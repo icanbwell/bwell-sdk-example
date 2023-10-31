@@ -12,11 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
         // BWell SDK Usage
         maven {
-            setUrl(uri("s3://bwell-maven-repo/"))
-            credentials<AwsCredentials>(AwsCredentials::class.java) {
-                accessKey = System.getenv("AWS_ACCESS_KEY_ID")
-                secretKey = System.getenv("AWS_SECRET_ACCESS_KEY")
-            }
+            url = uri("https://bwell-maven-repo.s3.amazonaws.com/")
         }
     }
 }
