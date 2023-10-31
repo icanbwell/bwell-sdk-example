@@ -2,8 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
-val GITHUB_USERNAME by extra("istashak")
-val GITHUB_TOKEN by extra("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")
 
 android {
     namespace = "com.bwell.sampleapp"
@@ -54,7 +52,7 @@ android {
 dependencies {
 
     // BWell SDK Usage
-    implementation("com.bwell:bwell-sdk:1.+")
+    implementation("com.bwell:bwell-sdk-kotlin:1.0.+")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
