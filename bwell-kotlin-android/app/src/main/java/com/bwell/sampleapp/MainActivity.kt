@@ -1,6 +1,7 @@
 package com.bwell.sampleapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,11 +16,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.bwell.sampleapp.ui.theme.MyTestAppTheme
 // BWell SDK Usage
 import com.bwell.BWellSdk
+import com.bwell.core.auth.Credentials
+import com.bwell.core.config.BWellConfig
+import com.bwell.core.config.LogLevel
+import com.bwell.core.config.RetryPolicy
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        BWellSdk.initialize(config = BWellConfig(
+            clientKey = "testClientKey",
+            logLevel = LogLevel.DEBUG,
+            timeout = 20000,
+            retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
+        ))
+        val credentials = Credentials.OAuthCredentials("token")
+        Log.d("BWell Sample App", credentials.token)
+        BWellSdk.authenticate(credentials)
         setContent {
             MyTestAppTheme {
                 // A surface container using the 'background' color from the theme
