@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/fragment_container"
+    tools:context=".activities.ui.insurance.InsuranceFragment">
+
+    <!-- Insurance Overview Title -->
+    <TextView
+        android:id="@+id/textInsuranceOverview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Insurance Overview Title"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:textColor="#0076AB"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp"/>
+
+    <!-- Constrained layout with image, text views, and button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textInsuranceOverview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#F2FAFC"
+        android:padding="10dp"
+        android:layout_margin="20dp">
+
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/insurance_logo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/insurance_data_layout"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp">
+
+            <!-- TextView 1 -->
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connection_benefits"
+                android:textColor="#0076AB"
+                android:textSize="22dp"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- TextView 1 -->
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/insurance_description_heading"
+                android:gravity="center"/>
+
+            <!-- TextView 3 with Bulleted List -->
+            <TextView
+                android:id="@+id/bulletPointsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/insurance_description"/>
+        </LinearLayout>
+
+        <!-- Connect Insurance Button -->
+        <FrameLayout
+            android:id="@+id/frameLayoutConnectInsurance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_rectangle_blue"
+            app:layout_constraintTop_toBottomOf="@+id/insurance_data_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+            android:layout_margin="20dp"
+            android:focusable="true"
+            android:onClick="onEditProfileClick">
+
+            <TextView
+                android:id="@+id/textViewLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/connect_insurance"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:padding="16dp"/>
+
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
