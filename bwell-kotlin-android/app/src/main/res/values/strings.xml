@@ -1,3 +1,136 @@
 <resources>
     <string name="app_name">b.well SDK Sample App</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+    <string name="lee_health">LEE HEALTH</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_data_connections">Data Connections</string>
+    <string name="menu_health_summary">Health Summary</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_labs">Labs</string>
+    <string name="menu_medicines">Medicines</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_gallery">Data Connections</string>
+    <string name="menu_health_journey">Health Journey</string>
+    <string name="menu_slideshow">Health Summary</string>
+    <string name="menu_insurance">Insurance</string>
+    <string name="bwell_sample">BWell Sample app</string>
+    <string name="email">Email</string>
+    <string name="sex">Sex</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="age">Age</string>
+    <string name="address">Address</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="create_profile">Create Profile</string>
+    <string name="logout">Log out</string>
+    <string name="connect_insurance">Connect Insurance</string>
+    <string name="connection_benefits">One Connection, Many benefits</string>
+    <string name="save">Save</string>
+    <string name="fill_edit_profile">Help us provide you with more tailored insights by filling out more details about you.</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="date_of_birth_label">Date of Birth</string>
+    <string name="sex_assigned_at_birth">Sex Assigned at Birth</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="primary_address">Primary Address</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zipcode">Zipcode</string>
+    <string name="enter_first_name">Enter your first name</string>
+    <string name="enter_last_name">Enter your last name</string>
+    <string name="enter_date_of_birth">Enter your Date of Birth</string>
+    <string name="enter_mobile_number">Enter your Mobile Number</string>
+    <string name="enter_primary_address">Enter your Primary Addressr</string>
+    <string name="enter_city">Enter your City</string>
+    <string name="enter_zipcode">Enter your Zipcode</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="suggested_activities">Suggested activities</string>
+    <string name="see_more">See More</string>
+    <string name="connect_your_care_providers">Connect Your Care Providers</string>
+    <string name="build_your_care_team">Build Your Care Team</string>
+    <string name="find_a_primary_care_provider_you">Find a Primary Care Provider You</string>
+    <string name="having_a_team_of_healthcare_providers_you_trust_helps_you_get_the_best_care_possible">Having a team of healthcare providers you trust helps you get the best care possible</string>
+    <string name="your_healthcare_providers_store_lots_of_important_information_about_your_health">Your healthcare providers store lots of important information about your health.</string>
+    <string name="a_primary_care_provider_is_a_healthcare_professional_who_helps">A primary care provider is a healthcare professional who helps</string>
+    <string name="welcome_bwell">Welcome!!BWell</string>
+    <string name="get_started">Get Started</string>
+    <string name="health_journey">Elevate your health journey</string>
+    <string name="sub_header_home">Combine all your health records to unlock more data</string>
+    <string name="search_connection_by">Search connection by</string>
+    <string name="data_connections">Data Connections</string>
+    <string name="health_summary">Health Summary</string>
+    <string name="health_journey_title">Health Journey</string>
+    <string name="health_activities">Health Activities</string>
+    <string name="labs">Labs</string>
+    <string name="lab_detail">Lab Detail</string>
+    <string name="pending">Pending</string>
+    <string name="data_connections_description">Here is your list of Data Connections from your providers/medical offices,insurance,labs,pharmacies and more.</string>
+    <string name="health_summary_description">Here is your list of connected health information grouped by record type.</string>
+    <string name="about_helath_type_desc">A urobilinogen in urine test measures the amount of urobilinogen in your urine (pee). Normal urine contains some urobilinogen. Too much urobilinogen in urine may be a sign of a liver disease, such as hepatitis or cirrhosis, or certain types of anemia.</string>
+    <string name="insurance_description_heading">
+    <![CDATA[
+    Enter the details of your insurance plan to \n     fill your app with your most important \n    health data, like your:
+    ]]>
+   </string>
+    <string name="insurance_description">
+    <![CDATA[
+           • Claims\n
+
+           • Payment history\n
+
+           • Out of pocket/deductible progress
+    ]]>
+</string>
+    <string name="history_description">
+    <![CDATA[ 31/10/2023 \n   \n 0.3 mg/dl \n  \n Healthy Range \n  0.1 mg/dl-1.0 mg/dl \n   \n from Memorial health]]>
+</string>
 </resources>

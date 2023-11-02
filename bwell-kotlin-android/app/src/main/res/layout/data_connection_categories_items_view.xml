@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@drawable/rounded_rectangle_grey"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:layout_margin="10dp">
+
+    <!-- LinearLayout for Title and ImageView -->
+    <LinearLayout
+        android:id="@+id/data_connection_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintHorizontal_chainStyle="packed">
+
+        <!-- Title TextView -->
+        <TextView
+            android:id="@+id/data_connection_heading_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textColor="#575881"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"/>
+
+        <!-- ImageView (Logo) -->
+        <ImageView
+            android:id="@+id/data_connection_logo_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/insurance_logo"/>
+
+    </LinearLayout>
+
+    <!-- Guideline to separate LinearLayout and Description -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8"/>
+
+    <!-- Description TextView -->
+    <TextView
+        android:id="@+id/data_connection_description_iv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/data_connection_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
