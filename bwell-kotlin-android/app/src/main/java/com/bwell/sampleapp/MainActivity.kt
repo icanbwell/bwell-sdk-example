@@ -26,12 +26,16 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BWellSdk.initialize(config = BWellConfig(
-            clientKey = "testClientKey",
-            logLevel = LogLevel.DEBUG,
-            timeout = 20000,
-            retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
-        ))
+
+        BWellSdk.initialize(
+            config = BWellConfig.Builder()
+                .clientKey("CLIENT_KEY")
+                .logLevel(LogLevel.DEBUG)
+                .timeout(20000)
+                .retryPolicy(RetryPolicy(maxRetries = 5, retryInterval = 500))
+                .build()
+        )
+
         val credentials = Credentials.OAuthCredentials("token")
         Log.d("BWell Sample App", credentials.token)
         BWellSdk.authenticate(credentials)
