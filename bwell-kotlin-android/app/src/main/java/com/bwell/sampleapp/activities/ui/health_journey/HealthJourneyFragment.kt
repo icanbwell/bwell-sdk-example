@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.databinding.FragmentHealthJourneyBinding
 import com.bwell.sampleapp.model.HealthJourneyListItems
+import com.bwell.sampleapp.viewmodel.HealthJourneyViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 
 class HealthJourneyFragment : Fragment() {

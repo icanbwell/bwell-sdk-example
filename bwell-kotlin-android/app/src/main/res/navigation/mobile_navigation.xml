@@ -35,10 +35,16 @@
         tools:layout="@layout/fragment_insurance_view" />
 
     <fragment
-        android:id="@+id/nav_setting"
-        android:name="com.bwell.sampleapp.activities.ui.settings.SettingFragment"
-        android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_setting" />
+        android:id="@+id/nav_labs"
+        android:name="com.bwell.sampleapp.activities.ui.labs.LabsFragment"
+        android:label="@string/menu_labs"
+        tools:layout="@layout/fragment_labs" />
+
+    <fragment
+        android:id="@+id/nav_medicines"
+        android:name="com.bwell.sampleapp.activities.ui.medicines.MedicinesFragment"
+        android:label="@string/menu_medicines"
+        tools:layout="@layout/fragment_medicines" />
 
     <fragment
         android:id="@+id/nav_profile"

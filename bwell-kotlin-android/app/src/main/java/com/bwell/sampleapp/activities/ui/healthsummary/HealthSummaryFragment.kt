@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.databinding.FragmentHealthSummaryBinding
 import com.bwell.sampleapp.model.HealthSummaryListItems
+import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 
 class HealthSummaryFragment : Fragment() {

@@ -40,7 +40,11 @@ class InsuranceFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.frameLayoutConnectInsurance -> findNavController().navigate(R.id.nav_data_connections)
+            R.id.frameLayoutConnectInsurance ->
+            {
+                findNavController().popBackStack(R.id.nav_insurance, true)
+                findNavController().navigate(R.id.nav_data_connections)
+            }
         }
     }
 }

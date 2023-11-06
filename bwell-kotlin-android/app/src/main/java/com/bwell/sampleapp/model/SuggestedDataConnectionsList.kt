@@ -13,3 +13,9 @@ data class SuggestedDataConnectionsCategoriesList(
 
 data class DataConnectionCategoriesListItems(val connectionCategoryName: String,
                                              val connectionLogo: Int,val description: String)
+
+data class DataConnectionsClinicsList(
+    val dataConnectionsClinicsList :List<DataConnectionsClinicsListItems>
+)
+
+data class DataConnectionsClinicsListItems(val clinicLogo: Int,val clinicName: String)

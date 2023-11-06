@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/clinic_info_view"
+    tools:context=".activities.ui.data_connections.DataConnectionsFragment">
+
+    <!-- Clinic Title -->
+    <TextView
+        android:id="@+id/clinicNametxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/connect_to"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textSize="24dp"
+        android:textColor="#0076AB"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp"/>
+
+    <!-- Constrained layout with image, text views,checkbox and button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/clinicNametxt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="10dp"
+        android:layout_margin="20dp">
+
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/baseline_person_pin_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/clinic_data_layout"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp">
+
+            <!-- TextView 1 -->
+            <TextView
+                android:id="@+id/clinic_discription_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/clinic_discription"
+                android:gravity="center"/>
+            <!-- Checkbox and TextView 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <!-- Checkbox -->
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"/>
+                <!-- TextView for checkbox -->
+                <TextView
+                    android:id="@+id/checkbox_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/clinic_checkbox_txt"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Connect Insurance Button -->
+        <FrameLayout
+            android:id="@+id/frameLayoutProceed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_rectangle_grey"
+            app:layout_constraintTop_toBottomOf="@+id/clinic_data_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+            android:layout_margin="20dp"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/textViewLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/proceed"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:layout_marginRight="70dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="70dp"/>
+
+        </FrameLayout>
+
+        <!-- TextView 1 -->
+        <TextView
+            android:id="@+id/cancel_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="#0076AB"
+            android:textSize="22dp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayoutProceed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
