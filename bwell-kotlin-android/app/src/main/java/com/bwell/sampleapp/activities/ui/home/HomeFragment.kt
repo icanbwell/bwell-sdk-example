@@ -83,8 +83,16 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.see_more -> findNavController().navigate(R.id.nav_health_journey)
-            R.id.btn_get_started -> findNavController().navigate(R.id.nav_data_connections)
+            R.id.see_more ->
+            {
+                findNavController().popBackStack(R.id.nav_home, true)
+                findNavController().navigate(R.id.nav_health_journey)
+            }
+            R.id.btn_get_started ->
+            {
+                findNavController().popBackStack(R.id.nav_home, true)
+                findNavController().navigate(R.id.nav_data_connections)
+            }
         }
     }
 }

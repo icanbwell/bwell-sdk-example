@@ -7,6 +7,8 @@ import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.model.DataConnectionListItems
+import com.bwell.sampleapp.model.DataConnectionsClinicsList
+import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.model.HealthJourneyList
 import com.bwell.sampleapp.model.HealthJourneyListItems
 import com.bwell.sampleapp.model.HealthSummaryList
@@ -48,6 +50,11 @@ class Repository(private val applicationContext: Context) {
 
     val healthJourney: LiveData<HealthJourneyList>
         get() = healthJourneyLiveData
+
+    private val dataConnectionsClinicsLiveData = MutableLiveData<DataConnectionsClinicsList>()
+
+    val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
+        get() = dataConnectionsClinicsLiveData
 
     suspend fun getActivitiesSuggestionList() {
 
@@ -258,6 +265,47 @@ class Repository(private val applicationContext: Context) {
 
         val activityList = HealthJourneyList(suggestionsList)
         healthJourneyLiveData.postValue(activityList)
+    }
+
+    suspend fun getDataConnectionsClinicsList() {
+
+        val suggestionsList = mutableListOf<DataConnectionsClinicsListItems>()
+
+        // Category A
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"AmSurg Columbia Anesthesia LLC"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Amsterdam Medical Practice (New York)"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Amsterdam Internal Medicine and Pediatrics"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Bna Medical Group (Texas)"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Presbyterian Hospital - Albuquerque, NM"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"We Care Family Practice"
+            )
+        )
+
+
+        val activityList = DataConnectionsClinicsList(suggestionsList)
+        dataConnectionsClinicsLiveData.postValue(activityList)
     }
 
 
