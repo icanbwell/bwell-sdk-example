@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.activities.ui.data_connections
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -68,14 +69,17 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         _binding = null
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setDataConnectionClinicsAdapter(dataConnectionsList: List<DataConnectionsClinicsListItems>) {
         val adapter = DataConnectionsClinicsListAdapter(dataConnectionsList)
         adapter.onItemClicked = { selectedDataConnection ->
             // Handle item click, perform UI changes here
             binding.includeDataConnectionsClinics.searchView.searchText.setText("")
             displayIndividualClinicInfo()
-            binding.clinicInfoView.clinicNametxt.setText(resources.getString(R.string.connect_to)+" "+selectedDataConnection.clinicName)
-            binding.clinicInfoView.clinicDiscriptionTxt.setText(selectedDataConnection.clinicName+" "+resources.getString(R.string.clinic_discription))
+            binding.clinicInfoView.clinicNametxt.text =
+                "${resources.getString(R.string.connect_to)} ${selectedDataConnection.clinicName}"
+            binding.clinicInfoView.clinicDiscriptionTxt.text =
+                "${selectedDataConnection.clinicName} ${resources.getString(R.string.clinic_discription)}"
 
         }
         binding.includeDataConnectionsClinics.clinicsAfterSearchDataBodyView.rvClinics.layoutManager = LinearLayoutManager(requireContext())
@@ -83,7 +87,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
 
         // Observe the filtered list and update the adapter
         dataConnectionsViewModel.filteredDataConnectionsClinics.observe(viewLifecycleOwner) {
-            if(it.size > 0)
+            if(it.isNotEmpty())
             {
                 displayClinicsAfterDataSearchView(it.size)
             }else{
