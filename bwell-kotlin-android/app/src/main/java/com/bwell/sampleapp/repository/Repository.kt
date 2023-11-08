@@ -3,6 +3,11 @@ package com.bwell.sampleapp.repository
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bwell.BWellSdk
+import com.bwell.common.domain.user.Person
+import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.OperationOutcome
+import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
@@ -18,6 +23,8 @@ import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class Repository(private val applicationContext: Context) {
 
@@ -55,6 +62,19 @@ class Repository(private val applicationContext: Context) {
 
     val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = dataConnectionsClinicsLiveData
+
+    suspend fun saveUserProfile(person: Person): Flow<OperationOutcome?> = flow {
+        val operationOutcome: OperationOutcome? = BWellSdk.user?.updateProfile(person)
+        emit(operationOutcome)
+    }
+
+
+    suspend fun fetchUserProfile(): Flow<BWellResult<Person>?> = flow {
+        if(BWellSdk.user?.getProfile()?.operationOutcome?.status==Status.SUCCESS){
+            emit(BWellSdk.user?.getProfile())
+        }
+    }
+
 
     suspend fun getActivitiesSuggestionList() {
 
