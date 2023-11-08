@@ -17,6 +17,7 @@ import com.bwell.common.domain.user.Person
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentProfileBinding
+import com.bwell.sampleapp.viewmodel.ProfileViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -74,7 +75,7 @@ class ProfileFragment : Fragment() {
             val primaryAddress = binding.includeEditProfile.primaryAddressEditText.text.toString()
             val city = binding.includeEditProfile.cityEditText.text.toString()
             val zipcode = binding.includeEditProfile.zipcodeEditText.text.toString()
-            val person:Person =  Person(userData.id,firstName,lastName,primaryAddress,userData.addressUnit,city,selectedState,zipcode,userData.homePhone,
+            val person =  Person(userData.id,firstName,lastName,primaryAddress,userData.addressUnit,city,selectedState,zipcode,userData.homePhone,
                 phoneNumber,userData.officePhone,userData.email,dateOfBirth,selectedSex,userData.rawFhirResource)
 
             // Call the saveData method from the ViewModel and pass the user data

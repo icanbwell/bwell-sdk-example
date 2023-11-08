@@ -1,4 +1,4 @@
-package com.bwell.sampleapp.activities.ui.profile
+package com.bwell.sampleapp.viewmodel
 
 import android.os.Build
 import androidx.lifecycle.ViewModel
