@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/editProfileParent"
+    tools:context=".activities.ui.profile.ProfileFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <!-- Left Arrow Image -->
+    <ImageView
+        android:id="@+id/leftArrowImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_back_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Edit Profile Title -->
+    <TextView
+        android:id="@+id/editProfileTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_profile"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#0076AB"
+        app:layout_constraintStart_toEndOf="@+id/leftArrowImageView"
+        app:layout_constraintTop_toTopOf="@+id/leftArrowImageView"
+        android:layout_marginStart="16dp"/>
+
+    <!-- Help Text -->
+    <TextView
+        android:id="@+id/helpTextTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/fill_edit_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leftArrowImageView"
+        android:padding="16dp"/>
+
+    <!-- First Name Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/firstNameSectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/helpTextTextView">
+        <!-- First Name Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/firstNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/firstNameLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/first_name"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/redAsteriskTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- First Name Value -->
+        <EditText
+            android:id="@+id/firstNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:hint="@string/enter_first_name"
+            android:background="@android:color/transparent"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Last Name Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/lastNameSectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstNameSectionLayout">
+        <!-- Last Name Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/lastNameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/lastNameLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_name"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/lastnameredAsteriskTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- Last Name Value -->
+        <EditText
+            android:id="@+id/lastNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_last_name"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:background="@android:color/transparent"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Date of Birth Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/dateofbirthSectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameSectionLayout">
+        <!-- dateofbirth Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/dateofbirthLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/dateofbirthLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_of_birth_label"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/dateofbirthredAsteriskTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- Date of Birth Value -->
+        <EditText
+            android:id="@+id/dateofbirthEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:hint="@string/enter_date_of_birth"
+            android:background="@android:color/transparent"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- Sex Assigned at Birth Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/sexAssignedAtBirthSectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateofbirthSectionLayout"
+        android:padding="10dp"
+        android:layout_margin="10dp">
+        <!-- Sex Assigned at Birth Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/sexAssignedAtBirthLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/sexAssignedAtBirthLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sex_assigned_at_birth"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/redAsteriskSexAssignedAtBirthTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- Sex Assigned at Birth Dropdown -->
+        <Spinner
+            android:id="@+id/sexAssignedAtBirthSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+        android:textColor="#000000"
+        android:padding="8dp">
+        </Spinner>
+    </LinearLayout>
+
+    <!-- Phone number Section with Blue Background -->
+    <RelativeLayout
+        android:id="@+id/phonenumberSectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F2FAFC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sexAssignedAtBirthSectionLayout"
+        android:padding="10dp"
+        android:layout_margin="10dp">
+        <!-- Phone number Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/phonenumberLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/phonenumberLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mobile_number"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/redAsteriskphonenumberTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- phonenumber Edittext -->
+        <EditText
+            android:id="@+id/phonenumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/phonenumberLayout"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:hint="@string/enter_mobile_number"
+            android:background="@android:color/transparent"
+            android:textColor="#000000" />
+        <!-- Receiver Symbol (ImageView) -->
+        <ImageView
+            android:id="@+id/receiverSymbolImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_phone_24"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_alignTop="@id/phonenumberLayout"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp">
+        </ImageView>
+    </RelativeLayout>
+
+    <!-- Primary Address Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/primaryAddressSectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phonenumberSectionLayout"
+        android:padding="10dp"
+        android:layout_margin="10dp">
+        <!-- Primary Address Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/primaryAddressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/primaryAddressLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/primary_address"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/redAsteriskprimaryAddressTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- Primary Address Dropdown -->
+        <EditText
+            android:id="@+id/primaryAddressEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:hint="@string/enter_primary_address"
+            android:background="@android:color/transparent"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- City Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/citySectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/primaryAddressSectionLayout"
+        android:padding="10dp"
+        android:layout_margin="10dp">
+        <!-- City Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/cityLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/cityLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/city"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/redAsteriskcityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- City Dropdown -->
+        <EditText
+            android:id="@+id/cityEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:hint="@string/enter_city"
+            android:background="@android:color/transparent"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/stateandzipcodeSectionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/citySectionLayout"
+        >
+    <!-- State Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/stateSectionLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        android:layout_weight="2.6"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent">
+        <!-- State Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/stateLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/stateLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/state"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/redAsteriskstateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- State Dropdown -->
+        <Spinner
+            android:id="@+id/stateSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textColor="#000000"
+            android:padding="8dp">
+        </Spinner>
+    </LinearLayout>
+        <!-- Space View for separation -->
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1" />
+
+    <!-- Zipcode Section with Blue Background -->
+    <LinearLayout
+        android:id="@+id/zipcodeSectionLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F2FAFC"
+        android:layout_weight="1.3"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        app:layout_constraintStart_toStartOf="parent">
+        <!-- zipcode Label with Red " *" -->
+        <LinearLayout
+            android:id="@+id/zipcodeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/zipcodeLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zipcode"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+            <TextView
+                android:id="@+id/redAsteriskzipcodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" *"
+                android:textStyle="bold"
+                android:textColor="#FF0000" />
+        </LinearLayout>
+        <!-- zipcode Dropdown -->
+        <EditText
+            android:id="@+id/zipcodeEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:hint="@string/enter_zipcode"
+            android:background="@android:color/transparent"
+            android:textColor="#000000" />
+    </LinearLayout>
+    </LinearLayout>
+
+    <!-- Save Button -->
+    <FrameLayout
+        android:id="@+id/frameLayoutSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_rectangle_blue"
+        app:layout_constraintTop_toBottomOf="@+id/stateandzipcodeSectionLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="true"
+        android:layout_margin="20dp"
+        android:focusable="true"
+        android:onClick="onSaveProfileClick">
+        <TextView
+            android:id="@+id/textViewLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:padding="16dp"/>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.ui.labs.LabsFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.bwell.sampleapp.viewmodel.LabsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
+        <!-- Include Labs Layout-->
+        <include
+            android:id="@+id/includelabsData"
+            layout="@layout/fragment_labs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Include Labs Detail Layout -->
+        <include
+            android:id="@+id/includeLabsDetail"
+            layout="@layout/fragment_lab_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/includelabsData" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+

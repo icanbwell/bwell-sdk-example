@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.bwell.sampleapp.activities.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_data_connections"
+        android:name="com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment"
+        android:label="@string/menu_data_connections"
+        tools:layout="@layout/fragment_data_connections" />
+
+    <fragment
+        android:id="@+id/nav_health_summary"
+        android:name="com.bwell.sampleapp.activities.ui.healthsummary.HealthSummaryFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_gallery" />
+    <fragment
+        android:id="@+id/nav_health_journey"
+        android:name="com.bwell.sampleapp.activities.ui.health_journey.HealthJourneyFragment"
+        android:label="@string/menu_health_journey"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_insurance"
+        android:name="com.bwell.sampleapp.activities.ui.insurance.InsuranceFragment"
+        android:label="@string/menu_insurance"
+        tools:layout="@layout/fragment_insurance_view" />
+
+    <fragment
+        android:id="@+id/nav_labs"
+        android:name="com.bwell.sampleapp.activities.ui.labs.LabsFragment"
+        android:label="@string/menu_labs"
+        tools:layout="@layout/fragment_labs" />
+
+    <fragment
+        android:id="@+id/nav_medicines"
+        android:name="com.bwell.sampleapp.activities.ui.medicines.MedicinesFragment"
+        android:label="@string/menu_medicines"
+        tools:layout="@layout/fragment_medicines" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.bwell.sampleapp.activities.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

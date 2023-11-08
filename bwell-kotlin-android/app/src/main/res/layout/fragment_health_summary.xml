@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/data_connection_fragment"
+    android:layout_margin="20dp"
+    tools:context=".activities.ui.healthsummary.HealthSummaryFragment">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/health_summary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#575881"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10dp"/>
+
+    <!-- Image -->
+    <ImageView
+        android:id="@+id/descriptionImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/baseline_control_point_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/titleTextView"
+        android:layout_marginEnd="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descriptionImageView"
+        android:orientation="vertical">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/rounded_rectangle_sky_blue"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content">
+            <!-- logo image -->
+            <ImageView
+                android:id="@+id/itemImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/baseline_feed_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="16dp"/>
+
+            <!-- Name of Data Connection -->
+            <TextView
+                android:id="@+id/itemText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/health_summary_description"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toEndOf="@+id/itemImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_health_summary"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.8"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
