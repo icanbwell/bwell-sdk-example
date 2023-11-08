@@ -1,214 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:id="@+id/view_profile_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_profile_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".activities.ui.profile.ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profile_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/profile_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_rectangle_green"
-        android:padding="30dp">
-
-    <!-- Name TextView -->
-    <TextView
-        android:id="@+id/textViewName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Arun Kumar"
-        android:textColor="@color/white"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:padding="10dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Email -->
-    <TextView
-        android:id="@+id/textViewEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/email"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/textViewEmailData"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textViewEmailData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="user@example.com"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="right"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/textViewEmail"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+        <!-- Name TextView -->
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Arun Kumar"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Sex -->
-    <TextView
-        android:id="@+id/textViewSex"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/sex"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/textViewSexData"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
-
-    <TextView
-        android:id="@+id/textViewSexData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Male"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="right"
-        app:layout_constraintStart_toEndOf="@+id/textViewSex"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEmailData" />
-
-    <!-- Phone Number -->
-    <TextView
-        android:id="@+id/textViewPhoneNumber"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/phone_number"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/textViewPhoneNumberData"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSexData" />
-
-    <TextView
-        android:id="@+id/textViewPhoneNumberData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="123-456-7890"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="right"
-        app:layout_constraintStart_toEndOf="@+id/textViewPhoneNumber"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSexData" />
-
-    <!-- Date of Birth -->
-    <TextView
-        android:id="@+id/textViewDateOfBirth"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/date_of_birth"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/textViewDateOfBirthData"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPhoneNumberData" />
-
-    <TextView
-        android:id="@+id/textViewDateOfBirthData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="01/01/1990"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="right"
-        app:layout_constraintStart_toEndOf="@+id/textViewDateOfBirth"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPhoneNumberData" />
-
-    <!-- Age -->
-    <TextView
-        android:id="@+id/textViewAge"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/age"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/textViewAgeData"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDateOfBirthData" />
-
-    <TextView
-        android:id="@+id/textViewAgeData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="30"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="right"
-        app:layout_constraintStart_toEndOf="@+id/textViewAge"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDateOfBirthData" />
-
-    <!-- Address -->
-    <TextView
-        android:id="@+id/textViewAddress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/address"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/textViewAddressData"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAgeData" />
-
-    <TextView
-        android:id="@+id/textViewAddressData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="123 Main St, City, Country"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewAddress"
-        android:gravity="right"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAgeData" />
-
-    <!-- Edit Profile Button -->
-    <FrameLayout
-        android:id="@+id/frameLayoutEditProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rectangle_without_stroke"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAddressData"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:clickable="true"
-        android:layout_margin="20dp"
-        android:focusable="true"
-        android:onClick="onEditProfileClick">
+        <!-- Email -->
+        <TextView
+            android:id="@+id/textViewEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/textViewEmailData"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
         <TextView
-            android:id="@+id/textViewEditProfile"
+            android:id="@+id/textViewEmailData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="user@example.comggggggggggggggggggggggggggggggggggg"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewEmail"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+        <!-- Sex -->
+        <TextView
+            android:id="@+id/textViewSex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/sex"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/textViewSexData"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewEmailData" />
+
+        <TextView
+            android:id="@+id/textViewSexData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="Male"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewSex"
+            app:layout_constraintTop_toBottomOf="@+id/textViewEmailData" />
+
+        <!-- Phone Number -->
+        <TextView
+            android:id="@+id/textViewPhoneNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/textViewPhoneNumberData"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSexData" />
+
+        <TextView
+            android:id="@+id/textViewPhoneNumberData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="123-456-7890"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewPhoneNumber"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSexData" />
+
+        <!-- Date of Birth -->
+        <TextView
+            android:id="@+id/textViewDateOfBirth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/date_of_birth"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/textViewDateOfBirthData"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPhoneNumberData" />
+
+        <TextView
+            android:id="@+id/textViewDateOfBirthData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="01/01/1990"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewDateOfBirth"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPhoneNumberData" />
+
+        <!-- Age -->
+        <TextView
+            android:id="@+id/textViewAge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/age"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/textViewAgeData"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDateOfBirthData" />
+
+        <TextView
+            android:id="@+id/textViewAgeData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="30"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewAge"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDateOfBirthData" />
+
+        <!-- Address -->
+        <TextView
+            android:id="@+id/textViewAddress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/address"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/textViewAddressData"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewAgeData" />
+
+        <TextView
+            android:id="@+id/textViewAddressData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="123 Main St, City, Country"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewAddress"
+            app:layout_constraintTop_toBottomOf="@+id/textViewAgeData" />
+
+        <!-- Edit Profile Button -->
+        <FrameLayout
+            android:id="@+id/frameLayoutEditProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/edit_profile"
-            android:layout_gravity="center"
-            android:textStyle="bold"
-            android:textColor="#0076AB"
-            android:padding="16dp"/>
+            android:layout_margin="20dp"
+            android:background="@drawable/rounded_rectangle_without_stroke"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onEditProfileClick"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewAddressData">
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/textViewEditProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="16dp"
+                android:text="@string/edit_profile"
+                android:textColor="#0076AB"
+                android:textStyle="bold" />
+
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <FrameLayout
         android:id="@+id/frameLayouIntialLetter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/circle"
         android:layout_marginTop="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/circle"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textViewIntialLetter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="A"
-            android:textStyle="bold"
             android:layout_gravity="center"
+            android:padding="16dp"
+            android:text="A"
             android:textColor="#FFFFFF"
-            android:padding="16dp"/>
+            android:textStyle="bold" />
 
     </FrameLayout>
 
@@ -217,25 +218,26 @@
         android:id="@+id/frameLayoutLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rectangle_blue"
-        app:layout_constraintTop_toBottomOf="@+id/profile_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:clickable="true"
         android:layout_margin="20dp"
+        android:background="@drawable/rounded_rectangle_blue"
+        android:clickable="true"
         android:focusable="true"
-        android:onClick="onEditProfileClick">
+        android:onClick="onEditProfileClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_layout">
 
         <TextView
             android:id="@+id/textViewLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/logout"
             android:layout_gravity="center"
-            android:textStyle="bold"
+            android:padding="16dp"
+            android:text="@string/logout"
             android:textColor="#FFFFFF"
-            android:padding="16dp"/>
+            android:textStyle="bold" />
 
     </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

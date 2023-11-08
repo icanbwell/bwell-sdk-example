@@ -8,21 +8,26 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.bwell.common.domain.user.Person
+import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentProfileBinding
-import com.bwell.sampleapp.model.UserData
+import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var profileViewModel: ProfileViewModel
-    private lateinit var userData: UserData
-    private var selected_sex = "Male"
-    private var selected_state = "Alabama"
+    private lateinit var userData: Person
+    private var selectedSex = "Male"
+    private var selectedState = "Alabama"
 
 
     @SuppressLint("SetTextI18n")
@@ -33,45 +38,52 @@ class ProfileFragment : Fragment() {
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+
         // Initialize ViewModel
-        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
+        profileViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[ProfileViewModel::class.java]
+
         // Observe changes in userData LiveData
-        profileViewModel.userData.observe(viewLifecycleOwner) { userData ->
-            if (userData != null) {
-                this.userData = userData
-            };
-            // Update UI with the new userData
-            updateUI(userData)
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.userData.collect{
+                userData = it!!
+                 updateUI(userData)
+            }
         }
 
         // Trigger data fetching
         profileViewModel.fetchData()
+
+        // Find the left arrow  by ID
+        val leftArrowImageView: ImageView = binding.root.findViewById(R.id.leftArrowImageView)
+        // Set a click listener for the left arrow
+        leftArrowImageView.setOnClickListener {
+            binding.includeViewProfile.viewProfileParent.visibility= View.VISIBLE;
+            binding.includeEditProfile.editProfileParent.visibility= View.GONE;
+        }
 
         // Find the save button by ID
         val saveButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutSave)
         // Set a click listener for the save button
         saveButton.setOnClickListener {
             // Create a UserData object with the necessary data ( need to get this data from  UI components)
-            val userData = UserData(
-                binding.includeEditProfile.firstNameEditText.text.toString(),
-                binding.includeEditProfile.lastNameEditText.text.toString(),
-                binding.includeEditProfile.dateofbirthEditText.text.toString(),
-                selected_sex,
-                "30",
-                binding.includeEditProfile.phonenumberEditText.text.toString(),
-                binding.includeEditProfile.primaryAddressEditText.text.toString(),
-                binding.includeEditProfile.cityEditText.text.toString(),
-                selected_state,
-                binding.includeEditProfile.zipcodeEditText.text.toString(),
-                "john.doe@example.com"
-            )
+            val firstName = binding.includeEditProfile.firstNameEditText.text.toString()
+            val lastName = binding.includeEditProfile.lastNameEditText.text.toString()
+            val dateOfBirth = binding.includeEditProfile.dateofbirthEditText.text.toString()
+            val phoneNumber = binding.includeEditProfile.phonenumberEditText.text.toString()
+            val primaryAddress = binding.includeEditProfile.primaryAddressEditText.text.toString()
+            val city = binding.includeEditProfile.cityEditText.text.toString()
+            val zipcode = binding.includeEditProfile.zipcodeEditText.text.toString()
+            val person:Person =  Person(userData.id,firstName,lastName,primaryAddress,userData.addressUnit,city,selectedState,zipcode,userData.homePhone,
+                phoneNumber,userData.officePhone,userData.email,dateOfBirth,selectedSex,userData.rawFhirResource)
+
             // Call the saveData method from the ViewModel and pass the user data
-            profileViewModel.saveData(userData)
+            profileViewModel.updateUserProfile(person)
         }
 
-        // Find the save button by ID
+        // Find the edit button by ID
         val editButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutEditProfile)
-        // Set a click listener for the save button
+        // Set a click listener for the edit button
         editButton.setOnClickListener {
             binding.includeViewProfile.viewProfileParent.visibility= View.GONE;
             binding.includeEditProfile.editProfileParent.visibility= View.VISIBLE;
@@ -79,11 +91,11 @@ class ProfileFragment : Fragment() {
             userData.let {
                 binding.includeEditProfile.firstNameEditText.setText(it.firstName)
                 binding.includeEditProfile.lastNameEditText.setText(it.lastName)
-                binding.includeEditProfile.dateofbirthEditText.setText(it.dateOfBirth)
-                binding.includeEditProfile.phonenumberEditText.setText(it.mobileNumber)
-                binding.includeEditProfile.primaryAddressEditText.setText(it.primaryAddress)
+                binding.includeEditProfile.dateofbirthEditText.setText(it.birthDate)
+                binding.includeEditProfile.phonenumberEditText.setText(it.mobilePhone)
+                binding.includeEditProfile.primaryAddressEditText.setText(it.addressStreet)
                 binding.includeEditProfile.cityEditText.setText(it.city)
-                binding.includeEditProfile.zipcodeEditText.setText(it.zipcode)
+                binding.includeEditProfile.zipcodeEditText.setText(it.postageOrZipCode)
             }
 
         }
@@ -100,7 +112,7 @@ class ProfileFragment : Fragment() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item from the spinner
-                selected_sex = spinner.selectedItem.toString()
+                selectedSex = spinner.selectedItem.toString()
 
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -108,7 +120,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        //create stateSpinner
+        //create state Spinner
         val stateSpinner: Spinner = binding.includeEditProfile.stateSpinner
         // Create an ArrayAdapter using the string array and a default spinner layout
         val stateAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.states, android.R.layout.simple_spinner_item)
@@ -120,7 +132,7 @@ class ProfileFragment : Fragment() {
         stateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 // Get the selected item from the spinner
-                selected_state = spinner.selectedItem.toString()
+                selectedState = spinner.selectedItem.toString()
 
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -137,7 +149,7 @@ class ProfileFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateUI(userData: UserData?) {
+    private fun updateUI(userData: Person?) {
         // Update UI components with userData
         if (userData == null) {
             binding.includeViewProfile.viewProfileParent.visibility= View.GONE;
@@ -148,14 +160,19 @@ class ProfileFragment : Fragment() {
             binding.includeEditProfile.editProfileParent.visibility= View.GONE;
             userData.let {
                 binding.includeViewProfile.textViewName.text= "${it.firstName} ${it.lastName}"
-                binding.includeViewProfile.textViewIntialLetter.text= "${it.firstName.firstOrNull()} "
+                binding.includeViewProfile.textViewIntialLetter.text= "${it.firstName?.firstOrNull()} "
                 binding.includeViewProfile.textViewEmailData.text= it.email
-                binding.includeViewProfile.textViewSexData.text= it.sexAssignedAtBirth
-                binding.includeViewProfile.textViewPhoneNumberData.text= it.mobileNumber
-                binding.includeViewProfile.textViewDateOfBirthData.text= it.dateOfBirth
-                binding.includeViewProfile.textViewAgeData.text= it.age
-                binding.includeViewProfile.textViewAddressData.text= it.primaryAddress
+                binding.includeViewProfile.textViewSexData.text= it.gender
+                binding.includeViewProfile.textViewPhoneNumberData.text= it.mobilePhone
+                binding.includeViewProfile.textViewDateOfBirthData.text= it.birthDate
+                binding.includeViewProfile.textViewAgeData.text= it.birthDate?.let { it1 ->
+                    profileViewModel.calculateAge(
+                        it1
+                    )
+                }
+                binding.includeViewProfile.textViewAddressData.text= it.addressStreet
             }
         }
     }
+
 }
