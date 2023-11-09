@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.activities.ui.profile
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Spinner
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -26,11 +28,11 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var userData: Person
-    private var selectedSex = "Male"
-    private var selectedState = "Alabama"
+    private lateinit var selectedSex:String;
+    private lateinit var selectedState:String;
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NewApi")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,6 +89,14 @@ class ProfileFragment : Fragment() {
                 binding.includeEditProfile.primaryAddressEditText.setText(it.addressStreet)
                 binding.includeEditProfile.cityEditText.setText(it.city)
                 binding.includeEditProfile.zipcodeEditText.setText(it.postageOrZipCode)
+                val sexArray = resources.getStringArray(R.array.sex_assigned_at_birth_options)
+                val sexIndex = sexArray.indexOf(it.gender)
+                binding.includeEditProfile.sexAssignedAtBirthSpinner.setSelection(sexIndex)
+                val stateArray = resources.getStringArray(R.array.states)
+                val stateIndex = stateArray.indexOf(it.stateOrProvidence)
+                if (stateIndex != -1) {
+                    binding.includeEditProfile.stateSpinner.setSelection(stateIndex)
+                }
             }
 
         }
@@ -130,9 +140,8 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NewApi")
     private fun updateUI(userData: Person?) {
-        // Update UI components with Person
         if (userData == null) {
             binding.includeViewProfile.viewProfileParent.visibility= View.GONE;
             binding.includeEditProfile.editProfileParent.visibility= View.VISIBLE;
@@ -153,6 +162,8 @@ class ProfileFragment : Fragment() {
                     )
                 }
                 binding.includeViewProfile.textViewAddressData.text= it.addressStreet
+                selectedSex = it.gender.toString();
+                selectedState = it.stateOrProvidence.toString();
             }
         }
     }

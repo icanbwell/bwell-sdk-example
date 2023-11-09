@@ -70,8 +70,9 @@ class Repository(private val applicationContext: Context) {
 
 
     suspend fun fetchUserProfile(): Flow<BWellResult<Person>?> = flow {
-        if(BWellSdk.user?.getProfile()?.operationOutcome?.status==Status.SUCCESS){
-            emit(BWellSdk.user?.getProfile())
+        val profileData = BWellSdk.user?.getProfile()
+        if(profileData?.operationOutcome?.status==Status.SUCCESS){
+            emit(profileData)
         }
     }
 

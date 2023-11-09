@@ -1,6 +1,8 @@
 package com.bwell.sampleapp.activities.ui.profile
 
+import android.annotation.SuppressLint
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.domain.user.Person
@@ -55,12 +57,9 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     }
 
     // Function to calculate age
+    @SuppressLint("NewApi")
     fun calculateAge(birthDate: String): String {
-        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
+        val formatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val parsedBirthDate = LocalDate.parse(birthDate, formatter)
         val currentDate = LocalDate.now()
         val period = Period.between(parsedBirthDate, currentDate)
