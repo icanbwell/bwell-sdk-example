@@ -261,6 +261,7 @@
             android:layout_below="@+id/phonenumberLayout"
             android:layout_marginTop="6dp"
             android:layout_marginLeft="6dp"
+            android:inputType="phone"
             android:hint="@string/enter_mobile_number"
             android:background="@android:color/transparent"
             android:textColor="#000000" />
@@ -462,6 +463,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:layout_marginLeft="6dp"
+            android:inputType="number"
             android:hint="@string/enter_zipcode"
             android:background="@android:color/transparent"
             android:textColor="#000000" />
