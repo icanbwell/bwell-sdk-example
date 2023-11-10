@@ -112,8 +112,10 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             // Handle item click, perform UI changes here
             binding.includeDataConnectionsClinics.searchView.searchText.setText("")
             displayIndividualClinicInfo()
-            binding.clinicInfoView.clinicNametxt.text = resources.getString(R.string.connect_to)+" "+selectedDataConnection.clinicName
-            binding.clinicInfoView.clinicDiscriptionTxt.text = selectedDataConnection.clinicName+" "+resources.getString(R.string.clinic_discription)
+            binding.clinicInfoView.clinicNametxt.text =
+                "${resources.getString(R.string.connect_to)} ${selectedDataConnection.clinicName}"
+            binding.clinicInfoView.clinicDiscriptionTxt.text =
+                "${selectedDataConnection.clinicName} ${resources.getString(R.string.clinic_discription)}"
 
         }
         binding.includeDataConnectionsClinics.clinicsAfterSearchDataBodyView.rvClinics.layoutManager = LinearLayoutManager(requireContext())
