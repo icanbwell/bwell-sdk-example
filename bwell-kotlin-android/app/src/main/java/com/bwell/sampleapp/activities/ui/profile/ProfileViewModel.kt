@@ -1,55 +1,69 @@
 package com.bwell.sampleapp.activities.ui.profile
 
-import androidx.lifecycle.MutableLiveData
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bwell.sampleapp.model.UserData
+import com.bwell.common.domain.user.Person
+import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.OperationOutcome
+import com.bwell.common.models.responses.Status
+import com.bwell.sampleapp.repository.Repository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel(private val repository: Repository?) : ViewModel() {
 
-    private val _userData = MutableLiveData<UserData?>()
-    val userData: MutableLiveData<UserData?>
+    private val _userData = MutableSharedFlow<Person?>()
+    val userData: MutableSharedFlow<Person?>
         get() = _userData
 
-    // Define a companion object to hold the data
     companion object {
-        private var storedUserData: UserData? = null
-    }
-
-    // Function to retrieve data from the companion object
-    private fun getStoredUserData(): UserData? {
-        return storedUserData
-    }
-
-    // Function to save data to the companion object
-    private fun saveUserData(userData: UserData) {
-        storedUserData = userData
+        private var storedUserData: Person? = null
     }
 
     fun fetchData() {
         viewModelScope.launch {
             try {
-                // Retrieve data from the companion object
-                val data = getStoredUserData()
-                _userData.postValue(data)
+                repository?.fetchUserProfile()?.collect{
+                    if (it is BWellResult.SingleResource<Person>){
+                        val person = it.data
+                        _userData.emit(person)
+                    }
+                }
             } catch (e: Exception) {
                 // Handle errors
             }
         }
     }
 
-    // Function to save data using the companion object
-    fun saveData(userData: UserData) {
+    fun updatePersonData(userData: Person) {
         viewModelScope.launch {
             try {
-                // Save data to the companion object
-                saveUserData(userData)
-                // Notify the UI about the change
-                _userData.postValue(userData)
-            } catch (e: Exception) {
-                // Handle errors
+                val operationOutcomeFlow: Flow<OperationOutcome?>? = repository?.saveUserProfile(userData)
+                operationOutcomeFlow?.collect { operationOutcome ->
+                    if (operationOutcome?.status == Status.SUCCESS) {
+                        _userData.emit(userData)
+                    }
+                }
+            } catch (_: Exception) {
             }
         }
     }
+
+    // Function to calculate age
+    @SuppressLint("NewApi")
+    fun calculateAge(birthDate: String): String {
+        val formatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val parsedBirthDate = LocalDate.parse(birthDate, formatter)
+        val currentDate = LocalDate.now()
+        val period = Period.between(parsedBirthDate, currentDate)
+        return period.years.toString()
+    }
+
 }
