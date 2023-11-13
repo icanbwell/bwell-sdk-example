@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.BWellSdk
@@ -20,6 +21,7 @@ import com.bwell.sampleapp.databinding.FragmentHomeBinding
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.viewmodel.SharedViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -66,7 +68,9 @@ class HomeFragment : Fragment(), View.OnClickListener {
         ))
         val credentials = Credentials.OAuthCredentials("token")
         Log.d("BWell Sample App", credentials.token)
-        BWellSdk.authenticate(credentials)
+        lifecycleScope.launch {
+            BWellSdk.authenticate(credentials)
+        }
     }
 
     private fun setAdapter(suggestedActivitiesLIst: List<ActivityListItems>) {

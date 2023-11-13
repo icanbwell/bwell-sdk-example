@@ -13,7 +13,7 @@ import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsList
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.user.consents.requests.ConsentUpdateRequest
-import com.bwell.user.consents.requests.ConsentsRequest
+import com.bwell.user.consents.requests.ConsentRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +57,7 @@ class DataConnectionsViewModel(private val repository: Repository?) : ViewModel(
     private val _consentsData = MutableStateFlow<BWellResult<Consent>?>(null)
     val consentsData: StateFlow<BWellResult<Consent>?> = _consentsData
 
-    fun fetchConsents(consentsRequest: ConsentsRequest) {
+    fun fetchConsents(consentsRequest: ConsentRequest) {
         viewModelScope.launch {
             try {
                 repository?.fetchUserConsents(consentsRequest)?.collect { consentsResult ->

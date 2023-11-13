@@ -26,7 +26,7 @@ import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import com.bwell.sampleapp.activities.ui.popup.PopupFragment
 import com.bwell.user.consents.requests.ConsentUpdateRequest
-import com.bwell.user.consents.requests.ConsentsRequest
+import com.bwell.user.consents.requests.ConsentRequest
 import kotlinx.coroutines.launch
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.PopupListener {
@@ -62,7 +62,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                 binding.clinicInfoView.frameLayoutProceed.background = drawable
                     lifecycleScope.launch {
                         try {
-                            val consentsRequest = ConsentsRequest.Builder()
+                            val consentsRequest = ConsentRequest.Builder()
                                 .category(ConsentCategoryCode.TOS)
                                 .status(ConsentStatus.ACTIVE)
                                 .build()
