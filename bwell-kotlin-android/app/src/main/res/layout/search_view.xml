@@ -35,7 +35,11 @@
             android:background="@android:color/transparent"
             android:layout_toEndOf="@id/searchIcon"
             android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:inputType="text"
+            android:maxLength="20"
+            android:imeOptions="actionSearch"
+            />
     </RelativeLayout>
 
 

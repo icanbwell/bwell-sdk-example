@@ -38,7 +38,9 @@ class MainActivity : ComponentActivity() {
 
         val credentials = Credentials.OAuthCredentials("token")
         Log.d("BWell Sample App", credentials.token)
-        BWellSdk.authenticate(credentials)
+        lifecycleScope.launch {
+            BWellSdk.authenticate(credentials)
+        }
         setContent {
             MyTestAppTheme {
                 // A surface container using the 'background' color from the theme
