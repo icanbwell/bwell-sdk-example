@@ -1,16 +1,23 @@
 package com.bwell.sampleapp.activities.ui.data_connections
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
+import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
+import com.bwell.common.models.domain.consent.enums.ConsentStatus
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
@@ -20,6 +27,10 @@ import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import com.bwell.sampleapp.activities.ui.popup.PopupFragment
+import com.bwell.sampleapp.utils.hideKeyboard
+import com.bwell.user.consents.requests.ConsentUpdateRequest
+import com.bwell.user.consents.requests.ConsentRequest
+import kotlinx.coroutines.launch
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.PopupListener {
 
@@ -30,6 +41,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
     private val binding get() = _binding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,7 +63,26 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             if (isChecked) {
                 val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_green)
                 binding.clinicInfoView.frameLayoutProceed.background = drawable
-                binding.clinicInfoView.frameLayoutProceed.setOnClickListener(this)
+                    lifecycleScope.launch {
+                        try {
+                            val consentsRequest = ConsentRequest.Builder()
+                                .category(ConsentCategoryCode.TOS)
+                                .status(ConsentStatus.ACTIVE)
+                                .build()
+                            dataConnectionsViewModel.fetchConsents(consentsRequest)
+
+                            // Update user consent
+                            val consentUpdateRequest = ConsentUpdateRequest.Builder()
+                                .provisionType(ConsentProvisionType.PERMIT) // PERMIT | DENY
+                                .category(ConsentCategoryCode.TOS)// Terms of Service
+                                .status(ConsentStatus.ACTIVE)
+                                .build()
+
+                            dataConnectionsViewModel.updateConsent(consentUpdateRequest)
+
+                        } catch (_: Exception) {
+                        }
+                    }
             } else {
                 val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_grey)
                 binding.clinicInfoView.frameLayoutProceed.background = drawable
@@ -59,6 +90,14 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             }
         }
 
+        // Observe changes in consent LiveData
+        viewLifecycleOwner.lifecycleScope.launch {
+            dataConnectionsViewModel.consentsData.collect { consentsResult ->
+                consentsResult?.let {
+                    Log.d("Consents ", "Consent >>>$consentsResult")
+                }
+            }
+        }
         displayDataConnectionsHomeInfo()
 
         return root
@@ -85,7 +124,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         binding.includeDataConnectionsClinics.clinicsAfterSearchDataBodyView.rvClinics.layoutManager = LinearLayoutManager(requireContext())
         binding.includeDataConnectionsClinics.clinicsAfterSearchDataBodyView.rvClinics.adapter = adapter
 
-        // Observe the filtered list and update the adapter
+        hideKeyboard(requireContext(),binding.includeDataConnectionsClinics.searchView.searchText.windowToken)
         dataConnectionsViewModel.filteredDataConnectionsClinics.observe(viewLifecycleOwner) {
             if(it.isNotEmpty())
             {

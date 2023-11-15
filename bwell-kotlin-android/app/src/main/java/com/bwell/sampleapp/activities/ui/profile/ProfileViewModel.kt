@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bwell.common.domain.user.Person
+import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
@@ -45,11 +45,9 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     fun updatePersonData(userData: Person) {
         viewModelScope.launch {
             try {
-                val operationOutcomeFlow: Flow<OperationOutcome?>? = repository?.saveUserProfile(userData)
+                val operationOutcomeFlow: Flow<BWellResult<Person>?>? = repository?.saveUserProfile(userData)
                 operationOutcomeFlow?.collect { operationOutcome ->
-                    if (operationOutcome?.status == Status.SUCCESS) {
                         _userData.emit(userData)
-                    }
                 }
             } catch (_: Exception) {
             }

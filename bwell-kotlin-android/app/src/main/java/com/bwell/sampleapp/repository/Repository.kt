@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
-import com.bwell.common.domain.user.Person
+import com.bwell.common.models.domain.user.Person
+import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
@@ -23,6 +24,8 @@ import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsList
+import com.bwell.user.consents.requests.ConsentUpdateRequest
+import com.bwell.user.consents.requests.ConsentRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -63,8 +66,8 @@ class Repository(private val applicationContext: Context) {
     val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = dataConnectionsClinicsLiveData
 
-    suspend fun saveUserProfile(person: Person): Flow<OperationOutcome?> = flow {
-        var operationOutcome: OperationOutcome? = BWellSdk.user?.updateProfile(person)
+    suspend fun saveUserProfile(person: Person): Flow<BWellResult<Person>?> = flow {
+        var operationOutcome: BWellResult<Person>? = BWellSdk.user?.updateProfile(person)
         emit(operationOutcome)
     }
 
@@ -74,6 +77,16 @@ class Repository(private val applicationContext: Context) {
         if(profileData?.operationOutcome?.status==Status.SUCCESS){
             emit(profileData)
         }
+    }
+
+    suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> = flow {
+        val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
+        emit(consentsResult)
+    }
+
+    suspend fun updateUserConsent(consentUpdateRequest: ConsentUpdateRequest): Flow<BWellResult<Consent>?> = flow {
+        val updateOutcome = BWellSdk.user?.updateConsent(consentUpdateRequest)
+        emit(updateOutcome)
     }
 
 
