@@ -18,6 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
 import com.bwell.common.models.domain.consent.enums.ConsentStatus
+import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.responses.Status
+import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
@@ -25,9 +28,8 @@ import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.model.DataConnectionListItems
 import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
-import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import com.bwell.sampleapp.activities.ui.popup.PopupFragment
-import com.bwell.sampleapp.utils.hideKeyboard
+import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import com.bwell.user.consents.requests.ConsentUpdateRequest
 import com.bwell.user.consents.requests.ConsentRequest
 import kotlinx.coroutines.launch
@@ -49,9 +51,9 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
     ): View {
         _binding = FragmentDataConnectionsParentBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+        val repository = (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
 
-        dataConnectionsViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[DataConnectionsViewModel::class.java]
+        dataConnectionsViewModel = ViewModelProvider(this, DataConnectionsViewModelFactory(repository))[DataConnectionsViewModel::class.java]
 
         binding.includeHomeView.header.setText(resources.getString(R.string.connect_health_records))
         binding.includeHomeView.subText.setText(resources.getString(R.string.connect_health_records_sub_txt))
@@ -63,6 +65,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             if (isChecked) {
                 val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_green)
                 binding.clinicInfoView.frameLayoutProceed.background = drawable
+                binding.clinicInfoView.frameLayoutProceed.setOnClickListener(this)
                     lifecycleScope.launch {
                         try {
                             val consentsRequest = ConsentRequest.Builder()
@@ -98,6 +101,47 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                 }
             }
         }
+
+        // Observe changes in creating a connection
+        viewLifecycleOwner.lifecycleScope.launch {
+            dataConnectionsViewModel.createConnectionData.collect { connectionOutcome ->
+                connectionOutcome?.let {
+                    if (connectionOutcome.status == Status.SUCCESS) {
+                        // Connection created successfully, do something
+                        //  calling getConnections
+                        lifecycleScope.launch {
+                            try {
+                                dataConnectionsViewModel.getConnectionsAndObserve()
+                            } catch (e: Exception) {
+                                // Handle exceptions
+                            }
+                        }
+                    } else {
+                        // Connection creation failed, handle the error
+                    }
+                }
+            }
+        }
+
+        // Observe changes in disconnecting a connection
+        viewLifecycleOwner.lifecycleScope.launch {
+            dataConnectionsViewModel.disconnectConnectionData.collect { disconnectOutcome ->
+                disconnectOutcome?.let {
+                    if (disconnectOutcome.status == Status.SUCCESS) {
+                        // Disconnection done successfully, do something
+                    } else {
+                        // Disconnection failed, handle the error
+                    }
+                }
+            }
+        }
+
+        // Observe changes in dataConnectionsListItems LiveData
+        dataConnectionsViewModel.connectionsList.observe(viewLifecycleOwner) { connectionListItems ->
+            // Update UI with the new list of DataConnectionListItems
+            setDataConnectionsAdapter(connectionListItems)
+        }
+
         displayDataConnectionsHomeInfo()
 
         return root
@@ -114,6 +158,9 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         adapter.onItemClicked = { selectedDataConnection ->
             // Handle item click, perform UI changes here
             binding.includeDataConnectionsClinics.searchView.searchText.setText("")
+            // Close the keyboard
+            val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(binding.includeDataConnectionsClinics.searchView.searchText.windowToken, 0)
             displayIndividualClinicInfo()
             binding.clinicInfoView.clinicNametxt.text =
                 "${resources.getString(R.string.connect_to)} ${selectedDataConnection.clinicName}"
@@ -124,7 +171,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         binding.includeDataConnectionsClinics.clinicsAfterSearchDataBodyView.rvClinics.layoutManager = LinearLayoutManager(requireContext())
         binding.includeDataConnectionsClinics.clinicsAfterSearchDataBodyView.rvClinics.adapter = adapter
 
-        hideKeyboard(requireContext(),binding.includeDataConnectionsClinics.searchView.searchText.windowToken)
         dataConnectionsViewModel.filteredDataConnectionsClinics.observe(viewLifecycleOwner) {
             if(it.isNotEmpty())
             {
@@ -136,10 +182,13 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         }
     }
 
-    private fun setDataConnectionsAdapter(suggestedActivitiesLIst: List<DataConnectionListItems>) {
+    private fun setDataConnectionsAdapter(suggestedActivitiesLIst: List<Connection>) {
         val adapter = DataConnectionsListAdapter(suggestedActivitiesLIst)
         binding.includeDataConnections.dataConnectionFragment.visibility = View.VISIBLE;
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
+        binding.includeDataConnectionsClinics.dataConnectionsClinics.visibility = View.GONE;
+        binding.clinicInfoView.clinicInfoView.visibility = View.GONE;
+        binding.includeHomeView.headerView.visibility = View.GONE;
         binding.includeDataConnections.rvSuggestedDataConnections.layoutManager = LinearLayoutManager(requireContext())
         binding.includeDataConnections.rvSuggestedDataConnections.adapter = adapter
     }
@@ -148,7 +197,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         val adapter = DataConnectionsCategoriesListAdapter(suggestedActivitiesLIst)
         adapter.onItemClicked = { selectedDataConnection ->
             // Handle item click, perform UI changes here
-            //displayRelatedDataConnectionsList();
             binding.includeDataConnectionsClinics.searchView.searchText.setText("")
             displayClinicsBeforeSearchView()
             addSearchTextListeners()
@@ -193,6 +241,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
         binding.includeDataConnectionsClinics.dataConnectionsClinics.visibility = View.GONE;
         binding.clinicInfoView.clinicInfoView.visibility = View.GONE;
+        binding.includeDataConnections.dataConnectionFragment.visibility = View.GONE;
         binding.includeHomeView.headerView.visibility = View.VISIBLE;
     }
 
@@ -230,36 +279,47 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         binding.clinicInfoView.clinicInfoView.visibility = View.GONE;
     }
 
-    private fun displayRelatedDataConnectionsList() {
-        dataConnectionsViewModel.suggestedDataConnections.observe(viewLifecycleOwner) {
-            setDataConnectionsAdapter(it.suggestedDataConnectionsList)
-        }
-    }
-
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.btn_get_started -> {
-                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE;
-                    binding.includeHomeView.headerView.visibility = View.GONE;
-                    dataConnectionsViewModel.suggestedDataConnectionsCategories.observe(viewLifecycleOwner) {
-                        setDataConnectionsCategoryAdapter(it.suggestedDataConnectionsCategoriesList)
-                    }
+                binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
+                binding.includeHomeView.headerView.visibility = View.GONE
+                dataConnectionsViewModel.suggestedDataConnectionsCategories.observe(viewLifecycleOwner) {
+                    setDataConnectionsCategoryAdapter(it.suggestedDataConnectionsCategoriesList)
+                }
             }
             R.id.cancel_txt -> {
                 displayDataConnectionsCategoriesList()
+                // Call the disconnect method
+                lifecycleScope.launch {
+                    try {
+                        // Disconnect the data connection
+                        val connectionId = "456"
+                        // Call the disconnect method
+                        dataConnectionsViewModel.disconnectConnection(connectionId)
+                    } catch (e: Exception) {
+                        // Handle the exception, e.g., show an error message
+                        e.printStackTrace()
+                    }
+                }
             }
             R.id.frameLayoutProceed -> {
-                val popupFragment = PopupFragment()
-                popupFragment.setPopupListener(this) // Set the listener
-                popupFragment.show(childFragmentManager, "popup")
+                // Assuming  have a connection request ready
+                lifecycleScope.launch {
+                    val connectionRequest = ConnectionCreateRequest.Builder()
+                        .connectionId("connection_id")
+                        .username("username")
+                        .password("password")
+                        .build()
+                    dataConnectionsViewModel.createConnection(connectionRequest)
+                }
             }
         }
     }
 
-     override fun onCloseButtonClicked() {
-        // Do the action you want when the close button is clicked in the popup
-        // For example, perform some action in YourFragment
-        // You can access the views or methods of YourFragment here
-         displayDataConnectionsCategoriesList()
+    override fun onGetDataButtonClicked() {
+         //displayDataConnectionsCategoriesList()
+        dataConnectionsViewModel.getConnectionsAndObserve()
     }
+
 }

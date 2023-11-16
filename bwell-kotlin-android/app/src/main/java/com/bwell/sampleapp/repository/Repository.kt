@@ -5,16 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.user.Person
-import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
-import com.bwell.sampleapp.model.DataConnectionListItems
-import com.bwell.sampleapp.model.DataConnectionsClinicsList
-import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.model.HealthJourneyList
 import com.bwell.sampleapp.model.HealthJourneyListItems
 import com.bwell.sampleapp.model.HealthSummaryList
@@ -23,9 +18,6 @@ import com.bwell.sampleapp.model.LabsList
 import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
-import com.bwell.sampleapp.model.SuggestedDataConnectionsList
-import com.bwell.user.consents.requests.ConsentUpdateRequest
-import com.bwell.user.consents.requests.ConsentRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -35,11 +27,6 @@ class Repository(private val applicationContext: Context) {
 
     val suggestedActivities: LiveData<SuggestedActivitiesLIst>
         get() = suggestedActivitiesLiveData
-
-    private val suggestedDataConnectionsLiveData = MutableLiveData<SuggestedDataConnectionsList>()
-
-    val suggestedDataConnections: LiveData<SuggestedDataConnectionsList>
-        get() = suggestedDataConnectionsLiveData
 
     private val suggestedDataConnectionsCategoriesLiveData = MutableLiveData<SuggestedDataConnectionsCategoriesList>()
 
@@ -61,16 +48,10 @@ class Repository(private val applicationContext: Context) {
     val healthJourney: LiveData<HealthJourneyList>
         get() = healthJourneyLiveData
 
-    private val dataConnectionsClinicsLiveData = MutableLiveData<DataConnectionsClinicsList>()
-
-    val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
-        get() = dataConnectionsClinicsLiveData
-
     suspend fun saveUserProfile(person: Person): Flow<BWellResult<Person>?> = flow {
         var operationOutcome: BWellResult<Person>? = BWellSdk.user?.updateProfile(person)
         emit(operationOutcome)
     }
-
 
     suspend fun fetchUserProfile(): Flow<BWellResult<Person>?> = flow {
         val profileData = BWellSdk.user?.getProfile()
@@ -78,17 +59,6 @@ class Repository(private val applicationContext: Context) {
             emit(profileData)
         }
     }
-
-    suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> = flow {
-        val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
-        emit(consentsResult)
-    }
-
-    suspend fun updateUserConsent(consentUpdateRequest: ConsentUpdateRequest): Flow<BWellResult<Consent>?> = flow {
-        val updateOutcome = BWellSdk.user?.updateConsent(consentUpdateRequest)
-        emit(updateOutcome)
-    }
-
 
     suspend fun getActivitiesSuggestionList() {
 
@@ -177,33 +147,6 @@ class Repository(private val applicationContext: Context) {
 
         val activityList = SuggestedDataConnectionsCategoriesList(suggestionsList)
         suggestedDataConnectionsCategoriesLiveData.postValue(activityList)
-    }
-
-    suspend fun getDataConnectionsList() {
-
-        val suggestionsList = mutableListOf<DataConnectionListItems>()
-
-        // Category A
-        suggestionsList.add(
-            DataConnectionListItems(
-                "Epic Sandbox R4C", R.drawable.baseline_person_pin_24, "Pending",R.drawable.baseline_more_vert_24
-            )
-        )
-        suggestionsList.add(
-            DataConnectionListItems(
-                "HAPI - Starfleet Medical", R.drawable.baseline_person_pin_24,
-                "Disconnected",R.drawable.baseline_more_vert_24
-            )
-        )
-        suggestionsList.add(
-            DataConnectionListItems(
-                "ThedaCare Ripple", R.drawable.baseline_person_pin_24,
-                "Needs Reauthorization",R.drawable.baseline_more_vert_24
-            )
-        )
-
-        val activityList = SuggestedDataConnectionsList(suggestionsList)
-        suggestedDataConnectionsLiveData.postValue(activityList)
     }
 
     suspend fun getHealthSummaryList() {
@@ -300,47 +243,5 @@ class Repository(private val applicationContext: Context) {
         val activityList = HealthJourneyList(suggestionsList)
         healthJourneyLiveData.postValue(activityList)
     }
-
-    suspend fun getDataConnectionsClinicsList() {
-
-        val suggestionsList = mutableListOf<DataConnectionsClinicsListItems>()
-
-        // Category A
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"AmSurg Columbia Anesthesia LLC"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Amsterdam Medical Practice (New York)"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Amsterdam Internal Medicine and Pediatrics"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Bna Medical Group (Texas)"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Presbyterian Hospital - Albuquerque, NM"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"We Care Family Practice"
-            )
-        )
-
-
-        val activityList = DataConnectionsClinicsList(suggestionsList)
-        dataConnectionsClinicsLiveData.postValue(activityList)
-    }
-
 
 }

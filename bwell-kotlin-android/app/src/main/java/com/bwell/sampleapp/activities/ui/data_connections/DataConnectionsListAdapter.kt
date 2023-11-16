@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bwell.common.models.domain.data.Connection
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.DataConnectionsItemsViewBinding
-import com.bwell.sampleapp.model.DataConnectionListItems
 
 /*
 *Display the Data Connections List in RecyclerView
 * */
-class DataConnectionsListAdapter(private val launches: List<DataConnectionListItems>) :
+class DataConnectionsListAdapter(private val launches: List<Connection>) :
     RecyclerView.Adapter<DataConnectionsListAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: DataConnectionsItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
@@ -26,16 +26,16 @@ class DataConnectionsListAdapter(private val launches: List<DataConnectionListIt
     }
 
     var onEndOfListReached: (() -> Unit)? = null
-    var onItemClicked: ((DataConnectionListItems) -> Unit)? = null
+    var onItemClicked: ((Connection) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches[position]
-        holder.binding.header.text = launch.connectionName?: ""
-        holder.binding.textViewStatus.text = launch.status?: ""
-        holder.binding.changeStatusIv.load(launch.statusChangeLogo) {
+        holder.binding.header.text = launch.name?: ""
+        holder.binding.textViewStatus.text = (launch.status?: "").toString()
+        holder.binding.changeStatusIv.load(R.drawable.baseline_more_vert_24) {
             placeholder(R.drawable.insurance_logo)
         }
-        holder.binding.icon.load(launch.connectionLogo) {
+        holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
             placeholder(R.drawable.baseline_person_pin_24)
         }
 
