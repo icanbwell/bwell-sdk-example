@@ -55,9 +55,9 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
 
         dataConnectionsViewModel = ViewModelProvider(this, DataConnectionsViewModelFactory(repository))[DataConnectionsViewModel::class.java]
 
-        binding.includeHomeView.header.setText(resources.getString(R.string.connect_health_records))
-        binding.includeHomeView.subText.setText(resources.getString(R.string.connect_health_records_sub_txt))
-        binding.includeHomeView.btnGetStarted.setText(resources.getString(R.string.lets_go))
+        binding.includeHomeView.header.text = resources.getString(R.string.connect_health_records)
+        binding.includeHomeView.subText.text = resources.getString(R.string.connect_health_records_sub_txt)
+        binding.includeHomeView.btnGetStarted.text = resources.getString(R.string.lets_go)
         binding.includeHomeView.btnGetStarted.setOnClickListener(this)
         binding.clinicInfoView.cancelTxt.setOnClickListener(this)
 
@@ -74,7 +74,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                                 .build()
                             dataConnectionsViewModel.fetchConsents(consentsRequest)
 
-                            // Update user consent
                             val consentUpdateRequest = ConsentUpdateRequest.Builder()
                                 .provisionType(ConsentProvisionType.PERMIT) // PERMIT | DENY
                                 .category(ConsentCategoryCode.TOS)// Terms of Service
@@ -93,7 +92,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             }
         }
 
-        // Observe changes in consent LiveData
         viewLifecycleOwner.lifecycleScope.launch {
             dataConnectionsViewModel.consentsData.collect { consentsResult ->
                 consentsResult?.let {
@@ -102,46 +100,34 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             }
         }
 
-        // Observe changes in creating a connection
         viewLifecycleOwner.lifecycleScope.launch {
             dataConnectionsViewModel.createConnectionData.collect { connectionOutcome ->
                 connectionOutcome?.let {
                     if (connectionOutcome.status == Status.SUCCESS) {
-                        // Connection created successfully, do something
-                        //  calling getConnections
                         lifecycleScope.launch {
                             try {
                                 dataConnectionsViewModel.getConnectionsAndObserve()
                             } catch (e: Exception) {
-                                // Handle exceptions
+                                Log.d("","$e.message")
                             }
                         }
-                    } else {
-                        // Connection creation failed, handle the error
                     }
                 }
             }
         }
 
-        // Observe changes in disconnecting a connection
         viewLifecycleOwner.lifecycleScope.launch {
             dataConnectionsViewModel.disconnectConnectionData.collect { disconnectOutcome ->
                 disconnectOutcome?.let {
                     if (disconnectOutcome.status == Status.SUCCESS) {
-                        // Disconnection done successfully, do something
-                    } else {
-                        // Disconnection failed, handle the error
                     }
                 }
             }
         }
 
-        // Observe changes in dataConnectionsListItems LiveData
         dataConnectionsViewModel.connectionsList.observe(viewLifecycleOwner) { connectionListItems ->
-            // Update UI with the new list of DataConnectionListItems
             setDataConnectionsAdapter(connectionListItems)
         }
-
         displayDataConnectionsHomeInfo()
 
         return root
@@ -196,7 +182,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
     private fun setDataConnectionsCategoryAdapter(suggestedActivitiesLIst: List<DataConnectionCategoriesListItems>) {
         val adapter = DataConnectionsCategoriesListAdapter(suggestedActivitiesLIst)
         adapter.onItemClicked = { selectedDataConnection ->
-            // Handle item click, perform UI changes here
             binding.includeDataConnectionsClinics.searchView.searchText.setText("")
             displayClinicsBeforeSearchView()
             addSearchTextListeners()
@@ -290,12 +275,9 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             }
             R.id.cancel_txt -> {
                 displayDataConnectionsCategoriesList()
-                // Call the disconnect method
                 lifecycleScope.launch {
                     try {
-                        // Disconnect the data connection
                         val connectionId = "456"
-                        // Call the disconnect method
                         dataConnectionsViewModel.disconnectConnection(connectionId)
                     } catch (e: Exception) {
                         // Handle the exception, e.g., show an error message
@@ -304,7 +286,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                 }
             }
             R.id.frameLayoutProceed -> {
-                // Assuming  have a connection request ready
                 lifecycleScope.launch {
                     val connectionRequest = ConnectionCreateRequest.Builder()
                         .connectionId("connection_id")
@@ -318,8 +299,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
     }
 
     override fun onGetDataButtonClicked() {
-         //displayDataConnectionsCategoriesList()
         dataConnectionsViewModel.getConnectionsAndObserve()
     }
-
 }
