@@ -29,6 +29,7 @@ import com.bwell.sampleapp.model.DataConnectionListItems
 import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
 import com.bwell.sampleapp.activities.ui.popup.PopupFragment
+import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import com.bwell.user.consents.requests.ConsentUpdateRequest
 import com.bwell.user.consents.requests.ConsentRequest
@@ -144,9 +145,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         adapter.onItemClicked = { selectedDataConnection ->
             // Handle item click, perform UI changes here
             binding.includeDataConnectionsClinics.searchView.searchText.setText("")
-            // Close the keyboard
-            val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(binding.includeDataConnectionsClinics.searchView.searchText.windowToken, 0)
+            hideKeyboard(requireContext(),binding.includeDataConnectionsClinics.searchView.searchText.windowToken)
             displayIndividualClinicInfo()
             binding.clinicInfoView.clinicNametxt.text =
                 "${resources.getString(R.string.connect_to)} ${selectedDataConnection.clinicName}"
