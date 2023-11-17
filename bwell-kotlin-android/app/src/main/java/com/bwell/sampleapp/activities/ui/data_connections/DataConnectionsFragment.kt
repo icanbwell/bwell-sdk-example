@@ -25,7 +25,6 @@ import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
-import com.bwell.sampleapp.model.DataConnectionListItems
 import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
 import com.bwell.sampleapp.activities.ui.popup.PopupFragment
@@ -35,7 +34,7 @@ import com.bwell.user.consents.requests.ConsentUpdateRequest
 import com.bwell.user.consents.requests.ConsentRequest
 import kotlinx.coroutines.launch
 
-class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.PopupListener {
+class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.PopupListener, DataConnectionsListAdapter.DataConnectionsClickListener {
 
     private var _binding: FragmentDataConnectionsParentBinding? = null
 
@@ -43,6 +42,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
+    private lateinit var connection: Connection
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
@@ -169,6 +169,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
 
     private fun setDataConnectionsAdapter(suggestedActivitiesLIst: List<Connection>) {
         val adapter = DataConnectionsListAdapter(suggestedActivitiesLIst)
+        adapter.dataConnectionsClickListener = this
         binding.includeDataConnections.dataConnectionFragment.visibility = View.VISIBLE;
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
         binding.includeDataConnectionsClinics.dataConnectionsClinics.visibility = View.GONE;
@@ -274,15 +275,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
             }
             R.id.cancel_txt -> {
                 displayDataConnectionsCategoriesList()
-                lifecycleScope.launch {
-                    try {
-                        val connectionId = "456"
-                        dataConnectionsViewModel.disconnectConnection(connectionId)
-                    } catch (e: Exception) {
-                        // Handle the exception, e.g., show an error message
-                        e.printStackTrace()
-                    }
-                }
             }
             R.id.frameLayoutProceed -> {
                 lifecycleScope.launch {
@@ -294,10 +286,30 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                     dataConnectionsViewModel.createConnection(connectionRequest)
                 }
             }
+            R.id.frameLayoutDisconnect -> {
+                binding.includeDataConnections.frameLayoutDisconnect.visibility = View.GONE;
+                lifecycleScope.launch {
+                    try {
+                        val connectionId = connection.id
+                        dataConnectionsViewModel.disconnectConnection(connectionId)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
         }
     }
 
     override fun onGetDataButtonClicked() {
         dataConnectionsViewModel.getConnectionsAndObserve()
     }
+
+    override fun onChangeStatusClicked(connection: Connection,parentView:ViewGroup,statusChangeView: View) {
+        Log.d("onChangeStatusClicked","onChangeStatusClicked")
+        binding.includeDataConnections.frameLayoutDisconnect.visibility = View.VISIBLE;
+        binding.includeDataConnections.frameLayoutDisconnect.y =binding.includeDataConnections.rvSuggestedDataConnections.y +parentView.y+statusChangeView.y+statusChangeView.height.toFloat()
+        binding.includeDataConnections.frameLayoutDisconnect.setOnClickListener(this)
+        this.connection = connection
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.activities.ui.data_connections
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -16,6 +17,10 @@ class DataConnectionsListAdapter(private val launches: List<Connection>) :
 
     class ViewHolder(val binding: DataConnectionsItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
 
+    interface DataConnectionsClickListener {
+        fun onChangeStatusClicked(connection: Connection,parent_view:ViewGroup,status_change_view: View)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = DataConnectionsItemsViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
@@ -27,6 +32,7 @@ class DataConnectionsListAdapter(private val launches: List<Connection>) :
 
     var onEndOfListReached: (() -> Unit)? = null
     var onItemClicked: ((Connection) -> Unit)? = null
+    var dataConnectionsClickListener: DataConnectionsClickListener? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches[position]
@@ -37,6 +43,10 @@ class DataConnectionsListAdapter(private val launches: List<Connection>) :
         }
         holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
             placeholder(R.drawable.baseline_person_pin_24)
+        }
+
+        holder.binding.changeStatusIv.setOnClickListener {
+            dataConnectionsClickListener?.onChangeStatusClicked(launch,holder.binding.root,holder.binding.changeStatusIv)
         }
 
         if (position == launches.size - 1) {
