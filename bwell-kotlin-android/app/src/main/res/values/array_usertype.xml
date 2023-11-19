@@ -1,0 +1,7 @@
+<resources>
+<string-array name="sex_assigned_at_birth_options">
+    <item>male</item>
+    <item>female</item>
+    <item>prefer not to answer</item>
+</string-array>
+</resources>
