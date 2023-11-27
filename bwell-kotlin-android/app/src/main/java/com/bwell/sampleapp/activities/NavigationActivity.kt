@@ -12,14 +12,13 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ActivityNavigationBinding
-import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
-import com.bwell.core.device.BWellDeviceManager
 import kotlinx.coroutines.launch
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.bwell.BWellSdk
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -53,13 +52,16 @@ class NavigationActivity : AppCompatActivity() {
     private fun registerDeviceToken(deviceToken: String) {
         lifecycleScope.launch {
             try {
-                val outcome: OperationOutcome = BWellDeviceManager.registerDeviceToken(deviceToken)
-                when (outcome.status) {
-                    Status.SUCCESS -> {
-                        Log.d("registerDeviceToken-","${outcome.status}")
-                    }
-                    else -> {
-                        Log.d("registerDeviceToken Error-","${outcome.exception}")
+                val outcome = BWellSdk.device?.registerDeviceToken(deviceToken)
+                if (outcome != null) {
+                    when (outcome.status) {
+                        Status.SUCCESS -> {
+                            Log.d("registerDeviceToken-","${outcome.status}")
+                        }
+
+                        else -> {
+                            Log.d("registerDeviceToken Error-","${outcome.exception}")
+                        }
                     }
                 }
             } catch (_: Exception) {
@@ -80,13 +82,16 @@ class NavigationActivity : AppCompatActivity() {
     private fun unregisterDeviceToken(deviceToken: String) {
         lifecycleScope.launch {
             try {
-                val outcome: OperationOutcome = BWellDeviceManager.deregisterDeviceToken(deviceToken)
-                when (outcome.status) {
-                    Status.SUCCESS -> {
-                        Log.d("deregisterDeviceToken-","${outcome.status}")
-                    }
-                    else -> {
-                        Log.d("deregisterDeviceToken Error-","${outcome.exception}")
+                val outcome = BWellSdk.device?.deregisterDeviceToken(deviceToken)
+                if (outcome != null) {
+                    when (outcome.status) {
+                        Status.SUCCESS -> {
+                            Log.d("deregisterDeviceToken-","${outcome.status}")
+                        }
+
+                        else -> {
+                            Log.d("deregisterDeviceToken Error-","${outcome.exception}")
+                        }
                     }
                 }
             } catch (_: Exception) {

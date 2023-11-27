@@ -6,7 +6,6 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
@@ -37,7 +36,7 @@ class PopupFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        popupView = view;
+        popupView = view
         /*val getDataButton: Button = view.findViewById(R.id.get_data)
         // Set up the button click listener
         getDataButton.setOnClickListener {
@@ -68,12 +67,12 @@ class PopupFragment : DialogFragment() {
                     val attributes = listOf(
                         "ID" to connection.id,
                         "Last Synced" to connection.lastSynced,
-                        "Name" to connection.name,
+                        //"Name" to connection.name,
                         "Status" to connection.status.toString(),
                         "Status Updated" to connection.statusUpdated,
                         "Sync Status" to connection.syncStatus.toString(),
                         "Type" to connection.type.toString(),
-                        "URL" to connection.url
+                        //"URL" to connection.url
                     )
 
                     for ((key, value) in attributes) {
