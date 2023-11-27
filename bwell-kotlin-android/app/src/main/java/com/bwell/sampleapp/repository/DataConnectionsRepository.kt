@@ -1,0 +1,185 @@
+package com.bwell.sampleapp.repository
+
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.bwell.BWellSdk
+import com.bwell.common.models.domain.consent.Consent
+import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.OperationOutcome
+import com.bwell.connections.requests.ConnectionCreateRequest
+import com.bwell.sampleapp.R
+import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
+import com.bwell.sampleapp.model.DataConnectionListItems
+import com.bwell.sampleapp.model.DataConnectionsClinicsList
+import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
+import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
+import com.bwell.sampleapp.model.SuggestedDataConnectionsList
+import com.bwell.user.consents.requests.ConsentRequest
+import com.bwell.user.consents.requests.ConsentUpdateRequest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
+class DataConnectionsRepository(private val applicationContext: Context) {
+
+    private val suggestedDataConnectionsLiveData = MutableLiveData<SuggestedDataConnectionsList>()
+
+    val suggestedDataConnections: LiveData<SuggestedDataConnectionsList>
+        get() = suggestedDataConnectionsLiveData
+
+    private val suggestedDataConnectionsCategoriesLiveData = MutableLiveData<SuggestedDataConnectionsCategoriesList>()
+
+    val suggestedDataConnectionsCategories: LiveData<SuggestedDataConnectionsCategoriesList>
+        get() = suggestedDataConnectionsCategoriesLiveData
+
+    private val dataConnectionsClinicsLiveData = MutableLiveData<DataConnectionsClinicsList>()
+
+    val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
+        get() = dataConnectionsClinicsLiveData
+
+    suspend fun getConnections(): Flow<BWellResult<Connection>?> = flow {
+        try {
+            val connectionsResult = BWellSdk.connections?.getConnections()
+            emit(connectionsResult)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun disconnectConnection(connectionId: String): Flow<OperationOutcome?> = flow {
+        try {
+            val disconnectOutcome = BWellSdk.connections?.disconnect(connectionId)
+            emit(disconnectOutcome)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<OperationOutcome?> = flow {
+        try {
+            val connectionOutcome = BWellSdk.connections?.createConnection(connectionRequest)
+            emit(connectionOutcome)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> = flow {
+        val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
+        emit(consentsResult)
+    }
+
+    suspend fun updateUserConsent(consentUpdateRequest: ConsentUpdateRequest): Flow<BWellResult<Consent>?> = flow {
+        val updateOutcome = BWellSdk.user?.updateConsent(consentUpdateRequest)
+        emit(updateOutcome)
+    }
+
+
+    suspend fun getDataConnectionsCategoriesList() {
+
+        val suggestionsList = mutableListOf<DataConnectionCategoriesListItems>()
+
+        // Category A
+        suggestionsList.add(
+            DataConnectionCategoriesListItems(
+                "Insurance", R.drawable.circle,
+                "Get your claims and financials, plus a record of the providers you see from common insurance plans and Medicare."
+            )
+        )
+        suggestionsList.add(
+            DataConnectionCategoriesListItems(
+                "Providers", R.drawable.plus_icon,
+                "See your core health info, such as provider visit summaries, diagnosis, treatment history, prescriptions, and labs."
+            )
+        )
+        suggestionsList.add(
+            DataConnectionCategoriesListItems(
+                "Clinics, Hospitals and Health Systems", R.drawable.ic_placeholder,
+                "See your core health info, such as your diagnosis, procedures, treatment history, prescriptions, and labs."
+            )
+        )
+        suggestionsList.add(
+            DataConnectionCategoriesListItems(
+                "Labs", R.drawable.vaccine_icon,
+                "View your lab results to track your numbers over time."
+            )
+        )
+
+        val activityList = SuggestedDataConnectionsCategoriesList(suggestionsList)
+        suggestedDataConnectionsCategoriesLiveData.postValue(activityList)
+    }
+
+    suspend fun getDataConnectionsList() {
+
+        val suggestionsList = mutableListOf<DataConnectionListItems>()
+
+        // Category A
+        suggestionsList.add(
+            DataConnectionListItems(
+                "Epic Sandbox R4C", R.drawable.baseline_person_pin_24, "Pending", R.drawable.baseline_more_vert_24
+            )
+        )
+        suggestionsList.add(
+            DataConnectionListItems(
+                "HAPI - Starfleet Medical", R.drawable.baseline_person_pin_24,
+                "Disconnected", R.drawable.baseline_more_vert_24
+            )
+        )
+        suggestionsList.add(
+            DataConnectionListItems(
+                "ThedaCare Ripple", R.drawable.baseline_person_pin_24,
+                "Needs Reauthorization", R.drawable.baseline_more_vert_24
+            )
+        )
+
+        val activityList = SuggestedDataConnectionsList(suggestionsList)
+        suggestedDataConnectionsLiveData.postValue(activityList)
+    }
+
+
+
+    suspend fun getDataConnectionsClinicsList() {
+
+        val suggestionsList = mutableListOf<DataConnectionsClinicsListItems>()
+
+        // Category A
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"AmSurg Columbia Anesthesia LLC"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Amsterdam Medical Practice (New York)"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Amsterdam Internal Medicine and Pediatrics"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Bna Medical Group (Texas)"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"Presbyterian Hospital - Albuquerque, NM"
+            )
+        )
+        suggestionsList.add(
+            DataConnectionsClinicsListItems(
+                R.drawable.baseline_person_pin_24,"We Care Family Practice"
+            )
+        )
+
+
+        val activityList = DataConnectionsClinicsList(suggestionsList)
+        dataConnectionsClinicsLiveData.postValue(activityList)
+    }
+}
