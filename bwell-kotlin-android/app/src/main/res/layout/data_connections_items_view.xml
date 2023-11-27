@@ -37,7 +37,7 @@
         android:id="@+id/frameLayoutConnectionStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rectangle_blue"
+        android:background="@drawable/rounded_rectangle_green_connections"
         app:layout_constraintLeft_toRightOf="@+id/icon"
         app:layout_constraintTop_toBottomOf="@+id/header"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -49,7 +49,8 @@
             android:text="@string/pending"
             android:layout_gravity="left"
             android:textStyle="bold"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
+            android:textSize="12sp"
             android:textColor="#FFFFFF"/>
     </FrameLayout>
 
