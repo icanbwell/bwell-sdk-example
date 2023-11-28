@@ -61,10 +61,13 @@ class NavigationActivity : AppCompatActivity() {
             val registerOutcome = repository.registerDeviceToken(deviceToken)
             registerOutcome.collect { outcome ->
                 outcome?.let {
-                    if (outcome.status == Status.SUCCESS) {
-                        //device registered successfully
-                    }else{
-                        //device not registered
+                    when (outcome.status) {
+                        Status.SUCCESS -> {
+                            //device registered successfully
+                        }
+                        else -> {
+                            //device not registered
+                        }
                     }
                 }
             }
@@ -86,10 +89,13 @@ class NavigationActivity : AppCompatActivity() {
             val unregisterOutcome = repository.unregisterDeviceToken(deviceToken)
             unregisterOutcome.collect { outcome ->
                 outcome?.let {
-                    if (outcome.status == Status.SUCCESS) {
-                        //device unregistered successfully
-                    }else{
-                        //device not unregistered
+                    when (outcome.status) {
+                        Status.SUCCESS -> {
+                            //device unregistered successfully
+                        }
+                        else -> {
+                            //device not unregistered
+                        }
                     }
                 }
             }

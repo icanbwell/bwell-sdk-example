@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/clinic_info_view"
-    tools:context=".activities.ui.data_connections.providers.OrganizationInfoFragment">
+    android:id="@+id/scrollView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clinic_info_view"
+        tools:context=".activities.ui.data_connections.providers.OrganizationInfoFragment">
 
     <!-- Clinic Title -->
     <TextView
@@ -22,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="10dp"/>
 
-    <!-- Constrained layout with image, text views,checkbox and button -->
+    <!-- Constrained layout with image, text views, checkbox and button -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
@@ -30,7 +35,6 @@
         app:layout_constraintTop_toBottomOf="@id/clinicNametxt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:padding="10dp"
         android:layout_margin="20dp">
 
@@ -62,6 +66,47 @@
                 android:layout_height="wrap_content"
                 android:text="@string/clinic_discription"
                 android:gravity="center"/>
+
+            <EditText
+                android:id="@+id/editTextUsername"
+                android:background="#F2FAFC"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColorHint="#0076AB"
+                android:hint="Username or Email *"/>
+
+            <!-- Password EditText -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="#F2FAFC"
+                android:id="@+id/password_layout"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F2FAFC"
+                    android:padding="10dp"
+                    android:hint="Password *"
+                    android:layout_toStartOf="@+id/togglePassword"
+                    android:textColorHint="#0076AB"
+                    android:inputType="textPassword"/>
+
+                <!-- Password Visibility Toggle -->
+                <ImageView
+                    android:id="@+id/togglePassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/baseline_visibility_off_24"/>
+            </RelativeLayout>
+
             <!-- Checkbox and TextView 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -128,5 +173,6 @@
             android:layout_marginTop="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -171,6 +171,9 @@
 <string name="data_connection_category_clinics">Clinics, Hospitals and Health Systems</string>
 <string name="data_connection_category_lab">Labs</string>
 <string name="request_add_new_connection">Request that we add a new connection</string>
+    <string name="open">Open</string>
+    <string name="hapi">hapi</string>
+    <string name="clinic_info_hapi">credentials, I consent for b.well to retrieve my health data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.</string>
 
 
 </resources>
