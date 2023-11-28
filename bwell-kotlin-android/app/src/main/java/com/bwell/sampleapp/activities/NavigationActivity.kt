@@ -58,17 +58,15 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun registerDeviceToken(deviceToken: String) {
         lifecycleScope.launch {
-            try {
-                val outcome: OperationOutcome = BWellDeviceManager.registerDeviceToken(deviceToken)
-                when (outcome.status) {
-                    Status.SUCCESS -> {
-                        Log.d("registerDeviceToken-","${outcome.status}")
-                    }
-                    else -> {
-                        Log.d("registerDeviceToken Error-","${outcome.exception}")
+            val registerOutcome = repository.registerDeviceToken(deviceToken)
+            registerOutcome.collect { outcome ->
+                outcome?.let {
+                    if (outcome.status == Status.SUCCESS) {
+                        //device registered successfully
+                    }else{
+                        //device not registered
                     }
                 }
-            } catch (_: Exception) {
             }
         }
     }
@@ -85,17 +83,15 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun unregisterDeviceToken(deviceToken: String) {
         lifecycleScope.launch {
-            try {
-                val outcome: OperationOutcome = BWellDeviceManager.deregisterDeviceToken(deviceToken)
-                when (outcome.status) {
-                    Status.SUCCESS -> {
-                        Log.d("deregisterDeviceToken-","${outcome.status}")
-                    }
-                    else -> {
-                        Log.d("deregisterDeviceToken Error-","${outcome.exception}")
+            val unregisterOutcome = repository.unregisterDeviceToken(deviceToken)
+            unregisterOutcome.collect { outcome ->
+                outcome?.let {
+                    if (outcome.status == Status.SUCCESS) {
+                        //device unregistered successfully
+                    }else{
+                        //device not unregistered
                     }
                 }
-            } catch (_: Exception) {
             }
         }
     }
