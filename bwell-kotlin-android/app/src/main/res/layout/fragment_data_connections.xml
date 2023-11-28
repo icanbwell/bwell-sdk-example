@@ -27,7 +27,7 @@
 
         <!-- Image -->
         <ImageView
-            android:id="@+id/descriptionImageView"
+            android:id="@+id/addConnectionsView"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/baseline_control_point_24"
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
             android:text="@string/data_connections_description"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/descriptionImageView"
-            app:layout_constraintTop_toBottomOf="@id/descriptionImageView"
+            app:layout_constraintEnd_toStartOf="@+id/addConnectionsView"
+            app:layout_constraintTop_toBottomOf="@id/addConnectionsView"
             android:textSize="18sp"
             android:layout_margin="10dp"/>
 

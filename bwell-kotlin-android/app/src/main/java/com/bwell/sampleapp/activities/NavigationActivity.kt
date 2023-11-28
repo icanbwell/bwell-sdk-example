@@ -20,16 +20,22 @@ import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.bwell.BWellSdk
+import com.bwell.sampleapp.BWellSampleApplication
+import com.bwell.sampleapp.activities.ui.popup.PopupFragment
+import com.bwell.sampleapp.repository.Repository
 
 class NavigationActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityNavigationBinding
     private lateinit var deviceId:String
+    private lateinit var repository:Repository
 
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        repository = (this?.application as? BWellSampleApplication)?.bWellRepository!!
 
         binding = ActivityNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
