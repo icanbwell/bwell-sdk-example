@@ -36,7 +36,7 @@ class DataConnectionsListAdapter(private val launches: List<Connection>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches[position]
-        holder.binding.header.text = launch.id?: ""
+        holder.binding.header.text = launch.name?: ""
         holder.binding.textViewStatus.text = (launch.status?: "").toString()
         holder.binding.changeStatusIv.load(R.drawable.baseline_more_vert_24) {
             placeholder(R.drawable.insurance_logo)
