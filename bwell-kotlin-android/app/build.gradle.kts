@@ -55,7 +55,6 @@ dependencies {
 
     // BWell SDK Usage
     implementation("com.bwell:bwell-sdk-kotlin:0.3.1")
-    implementation("com.apollographql.apollo3:apollo-api:3.8.2")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")

@@ -14,11 +14,13 @@ import androidx.fragment.app.FragmentManager
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
-import com.bwell.sampleapp.utils.SelectedOrganizationHolder
+import com.bwell.search.ProviderSearchQuery
 
-class OrganizationInfoFragment : Fragment(),View.OnClickListener {
+class OrganizationInfoFragment(organizationData: ProviderSearchQuery.Organization?) : Fragment(),View.OnClickListener {
 
     private var _binding: FragmentOrganizationInfoViewBinding? = null
+    private var organization: ProviderSearchQuery.Organization? = organizationData
+
     private val binding get() = _binding!!
 
     @SuppressLint("SetTextI18n")
@@ -29,7 +31,7 @@ class OrganizationInfoFragment : Fragment(),View.OnClickListener {
     ): View {
         _binding = FragmentOrganizationInfoViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val organization = SelectedOrganizationHolder.selectedOrganization
+        val organization = organization
         val connectionType = organization?.endpoint?.get(0)?.connectionType?.code
         binding.clinicNametxt.text =
             "${resources.getString(R.string.connect_to)} ${organization?.name}"

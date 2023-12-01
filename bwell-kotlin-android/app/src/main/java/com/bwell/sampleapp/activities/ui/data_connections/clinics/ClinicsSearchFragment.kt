@@ -15,7 +15,6 @@ import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.providers.OrganizationInfoFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsClinicsBinding
-import com.bwell.sampleapp.utils.SelectedOrganizationHolder
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ClinicsViewModel
 import com.bwell.sampleapp.viewmodel.ClinicsViewModelFactory
@@ -111,8 +110,7 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
             binding.searchView.searchText.setText("")
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
             binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.GONE;
-            SelectedOrganizationHolder.selectedOrganization = organization
-            val organizationFragment = OrganizationInfoFragment()
+            val organizationFragment = OrganizationInfoFragment(organization)
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.container_layout, organizationFragment)
             transaction.addToBackStack(null)

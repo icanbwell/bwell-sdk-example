@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +37,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
     protected val binding get() = _binding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
     private lateinit var connection: Connection
+    private lateinit var frameLayoutConnectionStatus:FrameLayout
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
@@ -186,7 +190,13 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                     dataConnectionsViewModel.disconnectConnectionData.collect { disconnectOutcome ->
                         disconnectOutcome?.let {
                             if (disconnectOutcome.status == Status.SUCCESS) {
-
+                                val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_grey)
+                                frameLayoutConnectionStatus.background = drawable
+                                if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(0) is TextView) {
+                                    val textView = frameLayoutConnectionStatus.getChildAt(0) as TextView
+                                    textView.text = resources.getString(R.string.disconnected)
+                                    textView.setTextColor(resources.getColor(R.color.black))
+                                }
                             }
                         }
                     }
@@ -208,12 +218,13 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         displayDataConnectionsCategoriesList()
     }
 
-    override fun onChangeStatusClicked(connection: Connection,parentView:ViewGroup,statusChangeView: View) {
+    override fun onChangeStatusClicked(connection: Connection,parentView:ViewGroup,statusChangeView: View,frameLayoutConnectionStatus: FrameLayout) {
         Log.d("onChangeStatusClicked","onChangeStatusClicked")
         binding.includeDataConnections.frameLayoutDisconnect.visibility = View.VISIBLE;
         binding.includeDataConnections.frameLayoutDisconnect.y =binding.includeDataConnections.rvSuggestedDataConnections.y +parentView.y+statusChangeView.y+statusChangeView.height.toFloat()
         binding.includeDataConnections.frameLayoutDisconnect.setOnClickListener(this)
         this.connection = connection
+        this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
     }
 
     fun showDataConnectionCategories() {

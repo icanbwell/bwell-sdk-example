@@ -3,6 +3,7 @@ package com.bwell.sampleapp.activities.ui.data_connections
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bwell.common.models.domain.data.Connection
@@ -18,7 +19,7 @@ class DataConnectionsListAdapter(private val launches: List<Connection>) :
     class ViewHolder(val binding: DataConnectionsItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface DataConnectionsClickListener {
-        fun onChangeStatusClicked(connection: Connection,parent_view:ViewGroup,status_change_view: View)
+        fun onChangeStatusClicked(connection: Connection,parent_view:ViewGroup,status_change_view: View,frameLayoutConnectionStatus: FrameLayout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,7 +47,7 @@ class DataConnectionsListAdapter(private val launches: List<Connection>) :
         }
 
         holder.binding.changeStatusIv.setOnClickListener {
-            dataConnectionsClickListener?.onChangeStatusClicked(launch,holder.binding.root,holder.binding.changeStatusIv)
+            dataConnectionsClickListener?.onChangeStatusClicked(launch,holder.binding.root,holder.binding.changeStatusIv,holder.binding.frameLayoutConnectionStatus)
         }
 
         if (position == launches.size - 1) {

@@ -15,7 +15,6 @@ import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.providers.OrganizationInfoFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsLabsBinding
-import com.bwell.sampleapp.utils.SelectedOrganizationHolder
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
@@ -105,8 +104,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
             // Handle item click, perform UI changes here
             binding.searchView.searchText.setText("")
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            SelectedOrganizationHolder.selectedOrganization = organization
-            val organizationFragment = OrganizationInfoFragment()
+            val organizationFragment = OrganizationInfoFragment(organization)
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.container_layout, organizationFragment)
             transaction.addToBackStack(null)

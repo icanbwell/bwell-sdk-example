@@ -12,13 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.apollographql.apollo3.api.Optional
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentProviderViewBinding
-import com.bwell.sampleapp.utils.SelectedOrganizationHolder
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
@@ -58,8 +56,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
 
     override fun onOrganizationClick(organization: ProviderSearchQuery.Organization?) {
         binding.organizationsLocationsDataView.organizationsLocationsDataView.visibility = View.GONE
-        SelectedOrganizationHolder.selectedOrganization = organization
-        val organizationFragment = OrganizationInfoFragment()
+        val organizationFragment = OrganizationInfoFragment(organization)
         val transaction = parentFragmentManager.beginTransaction()
         transaction.replace(R.id.container_layout, organizationFragment)
         transaction.addToBackStack(null)
@@ -86,15 +83,12 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
         val gender = Gender.male
         val page = 1
         val pageSize = 10
-        val sortBy = OrderBy(
-            field = Optional.present(SortField.distance),
-            order = Optional.present(SortOrder.asc)
-        )
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
             .organizationTypeFilters(listOf(OrganizationType.Provider))
             .location(latitude, longitude, distance)
             .gender(gender)
+            .sortBy(SortField.distance, SortOrder.asc)
             .page(page)
             .pageSize(pageSize)
             .build()
