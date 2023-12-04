@@ -49,6 +49,7 @@ class OrganizationInfoFragment(organizationData: ProviderSearchQuery.Organizatio
         }
         binding.cancelTxt.setOnClickListener(this)
         binding.togglePassword.setOnClickListener(this)
+        binding.leftArrowImageView.setOnClickListener(this)
         binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val isShow = checkVisibilityOfProceed(connectionType)
@@ -146,6 +147,9 @@ class OrganizationInfoFragment(organizationData: ProviderSearchQuery.Organizatio
             }
             R.id.togglePassword -> {
                 togglePasswordVisibility()
+            }
+            R.id.leftArrowImageView -> {
+                parentFragmentManager.popBackStack()
             }
         }
     }

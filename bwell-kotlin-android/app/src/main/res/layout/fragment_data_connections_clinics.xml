@@ -7,19 +7,26 @@
     android:id="@+id/data_connections_clinics"
     tools:context=".activities.ui.data_connections.clinics.ClinicsSearchFragment">
         <!-- Title -->
+        <ImageView
+            android:id="@+id/leftArrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <!-- Title -->
         <TextView
             android:id="@+id/titleTextView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/search_clinics"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#0076AB"
-            android:gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginStart="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/leftArrowImageView"
+            app:layout_constraintTop_toTopOf="@+id/leftArrowImageView"/>
 
         <!-- Search view -->
         <include

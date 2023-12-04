@@ -14,20 +14,28 @@
         tools:context=".activities.ui.data_connections.providers.OrganizationInfoFragment">
 
     <!-- Clinic Title -->
-    <TextView
-        android:id="@+id/clinicNametxt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/connect_to"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="24dp"
-        android:textColor="#0076AB"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="10dp"/>
+        <ImageView
+            android:id="@+id/leftArrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Constrained layout with image, text views, checkbox and button -->
+        <TextView
+            android:id="@+id/clinicNametxt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/connect_to"
+            android:textColor="#0076AB"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/leftArrowImageView"
+            app:layout_constraintTop_toTopOf="@+id/leftArrowImageView" />
+
+        <!-- Constrained layout with image, text views, checkbox and button -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"

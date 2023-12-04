@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.activities.ui.data_connections.providers.OrganizationInfoFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsLabsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
@@ -42,7 +44,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
         dataConnectionLabsViewModel = ViewModelProvider(this, DataConnectionsLabsViewModelFactory(repository))[DataConnectionLabsViewModel::class.java]
 
         getConnections()
-
+        binding.leftArrowImageView.setOnClickListener(this)
         return root
     }
 
@@ -106,7 +108,8 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
             val organizationFragment = OrganizationInfoFragment(organization)
             val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_layout, organizationFragment)
+            transaction.hide(this@LabsSearchFragment)
+            transaction.add(R.id.container_layout, organizationFragment)
             transaction.addToBackStack(null)
             transaction.commit()
         }
@@ -123,7 +126,11 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-
+            R.id.leftArrowImageView -> {
+                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                val parentFrag: DataConnectionsFragment = this@LabsSearchFragment.parentFragment as DataConnectionsFragment
+                parentFrag.showDataConnectionCategories()
+            }
         }
     }
 }

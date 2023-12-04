@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.activities.ui.data_connections.providers.OrganizationInfoFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsClinicsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
@@ -42,7 +44,7 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         clinicsViewModel = ViewModelProvider(this, ClinicsViewModelFactory(repository))[ClinicsViewModel::class.java]
 
         getConnections()
-
+        binding.leftArrowImageView.setOnClickListener(this)
         return root
     }
 
@@ -107,12 +109,11 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         dataConnectionClinicsAdapter = DataConnectionsClinicsListAdapter(filteredList)
         dataConnectionClinicsAdapter.onItemClicked = { organization ->
             // Handle item click, perform UI changes here
-            binding.searchView.searchText.setText("")
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.GONE;
             val organizationFragment = OrganizationInfoFragment(organization)
             val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.container_layout, organizationFragment)
+            transaction.hide(this@ClinicsSearchFragment)
+            transaction.add(R.id.container_layout, organizationFragment)
             transaction.addToBackStack(null)
             transaction.commit()
         }
@@ -144,6 +145,11 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
+            R.id.leftArrowImageView -> {
+                parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                val parentFrag: DataConnectionsFragment = this@ClinicsSearchFragment.getParentFragment() as DataConnectionsFragment
+                parentFrag.showDataConnectionCategories()
+            }
 
         }
     }

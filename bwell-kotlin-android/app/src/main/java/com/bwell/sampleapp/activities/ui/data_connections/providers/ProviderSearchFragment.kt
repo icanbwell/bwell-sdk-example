@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentProviderViewBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ProviderViewModel
@@ -50,15 +52,20 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
         binding.providerFiltersView.frameLayoutapplyFilters.setOnClickListener(this)
         addSearchTextListeners()
 
+        binding.providerSearchView.leftArrowImageView.setOnClickListener {
+            parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            val parentFrag: DataConnectionsFragment = this@ProviderSearchFragment.parentFragment as DataConnectionsFragment
+            parentFrag.showDataConnectionCategories()
+        }
         return root
     }
 
 
     override fun onOrganizationClick(organization: ProviderSearchQuery.Organization?) {
-        binding.organizationsLocationsDataView.organizationsLocationsDataView.visibility = View.GONE
         val organizationFragment = OrganizationInfoFragment(organization)
         val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.container_layout, organizationFragment)
+        transaction.hide(this@ProviderSearchFragment)
+        transaction.add(R.id.container_layout, organizationFragment)
         transaction.addToBackStack(null)
         transaction.commit()
     }
