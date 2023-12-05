@@ -149,6 +149,6 @@
     <string name="history_description">
     <![CDATA[ 31/10/2023 \n   \n 0.3 mg/dl \n  \n Healthy Range \n  0.1 mg/dl-1.0 mg/dl \n   \n from Memorial health]]>
 </string>
-
+    <string name="healthy_range">Healthy Range</string>
 
 </resources>
