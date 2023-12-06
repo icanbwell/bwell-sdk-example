@@ -67,10 +67,12 @@ class LabsFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labsResults.take(1).collect { result ->
                 if (result != null) {
-                    Log.d("result","result"+result)
+                    Log.e("result","result-"+result)
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
+                            Log.e("gtLabs()","-gtLabs--${dataList?.get(0)?.code}")
+
                             setLabsAdapter(dataList)
                         }
 
@@ -113,11 +115,10 @@ class LabsFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labsDetailResults.take(1).collect { result ->
                 if (result != null) {
-                    Log.d("result","result"+result)
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
-                            Log.d("dataList","dataList"+dataList)
+                            Log.d("getLabs()-","dataList"+dataList)
                             val details:Observation? = dataList?.get(0)
                             binding.includeLabsDetail.typeText.text = details?.code?.text
                             binding.includeLabsDetail.dateText.text = "as of "+details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
