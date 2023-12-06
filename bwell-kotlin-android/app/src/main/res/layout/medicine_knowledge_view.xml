@@ -1,14 +1,20 @@
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/medicine_knowledge_view"
     android:layout_width="match_parent"
+    android:weightSum="1"
+    android:orientation="vertical"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/containerLayout"
+    <ScrollView
+        android:id="@+id/medicine_knowledge_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-    </LinearLayout>
-
-</ScrollView>
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:fillViewport="true">
+        <LinearLayout
+            android:id="@+id/containerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
