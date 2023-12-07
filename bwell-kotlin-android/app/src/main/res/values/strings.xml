@@ -166,6 +166,13 @@
     <string name="history_description">
     <![CDATA[ 31/10/2023 \n   \n 0.3 mg/dl \n  \n Healthy Range \n  0.1 mg/dl-1.0 mg/dl \n   \n from Memorial health]]>
 </string>
+    <string name="active">Active</string>
+    <string name="past">Past</string>
+    <string name="medicine_detail">Medicine Detail</string>
+    <string name="overview">Overview</string>
+    <string name="waht_is_it">What is it ?</string>
+    <string name="pricing">About Pricing ?</string>
+    <string name="note_info">NOTE: Your data will be connected into your Lee Health app for your personal use to help you manage your healthcare. Lee Health will not review your health data from these connections and will only have access to it if you have consented to share this data with Lee Health.</string>
 <string name="data_connection_category_insurance">Insurance</string>
 <string name="data_connection_category_providers">Providers</string>
 <string name="data_connection_category_clinics">Clinics, Hospitals and Health Systems</string>
