@@ -13,4 +13,6 @@
     <color name="menu_blue">#304A95</color>
     <color name="menu_item_bg">#0076AC</color>
 
+    <color name="medicine_tabs_selected_color">#0076AB</color>
+    <color name="medicine_tabs_non_selected_color">#30333333</color>
 </resources>
