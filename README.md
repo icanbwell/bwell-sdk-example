@@ -4,7 +4,6 @@ This repository contains a Kotlin-based example application designed to demonstr
 ## Pre-requisites
 1. Install Android Studio (https://developer.android.com/studio)
    1. After download, run it and choose to install the Android SDK 
-2. For Kotlin IDE, you can use the Jetbrains IntelliJ community edition (https://www.jetbrains.com/idea/download/)
-   1. Community Edition is free.  Ultimate edition is paid.
-3. 
+2. Open the Project in Android Studio
+3. Click the Play button in the top right
 
