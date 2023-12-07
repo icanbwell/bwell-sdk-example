@@ -23,7 +23,7 @@ import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.ProviderSearchQuery
-import com.bwell.search.provider.requests.ProviderSearchRequest
+import com.bwell.search.requests.ProviderSearchRequest
 import com.bwell.search.type.Gender
 import com.bwell.search.type.OrderBy
 import com.bwell.search.type.OrganizationType
