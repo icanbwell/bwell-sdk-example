@@ -1,18 +1,26 @@
 package com.bwell.sampleapp.activities.ui.medicines
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.common.Period
+import com.bwell.common.models.domain.healthdata.medication.MedicationSummary
+import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.medication.MedicationListRequest
+import com.bwell.healthdata.medication.type.MedicationStatus
 import com.bwell.sampleapp.BWellSampleApplication
-import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsCategoriesListAdapter
+import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentMedicinesBinding
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
-import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
-import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
+import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
+import kotlinx.coroutines.launch
 
 class MedicinesFragment : Fragment() {
 
@@ -20,6 +28,8 @@ class MedicinesFragment : Fragment() {
 
     private val binding get() = _binding!!
     private lateinit var medicinesViewModel: MedicinesViewModel
+    private lateinit var activeMedicationListAdapter: ActiveMedicationListAdapter
+    private lateinit var pastMedicationListAdapter: PastMedicationListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,25 +38,134 @@ class MedicinesFragment : Fragment() {
     ): View {
         _binding = FragmentMedicinesBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+        val repository = (activity?.application as? BWellSampleApplication)?.medicineRepository
+        medicinesViewModel = ViewModelProvider(this, MedicineViewModelFactory(repository))[MedicinesViewModel::class.java]
 
-        medicinesViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[MedicinesViewModel::class.java]
-
-        medicinesViewModel.suggestedDataConnectionsCategories.observe(viewLifecycleOwner) {
-            setAdapter(it.suggestedDataConnectionsCategoriesList)
-        }
+        getActiveMedicationList()
+        getPastMedicationList()
+        addSearchTextListeners()
         return root
     }
 
-    private fun setAdapter(suggestedActivitiesLIst: List<DataConnectionCategoriesListItems>) {
-        val adapter = DataConnectionsCategoriesListAdapter(suggestedActivitiesLIst)
-        binding.rvSuggestedDataConnections.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvSuggestedDataConnections.adapter = adapter
+    private fun setActiveMedicinesAdapter(result:BWellResult<MedicationSummary>) {
+        when (result) {
+            is BWellResult.ResourceCollection -> {
+                val dataList = result.data
+                 activeMedicationListAdapter = ActiveMedicationListAdapter(dataList)
+                binding.medicineActiveView.rvActiveMedicine.layoutManager = LinearLayoutManager(requireContext())
+                binding.medicineActiveView.rvActiveMedicine.adapter = activeMedicationListAdapter
+                activeMedicationListAdapter.onItemClicked= { selectedMedicine ->
+                    showDetailedView(selectedMedicine)
+                }
+            }
+            else -> {}
+        }
+    }
+
+    private fun showDetailedView(selectedMedicine: MedicationSummary?) {
+        binding.includeHomeView.headerView.visibility = View.GONE
+        binding.searchView.searchView.visibility = View.GONE
+        binding.medicineActiveView.medicineActiveView.visibility = View.GONE
+        binding.medicinePastView.medicinePastView.visibility = View.GONE
+        val medicineDetailFragment = MedicineDetailFragment()
+        val bundle = Bundle()
+        bundle.putString("id", selectedMedicine?.reference)
+        medicineDetailFragment.arguments = bundle
+        val transaction = childFragmentManager.beginTransaction()
+        binding.containerLayout.visibility = View.VISIBLE;
+        transaction.replace(R.id.container_layout, medicineDetailFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    private fun setPastMedicinesAdapter(result:BWellResult<MedicationSummary>) {
+        when (result) {
+            is BWellResult.ResourceCollection -> {
+                val dataList = result.data
+                 pastMedicationListAdapter = PastMedicationListAdapter(dataList)
+                binding.medicinePastView.rvPastMedicine.layoutManager = LinearLayoutManager(requireContext())
+                binding.medicinePastView.rvPastMedicine.adapter = pastMedicationListAdapter
+                pastMedicationListAdapter.onItemClicked= { selectedMedicine ->
+                    showDetailedView(selectedMedicine)
+                }
+            }
+            else -> {}
+        }
+    }
+
+    private fun getActiveMedicationList() {
+        val name = ""
+        val date = Period.Builder().start("2023-01-01").end("2023-12-31").build()
+        val status = MedicationStatus.ACTIVE
+        val request = MedicationListRequest.Builder()
+            .name(name)
+            .date(date)
+            .status(status)
+            .build()
+        medicinesViewModel.getActiveMedicationList(request)
+            viewLifecycleOwner.lifecycleScope.launch {
+                medicinesViewModel.activeMedicationResults.collect { result ->
+                    if (result != null) {
+                        setActiveMedicinesAdapter(result)
+
+                }
+            }
+        }
+    }
+
+    private fun getPastMedicationList() {
+        val name = ""
+        val date = Period.Builder().start("2023-01-01").end("2023-12-31").build()
+        val status = MedicationStatus.HISTORICAL
+        val request = MedicationListRequest.Builder()
+            .name(name)
+            .date(date)
+            .status(status)
+            .build()
+        medicinesViewModel.getPastMedicationList(request)
+        viewLifecycleOwner.lifecycleScope.launch {
+            medicinesViewModel.pastMedicationResults.collect { result ->
+                if (result != null) {
+                    setPastMedicinesAdapter(result)
+                }
+            }
+        }
+    }
+
+    private fun addSearchTextListeners() {
+        binding.searchView.searchText.addTextChangedListener(object :
+            TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                medicinesViewModel.filterActiveMedicationList(charSequence.toString())
+                viewLifecycleOwner.lifecycleScope.launch {
+                    medicinesViewModel.filteredActiveMedicationResults.collect { filteredList ->
+                        activeMedicationListAdapter.updateList(filteredList)
+                    }
+                }
+                medicinesViewModel.filterPastMedicationList(charSequence.toString())
+                viewLifecycleOwner.lifecycleScope.launch {
+                    medicinesViewModel.filteredPastMedicationResults.collect { filteredList ->
+                        pastMedicationListAdapter.updateList(filteredList)
+                    }
+                }
+            }
+
+            override fun afterTextChanged(editable: Editable?) {}
+        })
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun showMedicinesList() {
+        binding.includeHomeView.headerView.visibility = View.VISIBLE
+        binding.searchView.searchView.visibility = View.VISIBLE
+        binding.medicineActiveView.medicineActiveView.visibility = View.VISIBLE
+        binding.medicinePastView.medicinePastView.visibility = View.VISIBLE
     }
 
 }

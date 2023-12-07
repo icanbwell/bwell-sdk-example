@@ -1,0 +1,206 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:id="@+id/medicine_overview_view"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/medicineTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Medicine"
+        android:textStyle="bold"
+        android:textColor="#0076AB"
+        android:textSize="26sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
+    <TextView
+        android:id="@+id/rxTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Rx#"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
+
+    <TextView
+        android:id="@+id/quantityTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Quantity"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/guidelineTitleRx"
+        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTitleRx"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/rxValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="RX837462"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rxTitleTextView"/>
+
+    <TextView
+        android:id="@+id/quantityValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="30"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/guidelineValueRx"
+        app:layout_constraintTop_toTopOf="@+id/rxValueTextView"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineValueRx"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/lastRefilledTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Last refilled"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rxValueTextView"/>
+
+    <TextView
+        android:id="@+id/refillsRemainingTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Refills Remaining"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/guidelineTitleRefills"
+        app:layout_constraintTop_toTopOf="@+id/lastRefilledTitleTextView"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTitleRefills"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/lastRefilledValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2010-03-11"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lastRefilledTitleTextView"/>
+
+    <TextView
+        android:id="@+id/refillsRemainingValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/guidelineValueRefills"
+        app:layout_constraintTop_toTopOf="@+id/lastRefilledValueTextView"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineValueRefills"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/startDateTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Start Date"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lastRefilledValueTextView"/>
+
+    <TextView
+        android:id="@+id/datePrescribedTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Date Prescribed"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/guidelineTitleDatePrescribed"
+        app:layout_constraintTop_toTopOf="@+id/startDateTitleTextView"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTitleDatePrescribed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/startDateValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2023-03-01"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startDateTitleTextView"/>
+
+    <TextView
+        android:id="@+id/datePrescribedValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2023-02-28"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/guidelineValueDatePrescribed"
+        app:layout_constraintTop_toTopOf="@+id/startDateValueTextView"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineValueDatePrescribed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <LinearLayout
+        android:id="@+id/organization_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startDateValueTextView">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icon_data_connection"/>
+        <TextView
+            android:id="@+id/organization_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:text="from Memorial Health" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/note_info"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/organization_ll"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
