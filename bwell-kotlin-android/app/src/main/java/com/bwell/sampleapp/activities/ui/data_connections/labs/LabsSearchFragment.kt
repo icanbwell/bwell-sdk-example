@@ -21,7 +21,7 @@ import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
 import com.bwell.search.ProviderSearchQuery
-import com.bwell.search.provider.requests.ProviderSearchRequest
+import com.bwell.search.requests.ProviderSearchRequest
 import com.bwell.search.type.OrganizationType
 import kotlinx.coroutines.launch
 

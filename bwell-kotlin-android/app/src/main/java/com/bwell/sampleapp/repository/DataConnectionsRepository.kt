@@ -40,7 +40,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun getConnections(): Flow<BWellResult<Connection>?> = flow {
         try {
-            val connectionsResult = BWellSdk.connections.getConnections()
+            val connectionsResult = BWellSdk.connections?.getConnections()
             emit(connectionsResult)
         } catch (e: Exception) {
             // Handle exceptions, if any
@@ -50,7 +50,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun disconnectConnection(connectionId: String): Flow<OperationOutcome?> = flow {
         try {
-            val disconnectOutcome = BWellSdk.connections.disconnectConnection(connectionId)
+            val disconnectOutcome = BWellSdk.connections?.disconnectConnection(connectionId)
             emit(disconnectOutcome)
         } catch (e: Exception) {
             // Handle exceptions, if any
@@ -60,7 +60,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<OperationOutcome?> = flow {
         try {
-            val connectionOutcome = BWellSdk.connections.createConnection(connectionRequest)
+            val connectionOutcome = BWellSdk.connections?.createConnection(connectionRequest)
             emit(connectionOutcome)
         } catch (e: Exception) {
             // Handle exceptions, if any
@@ -69,12 +69,12 @@ class DataConnectionsRepository(private val applicationContext: Context) {
     }
 
     suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> = flow {
-        val consentsResult = BWellSdk.user.getConsents(consentsRequest)
+        val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
         emit(consentsResult)
     }
 
     suspend fun updateUserConsent(consentUpdateRequest: ConsentUpdateRequest): Flow<BWellResult<Consent>?> = flow {
-        val updateOutcome = BWellSdk.user.updateConsent(consentUpdateRequest)
+        val updateOutcome = BWellSdk.user?.updateConsent(consentUpdateRequest)
         emit(updateOutcome)
     }
 
