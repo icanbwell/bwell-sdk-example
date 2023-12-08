@@ -50,7 +50,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun disconnectConnection(connectionId: String): Flow<OperationOutcome?> = flow {
         try {
-            val disconnectOutcome = BWellSdk.connections?.disconnectConnection(connectionId)
+            val disconnectOutcome = BWellSdk.connections?.disconnect(connectionId)
             emit(disconnectOutcome)
         } catch (e: Exception) {
             // Handle exceptions, if any
