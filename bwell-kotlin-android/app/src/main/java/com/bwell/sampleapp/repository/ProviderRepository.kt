@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult

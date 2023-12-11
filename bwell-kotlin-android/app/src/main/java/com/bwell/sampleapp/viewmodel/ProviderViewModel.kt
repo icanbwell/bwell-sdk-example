@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.search.Provider
@@ -23,7 +24,26 @@ class ProviderViewModel(private val repository: ProviderRepository?) : ViewModel
                     _searchResults.emit(searchResult)
                 }
             } catch (e: Exception) {
-                // Handle exceptions, if any
+                Log.e("Exception-","${e.message}")
+            }
+        }
+    }
+
+    private val _filteredResults = MutableStateFlow<List<Provider>?>(null)
+    val filteredResults: StateFlow<List<Provider>?> = _filteredResults
+
+    fun filterDataConnectionsProviders(query: String) {
+        viewModelScope.launch {
+            val searchResult = _searchResults.value
+            if (searchResult != null) {
+                if (searchResult is BWellResult.SearchResults) {
+                    val dataConnectionsList = searchResult.data
+                    val filteredList = dataConnectionsList?.filter { provider ->
+                        provider?.name?.get(0)?.text?.contains(query, ignoreCase = true) == true
+                    }
+                    _filteredResults.emit(filteredList)
+                }
+
             }
         }
     }

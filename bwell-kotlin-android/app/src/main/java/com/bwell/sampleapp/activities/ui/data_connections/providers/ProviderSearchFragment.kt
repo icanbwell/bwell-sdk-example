@@ -2,12 +2,13 @@ package com.bwell.sampleapp.activities.ui.data_connections.providers
 
 import LocationAdapter
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
+import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +26,6 @@ import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.ProviderSearchQuery
 import com.bwell.search.requests.ProviderSearchRequest
 import com.bwell.search.type.Gender
-import com.bwell.search.type.OrderBy
 import com.bwell.search.type.OrganizationType
 import com.bwell.search.type.SortField
 import com.bwell.search.type.SortOrder
@@ -38,6 +38,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
     private lateinit var providerViewModel: ProviderViewModel
 
     private val binding get() = _binding!!
+    private lateinit var providersListAdapter: ProvidersListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,13 +51,13 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
         providerViewModel = ViewModelProvider(this, ProviderViewModelFactory(repository))[ProviderViewModel::class.java]
         binding.providerSearchView.applyFiltersIv.setOnClickListener(this)
         binding.providerFiltersView.frameLayoutapplyFilters.setOnClickListener(this)
-        addSearchTextListeners()
-
         binding.providerSearchView.leftArrowImageView.setOnClickListener {
             parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            val parentFrag: DataConnectionsFragment = this@ProviderSearchFragment.parentFragment as DataConnectionsFragment
+            val parentFrag: DataConnectionsFragment = this@ProviderSearchFragment.getParentFragment() as DataConnectionsFragment
             parentFrag.showDataConnectionCategories()
         }
+        showProvidersData("")
+
         return root
     }
 
@@ -71,18 +72,38 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
     }
 
     private fun addSearchTextListeners() {
-        binding.providerSearchView.searchView.searchText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performSearch(binding.providerSearchView.searchView.searchText.text.toString())
-                true
-            } else {
-                false
+        binding.providerSearchView.searchView.searchText.addTextChangedListener(object :
+            TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                // Update the filtered list when text changes
+                val numberOfCharacters = charSequence?.length ?: 0
+                providerViewModel.filterDataConnectionsProviders(charSequence.toString())
+                viewLifecycleOwner.lifecycleScope.launch {
+                    providerViewModel.filteredResults.collect { filteredList ->
+                        providersListAdapter.updateList(filteredList)
+                        if(filteredList!!.isNotEmpty())
+                        {
+                            binding.providerSearchView.providersDataView.resultsText.text = "Search Results ("+filteredList?.size+")"
+                            binding.providerSearchView.providersDataView.providerDataView.visibility = View.VISIBLE
+                            binding.providerSearchView.constraintLayout.visibility = View.GONE
+                        }
+                        else
+                        {
+                            binding.providerSearchView.providersDataView.providerDataView.visibility = View.GONE
+                            binding.providerSearchView.constraintLayout.visibility = View.VISIBLE
+                            binding.providerSearchView.noDataTv.visibility = View.VISIBLE
+                        }
+                    }
+                }
             }
-        }
+
+            override fun afterTextChanged(editable: Editable?) {}
+        })
     }
 
-    private fun performSearch(enteredText: String) {
-        hideKeyboard(requireContext(),binding.providerSearchView.searchView.searchText.windowToken)
+    private fun showProvidersData(enteredText: String) {
         val searchTerm = enteredText
         val latitude = 33.33
         val longitude = 44.44
@@ -90,16 +111,16 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
         val gender = Gender.male
         val page = 1
         val pageSize = 10
+
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
             .organizationTypeFilters(listOf(OrganizationType.Provider))
             .location(latitude, longitude, distance)
-            .gender(gender)
             .sortBy(SortField.distance, SortOrder.asc)
+            .gender(gender)
             .page(page)
             .pageSize(pageSize)
             .build()
-
 
         providerViewModel.searchProviders(request)
 
@@ -110,14 +131,17 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
                 }
             }
         }
+
+        addSearchTextListeners()
     }
 
     private fun setProviderAdapter(searchResult: BWellResult<Provider>) {
         when (searchResult) {
             is BWellResult.SearchResults -> {
                 val providersList = searchResult.data
-                val adapter = ProvidersListAdapter(providersList)
-                adapter.onItemClicked = { selectedList ->
+                providersListAdapter = ProvidersListAdapter(providersList)
+                providersListAdapter.onItemClicked = { selectedList ->
+                    hideKeyboard(requireContext(),binding.providerSearchView.searchView.searchText.windowToken)
                     binding.providerSearchView.providerSearchView.visibility = View.GONE
                     binding.providerFiltersView.providerFiltersView.visibility = View.GONE
                     binding.organizationsLocationsDataView.organizationsLocationsDataView.visibility = View.VISIBLE
@@ -141,15 +165,14 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
                     binding.organizationsLocationsDataView.requestConnection.text = content
                     if(selectedList.name?.size!! > 0)
                     {
-
+                        binding.organizationsLocationsDataView.headerText.text = titleText+" "+selectedList.name?.get(0)?.text.toString()+" below:"
                     }
-                       binding.organizationsLocationsDataView.headerText.text = titleText+" "+selectedList.name?.get(0)?.text.toString()+" below:"
                 }
                 binding.providerSearchView.constraintLayout.visibility = View.GONE
                 binding.providerSearchView.providersDataView.providerDataView.visibility = View.VISIBLE
                 binding.providerSearchView.providersDataView.resultsText.text = "Search Results ("+providersList?.size+")"
                 binding.providerSearchView.providersDataView.rvProviders.layoutManager = LinearLayoutManager(requireContext())
-                binding.providerSearchView.providersDataView.rvProviders.adapter = adapter
+                binding.providerSearchView.providersDataView.rvProviders.adapter = providersListAdapter
                 binding.organizationsLocationsDataView.leftArrowImageView.setOnClickListener(this)
 
             }

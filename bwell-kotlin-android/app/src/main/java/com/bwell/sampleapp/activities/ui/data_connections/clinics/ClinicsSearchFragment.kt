@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.search.Provider
+import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
@@ -20,7 +22,6 @@ import com.bwell.sampleapp.databinding.FragmentDataConnectionsClinicsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ClinicsViewModel
 import com.bwell.sampleapp.viewmodel.ClinicsViewModelFactory
-import com.bwell.search.ProviderSearchQuery
 import com.bwell.search.requests.ProviderSearchRequest
 import com.bwell.search.type.OrganizationType
 import kotlinx.coroutines.launch
@@ -30,7 +31,6 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
     private var _binding: FragmentDataConnectionsClinicsBinding? = null
     private lateinit var clinicsViewModel: ClinicsViewModel
     private lateinit var dataConnectionClinicsAdapter: DataConnectionsClinicsListAdapter
-
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -42,9 +42,8 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.clinicsRepository
         clinicsViewModel = ViewModelProvider(this, ClinicsViewModelFactory(repository))[ClinicsViewModel::class.java]
-
-        getConnections()
         binding.leftArrowImageView.setOnClickListener(this)
+        getConnections()
         return root
     }
 
@@ -54,9 +53,7 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
             .searchTerm(searchTerm)
             .organizationTypeFilters(listOf(OrganizationType.Provider))
             .build()
-
         clinicsViewModel.searchConnections(request)
-
         viewLifecycleOwner.lifecycleScope.launch {
             clinicsViewModel.searchResults.collect { searchResult ->
                 if (searchResult != null) {
@@ -70,65 +67,57 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         binding.searchView.searchText.addTextChangedListener(object :
             TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
                 // Update the filtered list when text changes
-                val numberOfCharacters = charSequence?.length ?: 0
-                if(numberOfCharacters > 2)
-                {
-                    clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        clinicsViewModel.filteredResults.collect { filteredList ->
-                            if(filteredList!!.isNotEmpty())
-                            {
-                                displayClinicsAfterDataSearchView(filteredList.size)
-                            }else{
-                                displayClinicsAfterNoDataSearchView()
-                            }
-                            dataConnectionClinicsAdapter.updateList(filteredList)
+                clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
+                viewLifecycleOwner.lifecycleScope.launch {
+                    clinicsViewModel.filteredResults.collect { filteredList ->
+                        if(filteredList!!.isNotEmpty())
+                        {
+                            displayClinicsAfterDataSearchView(filteredList.size)
+                        }else{
+                            displayClinicsAfterNoDataSearchView()
                         }
+                        dataConnectionClinicsAdapter.updateList(filteredList)
                     }
-                }else{
-                    if (charSequence?.isNotEmpty() == true)
-                        displayClinicsBeforeSearchView()
                 }
             }
-
             override fun afterTextChanged(editable: Editable?) {}
         })
     }
 
-    private fun displayClinicsBeforeSearchView() {
-        binding.clinicsBeforeSearchBodyView.clinicsBeforeSearchBodyView.visibility = View.VISIBLE;
-        binding.clinicsAfterSearchNoDataBodyView.clinicsAfterSearchNoDataBodyView.visibility = View.GONE;
-        binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.GONE;
-    }
-
     @SuppressLint("SetTextI18n")
-    private fun setDataConnectionClinicsAdapter(filteredList: List<ProviderSearchQuery.Organization?>?) {
-        dataConnectionClinicsAdapter = DataConnectionsClinicsListAdapter(filteredList)
-        dataConnectionClinicsAdapter.onItemClicked = { organization ->
+    private fun setDataConnectionClinicsAdapter(searchResult: BWellResult<Provider>) {
+        when (searchResult) {
+            is BWellResult.SearchResults -> {
+                val connectionsList = searchResult.data
+                dataConnectionClinicsAdapter = DataConnectionsClinicsListAdapter(connectionsList)
+                displayClinicsAfterDataSearchView(connectionsList?.size ?: 0)
+            }
+            else -> {}
+        }
+        dataConnectionClinicsAdapter.onItemClicked = { selectedList ->
             // Handle item click, perform UI changes here
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            val organizationFragment = OrganizationInfoFragment(organization)
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.hide(this@ClinicsSearchFragment)
-            transaction.add(R.id.container_layout, organizationFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            if(selectedList?.organization?.size!! > 0)
+            {
+                val organizationFragment = OrganizationInfoFragment(selectedList?.organization?.get(0))
+                val transaction = parentFragmentManager.beginTransaction()
+                transaction.hide(this@ClinicsSearchFragment)
+                transaction.add(R.id.container_layout, organizationFragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }
         }
         binding.clinicsAfterSearchDataBodyView.rvClinics.layoutManager = LinearLayoutManager(requireContext())
         binding.clinicsAfterSearchDataBodyView.rvClinics.adapter = dataConnectionClinicsAdapter
         addSearchTextListeners()
-
-
     }
 
     private fun displayClinicsAfterNoDataSearchView() {
         binding.clinicsBeforeSearchBodyView.clinicsBeforeSearchBodyView.visibility = View.GONE;
         binding.clinicsAfterSearchNoDataBodyView.clinicsAfterSearchNoDataBodyView.visibility = View.VISIBLE;
         binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.GONE;
-
     }
 
     private fun displayClinicsAfterDataSearchView(resultCount:Int) {
@@ -150,7 +139,6 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
                 val parentFrag: DataConnectionsFragment = this@ClinicsSearchFragment.getParentFragment() as DataConnectionsFragment
                 parentFrag.showDataConnectionCategories()
             }
-
         }
     }
 }

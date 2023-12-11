@@ -2,47 +2,46 @@ package com.bwell.sampleapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.ClinicsRepository
-import com.bwell.search.ProviderSearchQuery
-import com.bwell.search.provider.requests.ProviderSearchRequest
+import com.bwell.search.requests.ProviderSearchRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ClinicsViewModel(private val repository: ClinicsRepository?) : ViewModel() {
 
-    private val _searchResults = MutableStateFlow<List<ProviderSearchQuery.Organization?>?>(null)
-    val searchResults: StateFlow<List<ProviderSearchQuery.Organization?>?> = _searchResults
+    private val _searchResults = MutableStateFlow<BWellResult<Provider>?>(null)
+    val searchResults: StateFlow<BWellResult<Provider>?> = _searchResults
 
     fun searchConnections(providerSearchRequest: ProviderSearchRequest) {
         viewModelScope.launch {
             try {
                 repository?.searchConnections(providerSearchRequest)?.collect { searchResult ->
-                    if (searchResult is BWellResult.SearchResults) {
-                        val dataConnectionsList = searchResult.data
-                        val filteredList = dataConnectionsList?.flatMap { item ->
-                            item.organization ?: emptyList()
-                        }
-                        _searchResults.value = filteredList
-                    }
+                    _searchResults.emit(searchResult)
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                // Handle exceptions, if any
             }
         }
     }
 
-    private val _filteredResults = MutableStateFlow<List<ProviderSearchQuery.Organization?>?>(null)
-    val filteredResults: StateFlow<List<ProviderSearchQuery.Organization?>?> = _filteredResults
+    private val _filteredResults = MutableStateFlow<List<Provider>?>(null)
+    val filteredResults: StateFlow<List<Provider>?> = _filteredResults
 
     fun filterDataConnectionsClinics(query: String) {
         viewModelScope.launch {
             val searchResult = _searchResults.value
             if (searchResult != null) {
-                val filteredList = searchResult.filter { item ->
-                    item?.name?.contains(query, ignoreCase = true) == true
+                if (searchResult is BWellResult.SearchResults) {
+                    val dataConnectionsList = searchResult.data
+                    val filteredList = dataConnectionsList?.filter { provider ->
+                        provider?.content?.contains(query, ignoreCase = true) == true
+                    }
+                    _filteredResults.emit(filteredList)
                 }
-                _filteredResults.value = filteredList
+
             }
         }
     }

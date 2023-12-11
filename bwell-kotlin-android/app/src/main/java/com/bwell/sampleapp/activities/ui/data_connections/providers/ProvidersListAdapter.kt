@@ -77,5 +77,10 @@ class ProvidersListAdapter(private var launches: List<Provider>?) :
         }
     }
 
+    // Add a function to update the list
+    fun updateList(newList:List<Provider>?) {
+        launches = newList
+        notifyDataSetChanged()
+    }
 
 }

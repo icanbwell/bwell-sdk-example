@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ClinicsItemsViewBinding
-import com.bwell.search.ProviderSearchQuery
 
 /*
 *Display the Data Connections Clinics List in RecyclerView
 * */
-class DataConnectionsClinicsListAdapter(private var launches: List<ProviderSearchQuery.Organization?>?) :
+class DataConnectionsClinicsListAdapter(private var launches: List<Provider>?) :
     RecyclerView.Adapter<DataConnectionsClinicsListAdapter.ViewHolder>() {
 
 
@@ -27,11 +27,11 @@ class DataConnectionsClinicsListAdapter(private var launches: List<ProviderSearc
     }
 
     var onEndOfListReached: (() -> Unit)? = null
-    var onItemClicked: ((ProviderSearchQuery.Organization?) -> Unit)? = null
+    var onItemClicked: ((Provider?) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches?.get(position)
-        holder.binding.itemText.text = launch?.name?: ""
+        holder.binding.itemText.text = launch?.content?: ""
         holder.binding.itemImage.load(R.drawable.baseline_person_pin_24) {
             placeholder(R.drawable.baseline_person_pin_24)
         }
@@ -46,7 +46,7 @@ class DataConnectionsClinicsListAdapter(private var launches: List<ProviderSearc
     }
 
     // Add a function to update the list
-    fun updateList(newList:List<ProviderSearchQuery.Organization?>?) {
+    fun updateList(newList:List<Provider>?) {
         launches = newList
         notifyDataSetChanged()
     }

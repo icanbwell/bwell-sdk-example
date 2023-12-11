@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.search.Provider
+import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
@@ -20,7 +22,6 @@ import com.bwell.sampleapp.databinding.FragmentDataConnectionsLabsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
-import com.bwell.search.ProviderSearchQuery
 import com.bwell.search.requests.ProviderSearchRequest
 import com.bwell.search.type.OrganizationType
 import kotlinx.coroutines.launch
@@ -42,9 +43,10 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.dataConnectionLabsRepository
         dataConnectionLabsViewModel = ViewModelProvider(this, DataConnectionsLabsViewModelFactory(repository))[DataConnectionLabsViewModel::class.java]
+        binding.leftArrowImageView.setOnClickListener(this)
 
         getConnections()
-        binding.leftArrowImageView.setOnClickListener(this)
+
         return root
     }
 
@@ -59,7 +61,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
 
         viewLifecycleOwner.lifecycleScope.launch {
             dataConnectionLabsViewModel.searchResults.collect { searchResult ->
-                if (searchResult?.size ?: 0 > 0) {
+                if (searchResult != null) {
                     binding.noDataLl.visibility = View.GONE;
                     binding.dataLl.visibility = View.VISIBLE;
                     setDataConnectionLabsAdapter(searchResult)
@@ -77,7 +79,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
-                dataConnectionLabsViewModel.filterDataConnectionsClinics(charSequence.toString())
+                dataConnectionLabsViewModel.filterDataConnectionsLabs(charSequence.toString())
                 viewLifecycleOwner.lifecycleScope.launch {
                     dataConnectionLabsViewModel.filteredResults.collect { filteredList ->
                         if(filteredList!!.isNotEmpty())
@@ -100,18 +102,26 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
 
 
     @SuppressLint("SetTextI18n")
-    private fun setDataConnectionLabsAdapter(filteredList: List<ProviderSearchQuery.Organization?>?) {
-        dataConnectionsLabsListAdapter = DataConnectionsLabsListAdapter(filteredList)
-        dataConnectionsLabsListAdapter.onItemClicked = { organization ->
+    private fun setDataConnectionLabsAdapter(searchResult: BWellResult<Provider>) {
+        when (searchResult) {
+            is BWellResult.SearchResults -> {
+                val connectionsList = searchResult.data
+                dataConnectionsLabsListAdapter = DataConnectionsLabsListAdapter(connectionsList)
+            }
+
+            else -> {}
+        }
+        dataConnectionsLabsListAdapter.onItemClicked = { selectedList ->
             // Handle item click, perform UI changes here
-            binding.searchView.searchText.setText("")
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            val organizationFragment = OrganizationInfoFragment(organization)
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.hide(this@LabsSearchFragment)
-            transaction.add(R.id.container_layout, organizationFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
+            if(selectedList?.organization?.size!! > 0) {
+                val organizationFragment = OrganizationInfoFragment(selectedList?.organization?.get(0))
+                val transaction = parentFragmentManager.beginTransaction()
+                transaction.hide(this@LabsSearchFragment)
+                transaction.add(R.id.container_layout, organizationFragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }
         }
         binding.rvDataConnectionsLabs.layoutManager = LinearLayoutManager(requireContext())
         binding.rvDataConnectionsLabs.adapter = dataConnectionsLabsListAdapter
@@ -128,7 +138,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
         when (view?.id) {
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val parentFrag: DataConnectionsFragment = this@LabsSearchFragment.parentFragment as DataConnectionsFragment
+                val parentFrag: DataConnectionsFragment = this@LabsSearchFragment.getParentFragment() as DataConnectionsFragment
                 parentFrag.showDataConnectionCategories()
             }
         }
