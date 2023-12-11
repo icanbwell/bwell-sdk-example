@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
@@ -33,10 +34,7 @@ class Repository(private val applicationContext: Context) {
     val suggestedDataConnectionsCategories: LiveData<SuggestedDataConnectionsCategoriesList>
         get() = suggestedDataConnectionsCategoriesLiveData
 
-    private val healthSummaryLiveData = MutableLiveData<HealthSummaryList>()
 
-    val healthSummary: LiveData<HealthSummaryList>
-        get() = healthSummaryLiveData
 
     private val labsLiveData = MutableLiveData<LabsList>()
 
@@ -57,6 +55,24 @@ class Repository(private val applicationContext: Context) {
         val profileData = BWellSdk.user?.getProfile()
         if(profileData?.operationOutcome?.status==Status.SUCCESS){
             emit(profileData)
+        }
+    }
+
+    suspend fun registerDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
+        try {
+            val outcome: OperationOutcome? = BWellSdk.device?.registerDeviceToken(deviceToken)
+            emit(outcome)
+        } catch (e: Exception) {
+            // Handle exceptions
+        }
+    }
+
+    suspend fun unregisterDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
+        try {
+            val outcome: OperationOutcome? = BWellSdk.device?.deregisterDeviceToken(deviceToken)
+            emit(outcome)
+        } catch (e: Exception) {
+            // Handle exceptions
         }
     }
 
@@ -149,36 +165,7 @@ class Repository(private val applicationContext: Context) {
         suggestedDataConnectionsCategoriesLiveData.postValue(activityList)
     }
 
-    suspend fun getHealthSummaryList() {
 
-        val suggestionsList = mutableListOf<HealthSummaryListItems>()
-
-        // Category A
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Care Plans (1)", R.drawable.baseline_person_24,R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Visit History (4)", R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Vitals (5)", R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Procedures (1)", R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-
-        val activityList = HealthSummaryList(suggestionsList)
-        healthSummaryLiveData.postValue(activityList)
-    }
 
     suspend fun getLabsList() {
 
