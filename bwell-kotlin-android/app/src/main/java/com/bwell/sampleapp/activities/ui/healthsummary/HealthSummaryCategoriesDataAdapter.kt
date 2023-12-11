@@ -97,8 +97,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
 
     private fun getDate(item: T?): String? {
         return when (item) {
-            is CarePlan -> item.period?.start?.date
-            is Immunization -> item.occurrenceDateTime?.date
+            is CarePlan -> item.period?.start.toString()
+            is Immunization -> item.occurrenceDateTime.toString()
             else -> null
         }
     }
