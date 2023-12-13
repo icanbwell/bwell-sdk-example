@@ -3,7 +3,6 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bwell.sampleapp.repository.HealthSummaryRepository
-import com.bwell.sampleapp.repository.ProviderRepository
 
 class HealthSummaryViewModelFactory(private val repository: HealthSummaryRepository?) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

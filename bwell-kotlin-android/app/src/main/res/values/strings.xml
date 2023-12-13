@@ -156,11 +156,31 @@
     <string name="waht_is_it">What is it ?</string>
     <string name="pricing">About Pricing ?</string>
     <string name="note_info">NOTE: Your data will be connected into your Lee Health app for your personal use to help you manage your healthcare. Lee Health will not review your health data from these connections and will only have access to it if you have consented to share this data with Lee Health.</string>
+    <string name="procedures">Procedures</string>
+    <string name="vitals">Vitals</string>
+    <string name="visit_history">Visit History</string>
+    <string name="allergies">Allergies</string>
+    <string name="communications">Communications</string>
+    <string name="conditions">Conditions</string>
+    <string name="bodysite">Body Site</string>
+    <string name="reason">Reason</string>
+    <string name="outcome">Outcome</string>
+    <string name="followup">Follow-up</string>
+    <string name="complication">Complications</string>
+    <string name="notes">Notes</string>
+    <string name="result">Result</string>
+    <string name="onsetdate">Onset Date</string>
+    <string name="severity">Severity</string>
+    <string name="reactions">Reactions</string>
+    <string name="resourcetype">Resource Type</string>
+    <string name="patient_name">Patient Name</string>
+    <string name="recorded_date">Recorded Date</string>
+    <string name="category">Category</string>
+    <string name="care_plans">Care Plans</string>
+    <string name="immunizations">Immunizations</string>
     <string name="status">Status</string>
     <string name="intent">Intent</string>
     <string name="dose_number">Dose Number</string>
-    <string name="manufacturer_name">Manufacturer</string>
-    <string name="care_plans">Care Plans</string>
-    <string name="immunizations">Immunizations</string>
-
+    <string name="manufacturer_name">Manufacturer Name</string>
+    <string name="healthy_range">Health Range</string>
 </resources>
