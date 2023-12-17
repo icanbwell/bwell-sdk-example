@@ -6,9 +6,6 @@
     tools:context=".activities.ui.labs.LabsFragment">
 
     <data>
-        <variable
-            name="viewModel"
-            type="com.bwell.sampleapp.viewmodel.LabsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

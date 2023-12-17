@@ -10,16 +10,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentLabsParentBinding
-import com.bwell.sampleapp.viewmodel.LabsViewModel
-import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import com.bwell.sampleapp.model.LabsListItems
+import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 
 class LabsFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentLabsParentBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var labsViewModel: LabsViewModel
+//    private lateinit var labsViewModel: LabsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,12 +28,12 @@ class LabsFragment : Fragment(), View.OnClickListener {
         _binding = FragmentLabsParentBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
-
-        labsViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[LabsViewModel::class.java]
-
-        labsViewModel.labsData.observe(viewLifecycleOwner) {
-            setLabsAdapter(it.labsList)
-        }
+//
+//        labsViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[LabsViewModel::class.java]
+//
+//        labsViewModel.labsData.observe(viewLifecycleOwner) {
+//            setLabsAdapter(it.labsList)
+//        }
 
         binding.includeLabsDetail.leftArrowImageView.setOnClickListener(this)
         return root

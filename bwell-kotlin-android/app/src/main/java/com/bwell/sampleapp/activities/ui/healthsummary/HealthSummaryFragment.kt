@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.databinding.FragmentHealthSummaryBinding
 import com.bwell.sampleapp.model.HealthSummaryListItems
-import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 
 class HealthSummaryFragment : Fragment() {
@@ -18,7 +17,7 @@ class HealthSummaryFragment : Fragment() {
     private var _binding: FragmentHealthSummaryBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var healthSummaryViewModel: HealthSummaryViewModel
+//    private lateinit var healthSummaryViewModel: HealthSummaryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,13 +27,6 @@ class HealthSummaryFragment : Fragment() {
         _binding = FragmentHealthSummaryBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
-
-
-        healthSummaryViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[HealthSummaryViewModel::class.java]
-
-        healthSummaryViewModel.healthSummaryData.observe(viewLifecycleOwner) {
-            setHealthSummaryAdapter(it.healthSummaryList)
-        }
 
 
         return root
