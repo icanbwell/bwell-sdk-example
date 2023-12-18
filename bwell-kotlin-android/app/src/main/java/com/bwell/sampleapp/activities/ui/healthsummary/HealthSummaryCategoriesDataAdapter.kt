@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.activities.ui.healthsummary
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -39,6 +40,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
     var onEndOfListReached: (() -> Unit)? = null
     var onItemClicked: ((T?) -> Unit)? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches?.get(position)
         when (launch) {
@@ -85,7 +87,9 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text =launch.participant?.get(0)?.individual?.practitionerName?.get(0)?.text.toString()+" "+formattedDate ?: ""
+                holder.binding.textViewDate.text =
+                    (launch.participant?.get(0)?.individual?.practitionerName?.get(0)?.text.toString() + " " + formattedDate)
+                        ?: ""
                 addTextField(holder, holder.binding.root.context.getString(R.string.reason), getDataOne(launch))
             }
             is AllergyIntolerance ->{
