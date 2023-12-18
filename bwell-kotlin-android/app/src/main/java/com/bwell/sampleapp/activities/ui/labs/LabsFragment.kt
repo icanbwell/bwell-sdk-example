@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -71,8 +72,6 @@ class LabsFragment : Fragment(), View.OnClickListener {
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
-                            Log.e("gtLabs()","-gtLabs--${dataList?.get(0)?.code}")
-
                             setLabsAdapter(dataList)
                         }
 
@@ -115,14 +114,15 @@ class LabsFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labsDetailResults.take(1).collect { result ->
                 if (result != null) {
+                    Log.d("result","result"+result)
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
-                            Log.d("getLabs()-","dataList"+dataList)
+                            Log.d("dataList","dataList"+dataList)
                             val details:Observation? = dataList?.get(0)
                             binding.includeLabsDetail.typeText.text = details?.code?.text
                             binding.includeLabsDetail.dateText.text = "as of "+details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
-                            binding.includeLabsDetail.organizationName.text = "from "+details?.encounter?.location?.get(0)?.location?.name
+                            binding.includeLabsDetail.organizationName.text = "from "+details?.performer?.get(1)?.onOrganization?.organizationName
                             addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)
@@ -166,9 +166,11 @@ class LabsFragment : Fragment(), View.OnClickListener {
                     Log.d("result","result"+result)
                     when (result) {
                         is BWellResult.SingleResource -> {
-                            binding.includeLabsDetail.labKnowledgeTitle.text = "What is "+selectedLabType?.code?.text+" ?"
-                            binding.includeLabsDetail.labKnowledgeText.text = result.data
-                            binding.includeLabsDetail.labKnowledgeText.setMovementMethod(ScrollingMovementMethod())
+                            val data = result.data
+                            val webView = WebView(requireContext())
+                            webView.loadDataWithBaseURL(null,
+                                data.toString(), "text/html", "utf-8", null)
+                            binding.includeLabsDetail.containerLayout.addView(webView)
                         }
                         else -> {}
                     }

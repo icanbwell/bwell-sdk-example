@@ -149,7 +149,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
                         binding.medicineOverviewView.refillsRemainingValueTextView.text = medicationOverview?.refillsRemaining.toString()
                         binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationOverview?.startDate.toString())
                         binding.medicineOverviewView.datePrescribedValueTextView.text = formatDate(medicationOverview?.datePrescribed.toString())
-                        binding.medicineOverviewView.organizationName.text = medicationOverview?.pharmacy?.name
+                        binding.medicineOverviewView.organizationName.text = "from "+medicationOverview?.source
                     }
                 }
             }
