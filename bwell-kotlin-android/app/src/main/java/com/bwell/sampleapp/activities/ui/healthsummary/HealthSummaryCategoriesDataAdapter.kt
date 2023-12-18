@@ -48,7 +48,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Started "+formattedDate ?: ""
+                holder.binding.textViewDate.text = ("Started $formattedDate")
                 addTextField(holder, holder.binding.root.context.getString(R.string.status), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.intent), getDataTwo(launch))
             }
@@ -56,8 +56,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Most Recent: "+formattedDate ?: ""
-                holder.binding.organizationName.text = "from "+launch?.performer?.get(1)?.actor?.onOrganization?.organizationName
+                holder.binding.textViewDate.text = "Most Recent: $formattedDate"
+                holder.binding.organizationName.text = "from "+ launch.performer?.get(1)?.actor?.onOrganization?.organizationName
                 addTextField(holder, holder.binding.root.context.getString(R.string.dose_number), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.manufacturer_name), getDataTwo(launch))
             }
@@ -65,8 +65,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Performed Date: "+formattedDate ?: ""
-                holder.binding.organizationName.text = "from "+launch?.performer?.get(1)?.actor?.onOrganization?.organizationName
+                holder.binding.textViewDate.text = "Performed Date: $formattedDate"
+                holder.binding.organizationName.text = "from "+ launch.performer?.get(1)?.actor?.onOrganization?.organizationName
                 addTextField(holder, holder.binding.root.context.getString(R.string.bodysite), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.reason), getDataTwo(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.outcome), launch.outcome.toString())
@@ -78,8 +78,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Effective Date: "+formattedDate ?: ""
-                holder.binding.organizationName.text = "from "+launch?.performer?.get(1)?.onOrganization?.organizationName
+                holder.binding.textViewDate.text = "Effective Date: $formattedDate"
+                holder.binding.organizationName.text = "from "+ launch.performer?.get(1)?.onOrganization?.organizationName
                 addTextField(holder, holder.binding.root.context.getString(R.string.result), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.healthy_range), getDataTwo(launch))
             }
@@ -89,7 +89,6 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text =
                     (launch.participant?.get(0)?.individual?.practitionerName?.get(0)?.text.toString() + " " + formattedDate)
-                        ?: ""
                 addTextField(holder, holder.binding.root.context.getString(R.string.reason), getDataOne(launch))
             }
             is AllergyIntolerance ->{
@@ -129,13 +128,13 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
         val layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT)
-        val labelTextView = createDynamicTextView(holder.binding.root.context, "$label")
+        val labelTextView = createDynamicTextView(holder.binding.root.context, label)
         labelTextView.setTextColor(Color.parseColor("#575881"))
         layoutParams.topMargin = 30
         labelTextView.layoutParams = layoutParams
         holder.binding.dataLl.addView(labelTextView)
 
-        val valueTextView = createDynamicTextView(holder.binding.root.context, "$value")
+        val valueTextView = createDynamicTextView(holder.binding.root.context, value)
         holder.binding.dataLl.addView(valueTextView)
     }
 
