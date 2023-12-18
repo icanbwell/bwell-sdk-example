@@ -1,0 +1,32 @@
+<!-- location_item.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/boldTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bold Text"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/secondTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Second Text"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/thirdTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Third Text"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp"/>
+</LinearLayout>

@@ -12,23 +12,30 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ActivityNavigationBinding
+import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
+import com.bwell.core.device.BWellDeviceManager
 import kotlinx.coroutines.launch
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.bwell.BWellSdk
+import com.bwell.sampleapp.BWellSampleApplication
+import com.bwell.sampleapp.activities.ui.popup.PopupFragment
+import com.bwell.sampleapp.repository.Repository
 
 class NavigationActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityNavigationBinding
     private lateinit var deviceId:String
+    private lateinit var repository:Repository
 
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        repository = (this?.application as? BWellSampleApplication)?.bWellRepository!!
 
         binding = ActivityNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -51,20 +58,18 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun registerDeviceToken(deviceToken: String) {
         lifecycleScope.launch {
-            try {
-                val outcome = BWellSdk.device?.registerDeviceToken(deviceToken)
-                if (outcome != null) {
+            val registerOutcome = repository.registerDeviceToken(deviceToken)
+            registerOutcome.collect { outcome ->
+                outcome?.let {
                     when (outcome.status) {
                         Status.SUCCESS -> {
-                            Log.d("registerDeviceToken-","${outcome.status}")
+                            //device registered successfully
                         }
-
                         else -> {
-                            Log.d("registerDeviceToken Error-","${outcome.exception}")
+                            //device not registered
                         }
                     }
                 }
-            } catch (_: Exception) {
             }
         }
     }
@@ -81,20 +86,18 @@ class NavigationActivity : AppCompatActivity() {
 
     private fun unregisterDeviceToken(deviceToken: String) {
         lifecycleScope.launch {
-            try {
-                val outcome = BWellSdk.device?.deregisterDeviceToken(deviceToken)
-                if (outcome != null) {
+            val unregisterOutcome = repository.unregisterDeviceToken(deviceToken)
+            unregisterOutcome.collect { outcome ->
+                outcome?.let {
                     when (outcome.status) {
                         Status.SUCCESS -> {
-                            Log.d("deregisterDeviceToken-","${outcome.status}")
+                            //device unregistered successfully
                         }
-
                         else -> {
-                            Log.d("deregisterDeviceToken Error-","${outcome.exception}")
+                            //device not unregistered
                         }
                     }
                 }
-            } catch (_: Exception) {
             }
         }
     }

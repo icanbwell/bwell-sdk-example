@@ -34,10 +34,6 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         viewModelScope.launch(Dispatchers.IO){
             repository?.getDataConnectionsCategoriesList()
         }
-
-        viewModelScope.launch(Dispatchers.IO){
-            repository?.getDataConnectionsClinicsList()
-        }
     }
 
     val suggestedDataConnections : LiveData<SuggestedDataConnectionsList>
