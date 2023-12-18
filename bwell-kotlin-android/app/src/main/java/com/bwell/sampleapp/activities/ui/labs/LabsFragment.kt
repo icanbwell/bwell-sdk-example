@@ -29,6 +29,8 @@ import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
+import com.bwell.sampleapp.model.LabsListItems
+import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 
 class LabsFragment : Fragment(), View.OnClickListener {
 

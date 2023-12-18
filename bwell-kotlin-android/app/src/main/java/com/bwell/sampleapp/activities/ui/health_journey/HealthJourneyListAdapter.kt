@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bwell.common.models.domain.task.Task
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.HealthJourneyItemsViewBinding
-import com.bwell.sampleapp.model.HealthJourneyListItems
 
 /*
 *Display the Health Journey List in RecyclerView
 * */
-class HealthJourneyListAdapter(private val launches: List<HealthJourneyListItems>) :
+class HealthJourneyListAdapter(private val launches: List<Task>?) :
     RecyclerView.Adapter<HealthJourneyListAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: HealthJourneyItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
@@ -22,24 +22,24 @@ class HealthJourneyListAdapter(private val launches: List<HealthJourneyListItems
     }
 
     override fun getItemCount(): Int {
-        return launches.size
+        return launches?.size ?: 0
     }
 
     var onEndOfListReached: (() -> Unit)? = null
-    var onItemClicked: ((HealthJourneyListItems) -> Unit)? = null
+    var onItemClicked: ((Task?) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val launch = launches[position]
-        holder.binding.typeText.text = launch.type?: ""
-        holder.binding.descriptionTxt.text = launch.description?: ""
-        holder.binding.typeLogo.load(launch.typeLogo) {
-            placeholder(R.drawable.baseline_person_24)
+        val launch = launches?.get(position)
+        holder.binding.typeText.text = launch?.code?.coding?.get(0)?.code?: ""
+        holder.binding.descriptionTxt.text = launch?.description?: ""
+        holder.binding.typeLogo.load(R.drawable.vaccine_icon) {
+            placeholder(R.drawable.vaccine_icon)
         }
-        holder.binding.moreLogo.load(launch.moreLogo) {
+        holder.binding.moreLogo.load(R.drawable.baseline_keyboard_arrow_right_24) {
             placeholder(R.drawable.baseline_keyboard_arrow_right_24)
         }
 
-        if (position == launches.size - 1) {
+        if (position == (launches?.size ?: 0) - 1) {
             onEndOfListReached?.invoke()
         }
 
