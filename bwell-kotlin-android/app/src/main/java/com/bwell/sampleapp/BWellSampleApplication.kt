@@ -6,6 +6,7 @@ import com.bwell.sampleapp.repository.DataConnectionLabsRepository
 import com.bwell.sampleapp.repository.DataConnectionsRepository
 import com.bwell.sampleapp.repository.MedicineRepository
 import com.bwell.sampleapp.repository.ProviderRepository
+import com.bwell.sampleapp.repository.LabsRepository
 import com.bwell.sampleapp.repository.Repository
 
 class BWellSampleApplication : Application() {
@@ -16,6 +17,7 @@ class BWellSampleApplication : Application() {
      lateinit var providerRepository: ProviderRepository
      lateinit var clinicsRepository: ClinicsRepository
      lateinit var dataConnectionLabsRepository: DataConnectionLabsRepository
+    lateinit var labsRepository: LabsRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -29,6 +31,7 @@ class BWellSampleApplication : Application() {
         providerRepository = ProviderRepository( applicationContext)
         clinicsRepository = ClinicsRepository( applicationContext)
         dataConnectionLabsRepository = DataConnectionLabsRepository( applicationContext)
+        labsRepository = LabsRepository( applicationContext)
 
     }
 }
