@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.activities.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private val binding get() = _binding!!
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,6 +58,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
         binding.seeMore.setOnClickListener(this)
         binding.homeView.btnGetStarted.setOnClickListener(this)
 
+        mainViewModel.fetchUserProfile()
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.userData.collect{
+                binding.userName.text = resources.getString(R.string.welcome_bwell)+" "+it?.firstName+"!"
+            }
+        }
         return root
     }
 
