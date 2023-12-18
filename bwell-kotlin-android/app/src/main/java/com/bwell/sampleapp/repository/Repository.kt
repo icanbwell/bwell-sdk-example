@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
@@ -57,6 +58,24 @@ class Repository(private val applicationContext: Context) {
         val profileData = BWellSdk.user?.getProfile()
         if(profileData?.operationOutcome?.status==Status.SUCCESS){
             emit(profileData)
+        }
+    }
+
+    suspend fun registerDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
+        try {
+            val outcome: OperationOutcome? = BWellSdk.device?.registerDeviceToken(deviceToken)
+            emit(outcome)
+        } catch (e: Exception) {
+            // Handle exceptions
+        }
+    }
+
+    suspend fun unregisterDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
+        try {
+            val outcome: OperationOutcome? = BWellSdk.device?.deregisterDeviceToken(deviceToken)
+            emit(outcome)
+        } catch (e: Exception) {
+            // Handle exceptions
         }
     }
 
