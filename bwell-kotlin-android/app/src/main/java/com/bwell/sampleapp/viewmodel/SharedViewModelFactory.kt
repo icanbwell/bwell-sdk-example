@@ -11,9 +11,6 @@ class SharedViewModelFactory(private val repository: Repository?) : ViewModelPro
             modelClass.isAssignableFrom(SharedViewModel::class.java) -> {
                 SharedViewModel(repository) as T
             }
-            modelClass.isAssignableFrom(HealthJourneyViewModel::class.java) -> {
-                HealthJourneyViewModel(repository) as T
-            }
             modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
                 ProfileViewModel(repository) as T
             }

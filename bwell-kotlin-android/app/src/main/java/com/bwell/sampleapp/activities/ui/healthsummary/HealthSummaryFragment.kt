@@ -37,6 +37,7 @@ import com.bwell.sampleapp.model.HealthSummaryListItems
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.launch
+import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 
 class HealthSummaryFragment : Fragment(), View.OnClickListener {
 
