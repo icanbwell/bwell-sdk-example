@@ -34,10 +34,7 @@ class Repository(private val applicationContext: Context) {
     val suggestedDataConnectionsCategories: LiveData<SuggestedDataConnectionsCategoriesList>
         get() = suggestedDataConnectionsCategoriesLiveData
 
-    private val healthSummaryLiveData = MutableLiveData<HealthSummaryList>()
 
-    val healthSummary: LiveData<HealthSummaryList>
-        get() = healthSummaryLiveData
 
     private val labsLiveData = MutableLiveData<LabsList>()
 
@@ -168,36 +165,7 @@ class Repository(private val applicationContext: Context) {
         suggestedDataConnectionsCategoriesLiveData.postValue(activityList)
     }
 
-    suspend fun getHealthSummaryList() {
 
-        val suggestionsList = mutableListOf<HealthSummaryListItems>()
-
-        // Category A
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Care Plans (1)", R.drawable.baseline_person_24,R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Visit History (4)", R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Vitals (5)", R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-
-        suggestionsList.add(
-            HealthSummaryListItems(
-                "Procedures (1)", R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24
-            )
-        )
-
-        val activityList = HealthSummaryList(suggestionsList)
-        healthSummaryLiveData.postValue(activityList)
-    }
 
     suspend fun getLabsList() {
 

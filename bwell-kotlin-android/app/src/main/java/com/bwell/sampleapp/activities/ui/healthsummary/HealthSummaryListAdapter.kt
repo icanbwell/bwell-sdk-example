@@ -30,7 +30,7 @@ class HealthSummaryListAdapter(private val launches: List<HealthSummaryListItems
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches[position]
-        holder.binding.itemText.text = launch.healthSummaryType?: ""
+        holder.binding.itemText.text = launch.category?: ""
         holder.binding.itemLogo.load(launch.healthSummaryTypeLogo) {
             placeholder(R.drawable.baseline_person_24)
         }

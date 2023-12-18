@@ -4,6 +4,7 @@ import android.app.Application
 import com.bwell.sampleapp.repository.ClinicsRepository
 import com.bwell.sampleapp.repository.DataConnectionLabsRepository
 import com.bwell.sampleapp.repository.DataConnectionsRepository
+import com.bwell.sampleapp.repository.HealthSummaryRepository
 import com.bwell.sampleapp.repository.MedicineRepository
 import com.bwell.sampleapp.repository.ProviderRepository
 import com.bwell.sampleapp.repository.LabsRepository
@@ -18,6 +19,7 @@ class BWellSampleApplication : Application() {
      lateinit var clinicsRepository: ClinicsRepository
      lateinit var dataConnectionLabsRepository: DataConnectionLabsRepository
     lateinit var labsRepository: LabsRepository
+    lateinit var healthSummaryRepository: HealthSummaryRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -32,6 +34,7 @@ class BWellSampleApplication : Application() {
         clinicsRepository = ClinicsRepository( applicationContext)
         dataConnectionLabsRepository = DataConnectionLabsRepository( applicationContext)
         labsRepository = LabsRepository( applicationContext)
+        healthSummaryRepository = HealthSummaryRepository( applicationContext)
 
     }
 }
