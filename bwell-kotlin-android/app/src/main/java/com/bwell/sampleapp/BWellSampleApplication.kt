@@ -15,7 +15,6 @@ class BWellSampleApplication : Application() {
 
      lateinit var bWellRepository: Repository
      lateinit var dataConnectionsRepository: DataConnectionsRepository
-    lateinit var medicineRepository: MedicineRepository
      lateinit var providerRepository: ProviderRepository
      lateinit var clinicsRepository: ClinicsRepository
      lateinit var dataConnectionLabsRepository: DataConnectionLabsRepository
@@ -38,7 +37,7 @@ class BWellSampleApplication : Application() {
         dataConnectionLabsRepository = DataConnectionLabsRepository( applicationContext)
         labsRepository = LabsRepository( applicationContext)
         healthSummaryRepository = HealthSummaryRepository( applicationContext)
-        healthJourneyRepository = HealthJourneyRepository( applicationContext)
+        healthJourneyRepository = HealthJourneyRepository()
 
     }
 }
