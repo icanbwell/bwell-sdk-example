@@ -1,6 +1,5 @@
 package com.bwell.sampleapp.activities.ui.healthsummary
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -40,7 +39,6 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
     var onEndOfListReached: (() -> Unit)? = null
     var onItemClicked: ((T?) -> Unit)? = null
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches?.get(position)
         when (launch) {
@@ -48,7 +46,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Started $formattedDate" ?: ""
+                holder.binding.textViewDate.text = "Started "+formattedDate ?: ""
                 addTextField(holder, holder.binding.root.context.getString(R.string.status), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.intent), getDataTwo(launch))
             }
@@ -56,7 +54,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Most Recent: $formattedDate" ?: ""
+                holder.binding.textViewDate.text = "Most Recent: "+formattedDate ?: ""
+                holder.binding.organizationName.text = "from "+launch?.performer?.get(1)?.actor?.onOrganization?.organizationName
                 addTextField(holder, holder.binding.root.context.getString(R.string.dose_number), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.manufacturer_name), getDataTwo(launch))
             }
@@ -64,7 +63,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Performed Date: $formattedDate" ?: ""
+                holder.binding.textViewDate.text = "Performed Date: "+formattedDate ?: ""
+                holder.binding.organizationName.text = "from "+launch?.performer?.get(1)?.actor?.onOrganization?.organizationName
                 addTextField(holder, holder.binding.root.context.getString(R.string.bodysite), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.reason), getDataTwo(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.outcome), launch.outcome.toString())
@@ -76,8 +76,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text = "Effective Date: $formattedDate" ?: ""
-                holder.binding.organizationName.text = "from "+launch?.encounter?.location?.get(0)?.location?.name
+                holder.binding.textViewDate.text = "Effective Date: "+formattedDate ?: ""
+                holder.binding.organizationName.text = "from "+launch?.performer?.get(1)?.onOrganization?.organizationName
                 addTextField(holder, holder.binding.root.context.getString(R.string.result), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.healthy_range), getDataTwo(launch))
             }
@@ -85,9 +85,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
-                holder.binding.textViewDate.text =
-                    (launch.participant?.get(0)?.individual?.name?.text + " " + formattedDate)
-                        ?: ""
+                holder.binding.textViewDate.text =launch.participant?.get(0)?.individual?.practitionerName?.get(0)?.text.toString()+" "+formattedDate ?: ""
                 addTextField(holder, holder.binding.root.context.getString(R.string.reason), getDataOne(launch))
             }
             is AllergyIntolerance ->{
@@ -106,7 +104,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             }
             is Condition ->{
                 holder.binding.header.text = getTitle(launch)
-                holder.binding.textViewDate.text =holder.binding.root.context.getString(R.string.patient_name)+": "+launch.recorder?.onPatient?.patientName?.get(0)?.given?.get(0).toString()
+                holder.binding.textViewDate.text =holder.binding.root.context.getString(R.string.name)+": "+launch.recorder?.onPractitioner?.practitionerName?.get(0)?.text.toString()
                 addTextField(holder, holder.binding.root.context.getString(R.string.recorded_date), getDataOne(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.category), getDataTwo(launch))
                 addTextField(holder, holder.binding.root.context.getString(R.string.severity), launch.severity.toString())

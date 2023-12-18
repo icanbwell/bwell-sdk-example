@@ -209,4 +209,5 @@
     <string name="dose_number">Dose Number</string>
     <string name="manufacturer_name">Manufacturer Name</string>
     <string name="healthy_range">Health Range</string>
+    <string name="name">Name</string>
 </resources>

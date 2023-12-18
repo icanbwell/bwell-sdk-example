@@ -113,27 +113,27 @@
         </LinearLayout>
 
     </LinearLayout>
-    <TextView
-        android:id="@+id/labKnowledgeTitle"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:weightSum="1"
+        android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:text="What is a Urobilinogen in Urine Test ?"
-        android:textStyle="bold"
-        android:textSize="16dp"
-        android:textColor="#575881"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_layout"
-        android:layout_margin="10dp"/>
-    <TextView
-        android:id="@+id/labKnowledgeText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about_helath_type_desc"
-        android:textSize="16dp"
-        android:scrollbars = "vertical"
-        android:maxLines = "120"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/labKnowledgeTitle"
-        android:layout_margin="10dp"/>
+        android:layout_marginTop="10dp">
+        <ScrollView
+            android:id="@+id/medicine_knowledge_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:fillViewport="true">
+            <LinearLayout
+                android:id="@+id/containerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
