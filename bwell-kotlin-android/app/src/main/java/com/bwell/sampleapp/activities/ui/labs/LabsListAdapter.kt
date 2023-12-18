@@ -3,13 +3,14 @@ package com.bwell.sampleapp.activities.ui.labs
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.sampleapp.databinding.LabsItemsViewBinding
-import com.bwell.sampleapp.model.LabsListItems
+import com.bwell.sampleapp.utils.formatDate
 
 /*
 *Display the Labs List in RecyclerView
 * */
-class LabsListAdapter(private val launches: List<LabsListItems>) :
+class LabsListAdapter(private val launches: List<Observation>?) :
     RecyclerView.Adapter<LabsListAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: LabsItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
@@ -20,19 +21,18 @@ class LabsListAdapter(private val launches: List<LabsListItems>) :
     }
 
     override fun getItemCount(): Int {
-        return launches.size
+        return launches?.size ?: 0
     }
 
     var onEndOfListReached: (() -> Unit)? = null
-    var onItemClicked: ((LabsListItems) -> Unit)? = null
+    var onItemClicked: ((Observation?) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val launch = launches[position]
-        holder.binding.header.text = launch.labs_type?: ""
-        holder.binding.textViewDate.text = launch.labs_date?: ""
-        holder.binding.textViewStatus.text = launch.labs_status?: ""
-
-        if (position == launches.size - 1) {
+        val launch = launches?.get(position)
+        holder.binding.header.text = launch?.code?.text
+        holder.binding.textViewDate.text = launch?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
+        holder.binding.textViewStatus.text = launch?.interpretation?.get(0)?.text ?: "---"
+        if (position == (launches?.size ?: 0) - 1) {
             onEndOfListReached?.invoke()
         }
 
