@@ -73,6 +73,7 @@
     <string name="create_profile">Create Profile</string>
     <string name="logout">Log out</string>
     <string name="proceed">Proceed</string>
+    <string name="apply_filters">Apply Filters</string>
     <string name="connect_insurance">Connect Insurance</string>
     <string name="connection_benefits">One Connection, Many benefits</string>
     <string name="cancel">Cancel</string>
@@ -82,6 +83,11 @@
     <string name="last_name">Last Name</string>
     <string name="date_of_birth_label">Date of Birth</string>
     <string name="sex_assigned_at_birth">Sex Assigned at Birth</string>
+    <string name="sort_by">Sort by</string>
+    <string name="distance">Distance</string>
+    <string name="location">Location</string>
+    <string name="speciality">Speciality</string>
+    <string name="gender">Gender</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="primary_address">Primary Address</string>
     <string name="city">City</string>
@@ -104,7 +110,7 @@
     <string name="having_a_team_of_healthcare_providers_you_trust_helps_you_get_the_best_care_possible">Having a team of healthcare providers you trust helps you get the best care possible</string>
     <string name="your_healthcare_providers_store_lots_of_important_information_about_your_health">Your healthcare providers store lots of important information about your health.</string>
     <string name="a_primary_care_provider_is_a_healthcare_professional_who_helps">A primary care provider is a healthcare professional who helps</string>
-    <string name="welcome_bwell">Welcome!!BWell</string>
+    <string name="welcome_bwell">Welcome, </string>
     <string name="get_started">Get Started</string>
     <string name="health_journey">Elevate your health journey</string>
     <string name="sub_header_home">Combine all your health records to unlock more data</string>
@@ -116,11 +122,19 @@
     <string name="labs">Labs</string>
     <string name="lab_detail">Lab Detail</string>
     <string name="pending">Pending</string>
+    <string name="connect_now">Connect Now</string>
     <string name="connect_health_records">Connect your health records</string>
     <string name="lets_go">Let\'s go!</string>
     <string name="search_clinics">Search Clinics, Hospitals and Health Systems</string>
+    <string name="select_lab">Select Lab</string>
+    <string name="search_connection_by_provider">Search Connections by Provider</string>
+    <string name="search_50_miles_from_current_location">Searching 50 miles from Current Location</string>
     <string name="contact_us">Contact us</string>
     <string name="connect_to">Connect to </string>
+    <string name="provider_filters">Provider Filters</string>
+    <string name="select_connection_for">Select a connection for </string>
+    <string name="request_connection_for">Request a connection for </string>
+    <string name="no_data_labs">We likely cannot connect to your lab at this time. Please contact support if you have any questions.</string>
     <string name="clinic_discription"> <![CDATA[
      will ask for your credentials and consent for b.well to retrieve your data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.
      \n   \n NOTE: Please turn off your browser\'s popup blocker in order to proceed and complete the data sync. ]]></string>
@@ -132,6 +146,9 @@
     <string name="data_connections_description">Here is your list of Data Connections from your providers/medical offices,insurance,labs,pharmacies and more.</string>
     <string name="health_summary_description">Here is your list of connected health information grouped by record type.</string>
     <string name="about_helath_type_desc">A urobilinogen in urine test measures the amount of urobilinogen in your urine (pee). Normal urine contains some urobilinogen. Too much urobilinogen in urine may be a sign of a liver disease, such as hepatitis or cirrhosis, or certain types of anemia.</string>
+    <string name="search_by_providers_name">Search by your provider’s name, or by their clinic/medical office name, or the city/state where you have appointments.</string>
+    <string name="provider_not_listed">If your provider isn’t listed or there’s no option to connect, click ‘Request Connection’ and we’ll get them added.</string>
+    <string name="no_results">No results found</string>
     <string name="insurance_description_heading">
     <![CDATA[
     Enter the details of your insurance plan to \n     fill your app with your most important \n    health data, like your:
@@ -149,6 +166,23 @@
     <string name="history_description">
     <![CDATA[ 31/10/2023 \n   \n 0.3 mg/dl \n  \n Healthy Range \n  0.1 mg/dl-1.0 mg/dl \n   \n from Memorial health]]>
 </string>
+    <string name="active">Active</string>
+    <string name="past">Past</string>
+    <string name="medicine_detail">Medicine Detail</string>
+    <string name="overview">Overview</string>
+    <string name="waht_is_it">What is it ?</string>
+    <string name="pricing">About Pricing ?</string>
+    <string name="note_info">NOTE: Your data will be connected into your Lee Health app for your personal use to help you manage your healthcare. Lee Health will not review your health data from these connections and will only have access to it if you have consented to share this data with Lee Health.</string>
+<string name="data_connection_category_insurance">Insurance</string>
+<string name="data_connection_category_providers">Providers</string>
+<string name="data_connection_category_clinics">Clinics, Hospitals and Health Systems</string>
+<string name="data_connection_category_lab">Labs</string>
+<string name="request_add_new_connection">Request that we add a new connection</string>
+    <string name="open">Open</string>
+    <string name="hapi">hapi</string>
+    <string name="clinic_info_hapi">credentials, I consent for b.well to retrieve my health data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.</string>
+    <string name="disconnected">Disconneted</string>
+
     <string name="healthy_range">Healthy Range</string>
 
 </resources>

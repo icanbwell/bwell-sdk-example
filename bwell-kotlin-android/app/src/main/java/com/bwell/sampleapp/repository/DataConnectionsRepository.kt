@@ -50,7 +50,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun disconnectConnection(connectionId: String): Flow<OperationOutcome?> = flow {
         try {
-            val disconnectOutcome = BWellSdk.connections?.disconnect(connectionId)
+            val disconnectOutcome = BWellSdk.connections?.disconnectConnection(connectionId)
             emit(disconnectOutcome)
         } catch (e: Exception) {
             // Handle exceptions, if any
@@ -86,25 +86,25 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         // Category A
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                "Insurance", R.drawable.circle,
+                applicationContext.getString(R.string.data_connection_category_insurance), R.drawable.circle,
                 "Get your claims and financials, plus a record of the providers you see from common insurance plans and Medicare."
             )
         )
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                "Providers", R.drawable.plus_icon,
+                applicationContext.getString(R.string.data_connection_category_providers), R.drawable.plus_icon,
                 "See your core health info, such as provider visit summaries, diagnosis, treatment history, prescriptions, and labs."
             )
         )
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                "Clinics, Hospitals and Health Systems", R.drawable.ic_placeholder,
+                applicationContext.getString(R.string.data_connection_category_clinics), R.drawable.ic_placeholder,
                 "See your core health info, such as your diagnosis, procedures, treatment history, prescriptions, and labs."
             )
         )
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                "Labs", R.drawable.vaccine_icon,
+                applicationContext.getString(R.string.data_connection_category_lab), R.drawable.vaccine_icon,
                 "View your lab results to track your numbers over time."
             )
         )
@@ -142,44 +142,5 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
 
 
-    suspend fun getDataConnectionsClinicsList() {
 
-        val suggestionsList = mutableListOf<DataConnectionsClinicsListItems>()
-
-        // Category A
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"AmSurg Columbia Anesthesia LLC"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Amsterdam Medical Practice (New York)"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Amsterdam Internal Medicine and Pediatrics"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Bna Medical Group (Texas)"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"Presbyterian Hospital - Albuquerque, NM"
-            )
-        )
-        suggestionsList.add(
-            DataConnectionsClinicsListItems(
-                R.drawable.baseline_person_pin_24,"We Care Family Practice"
-            )
-        )
-
-
-        val activityList = DataConnectionsClinicsList(suggestionsList)
-        dataConnectionsClinicsLiveData.postValue(activityList)
-    }
 }
