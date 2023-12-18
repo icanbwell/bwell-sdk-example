@@ -182,9 +182,6 @@
     <string name="hapi">hapi</string>
     <string name="clinic_info_hapi">credentials, I consent for b.well to retrieve my health data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.</string>
     <string name="disconnected">Disconneted</string>
-
-    <string name="healthy_range">Healthy Range</string>
-
     <string name="procedures">Procedures</string>
     <string name="vitals">Vitals</string>
     <string name="visit_history">Visit History</string>
