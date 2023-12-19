@@ -28,13 +28,10 @@ import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSear
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import kotlinx.coroutines.launch
 
-class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.PopupListener, DataConnectionsListAdapter.DataConnectionsClickListener {
+class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnectionsListAdapter.DataConnectionsClickListener {
 
-     var _binding: FragmentDataConnectionsParentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    protected val binding get() = _binding!!
+     private var mBinding: FragmentDataConnectionsParentBinding? = null
+    private val binding get() = mBinding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
     private lateinit var connection: Connection
     private lateinit var frameLayoutConnectionStatus:FrameLayout
@@ -45,7 +42,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDataConnectionsParentBinding.inflate(inflater, container, false)
+        mBinding = FragmentDataConnectionsParentBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
 
@@ -81,7 +78,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        mBinding = null
     }
 
     private fun setDataConnectionsAdapter(suggestedActivitiesLIst: List<Connection>) {
@@ -163,14 +160,12 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                         .build()
                     dataConnectionsViewModel.createConnection(connectionRequest)
                 }
-
                 viewLifecycleOwner.lifecycleScope.launch {
                     dataConnectionsViewModel.createConnectionData.collect { connectionOutcome ->
                         connectionOutcome?.let {
-                            if (connectionOutcome.status == Status.SUCCESS) {
-                                val popupFragment = PopupFragment()
-                                popupFragment.setPopupListener(this@DataConnectionsFragment) // Set the listener
-                                popupFragment.show(childFragmentManager, "popup")
+                            when {
+                                connectionOutcome.status != Status.SUCCESS -> {
+                                }
                             }
                         }
                     }
@@ -212,10 +207,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         dataConnectionsViewModel.suggestedDataConnectionsCategories.observe(viewLifecycleOwner) {
             setDataConnectionsCategoryAdapter(it.suggestedDataConnectionsCategoriesList)
         }
-    }
-
-    override fun onCloseButtonClicked() {
-        displayDataConnectionsCategoriesList()
     }
 
     override fun onChangeStatusClicked(connection: Connection,parentView:ViewGroup,statusChangeView: View,frameLayoutConnectionStatus: FrameLayout) {
