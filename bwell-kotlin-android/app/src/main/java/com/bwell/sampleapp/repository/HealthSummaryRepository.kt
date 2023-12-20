@@ -7,6 +7,7 @@ import com.bwell.BWellSdk
 import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceRequest
+import com.bwell.healthdata.healthsummary.careplan.CarePlanCompositeRequest
 import com.bwell.healthdata.healthsummary.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.communication.CommunicationRequest
 import com.bwell.healthdata.healthsummary.condition.ConditionRequest
@@ -27,7 +28,7 @@ class HealthSummaryRepository(private val applicationContext: Context) {
             lateinit var healthSummaryResult:BWellResult<Any>
             if(category.equals(applicationContext.getString(R.string.care_plans)))
             {
-                healthSummaryResult = BWellSdk.health.getCarePlans(request as? CarePlanRequest)
+                healthSummaryResult = BWellSdk.health.getCarePlanComposites(request as? CarePlanCompositeRequest)
             }else if(category.equals(applicationContext.getString(R.string.immunizations)))
             {
                 healthSummaryResult = BWellSdk.health.getImmunizations(request as? ImmunizationRequest)
