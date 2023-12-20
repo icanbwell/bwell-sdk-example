@@ -11,15 +11,16 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
 import com.bwell.search.ProviderSearchQuery
 
-class OrganizationInfoFragment(organizationData: ProviderSearchQuery.Organization?) : Fragment(),View.OnClickListener {
+class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClickListener {
 
     private var _binding: FragmentOrganizationInfoViewBinding? = null
-    private var organization: ProviderSearchQuery.Organization? = organizationData
+    private var organization: T? = organizationData
 
     private val binding get() = _binding!!
 
@@ -32,20 +33,32 @@ class OrganizationInfoFragment(organizationData: ProviderSearchQuery.Organizatio
         _binding = FragmentOrganizationInfoViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val organization = organization
-        val connectionType = organization?.endpoint?.get(0)?.connectionType?.code
+        var connectionType = ""
+        var name = ""
+        when (organization) {
+            is ProviderSearchQuery.Organization?->{
+                connectionType = organization?.endpoint?.get(0)?.connectionType?.code.toString()
+                name = organization?.name.toString()
+            }
+            is Provider?->{
+                connectionType = organization?.endpoint?.get(0)?.connectionType?.code.toString()
+                name = organization?.content.toString()
+            }
+
+        }
         binding.clinicNametxt.text =
-            "${resources.getString(R.string.connect_to)} ${organization?.name}"
+            "${resources.getString(R.string.connect_to)} ${name}"
         if(connectionType.equals(resources.getString(R.string.hapi)))
         {
             binding.clinicDiscriptionTxt.text ="By providing  my "+
-                "${organization?.name} ${resources.getString(R.string.clinic_info_hapi)}"
-            binding.editTextUsername.visibility = View.VISIBLE;
-            binding.passwordLayout.visibility = View.VISIBLE;
+                "$name ${resources.getString(R.string.clinic_info_hapi)}"
+            binding.editTextUsername.visibility = View.VISIBLE
+            binding.passwordLayout.visibility = View.VISIBLE
         }else{
             binding.clinicDiscriptionTxt.text =
-                "${organization?.name} ${resources.getString(R.string.clinic_discription)}"
-            binding.editTextUsername.visibility = View.GONE;
-            binding.passwordLayout.visibility = View.GONE;
+                "$name ${resources.getString(R.string.clinic_discription)}"
+            binding.editTextUsername.visibility = View.GONE
+            binding.passwordLayout.visibility = View.GONE
         }
         binding.cancelTxt.setOnClickListener(this)
         binding.togglePassword.setOnClickListener(this)
@@ -123,10 +136,7 @@ class OrganizationInfoFragment(organizationData: ProviderSearchQuery.Organizatio
     private fun checkVisibilityOfProceed(connectionType:String?): Boolean {
         if(connectionType.equals(resources.getString(R.string.hapi)))
         {
-            if(binding.editTextUsername.text.toString().equals("") || binding.editTextPassword.text.toString().equals("") || !binding.checkbox.isChecked)
-                return false
-            else
-                return true
+            return !(binding.editTextUsername.text.toString() == "" || binding.editTextPassword.text.toString().equals("") || !binding.checkbox.isChecked)
         }else{
             return true
         }
@@ -142,7 +152,7 @@ class OrganizationInfoFragment(organizationData: ProviderSearchQuery.Organizatio
         when (view?.id) {
             R.id.cancel_txt -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.getParentFragment() as DataConnectionsFragment
+                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
                 parentFrag.showDataConnectionCategories()
             }
             R.id.togglePassword -> {
