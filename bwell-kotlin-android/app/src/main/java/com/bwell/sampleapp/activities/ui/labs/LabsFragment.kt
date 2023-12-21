@@ -124,7 +124,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
                             val details:Observation? = dataList?.get(0)
                             binding.includeLabsDetail.typeText.text = details?.code?.text
                             binding.includeLabsDetail.dateText.text = "as of "+details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
-                            binding.includeLabsDetail.organizationName.text = "from "+details?.performer?.get(1)?.onOrganization?.organizationName
+                            binding.includeLabsDetail.organizationName.text = "from "+details?.meta?.security?.get(0)?.system
                             addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)
