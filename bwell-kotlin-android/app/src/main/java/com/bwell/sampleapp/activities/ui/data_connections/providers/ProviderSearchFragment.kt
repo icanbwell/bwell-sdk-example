@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.activities.ui.data_connections.providers
 
 import LocationAdapter
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
@@ -14,24 +15,29 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
+import com.bwell.sampleapp.activities.ui.popup.PopupFragment
 import com.bwell.sampleapp.databinding.FragmentProviderViewBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.ProviderSearchQuery
+import com.bwell.search.requests.ConnectionRequest
 import com.bwell.search.requests.ProviderSearchRequest
 import com.bwell.search.type.Gender
 import com.bwell.search.type.OrganizationType
 import com.bwell.search.type.SortField
 import com.bwell.search.type.SortOrder
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
-class ProviderSearchFragment : Fragment(),View.OnClickListener,
+class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.PopupListener,
     OrganizationAdapter.OrganizationClickListener {
 
     private var _binding: FragmentProviderViewBinding? = null
@@ -62,8 +68,8 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
     }
 
 
-    override fun onOrganizationClick(organization: ProviderSearchQuery.Organization?) {
-        val organizationFragment = OrganizationInfoFragment(organization)
+    override fun onOrganizationClick(organization: Organization?) {
+        val organizationFragment = OrganizationInfoFragment<Organization?>(organization)
         val transaction = parentFragmentManager.beginTransaction()
         transaction.hide(this@ProviderSearchFragment)
         transaction.add(R.id.container_layout, organizationFragment)
@@ -148,11 +154,13 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
                     var titleText = ""
                     if(selectedList.organization?.size!! > 0)
                     {
+                        binding.organizationsLocationsDataView.organizationsListView.visibility = View.VISIBLE
                         var organizationAdapter = OrganizationAdapter(requireContext(), selectedList.organization)
                         organizationAdapter.organizationClickListener = this
                         binding.organizationsLocationsDataView.organizationsListView.adapter = organizationAdapter
                         titleText = resources.getString(R.string.select_connection_for)
                     }else{
+                        binding.organizationsLocationsDataView.organizationsListView.visibility = View.GONE
                         titleText = resources.getString(R.string.request_connection_for)
                     }
                     if(selectedList.location?.size!! > 0)
@@ -167,6 +175,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
                     {
                         binding.organizationsLocationsDataView.headerText.text = titleText+" "+selectedList.name?.get(0)?.text.toString()+" below:"
                     }
+                    binding.organizationsLocationsDataView.requestConnection.setOnClickListener(this)
                 }
                 binding.providerSearchView.constraintLayout.visibility = View.GONE
                 binding.providerSearchView.providersDataView.providerDataView.visibility = View.VISIBLE
@@ -202,6 +211,43 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
                 binding.providerFiltersView.providerFiltersView.visibility = View.GONE
                 binding.organizationsLocationsDataView.organizationsLocationsDataView.visibility = View.GONE
             }
+            R.id.request_connection -> {
+                val popupFragment = PopupFragment()
+                popupFragment.setPopupListener(this@ProviderSearchFragment) // Set the listener
+                popupFragment.show(childFragmentManager, "popup")
+            }
         }
+    }
+
+    override fun onSubmitButtonClicked(institute: String, provider: String, city: String, state: String)
+    {
+        val connectionRequest = ConnectionRequest.Builder()
+            .institution(institute)
+            .provider(provider)
+            .city(city)
+            .state(state).build()
+        providerViewModel.requestConnection(connectionRequest)
+        viewLifecycleOwner.lifecycleScope.launch {
+            providerViewModel.requestConnectionData.take(1).collect { connectionOutcome ->
+                connectionOutcome?.let {
+                    if (connectionOutcome.status == Status.SUCCESS) {
+                        showSuccessDialog(resources.getString(R.string.success),resources.getString(R.string.success_data))
+                    }else{
+                        showSuccessDialog(resources.getString(R.string.error),resources.getString(R.string.error_data))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showSuccessDialog(title: String, content: String) {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle(title)
+        alertDialogBuilder.setMessage(content)
+        alertDialogBuilder.setPositiveButton(resources.getString(R.string.close)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 }

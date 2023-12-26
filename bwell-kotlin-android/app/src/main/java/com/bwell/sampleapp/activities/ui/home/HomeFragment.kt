@@ -12,10 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.BWellSdk
-import com.bwell.core.auth.Credentials
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.LogLevel
 import com.bwell.core.config.RetryPolicy
+import com.bwell.core.network.auth.Credentials
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentHomeBinding
@@ -68,19 +68,19 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initializeBWellSDK() {
-        BWellSdk.initialize(config = BWellConfig(
-            clientKey = "testClientKey",
-            logLevel = LogLevel.DEBUG,
-            timeout = 20000,
-            retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
-        ))
-        val credentials = Credentials.OAuthCredentials("token")
-        Log.d("BWell Sample App", credentials.token)
         lifecycleScope.launch {
+            BWellSdk.initialize(config = BWellConfig(
+                clientKey = "eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9",
+                logLevel = LogLevel.DEBUG,
+                timeout = 20000,
+                retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
+            ))
+            val credentials = Credentials.OAuthCredentials("token")
+            Log.d("BWell Sample App", credentials.token)
+
             BWellSdk.authenticate(credentials)
         }
     }
-
     private fun setAdapter(suggestedActivitiesLIst: List<ActivityListItems>) {
         val adapter = SuggestionActivitiesListAdapter(suggestedActivitiesLIst)
         binding.rvSuggestedActivities.layoutManager = LinearLayoutManager(requireContext())

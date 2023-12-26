@@ -210,4 +210,13 @@
     <string name="manufacturer_name">Manufacturer Name</string>
     <string name="healthy_range">Health Range</string>
     <string name="name">Name</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+    <string name="success_data">Success Data</string>
+    <string name="error_data">Error Data</string>
+    <string name="close">Close</string>
+    <string name="request_new_connection">Request New Connection</string>
+    <string name="institution_name">Institution Name</string>
+    <string name="provider">Provider</string>
+    <string name="submit">Submit</string>
 </resources>

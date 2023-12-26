@@ -30,7 +30,9 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 import com.bwell.sampleapp.model.LabsListItems
+import com.bwell.sampleapp.utils.parseDateStringToDate
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
+import java.util.Date
 
 class LabsFragment : Fragment(), View.OnClickListener {
 
@@ -57,7 +59,8 @@ class LabsFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getLabsList() {
-        val date = Period.Builder().start("2023-01-01").build()
+        val date = Period.Builder().start(
+            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
         val page = "0"
         val pageSize = 30
 
@@ -100,7 +103,8 @@ class LabsFragment : Fragment(), View.OnClickListener {
         binding.includeLabsDetail.labDataLl.removeAllViews()
         val id = selectedLabType?.id
         val code = selectedLabType?.code?.coding?.get(0)?.code
-        val date = Period.Builder().start("2023-01-01").build()
+        val date = Period.Builder().start(
+            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
         val page = "0"
         val pageSize = 30
 
@@ -124,7 +128,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
                             val details:Observation? = dataList?.get(0)
                             binding.includeLabsDetail.typeText.text = details?.code?.text
                             binding.includeLabsDetail.dateText.text = "as of "+details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
-                            binding.includeLabsDetail.organizationName.text = "from "+details?.performer?.get(1)?.onOrganization?.organizationName
+                            binding.includeLabsDetail.organizationName.text = "from "+details?.meta?.security?.get(0)?.system
                             addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)

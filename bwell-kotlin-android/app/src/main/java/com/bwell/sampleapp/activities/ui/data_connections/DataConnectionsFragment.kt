@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,13 +29,13 @@ import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSear
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import kotlinx.coroutines.launch
 
-class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.PopupListener, DataConnectionsListAdapter.DataConnectionsClickListener {
+class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnectionsListAdapter.DataConnectionsClickListener {
 
      var _binding: FragmentDataConnectionsParentBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    protected val binding get() = _binding!!
+    private val binding get() = _binding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
     private lateinit var connection: Connection
     private lateinit var frameLayoutConnectionStatus:FrameLayout
@@ -163,14 +164,10 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
                         .build()
                     dataConnectionsViewModel.createConnection(connectionRequest)
                 }
-
                 viewLifecycleOwner.lifecycleScope.launch {
                     dataConnectionsViewModel.createConnectionData.collect { connectionOutcome ->
                         connectionOutcome?.let {
-                            if (connectionOutcome.status == Status.SUCCESS) {
-                                val popupFragment = PopupFragment()
-                                popupFragment.setPopupListener(this@DataConnectionsFragment) // Set the listener
-                                popupFragment.show(childFragmentManager, "popup")
+                            if (connectionOutcome.status != Status.SUCCESS) {
                             }
                         }
                     }
@@ -212,10 +209,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, PopupFragment.
         dataConnectionsViewModel.suggestedDataConnectionsCategories.observe(viewLifecycleOwner) {
             setDataConnectionsCategoryAdapter(it.suggestedDataConnectionsCategoriesList)
         }
-    }
-
-    override fun onCloseButtonClicked() {
-        displayDataConnectionsCategoriesList()
     }
 
     override fun onChangeStatusClicked(connection: Connection,parentView:ViewGroup,statusChangeView: View,frameLayoutConnectionStatus: FrameLayout) {
