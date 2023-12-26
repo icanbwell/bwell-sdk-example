@@ -2,7 +2,6 @@ package com.bwell.sampleapp.activities.ui.popup
 
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,7 @@ class PopupFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var selectedState:String = "";
+        var selectedState = ""
         val closeButton: FrameLayout = view.findViewById(R.id.frameLayoutCancel)
         val submitButton: FrameLayout = view.findViewById(R.id.frameLayoutSubmit)
         val instituteEditText: EditText = view.findViewById(R.id.instituteEditText)
