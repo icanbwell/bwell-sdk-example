@@ -23,7 +23,6 @@ import com.bwell.sampleapp.activities.ui.data_connections.labs.LabsSearchFragmen
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
-import com.bwell.sampleapp.activities.ui.popup.PopupFragment
 import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSearchFragment
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import kotlinx.coroutines.launch

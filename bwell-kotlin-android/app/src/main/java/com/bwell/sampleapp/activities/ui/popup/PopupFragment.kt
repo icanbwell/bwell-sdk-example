@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSearchFragment
 
 
 class PopupFragment : DialogFragment() {
@@ -72,7 +73,7 @@ class PopupFragment : DialogFragment() {
     }
 
     // Setter method for the listener
-    fun setPopupListener(listener: PopupListener) {
+    fun setProviderPopupListener(listener: ProviderSearchFragment) {
         this.popupListener = listener
     }
 }

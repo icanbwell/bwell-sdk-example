@@ -2,7 +2,6 @@ package com.bwell.sampleapp.activities.ui.labs
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,8 +28,6 @@ import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
-import com.bwell.sampleapp.model.LabsListItems
-import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 
 class LabsFragment : Fragment(), View.OnClickListener {
 
