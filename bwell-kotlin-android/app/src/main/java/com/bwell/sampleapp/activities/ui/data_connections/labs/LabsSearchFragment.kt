@@ -112,10 +112,10 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
             else -> {}
         }
         dataConnectionsLabsListAdapter.onItemClicked = { selectedList ->
-            // Handle item click, perform UI changes here
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            if(selectedList?.organization?.size!! > 0) {
-                val organizationFragment = OrganizationInfoFragment(selectedList?.organization?.get(0))
+            if((selectedList?.organization?.size ?: 0) > 0)
+            {
+                val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
                 val transaction = parentFragmentManager.beginTransaction()
                 transaction.hide(this@LabsSearchFragment)
                 transaction.add(R.id.container_layout, organizationFragment)

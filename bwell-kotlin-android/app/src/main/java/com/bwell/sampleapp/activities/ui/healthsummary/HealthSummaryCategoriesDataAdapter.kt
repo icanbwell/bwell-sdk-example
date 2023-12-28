@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntolerance
 import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlan
+import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanComposite
 import com.bwell.common.models.domain.healthdata.healthsummary.communication.Communication
 import com.bwell.common.models.domain.healthdata.healthsummary.condition.Condition
 import com.bwell.common.models.domain.healthdata.healthsummary.immunization.Immunization
@@ -44,13 +45,12 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches?.get(position)
         when (launch) {
-            is CarePlan -> {
+            is CarePlanComposite -> {
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = ("Started $formattedDate")
-                addTextField(holder, holder.binding.root.context.getString(R.string.status), getDataOne(launch))
-                addTextField(holder, holder.binding.root.context.getString(R.string.intent), getDataTwo(launch))
+                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
             is Immunization ->{
                 holder.binding.header.text = getTitle(launch)
@@ -148,7 +148,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
 
     private fun getTitle(item: T?): String {
         return when (item) {
-            is CarePlan -> item.title ?: ""
+            is CarePlanComposite -> item.name ?: ""
             is Immunization -> item.vaccineCode?.text ?: ""
             is Procedure -> item.code?.text ?: ""
             is Observation -> item.code?.text ?: ""
@@ -162,7 +162,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
 
     private fun getDate(item: T?): String? {
         return when (item) {
-            is CarePlan -> item.period?.start.toString()
+            is CarePlanComposite -> item.period?.start.toString()
             is Immunization -> item.occurrenceDateTime.toString()
             is Procedure -> item.performedDateTime.toString()
             is Observation -> item.effectiveDateTime.toString()
