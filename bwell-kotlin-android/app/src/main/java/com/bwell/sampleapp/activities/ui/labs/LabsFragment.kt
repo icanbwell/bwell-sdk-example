@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.observation.Observation
+import com.bwell.common.models.domain.healthdata.observation.performer.ObservationOrganizationPerformer
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.lab.LabDetailRequest
 import com.bwell.healthdata.lab.LabKnowledgeRequest
@@ -126,9 +127,9 @@ class LabsFragment : Fragment(), View.OnClickListener {
                             val details:Observation? = dataList?.get(0)
                             binding.includeLabsDetail.typeText.text = details?.code?.text
                             binding.includeLabsDetail.dateText.text =
-                                ("as of " + details?.effectiveDateTime?.let { formatDate(it) })
-                            binding.includeLabsDetail.organizationName.text = "from "+details?.meta?.security?.get(0)?.system
-                            addTextField(details?.effectiveDateTime?.let { formatDate(it) } ?: "---",false)
+                                ("as of " + details?.effectiveDateTime?.toString().let { formatDate(it) })
+                            binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as ObservationOrganizationPerformer).organizationName
+                            addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)
                             addTextField(details?.referenceRange?.get(0)?.text.toString(),false)

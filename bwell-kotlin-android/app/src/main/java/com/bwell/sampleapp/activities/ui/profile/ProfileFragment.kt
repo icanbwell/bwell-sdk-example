@@ -58,7 +58,6 @@ class ProfileFragment : Fragment() {
         }
 
         val saveButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutSave)
-        // Set a click listener for the save button
         saveButton.setOnClickListener {
             val updatedPerson = Person.Builder()
                 .firstName(binding.includeEditProfile.firstNameEditText.text.toString())
@@ -75,6 +74,7 @@ class ProfileFragment : Fragment() {
 
             profileViewModel.updatePersonData(updatedPerson)
         }
+
 
         val editButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutEditProfile)
         editButton.setOnClickListener {

@@ -16,7 +16,6 @@ import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
-import com.bwell.search.ProviderSearchQuery
 
 class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClickListener {
 
@@ -137,10 +136,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
     private fun checkVisibilityOfProceed(connectionType:String?): Boolean {
         if(connectionType.equals(resources.getString(R.string.hapi)))
         {
-            if(binding.editTextUsername.text.toString().equals("") || binding.editTextPassword.text.toString().equals("") || !binding.checkbox.isChecked)
-                return false
-            else
-                return true
+            return !(binding.editTextUsername.text.toString() == "" || binding.editTextPassword.text.toString().equals("") || !binding.checkbox.isChecked)
         }else{
             return true
         }
@@ -156,7 +152,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         when (view?.id) {
             R.id.cancel_txt -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.getParentFragment() as DataConnectionsFragment
+                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
                 parentFrag.showDataConnectionCategories()
             }
             R.id.togglePassword -> {

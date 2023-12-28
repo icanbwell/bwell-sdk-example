@@ -57,38 +57,32 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             binding.healthSummaryCategoriesView.healthSummaryCategoriesView.visibility = View.GONE
             binding.healthSummaryCategoriesDataView.healthSummaryCategoriesDataView.visibility = View.VISIBLE
             lateinit var  healthSummaryRequest: Any
-            if(selectedList.category.toString().equals(resources.getString(R.string.care_plans)))
+            if(selectedList.category.toString() == resources.getString(R.string.care_plans))
             {
                 healthSummaryRequest = CarePlanCompositeRequest.Builder()
-                    .page(1)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.immunizations)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.immunizations))
             {
                 healthSummaryRequest = ImmunizationCompositeRequest.Builder()
-                    .page(1)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.procedures)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.procedures))
             {
                 healthSummaryRequest= ProcedureCompositeRequest.Builder()
-                    .page(1)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.vitals)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.vitals))
             {
                 healthSummaryRequest = VitalSignCompositeRequest.Builder()
-                    .page(1)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.visit_history)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.visit_history))
             {
                 healthSummaryRequest = EncounterCompositeRequest.Builder()
-                    .page(1)
                     .build()
             }
-            else if(selectedList.category.toString().equals(resources.getString(R.string.allergies)))
+            else if(selectedList.category.toString() == resources.getString(R.string.allergies))
             {
                 healthSummaryRequest = AllergyIntoleranceCompositeRequest.Builder()
-                    .page(1)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.communications)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.communications))
             {
                 val basedOn = ""
                 val category = selectedList.category
@@ -120,7 +114,7 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                     .subject(subject)
                     .page(page)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.conditions)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.conditions))
             {
                 healthSummaryRequest = ConditionCompositeRequest.Builder()
                     .page(1)
