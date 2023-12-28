@@ -97,7 +97,7 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         }
         dataConnectionClinicsAdapter.onItemClicked = { selectedList ->
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            if(selectedList?.endpoint?.size!! > 0)
+            if((selectedList?.organization?.size ?: 0) > 0)
             {
                 val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
                 val transaction = parentFragmentManager.beginTransaction()
