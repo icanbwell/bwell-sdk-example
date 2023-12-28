@@ -167,8 +167,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
                 viewLifecycleOwner.lifecycleScope.launch {
                     dataConnectionsViewModel.createConnectionData.collect { connectionOutcome ->
                         connectionOutcome?.let {
-                            if (connectionOutcome.status != Status.SUCCESS) {
-                            }
+
                         }
                     }
                 }
