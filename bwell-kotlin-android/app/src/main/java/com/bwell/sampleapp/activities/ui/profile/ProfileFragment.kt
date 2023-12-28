@@ -58,21 +58,22 @@ class ProfileFragment : Fragment() {
         }
 
         val saveButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutSave)
-        // Set a click listener for the save button
         saveButton.setOnClickListener {
-            val firstName = binding.includeEditProfile.firstNameEditText.text.toString()
-            val lastName = binding.includeEditProfile.lastNameEditText.text.toString()
-            val dateOfBirth = binding.includeEditProfile.dateofbirthEditText.text.toString()
-            val phoneNumber = binding.includeEditProfile.phonenumberEditText.text.toString()
-            val primaryAddress = binding.includeEditProfile.primaryAddressEditText.text.toString()
-            val city = binding.includeEditProfile.cityEditText.text.toString()
-            val zipcode = binding.includeEditProfile.zipcodeEditText.text.toString()
-            val person =  Person(userData.id,firstName,lastName,primaryAddress,userData.addressUnit,city,selectedState,zipcode,userData.homePhone,
-                phoneNumber,userData.officePhone,userData.email,dateOfBirth,selectedSex,userData.rawFhirResource)
-
-            // Call the saveData method from the ViewModel and pass the user data
-            profileViewModel.updatePersonData(person)
+            val updatedPerson = Person.Builder()
+                .firstName(binding.includeEditProfile.firstNameEditText.text.toString())
+                .lastName(binding.includeEditProfile.lastNameEditText.text.toString())
+                .birthDate(binding.includeEditProfile.dateofbirthEditText.text.toString())
+                .mobilePhone(binding.includeEditProfile.phonenumberEditText.text.toString())
+                .addressStreet(binding.includeEditProfile.primaryAddressEditText.text.toString())
+                .city(binding.includeEditProfile.cityEditText.text.toString())
+                .postageOrZipCode(binding.includeEditProfile.zipcodeEditText.text.toString())
+                .stateOrProvidence(selectedState)
+                .gender(selectedSex)
+                .email(userData.email)
+                .build()
+            profileViewModel.updatePersonData(updatedPerson)
         }
+
 
         val editButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutEditProfile)
         editButton.setOnClickListener {

@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bwell.sampleapp.ui.theme.MyTestAppTheme
 // BWell SDK Usage
 import com.bwell.BWellSdk
-import com.bwell.core.auth.Credentials
+import com.bwell.core.network.auth.Credentials
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.LogLevel
 import com.bwell.core.config.RetryPolicy
