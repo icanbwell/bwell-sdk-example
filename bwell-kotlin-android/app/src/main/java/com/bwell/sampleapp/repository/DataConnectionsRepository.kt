@@ -13,11 +13,10 @@ import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.model.DataConnectionListItems
 import com.bwell.sampleapp.model.DataConnectionsClinicsList
-import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsList
-import com.bwell.user.consents.requests.ConsentRequest
-import com.bwell.user.consents.requests.ConsentUpdateRequest
+import com.bwell.user.requests.consents.ConsentRequest
+import com.bwell.user.requests.consents.ConsentUpdateRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

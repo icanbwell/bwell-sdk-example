@@ -103,20 +103,20 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             }else if(selectedList.category.toString().equals(resources.getString(R.string.vitals)))
             {
                 val code = "1"
-                val id = "1"
+                val ids = listOf("1")
                 val componentCode = "1"
                 val date = selectedList.date
                 val status = ObservationStatus.FINAL
                 val page = "0"
                 healthSummaryRequest = VitalSignRequest.Builder()
                     .code(code)
-                    .id(id)
+                    .ids(ids)
                     .componentCode(componentCode)
                     .date(date)
                     .status(status)
                     .page(page)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.visit_history)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.visit_history))
             {
                 val `class` = ""
                 val date = selectedList.date
@@ -135,7 +135,7 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                     .page(page)
                     .build()
             }
-            else if(selectedList.category.toString().equals(resources.getString(R.string.allergies)))
+            else if(selectedList.category.toString() == resources.getString(R.string.allergies))
             {
                 val clinicalStatus = AllergyIntoleranceClinicalStatus.ACTIVE
                 val date = selectedList.date
@@ -185,7 +185,7 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                     .subject(subject)
                     .page(page)
                     .build()
-            }else if(selectedList.category.toString().equals(resources.getString(R.string.conditions)))
+            }else if(selectedList.category.toString() == resources.getString(R.string.conditions))
             {
                 val category = selectedList.category
                 val clinicalStatus = ""
@@ -208,7 +208,7 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 healthSummaryViewModel.healthSummaryResults.collect { result ->
-                    Log.d("result","result"+result)
+                    Log.d("result", "result$result")
                     if (result != null) {
                         setDataAdapter(result,selectedList.category.toString())
                     }

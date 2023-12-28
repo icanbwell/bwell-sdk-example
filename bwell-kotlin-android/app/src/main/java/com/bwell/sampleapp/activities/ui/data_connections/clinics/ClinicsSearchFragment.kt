@@ -69,7 +69,6 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
             TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
-                // Update the filtered list when text changes
                 clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
                 viewLifecycleOwner.lifecycleScope.launch {
                     clinicsViewModel.filteredResults.collect { filteredList ->
@@ -98,11 +97,10 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
             else -> {}
         }
         dataConnectionClinicsAdapter.onItemClicked = { selectedList ->
-            // Handle item click, perform UI changes here
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            if(selectedList?.organization?.size!! > 0)
+            if((selectedList?.organization?.size ?: 0) > 0)
             {
-                val organizationFragment = OrganizationInfoFragment(selectedList?.organization?.get(0))
+                val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
                 val transaction = parentFragmentManager.beginTransaction()
                 transaction.hide(this@ClinicsSearchFragment)
                 transaction.add(R.id.container_layout, organizationFragment)
@@ -121,11 +119,12 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.GONE;
     }
 
+    @SuppressLint("SetTextI18n")
     private fun displayClinicsAfterDataSearchView(resultCount:Int) {
         binding.clinicsBeforeSearchBodyView.clinicsBeforeSearchBodyView.visibility = View.GONE;
         binding.clinicsAfterSearchNoDataBodyView.clinicsAfterSearchNoDataBodyView.visibility = View.GONE;
         binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.VISIBLE;
-        binding.clinicsAfterSearchDataBodyView.resultsText.setText("Results ("+resultCount+")");
+        binding.clinicsAfterSearchDataBodyView.resultsText.text = "Results ($resultCount)";
     }
 
     override fun onDestroyView() {

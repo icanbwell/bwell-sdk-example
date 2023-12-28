@@ -19,6 +19,7 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.lab.LabDetailRequest
 import com.bwell.healthdata.lab.LabKnowledgeRequest
 import com.bwell.healthdata.lab.LabRequest
+import com.bwell.healthdata.labs.GetLabDetailsQuery
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentLabsParentBinding
@@ -27,7 +28,6 @@ import com.bwell.sampleapp.viewmodel.LabsViewModel
 import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-
 
 class LabsFragment : Fragment(), View.OnClickListener {
 
@@ -121,7 +121,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
                             val details:Observation? = dataList?.get(0)
                             binding.includeLabsDetail.typeText.text = details?.code?.text
                             binding.includeLabsDetail.dateText.text = "as of "+details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
-                            binding.includeLabsDetail.organizationName.text = "from "+details?.performer?.get(1)?.onOrganization?.organizationName
+                            binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as GetLabDetailsQuery.OnOrganization).organizationName
                             addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)
