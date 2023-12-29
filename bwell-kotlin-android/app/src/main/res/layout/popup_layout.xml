@@ -7,23 +7,83 @@
     android:backgroundTint="@null"
     android:padding="16dp">
 
-    <!---  TextView -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="Oops, sorry about that!Your connection was not successful."/>
+        android:text="@string/request_new_connection"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="#0076AB"/>
 
-    <!-- Add a button below the TextView -->
-    <Button
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/instituteEditText"
+        android:background="#F2FAFC"
+        android:padding="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/closeButton"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:textColorHint="#0076AB"
+        android:hint="@string/institution_name"/>
+    <EditText
+        android:id="@+id/providerEditText"
+        android:background="#F2FAFC"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColorHint="#0076AB"
+        android:hint="@string/provider"/>
+    <EditText
+        android:id="@+id/cityEditText"
+        android:background="#F2FAFC"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColorHint="#0076AB"
+        android:hint="@string/city"/>
+    <Spinner
+        android:id="@+id/stateSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F2FAFC"
+        android:layout_marginTop="10dp"
+        android:textColor="#000000"
+        android:padding="8dp">
+    </Spinner>
+    <FrameLayout
+        android:id="@+id/frameLayoutSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@null"
         android:background="@drawable/rounded_rectangle_blue"
-        android:text="Go back to Data Connections"/>
+        android:padding="10dp"
+        android:layout_margin="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frameLayoutCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_rectangle_grey"
+        android:padding="10dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="0dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="#0076AB"/>
+    </FrameLayout>
 
 </LinearLayout>
