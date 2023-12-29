@@ -24,9 +24,10 @@ class ProviderRepository {
 
     suspend fun requestConnection(connectionRequest: ConnectionRequest): Flow<OperationOutcome?> = flow {
         try {
-            val connectionOutcome = BWellSdk.search.requestConnection(connectionRequest)
+            val connectionOutcome = BWellSdk.search?.requestConnection(connectionRequest)
             emit(connectionOutcome)
         } catch (e: Exception) {
+            // Handle exceptions, if any
             emit(null)
         }
     }

@@ -24,18 +24,15 @@ import com.bwell.sampleapp.activities.ui.data_connections.labs.LabsSearchFragmen
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
-import com.bwell.sampleapp.activities.ui.popup.PopupFragment
 import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSearchFragment
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import kotlinx.coroutines.launch
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnectionsListAdapter.DataConnectionsClickListener {
 
-     var _binding: FragmentDataConnectionsParentBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private var mBinding: FragmentDataConnectionsParentBinding? = null
+    private val binding get() = mBinding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
     private lateinit var connection: Connection
     private lateinit var frameLayoutConnectionStatus:FrameLayout
@@ -46,7 +43,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDataConnectionsParentBinding.inflate(inflater, container, false)
+        mBinding = FragmentDataConnectionsParentBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
 
@@ -82,7 +79,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        mBinding = null
     }
 
     private fun setDataConnectionsAdapter(suggestedActivitiesLIst: List<Connection>) {

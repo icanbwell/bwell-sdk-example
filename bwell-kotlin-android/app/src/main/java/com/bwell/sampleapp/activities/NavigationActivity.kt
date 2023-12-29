@@ -12,17 +12,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ActivityNavigationBinding
-import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
-import com.bwell.core.device.BWellDeviceManager
 import kotlinx.coroutines.launch
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
-import com.bwell.BWellSdk
 import com.bwell.sampleapp.BWellSampleApplication
-import com.bwell.sampleapp.activities.ui.popup.PopupFragment
 import com.bwell.sampleapp.repository.Repository
 
 class NavigationActivity : AppCompatActivity() {

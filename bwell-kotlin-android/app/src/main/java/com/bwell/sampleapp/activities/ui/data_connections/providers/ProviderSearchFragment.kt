@@ -62,6 +62,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
             val parentFrag: DataConnectionsFragment = this@ProviderSearchFragment.getParentFragment() as DataConnectionsFragment
             parentFrag.showDataConnectionCategories()
         }
+        addRequestConnectionButtonListener()
         showProvidersData("")
 
         return root
@@ -108,6 +109,15 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
             override fun afterTextChanged(editable: Editable?) {}
         })
     }
+
+    private fun addRequestConnectionButtonListener() {
+        binding.providerSearchView.requestConnectionButton.setOnClickListener {
+            val popupFragment = PopupFragment()
+            popupFragment.setPopupListener(this@ProviderSearchFragment) // Set the listener
+            popupFragment.show(childFragmentManager, "popup")
+        }
+    }
+
 
     private fun showProvidersData(enteredText: String) {
         val searchTerm = enteredText
@@ -221,6 +231,10 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
 
     override fun onSubmitButtonClicked(institute: String, provider: String, city: String, state: String)
     {
+        if (institute.isEmpty()) {
+            showSuccessDialog(resources.getString(R.string.error),resources.getString(R.string.request_connection_institution_required))
+            return
+        }
         val connectionRequest = ConnectionRequest.Builder()
             .institution(institute)
             .provider(provider)
