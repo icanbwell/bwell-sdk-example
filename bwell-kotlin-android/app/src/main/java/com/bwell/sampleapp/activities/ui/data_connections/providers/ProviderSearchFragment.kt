@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.activities.ui.data_connections.providers
 
 import LocationAdapter
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
@@ -16,22 +17,26 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
+import com.bwell.sampleapp.activities.ui.popup.PopupFragment
 import com.bwell.sampleapp.databinding.FragmentProviderViewBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.ProviderSearchQuery
+import com.bwell.search.requests.ConnectionRequest
 import com.bwell.search.requests.ProviderSearchRequest
 import com.bwell.search.type.Gender
 import com.bwell.search.type.OrganizationType
 import com.bwell.search.type.SortField
 import com.bwell.search.type.SortOrder
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
-class ProviderSearchFragment : Fragment(),View.OnClickListener,
+class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.PopupListener,
     OrganizationAdapter.OrganizationClickListener {
 
     private var _binding: FragmentProviderViewBinding? = null
@@ -56,6 +61,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
             val parentFrag: DataConnectionsFragment = this@ProviderSearchFragment.getParentFragment() as DataConnectionsFragment
             parentFrag.showDataConnectionCategories()
         }
+        addRequestConnectionButtonListener()
         showProvidersData("")
 
         return root
@@ -102,6 +108,15 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
             override fun afterTextChanged(editable: Editable?) {}
         })
     }
+
+    private fun addRequestConnectionButtonListener() {
+        binding.providerSearchView.requestConnectionButton.setOnClickListener {
+            val popupFragment = PopupFragment()
+            popupFragment.setProviderPopupListener(this@ProviderSearchFragment) // Set the listener
+            popupFragment.show(childFragmentManager, "popup")
+        }
+    }
+
 
     private fun showProvidersData(enteredText: String) {
         val searchTerm = enteredText
@@ -167,6 +182,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
                     {
                         binding.organizationsLocationsDataView.headerText.text = titleText+" "+selectedList.name?.get(0)?.text.toString()+" below:"
                     }
+                    binding.organizationsLocationsDataView.requestConnection.setOnClickListener(this)
                 }
                 binding.providerSearchView.constraintLayout.visibility = View.GONE
                 binding.providerSearchView.providersDataView.providerDataView.visibility = View.VISIBLE
@@ -202,6 +218,47 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener,
                 binding.providerFiltersView.providerFiltersView.visibility = View.GONE
                 binding.organizationsLocationsDataView.organizationsLocationsDataView.visibility = View.GONE
             }
+            R.id.request_connection -> {
+                val popupFragment = PopupFragment()
+                popupFragment.setProviderPopupListener(this@ProviderSearchFragment) // Set the listener
+                popupFragment.show(childFragmentManager, "popup")
+            }
         }
+    }
+
+    override fun onSubmitButtonClicked(institute: String, provider: String, city: String, state: String)
+    {
+        if (institute.isEmpty()) {
+            showSuccessDialog(resources.getString(R.string.error),resources.getString(R.string.request_connection_institution_required))
+            return
+        }
+        val connectionRequest = ConnectionRequest.Builder()
+            .institution(institute)
+            .provider(provider)
+            .city(city)
+            .state(state).build()
+        providerViewModel.requestConnection(connectionRequest)
+        viewLifecycleOwner.lifecycleScope.launch {
+            providerViewModel.requestConnectionData.take(1).collect { connectionOutcome ->
+                connectionOutcome?.let {
+                    if (connectionOutcome.status == Status.SUCCESS) {
+                        showSuccessDialog(resources.getString(R.string.success),resources.getString(R.string.success_data))
+                    }else{
+                        showSuccessDialog(resources.getString(R.string.error),resources.getString(R.string.error_data))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showSuccessDialog(title: String, content: String) {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle(title)
+        alertDialogBuilder.setMessage(content)
+        alertDialogBuilder.setPositiveButton(resources.getString(R.string.close)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 }
