@@ -8,14 +8,15 @@ import android.widget.BaseAdapter
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.bwell.common.models.domain.common.Organization
 import com.bwell.sampleapp.R
 import com.bwell.search.ProviderSearchQuery
 
-class OrganizationAdapter(private val context: Context, private val data: List<ProviderSearchQuery.Organization?>?,
+class OrganizationAdapter(private val context: Context, private val data: List<Organization?>?,
                            var organizationClickListener: OrganizationClickListener? = null) : BaseAdapter() {
 
     interface OrganizationClickListener {
-        fun onOrganizationClick(organization: ProviderSearchQuery.Organization?)
+        fun onOrganizationClick(organization: Organization?)
     }
 
     override fun getCount(): Int {
@@ -47,7 +48,7 @@ class OrganizationAdapter(private val context: Context, private val data: List<P
         }
 
         // Bind data to views
-        val item = getItem(position) as ProviderSearchQuery.Organization?
+        val item = getItem(position) as Organization?
         holder.organizationNameTextView.text = item?.name
         holder.connectButton.setOnClickListener {
             organizationClickListener?.onOrganizationClick(item)

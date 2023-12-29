@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.Status
@@ -68,8 +69,8 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
     }
 
 
-    override fun onOrganizationClick(organization: ProviderSearchQuery.Organization?) {
-        val organizationFragment = OrganizationInfoFragment(organization)
+    override fun onOrganizationClick(organization: Organization?) {
+        val organizationFragment = OrganizationInfoFragment<Organization?>(organization)
         val transaction = parentFragmentManager.beginTransaction()
         transaction.hide(this@ProviderSearchFragment)
         transaction.add(R.id.container_layout, organizationFragment)
@@ -112,7 +113,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
     private fun addRequestConnectionButtonListener() {
         binding.providerSearchView.requestConnectionButton.setOnClickListener {
             val popupFragment = PopupFragment()
-            popupFragment.setProviderPopupListener(this@ProviderSearchFragment) // Set the listener
+            popupFragment.setPopupListener(this@ProviderSearchFragment) // Set the listener
             popupFragment.show(childFragmentManager, "popup")
         }
     }
@@ -163,11 +164,13 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
                     var titleText = ""
                     if(selectedList.organization?.size!! > 0)
                     {
+                        binding.organizationsLocationsDataView.organizationsListView.visibility = View.VISIBLE
                         var organizationAdapter = OrganizationAdapter(requireContext(), selectedList.organization)
                         organizationAdapter.organizationClickListener = this
                         binding.organizationsLocationsDataView.organizationsListView.adapter = organizationAdapter
                         titleText = resources.getString(R.string.select_connection_for)
                     }else{
+                        binding.organizationsLocationsDataView.organizationsListView.visibility = View.GONE
                         titleText = resources.getString(R.string.request_connection_for)
                     }
                     if(selectedList.location?.size!! > 0)
@@ -220,7 +223,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
             }
             R.id.request_connection -> {
                 val popupFragment = PopupFragment()
-                popupFragment.setProviderPopupListener(this@ProviderSearchFragment) // Set the listener
+                popupFragment.setPopupListener(this@ProviderSearchFragment) // Set the listener
                 popupFragment.show(childFragmentManager, "popup")
             }
         }

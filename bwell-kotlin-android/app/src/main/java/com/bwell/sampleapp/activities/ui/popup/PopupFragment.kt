@@ -12,7 +12,6 @@ import android.widget.FrameLayout
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
 import com.bwell.sampleapp.R
-import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSearchFragment
 
 
 class PopupFragment : DialogFragment() {
@@ -41,19 +40,16 @@ class PopupFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var selectedState:String = "";
+        var selectedState = ""
         val closeButton: FrameLayout = view.findViewById(R.id.frameLayoutCancel)
         val submitButton: FrameLayout = view.findViewById(R.id.frameLayoutSubmit)
         val instituteEditText: EditText = view.findViewById(R.id.instituteEditText)
         val providerEditText: EditText = view.findViewById(R.id.providerEditText)
         val cityEditText: EditText = view.findViewById(R.id.cityEditText)
-        //create state Spinner
         val stateSpinner: Spinner = view.findViewById(R.id.stateSpinner)
         val stateAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.states, android.R.layout.simple_spinner_item)
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        // Apply the adapter to the spinner
         stateSpinner.adapter = stateAdapter
-        // Set the on item selected listener
         stateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
                 selectedState = stateSpinner.selectedItem.toString()
@@ -72,8 +68,7 @@ class PopupFragment : DialogFragment() {
         }
     }
 
-    // Setter method for the listener
-    fun setProviderPopupListener(listener: ProviderSearchFragment) {
+    fun setPopupListener(listener: PopupListener) {
         this.popupListener = listener
     }
 }

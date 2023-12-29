@@ -11,11 +11,11 @@ import com.bwell.search.requests.ProviderSearchRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class ProviderRepository(private val applicationContext: Context) {
+class ProviderRepository {
 
     suspend fun searchProviders(providerSearchRequest: ProviderSearchRequest): Flow<BWellResult<Provider>?> = flow {
         try {
-            val searchResult = BWellSdk.search?.searchProviders(providerSearchRequest)
+            val searchResult = BWellSdk.search.searchProviders(providerSearchRequest)
             emit(searchResult)
         } catch (e: Exception) {
             emit(null)

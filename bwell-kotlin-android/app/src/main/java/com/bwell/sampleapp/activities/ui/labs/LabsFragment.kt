@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.activities.ui.labs
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -15,11 +16,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.observation.Observation
+import com.bwell.common.models.domain.healthdata.observation.performer.ObservationOrganizationPerformer
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.lab.LabDetailRequest
 import com.bwell.healthdata.lab.LabKnowledgeRequest
 import com.bwell.healthdata.lab.LabRequest
-import com.bwell.healthdata.labs.GetLabDetailsQuery
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentLabsParentBinding
@@ -28,6 +29,8 @@ import com.bwell.sampleapp.viewmodel.LabsViewModel
 import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+
+import com.bwell.sampleapp.utils.parseDateStringToDate
 
 class LabsFragment : Fragment(), View.OnClickListener {
 
@@ -54,7 +57,8 @@ class LabsFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getLabsList() {
-        val date = Period.Builder().start("2023-01-01").build()
+        val date = Period.Builder().start(
+            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
         val page = "0"
         val pageSize = 30
 
@@ -67,7 +71,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labsResults.take(1).collect { result ->
                 if (result != null) {
-                    Log.e("result","result-"+result)
+                    Log.e("result", "result-$result")
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
@@ -84,8 +88,8 @@ class LabsFragment : Fragment(), View.OnClickListener {
     private fun setLabsAdapter(dataList: List<Observation>?) {
         val adapter = LabsListAdapter(dataList)
         adapter.onItemClicked = { selectedLabType ->
-            binding.includelabsData.labsFragment.visibility = View.GONE;
-            binding.includeLabsDetail.labDetailFragment.visibility = View.VISIBLE;
+            binding.includelabsData.labsFragment.visibility = View.GONE
+            binding.includeLabsDetail.labDetailFragment.visibility = View.VISIBLE
             showLabDetailedView(selectedLabType)
             showLabKnowledgeView(selectedLabType)
         }
@@ -93,11 +97,13 @@ class LabsFragment : Fragment(), View.OnClickListener {
         binding.includelabsData.rvLabs.adapter = adapter
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showLabDetailedView(selectedLabType: Observation?) {
         binding.includeLabsDetail.labDataLl.removeAllViews()
         val id = selectedLabType?.id
         val code = selectedLabType?.code?.coding?.get(0)?.code
-        val date = Period.Builder().start("2023-01-01").build()
+        val date = Period.Builder().start(
+            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
         val page = "0"
         val pageSize = 30
 
@@ -113,15 +119,16 @@ class LabsFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labsDetailResults.take(1).collect { result ->
                 if (result != null) {
-                    Log.d("result","result"+result)
+                    Log.d("result", "result$result")
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
-                            Log.d("dataList","dataList"+dataList)
+                            Log.d("dataList", "dataList$dataList")
                             val details:Observation? = dataList?.get(0)
                             binding.includeLabsDetail.typeText.text = details?.code?.text
-                            binding.includeLabsDetail.dateText.text = "as of "+details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
-                            binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as GetLabDetailsQuery.OnOrganization).organizationName
+                            binding.includeLabsDetail.dateText.text =
+                                ("as of " + details?.effectiveDateTime?.toString().let { formatDate(it) })
+                            binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as ObservationOrganizationPerformer).organizationName
                             addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)
@@ -162,7 +169,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labsKnowledgeResults.take(1).collect { result ->
                 if (result != null) {
-                    Log.d("result","result"+result)
+                    Log.d("result", "result$result")
                     when (result) {
                         is BWellResult.SingleResource -> {
                             val data = result.data
@@ -186,8 +193,8 @@ class LabsFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.leftArrowImageView -> {
-                binding.includelabsData.labsFragment.visibility = View.VISIBLE;
-                binding.includeLabsDetail.labDetailFragment.visibility = View.GONE;
+                binding.includelabsData.labsFragment.visibility = View.VISIBLE
+                binding.includeLabsDetail.labDetailFragment.visibility = View.GONE
             }
         }
     }

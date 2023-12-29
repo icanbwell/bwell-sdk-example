@@ -211,16 +211,14 @@
     <string name="manufacturer_name">Manufacturer Name</string>
     <string name="healthy_range">Health Range</string>
     <string name="name">Name</string>
-
-    <string name="request_new_connection">Request a new connection</string>
-    <string name="institution_name">Institution Name *</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+    <string name="success_data">Success Data</string>
+    <string name="error_data">Error Data</string>
+    <string name="close">Close</string>
+    <string name="request_new_connection">Request New Connection</string>
+    <string name="institution_name">Institution Name</string>
     <string name="provider">Provider</string>
     <string name="submit">Submit</string>
-    <string name="success">Success!</string>
-    <string name="error">Error!</string>
-    <string name="error_data">Your request is not success. Please try again later.</string>
     <string name="request_connection_institution_required">Please enter an institution to make a connection request.</string>
-    <string name="success_data">Your new connection will be added as soon as possible.</string>
-    <string name="close">close</string>
-
 </resources>

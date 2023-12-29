@@ -14,13 +14,15 @@ import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.medication.MedicationSummary
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.MedicationListRequest
-import com.bwell.healthdata.medication.type.MedicationStatus
+import com.bwell.common.models.domain.healthdata.medication.enums.MedicationStatus
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentMedicinesBinding
+import com.bwell.sampleapp.utils.parseDateStringToDate
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class MedicinesFragment : Fragment() {
 
@@ -95,7 +97,9 @@ class MedicinesFragment : Fragment() {
 
     private fun getActiveMedicationList() {
         val name = ""
-        val date = Period.Builder().start("2023-01-01").end("2023-12-31").build()
+        val date = Period.Builder().start(
+            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")
+        ).end(parseDateStringToDate("2023-12-31", "yyyy-MM-dd")).build()
         val status = MedicationStatus.ACTIVE
         val request = MedicationListRequest.Builder()
             .name(name)
@@ -115,7 +119,9 @@ class MedicinesFragment : Fragment() {
 
     private fun getPastMedicationList() {
         val name = ""
-        val date = Period.Builder().start("2023-01-01").end("2023-12-31").build()
+        val date = Period.Builder().start(
+            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")
+        ).end(parseDateStringToDate("2023-12-31", "yyyy-MM-dd")).build()
         val status = MedicationStatus.HISTORICAL
         val request = MedicationListRequest.Builder()
             .name(name)
