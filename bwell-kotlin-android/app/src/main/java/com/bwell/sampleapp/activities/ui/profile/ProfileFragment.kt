@@ -71,6 +71,7 @@ class ProfileFragment : Fragment() {
                 .gender(selectedSex)
                 .email(userData.email)
                 .build()
+
             profileViewModel.updatePersonData(updatedPerson)
         }
 

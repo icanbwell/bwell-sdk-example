@@ -11,11 +11,11 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
-import com.bwell.search.ProviderSearchQuery
 
 class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClickListener {
 
@@ -36,7 +36,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         var connectionType = ""
         var name = ""
         when (organization) {
-            is ProviderSearchQuery.Organization?->{
+            is Organization?->{
                 connectionType = organization?.endpoint?.get(0)?.connectionType?.code.toString()
                 name = organization?.name.toString()
             }
@@ -51,14 +51,14 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         if(connectionType.equals(resources.getString(R.string.hapi)))
         {
             binding.clinicDiscriptionTxt.text ="By providing  my "+
-                "$name ${resources.getString(R.string.clinic_info_hapi)}"
-            binding.editTextUsername.visibility = View.VISIBLE
-            binding.passwordLayout.visibility = View.VISIBLE
+                "${name} ${resources.getString(R.string.clinic_info_hapi)}"
+            binding.editTextUsername.visibility = View.VISIBLE;
+            binding.passwordLayout.visibility = View.VISIBLE;
         }else{
             binding.clinicDiscriptionTxt.text =
-                "$name ${resources.getString(R.string.clinic_discription)}"
-            binding.editTextUsername.visibility = View.GONE
-            binding.passwordLayout.visibility = View.GONE
+                "${name} ${resources.getString(R.string.clinic_discription)}"
+            binding.editTextUsername.visibility = View.GONE;
+            binding.passwordLayout.visibility = View.GONE;
         }
         binding.cancelTxt.setOnClickListener(this)
         binding.togglePassword.setOnClickListener(this)

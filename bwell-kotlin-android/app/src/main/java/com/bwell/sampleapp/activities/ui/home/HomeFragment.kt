@@ -40,14 +40,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
 
-        /*BWellSdk.initialize(config = BWellConfig(
-            clientKey = "testClientKey",
-            logLevel = LogLevel.DEBUG,
-            timeout = 20000,
-            retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
-        )
-        )*/
-
         initializeBWellSDK()
 
         val mainViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[SharedViewModel::class.java]
@@ -68,19 +60,19 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initializeBWellSDK() {
-        BWellSdk.initialize(config = BWellConfig(
-            clientKey = "testClientKey",
-            logLevel = LogLevel.DEBUG,
-            timeout = 20000,
-            retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
-        ))
-        val credentials = Credentials.OAuthCredentials("token")
-        Log.d("BWell Sample App", credentials.token)
         lifecycleScope.launch {
+            BWellSdk.initialize(config = BWellConfig(
+                clientKey = "eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9",
+                logLevel = LogLevel.DEBUG,
+                timeout = 20000,
+                retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
+            ))
+            val credentials = Credentials.OAuthCredentials("token")
+            Log.d("BWell Sample App", credentials.token)
+
             BWellSdk.authenticate(credentials)
         }
     }
-
     private fun setAdapter(suggestedActivitiesLIst: List<ActivityListItems>) {
         val adapter = SuggestionActivitiesListAdapter(suggestedActivitiesLIst)
         binding.rvSuggestedActivities.layoutManager = LinearLayoutManager(requireContext())

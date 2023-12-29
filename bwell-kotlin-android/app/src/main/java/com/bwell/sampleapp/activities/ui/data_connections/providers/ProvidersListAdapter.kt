@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bwell.common.models.domain.common.Coding
+import com.bwell.common.models.domain.common.location.Location
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ProviderItemsViewBinding
@@ -39,7 +41,7 @@ class ProvidersListAdapter(private var launches: List<Provider>?) :
             holder.binding.name.text = "Null Data"
         if(launch.location?.size!! > 0)
         {
-            val location: ProviderSearchQuery.Location? = launch.location?.get(0)
+            val location: Location? = launch.location?.get(0)
             val city: String? = location?.address?.city
             val state: String? = location?.address?.state
             holder.binding.address.text = city+", "+state
@@ -49,7 +51,7 @@ class ProvidersListAdapter(private var launches: List<Provider>?) :
         var specialtiesNames: String = "Null Data";
         if(launch.specialty!!.size > 0)
         {
-            val specialties: List<ProviderSearchQuery.Specialty?>? = launch.specialty
+            val specialties: List<Coding?>? = launch.specialty
             val specialtyDisplays: List<String> = specialties!!.map { it!!.display ?: "" }
             specialtiesNames = specialtyDisplays.joinToString(", ")
         }

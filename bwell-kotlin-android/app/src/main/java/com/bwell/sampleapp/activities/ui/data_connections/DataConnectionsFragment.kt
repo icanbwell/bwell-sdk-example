@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +30,8 @@ import kotlinx.coroutines.launch
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnectionsListAdapter.DataConnectionsClickListener {
 
-     private var mBinding: FragmentDataConnectionsParentBinding? = null
+
+    private var mBinding: FragmentDataConnectionsParentBinding? = null
     private val binding get() = mBinding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
     private lateinit var connection: Connection
@@ -162,10 +164,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
                 viewLifecycleOwner.lifecycleScope.launch {
                     dataConnectionsViewModel.createConnectionData.collect { connectionOutcome ->
                         connectionOutcome?.let {
-                            when {
-                                connectionOutcome.status != Status.SUCCESS -> {
-                                }
-                            }
+
                         }
                     }
                 }

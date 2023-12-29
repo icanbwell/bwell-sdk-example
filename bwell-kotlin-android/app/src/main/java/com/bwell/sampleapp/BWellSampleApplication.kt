@@ -32,7 +32,7 @@ class BWellSampleApplication : Application() {
         bWellRepository = Repository( applicationContext)
         dataConnectionsRepository = DataConnectionsRepository( applicationContext)
         medicineRepository = MedicineRepository( applicationContext)
-        providerRepository = ProviderRepository( applicationContext)
+        providerRepository = ProviderRepository()
         clinicsRepository = ClinicsRepository( applicationContext)
         dataConnectionLabsRepository = DataConnectionLabsRepository( applicationContext)
         labsRepository = LabsRepository( applicationContext)

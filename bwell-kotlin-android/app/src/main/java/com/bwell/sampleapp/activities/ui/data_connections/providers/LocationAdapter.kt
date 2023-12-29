@@ -4,10 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import com.bwell.common.models.domain.common.location.Location
 import com.bwell.search.ProviderSearchQuery
 import com.bwell.sampleapp.R
 
-class LocationAdapter(private val context: Context, private val locationList: List<ProviderSearchQuery.Location?>?) : BaseAdapter() {
+class LocationAdapter(private val context: Context, private val locationList: List<Location?>?) : BaseAdapter() {
 
     override fun getCount(): Int {
         return locationList!!.size
@@ -34,7 +35,7 @@ class LocationAdapter(private val context: Context, private val locationList: Li
         }
 
         // Bind data to views
-        val locationItem = getItem(position) as ProviderSearchQuery.Location?
+        val locationItem = getItem(position) as Location?
         holder.boldTextView.text = locationItem?.name
         holder.secondTextView.text = locationItem?.name
         val city: String? = locationItem?.address?.city
