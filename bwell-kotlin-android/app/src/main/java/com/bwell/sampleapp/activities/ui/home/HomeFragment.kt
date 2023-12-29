@@ -40,14 +40,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
 
-        /*BWellSdk.initialize(config = BWellConfig(
-            clientKey = "testClientKey",
-            logLevel = LogLevel.DEBUG,
-            timeout = 20000,
-            retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
-        )
-        )*/
-
         initializeBWellSDK()
 
         val mainViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[SharedViewModel::class.java]
