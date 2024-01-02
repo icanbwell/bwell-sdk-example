@@ -62,12 +62,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private fun initializeBWellSDK() {
         lifecycleScope.launch {
             BWellSdk.initialize(config = BWellConfig(
-                clientKey = "eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9",
+                clientKey = "***REMOVED***",
                 logLevel = LogLevel.DEBUG,
                 timeout = 20000,
                 retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
             ))
-            val credentials = Credentials.OAuthCredentials("token")
+            val credentials = Credentials.OAuthCredentials("***REMOVED***")
             Log.d("BWell Sample App", credentials.token)
 
             BWellSdk.authenticate(credentials)
