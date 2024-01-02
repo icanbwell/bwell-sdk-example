@@ -23,7 +23,7 @@ import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
 import com.bwell.search.requests.ProviderSearchRequest
-import com.bwell.search.type.OrganizationType
+import com.bwell.generated.search.type.OrganizationType
 import kotlinx.coroutines.launch
 
 class LabsSearchFragment : Fragment(),View.OnClickListener {

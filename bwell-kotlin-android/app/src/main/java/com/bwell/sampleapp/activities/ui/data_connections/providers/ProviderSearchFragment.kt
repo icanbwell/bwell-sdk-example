@@ -27,13 +27,12 @@ import com.bwell.sampleapp.databinding.FragmentProviderViewBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
-import com.bwell.search.ProviderSearchQuery
 import com.bwell.search.requests.ConnectionRequest
 import com.bwell.search.requests.ProviderSearchRequest
-import com.bwell.search.type.Gender
-import com.bwell.search.type.OrganizationType
-import com.bwell.search.type.SortField
-import com.bwell.search.type.SortOrder
+import com.bwell.generated.search.type.OrganizationType
+import com.bwell.generated.search.type.SortField
+import com.bwell.generated.search.type.SortOrder
+import com.bwell.generated.search.type.Gender
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
