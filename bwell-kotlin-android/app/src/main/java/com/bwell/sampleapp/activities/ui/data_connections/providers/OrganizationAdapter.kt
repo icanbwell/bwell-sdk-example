@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.sampleapp.R
-import com.bwell.search.ProviderSearchQuery
 
 class OrganizationAdapter(private val context: Context, private val data: List<Organization?>?,
                            var organizationClickListener: OrganizationClickListener? = null) : BaseAdapter() {

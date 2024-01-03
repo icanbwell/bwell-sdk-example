@@ -10,7 +10,6 @@ import com.bwell.common.models.domain.common.location.Location
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ProviderItemsViewBinding
-import com.bwell.search.ProviderSearchQuery
 
 /*
 *Display the Providers List in RecyclerView
