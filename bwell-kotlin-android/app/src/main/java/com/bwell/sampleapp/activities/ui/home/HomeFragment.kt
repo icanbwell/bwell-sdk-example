@@ -65,14 +65,19 @@ class HomeFragment : Fragment(), View.OnClickListener {
     private fun initializeBWellSDK() {
         lifecycleScope.launch {
 
-            val keystore: KeyStoreConfig = KeyStoreConfig.Builder().path(requireContext().filesDir.absolutePath).build()
-            BWellSdk.initialize(config = BWellConfig(
-                clientKey = "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9",
-                logLevel = LogLevel.DEBUG,
-                timeout = 20000,
-                retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500),
-                keystore = keystore
-            ))
+            val keystore: KeyStoreConfig = KeyStoreConfig.Builder()
+                .path(requireContext().filesDir.absolutePath)
+                .build()
+
+            val config: BWellConfig = BWellConfig.Builder()
+                .clientKey("eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9")
+                .logLevel(LogLevel.DEBUG)
+                .timeout(20000)
+                .retryPolicy(RetryPolicy(maxRetries = 5, retryInterval = 500))
+                .keystore(keystore)
+                .build()
+
+            BWellSdk.initialize(config = config)
             val credentials = Credentials.OAuthCredentials("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF95czhpbE5NU0Rvd2h3ZklQZk1PMi9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDM4ODkwNTZ9.2rFiyAfvqiQ_CxWM8P_AUvpGxHbXTdBAzAQuUQLSUiFq3HRXBmtjjxvHDJzhKhSIP_rU9BrAo14PNvRqKW1c6g")
             Log.d("BWell Sample App", credentials.token)
 
