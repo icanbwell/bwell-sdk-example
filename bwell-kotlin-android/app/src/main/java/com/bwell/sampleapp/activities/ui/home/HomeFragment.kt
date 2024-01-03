@@ -12,10 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.BWellSdk
-import com.bwell.core.network.auth.Credentials
 import com.bwell.core.config.BWellConfig
+import com.bwell.core.config.KeyStoreConfig
 import com.bwell.core.config.LogLevel
 import com.bwell.core.config.RetryPolicy
+import com.bwell.core.network.auth.Credentials
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentHomeBinding
@@ -23,6 +24,7 @@ import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.viewmodel.SharedViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import kotlinx.coroutines.launch
+
 
 class HomeFragment : Fragment(), View.OnClickListener {
 
@@ -37,10 +39,11 @@ class HomeFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
 
         initializeBWellSDK()
+
+        val root: View = binding.root
+        val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
 
         val mainViewModel = ViewModelProvider(this, SharedViewModelFactory(repository))[SharedViewModel::class.java]
         mainViewModel.suggestedActivities.observe(viewLifecycleOwner) {
@@ -61,12 +64,20 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private fun initializeBWellSDK() {
         lifecycleScope.launch {
-            BWellSdk.initialize(config = BWellConfig(
-                clientKey = "***REMOVED***",
-                logLevel = LogLevel.DEBUG,
-                timeout = 20000,
-                retryPolicy = RetryPolicy(maxRetries = 5, retryInterval = 500)
-            ))
+
+            val keystore: KeyStoreConfig = KeyStoreConfig.Builder()
+                .path(requireContext().filesDir.absolutePath)
+                .build()
+
+            val config: BWellConfig = BWellConfig.Builder()
+                .clientKey("***REMOVED***")
+                .logLevel(LogLevel.DEBUG)
+                .timeout(20000)
+                .retryPolicy(RetryPolicy(maxRetries = 5, retryInterval = 500))
+                .keystore(keystore)
+                .build()
+
+            BWellSdk.initialize(config = config)
             val credentials = Credentials.OAuthCredentials("***REMOVED***")
             Log.d("BWell Sample App", credentials.token)
 

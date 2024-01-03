@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.bwell.common.models.domain.common.location.Location
-import com.bwell.search.ProviderSearchQuery
 import com.bwell.sampleapp.R
 
 class LocationAdapter(private val context: Context, private val locationList: List<Location?>?) : BaseAdapter() {
