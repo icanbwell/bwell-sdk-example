@@ -16,7 +16,7 @@ import com.bwell.sampleapp.model.DataConnectionsClinicsList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsList
 import com.bwell.user.requests.consents.ConsentRequest
-import com.bwell.user.requests.consents.ConsentUpdateRequest
+import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -72,8 +72,8 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         emit(consentsResult)
     }
 
-    suspend fun updateUserConsent(consentUpdateRequest: ConsentUpdateRequest): Flow<BWellResult<Consent>?> = flow {
-        val updateOutcome = BWellSdk.user?.updateConsent(consentUpdateRequest)
+    suspend fun updateUserConsent(request: ConsentCreateRequest): Flow<BWellResult<Consent>?> = flow {
+        val updateOutcome = BWellSdk.user?.createConsent(request)
         emit(updateOutcome)
     }
 
