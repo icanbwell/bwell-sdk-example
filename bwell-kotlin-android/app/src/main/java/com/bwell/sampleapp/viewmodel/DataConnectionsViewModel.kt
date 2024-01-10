@@ -16,7 +16,7 @@ import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsList
 import com.bwell.sampleapp.repository.DataConnectionsRepository
 import com.bwell.user.requests.consents.ConsentRequest
-import com.bwell.user.requests.consents.ConsentUpdateRequest
+import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,10 +67,10 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         }
     }
 
-    fun updateConsent(consentUpdateRequest: ConsentUpdateRequest) {
+    fun updateConsent(request: ConsentCreateRequest) {
         viewModelScope.launch {
             try {
-                val updateOutcomeFlow: Flow<BWellResult<Consent>?>? = repository?.updateUserConsent(consentUpdateRequest)
+                val updateOutcomeFlow: Flow<BWellResult<Consent>?>? = repository?.updateUserConsent(request)
                 updateOutcomeFlow?.collect { updateOutcome ->
                     if (updateOutcome?.operationOutcome?.status == Status.SUCCESS) {
                         _consentsData.emit(updateOutcome)
