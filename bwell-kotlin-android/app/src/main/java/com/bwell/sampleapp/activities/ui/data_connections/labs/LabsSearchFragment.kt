@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.common.models.domain.search.enums.OrganizationType
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -23,7 +24,6 @@ import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
 import com.bwell.search.requests.ProviderSearchRequest
-import com.bwell.generated.search.type.OrganizationType
 import kotlinx.coroutines.launch
 
 class LabsSearchFragment : Fragment(),View.OnClickListener {
@@ -54,7 +54,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
         val searchTerm = ""
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .organizationTypeFilters(listOf(OrganizationType.Laboratory))
+            .organizationTypeFilters(listOf(OrganizationType.LABORATORY))
             .build()
 
         dataConnectionLabsViewModel.searchConnections(request)

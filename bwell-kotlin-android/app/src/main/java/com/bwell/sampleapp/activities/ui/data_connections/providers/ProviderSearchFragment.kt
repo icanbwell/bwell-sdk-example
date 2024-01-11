@@ -16,7 +16,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Organization
+import com.bwell.common.models.domain.common.enums.Gender
+import com.bwell.common.models.domain.common.enums.SortOrder
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.common.models.domain.search.enums.OrganizationType
+import com.bwell.common.models.domain.search.enums.SortField
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.BWellSampleApplication
@@ -29,10 +33,6 @@ import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.requests.ConnectionRequest
 import com.bwell.search.requests.ProviderSearchRequest
-import com.bwell.generated.search.type.OrganizationType
-import com.bwell.generated.search.type.SortField
-import com.bwell.generated.search.type.SortOrder
-import com.bwell.generated.search.type.Gender
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
@@ -123,15 +123,15 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
         val latitude = 33.33
         val longitude = 44.44
         val distance = 50.0
-        val gender = Gender.male
+        val gender = Gender.MALE
         val page = 1
         val pageSize = 10
 
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .organizationTypeFilters(listOf(OrganizationType.Provider))
+            .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
             .location(latitude, longitude, distance)
-            .sortBy(SortField.distance, SortOrder.asc)
+            .sortBy(SortField.DISTANCE, SortOrder.ASC)
             .gender(gender)
             .page(page)
             .pageSize(pageSize)
