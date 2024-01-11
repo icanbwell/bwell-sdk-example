@@ -60,6 +60,7 @@ class ProfileFragment : Fragment() {
         val saveButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutSave)
         saveButton.setOnClickListener {
             val updatedPerson = Person.Builder()
+                .id(null)
                 .firstName(binding.includeEditProfile.firstNameEditText.text.toString())
                 .lastName(binding.includeEditProfile.lastNameEditText.text.toString())
                 .birthDate(binding.includeEditProfile.dateofbirthEditText.text.toString())

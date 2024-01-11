@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
@@ -52,9 +53,13 @@ class Repository(private val applicationContext: Context) {
     }
 
     suspend fun fetchUserProfile(): Flow<BWellResult<Person>?> = flow {
-        val profileData = BWellSdk.user?.getProfile()
-        if(profileData?.operationOutcome?.status==Status.SUCCESS){
-            emit(profileData)
+        try {
+            val profileData = BWellSdk.user?.getProfile()
+            if (profileData?.operationOutcome?.status == Status.SUCCESS) {
+                emit(profileData)
+            }
+        } catch (e: Exception) {
+            Log.e("FOO", e.message, e)
         }
     }
 

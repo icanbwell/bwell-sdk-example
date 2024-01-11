@@ -39,7 +39,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun getConnections(): Flow<BWellResult<Connection>?> = flow {
         try {
-            val connectionsResult = BWellSdk.connections?.getConnections()
+            val connectionsResult = BWellSdk.connections?.getMemberConnections()
             emit(connectionsResult)
         } catch (e: Exception) {
             // Handle exceptions, if any

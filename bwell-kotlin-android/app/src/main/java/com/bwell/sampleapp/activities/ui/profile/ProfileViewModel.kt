@@ -2,6 +2,7 @@ package com.bwell.sampleapp.activities.ui.profile
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -49,7 +50,8 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
                 operationOutcomeFlow?.collect { operationOutcome ->
                         _userData.emit(userData)
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                Log.e("FOO", e.message, e)
             }
         }
     }
