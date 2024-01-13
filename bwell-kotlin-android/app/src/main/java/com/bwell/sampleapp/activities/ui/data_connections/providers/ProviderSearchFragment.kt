@@ -120,19 +120,17 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
 
     private fun showProvidersData(enteredText: String) {
         val searchTerm = enteredText
-        val latitude = 33.33
-        val longitude = 44.44
-        val distance = 50.0
-        val gender = Gender.MALE
+        val latitude = 39.2848102
+        val longitude = -76.702898
+        val distance = 200.0
+        //val gender = Gender.MALE
         val page = 1
-        val pageSize = 10
+        val pageSize = 100
 
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
             .location(latitude, longitude, distance)
             .sortBy(SortField.DISTANCE, SortOrder.ASC)
-            .gender(gender)
             .page(page)
             .pageSize(pageSize)
             .build()
