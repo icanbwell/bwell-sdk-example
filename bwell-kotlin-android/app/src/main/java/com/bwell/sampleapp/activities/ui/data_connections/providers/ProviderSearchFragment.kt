@@ -27,8 +27,8 @@ import com.bwell.sampleapp.databinding.FragmentProviderViewBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
-import com.bwell.search.requests.ConnectionRequest
-import com.bwell.search.requests.ProviderSearchRequest
+import com.bwell.search.requests.connection.ConnectionRequest
+import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.OrganizationType
 import com.bwell.common.models.domain.search.enums.SortField
 import com.bwell.common.models.domain.common.enums.SortOrder

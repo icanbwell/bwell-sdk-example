@@ -22,7 +22,7 @@ import com.bwell.sampleapp.databinding.FragmentDataConnectionsLabsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
-import com.bwell.search.requests.ProviderSearchRequest
+import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.OrganizationType
 import kotlinx.coroutines.launch
 
