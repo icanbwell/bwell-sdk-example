@@ -8,6 +8,7 @@ import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
+import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
@@ -58,9 +59,9 @@ class Repository(private val applicationContext: Context) {
         }
     }
 
-    suspend fun registerDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
+    suspend fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest): Flow<OperationOutcome?> = flow {
         try {
-            val outcome: OperationOutcome? = BWellSdk.device?.registerDeviceToken(deviceToken)
+            val outcome: OperationOutcome? = BWellSdk.device?.registerDevice(registerDeviceTokenRequest)
             emit(outcome)
         } catch (e: Exception) {
             // Handle exceptions
@@ -69,7 +70,7 @@ class Repository(private val applicationContext: Context) {
 
     suspend fun unregisterDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
         try {
-            val outcome: OperationOutcome? = BWellSdk.device?.deregisterDeviceToken(deviceToken)
+            val outcome: OperationOutcome? = BWellSdk.device?.deregisterDevice(deviceToken)
             emit(outcome)
         } catch (e: Exception) {
             // Handle exceptions

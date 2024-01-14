@@ -6,8 +6,8 @@ import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
-import com.bwell.search.requests.ConnectionRequest
-import com.bwell.search.requests.ProviderSearchRequest
+import com.bwell.search.requests.connection.ConnectionRequest
+import com.bwell.search.requests.provider.ProviderSearchRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

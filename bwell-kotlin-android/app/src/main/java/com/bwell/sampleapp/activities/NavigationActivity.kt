@@ -19,6 +19,8 @@ import android.provider.Settings.Secure.getString
 import androidx.lifecycle.lifecycleScope
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.repository.Repository
+import com.bwell.device.requests.deviceToken.DevicePlatform
+import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -48,12 +50,18 @@ class NavigationActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         navView.itemIconTintList = null
         deviceId = getString(contentResolver, Secure.ANDROID_ID)
-        registerDeviceToken(deviceId)
+
+        val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
+            .deviceToken(deviceId)
+            .applicationName("Samsung Health PHR")
+            .platform(DevicePlatform.ANDROID)
+            .build()
+        registerDeviceToken(registerDeviceTokenRequest)
     }
 
-    private fun registerDeviceToken(deviceToken: String) {
+    private fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest) {
         lifecycleScope.launch {
-            val registerOutcome = repository.registerDeviceToken(deviceToken)
+            val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
             registerOutcome.collect { outcome ->
                 outcome?.let {
                     when (outcome.status) {
