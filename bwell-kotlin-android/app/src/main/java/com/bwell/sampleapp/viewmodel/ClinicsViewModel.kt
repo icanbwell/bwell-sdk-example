@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.ClinicsRepository
-import com.bwell.search.requests.ProviderSearchRequest
+import com.bwell.search.requests.provider.ProviderSearchRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
