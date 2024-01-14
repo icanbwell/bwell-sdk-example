@@ -60,8 +60,8 @@ class Repository(private val applicationContext: Context) {
 
     suspend fun registerDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
         try {
-            val outcome: OperationOutcome? = BWellSdk.device?.registerDeviceToken(deviceToken)
-            emit(outcome)
+           // val outcome: OperationOutcome? = BWellSdk.device?.registerDevice  (deviceToken)
+           // emit(outcome)
         } catch (e: Exception) {
             // Handle exceptions
         }
@@ -69,8 +69,8 @@ class Repository(private val applicationContext: Context) {
 
     suspend fun unregisterDeviceToken(deviceToken: String): Flow<OperationOutcome?> = flow {
         try {
-            val outcome: OperationOutcome? = BWellSdk.device?.deregisterDeviceToken(deviceToken)
-            emit(outcome)
+            //val outcome: OperationOutcome? = BWellSdk.device?.deregisterDeviceToken(deviceToken)
+           // emit(outcome)
         } catch (e: Exception) {
             // Handle exceptions
         }

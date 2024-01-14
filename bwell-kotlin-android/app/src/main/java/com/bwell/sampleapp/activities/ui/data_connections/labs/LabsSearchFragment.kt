@@ -22,8 +22,8 @@ import com.bwell.sampleapp.databinding.FragmentDataConnectionsLabsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
-import com.bwell.search.requests.ProviderSearchRequest
-import com.bwell.generated.search.type.OrganizationType
+import com.bwell.search.requests.provider.ProviderSearchRequest
+import com.bwell.common.models.domain.search.enums.OrganizationType
 import kotlinx.coroutines.launch
 
 class LabsSearchFragment : Fragment(),View.OnClickListener {
@@ -54,7 +54,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
         val searchTerm = ""
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .organizationTypeFilters(listOf(OrganizationType.Laboratory))
+            .organizationTypeFilters(listOf(OrganizationType.LABORATORY))
             .build()
 
         dataConnectionLabsViewModel.searchConnections(request)
