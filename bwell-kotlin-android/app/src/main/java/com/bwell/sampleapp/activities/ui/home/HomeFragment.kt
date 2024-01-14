@@ -12,11 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.BWellSdk
+import com.bwell.common.models.responses.Status
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.KeyStoreConfig
 import com.bwell.core.config.LogLevel
 import com.bwell.core.config.RetryPolicy
 import com.bwell.core.network.auth.Credentials
+import com.bwell.device.requests.deviceToken.DevicePlatform
+import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentHomeBinding
@@ -59,6 +62,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 binding.userName.text = resources.getString(R.string.welcome_bwell)+" "+it?.firstName+"!"
             }
         }
+
         return root
     }
 
@@ -82,6 +86,15 @@ class HomeFragment : Fragment(), View.OnClickListener {
             Log.d("BWell Sample App", credentials.token)
 
             BWellSdk.authenticate(credentials)
+
+            val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
+                .deviceToken("34cb23e2f562dbb5")
+                .applicationName("com.icanbwell.bwelldemo.staging")
+                .platform(DevicePlatform.ANDROID)
+                .build()
+            registerDeviceToken(registerDeviceTokenRequest)
+
+            deregisterDeviceToken("34cb23e2f562dbb5")
         }
     }
     private fun setAdapter(suggestedActivitiesLIst: List<ActivityListItems>) {
@@ -107,6 +120,44 @@ class HomeFragment : Fragment(), View.OnClickListener {
             {
                 findNavController().popBackStack(R.id.nav_home, true)
                 findNavController().navigate(R.id.nav_data_connections)
+            }
+        }
+    }
+
+    private fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest) {
+        lifecycleScope.launch {
+            val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+            val registerOutcome = repository?.registerDeviceToken(registerDeviceTokenRequest)
+            registerOutcome?.collect { outcome ->
+                outcome?.let {
+                    when (outcome.status) {
+                        Status.SUCCESS -> {
+                            //device registered successfully
+                        }
+                        else -> {
+                            //device not registered
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deregisterDeviceToken(deviceToken: String) {
+        lifecycleScope.launch {
+            val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+            val registerOutcome = repository?.unregisterDeviceToken(deviceToken)
+            registerOutcome?.collect { outcome ->
+                outcome?.let {
+                    when (outcome.status) {
+                        Status.SUCCESS -> {
+                            //device registered successfully
+                        }
+                        else -> {
+                            //device not registered
+                        }
+                    }
+                }
             }
         }
     }

@@ -22,7 +22,7 @@ import com.bwell.sampleapp.databinding.FragmentDataConnectionsLabsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
-import com.bwell.search.requests.ProviderSearchRequest
+import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.OrganizationType
 import kotlinx.coroutines.launch
 
@@ -113,7 +113,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
         }
         dataConnectionsLabsListAdapter.onItemClicked = { selectedList ->
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            if((selectedList?.organization?.size ?: 0) > 0)
+            if((selectedList?.endpoint?.size ?: 0) > 0)
             {
                 val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
                 val transaction = parentFragmentManager.beginTransaction()
