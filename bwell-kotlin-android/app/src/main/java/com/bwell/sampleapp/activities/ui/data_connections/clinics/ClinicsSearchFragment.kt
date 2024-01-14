@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.common.enums.SortOrder
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
@@ -24,6 +25,7 @@ import com.bwell.sampleapp.viewmodel.ClinicsViewModel
 import com.bwell.sampleapp.viewmodel.ClinicsViewModelFactory
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.OrganizationType
+import com.bwell.common.models.domain.search.enums.SortField
 import kotlinx.coroutines.launch
 
 class ClinicsSearchFragment : Fragment(),View.OnClickListener {
@@ -52,6 +54,9 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
             .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
+            .sortBy(SortField.CONTENT, SortOrder.ASC)
+            .page(1)
+            .pageSize(100)
             .build()
         clinicsViewModel.searchConnections(request)
         viewLifecycleOwner.lifecycleScope.launch {
@@ -97,7 +102,7 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         }
         dataConnectionClinicsAdapter.onItemClicked = { selectedList ->
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            if((selectedList?.organization?.size ?: 0) > 0)
+            if((selectedList?.endpoint?.size ?: 0) > 0)
             {
                 val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
                 val transaction = parentFragmentManager.beginTransaction()
