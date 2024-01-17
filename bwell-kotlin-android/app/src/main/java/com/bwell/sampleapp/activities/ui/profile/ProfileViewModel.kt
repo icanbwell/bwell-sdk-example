@@ -1,14 +1,10 @@
 package com.bwell.sampleapp.activities.ui.profile
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.common.models.responses.OperationOutcome
-import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
