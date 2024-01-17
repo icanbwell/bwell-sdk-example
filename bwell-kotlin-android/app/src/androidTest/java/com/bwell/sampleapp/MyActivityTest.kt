@@ -26,7 +26,7 @@ class MyActivityTest {
             .perform(ViewActions.click())
 
 //        // Assert outcomes
-//        Espresso.onView(ViewMatchers.withId(R.id.my_text_view))
-//            .check(ViewAssertions.matches(ViewMatchers.withText("Expected Text")))
+//        Espresso.onView(ViewMatchers.withId(R.id.titleTextView))
+//            .check(ViewAssertions.matches(ViewMatchers.withText("Data Connections")))
     }
 }

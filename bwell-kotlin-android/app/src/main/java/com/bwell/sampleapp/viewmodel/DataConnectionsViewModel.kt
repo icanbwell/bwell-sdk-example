@@ -8,6 +8,7 @@ import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
+import com.bwell.common.models.responses.Status
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.model.DataConnectionsClinicsList
 import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
@@ -71,7 +72,7 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
             try {
                 val updateOutcomeFlow: Flow<BWellResult<Consent>?>? = repository?.updateUserConsent(request)
                 updateOutcomeFlow?.collect { updateOutcome ->
-                    if (updateOutcome?.operationOutcome()?.success() == true) {
+                    if (updateOutcome?.operationOutcome?.status == Status.SUCCESS) {
                         _consentsData.emit(updateOutcome)
                     }
                 }
