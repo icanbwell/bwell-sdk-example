@@ -12,7 +12,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ActivityNavigationBinding
-import com.bwell.common.models.responses.Status
 import kotlinx.coroutines.launch
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
@@ -64,13 +63,10 @@ class NavigationActivity : AppCompatActivity() {
             val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
             registerOutcome.collect { outcome ->
                 outcome?.let {
-                    when (outcome.status) {
-                        Status.SUCCESS -> {
-                            //device registered successfully
-                        }
-                        else -> {
-                            //device not registered
-                        }
+                    if (outcome.success()) {
+                        //device registered successfully
+                    } else {
+                        //device not registered
                     }
                 }
             }
@@ -92,13 +88,10 @@ class NavigationActivity : AppCompatActivity() {
             val unregisterOutcome = repository.unregisterDeviceToken(deviceToken)
             unregisterOutcome.collect { outcome ->
                 outcome?.let {
-                    when (outcome.status) {
-                        Status.SUCCESS -> {
-                            //device unregistered successfully
-                        }
-                        else -> {
-                            //device not unregistered
-                        }
+                    if (outcome.success()) {
+                        //device registered successfully
+                    } else {
+                        //device not registered
                     }
                 }
             }

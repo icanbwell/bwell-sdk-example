@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
@@ -29,10 +28,8 @@ import com.bwell.sampleapp.viewmodel.ProviderViewModel
 import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.requests.connection.ConnectionRequest
 import com.bwell.search.requests.provider.ProviderSearchRequest
-import com.bwell.common.models.domain.search.enums.OrganizationType
 import com.bwell.common.models.domain.search.enums.SortField
 import com.bwell.common.models.domain.common.enums.SortOrder
-import com.bwell.common.models.domain.common.enums.Gender
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
@@ -241,7 +238,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
         viewLifecycleOwner.lifecycleScope.launch {
             providerViewModel.requestConnectionData.take(1).collect { connectionOutcome ->
                 connectionOutcome?.let {
-                    if (connectionOutcome.status == Status.SUCCESS) {
+                    if (connectionOutcome.success()) {
                         showSuccessDialog(resources.getString(R.string.success),resources.getString(R.string.success_data))
                     }else{
                         showSuccessDialog(resources.getString(R.string.error),resources.getString(R.string.error_data))
