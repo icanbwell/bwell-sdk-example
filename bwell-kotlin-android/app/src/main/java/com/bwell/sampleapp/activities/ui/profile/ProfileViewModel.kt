@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.sampleapp.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
@@ -44,6 +47,20 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
                 val operationOutcomeFlow: Flow<BWellResult<Person>?>? = repository?.saveUserProfile(userData)
                 operationOutcomeFlow?.collect { operationOutcome ->
                         _userData.emit(userData)
+                }
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    private val _deletePersonData = MutableStateFlow<OperationOutcome?>(null)
+    val deletePersonData: StateFlow<OperationOutcome?> = _deletePersonData
+
+    fun deletePerson() {
+        viewModelScope.launch {
+            try {
+                repository?.deleteUserProfile()?.collect { disconnectOutcome ->
+                    _deletePersonData.emit(disconnectOutcome)
                 }
             } catch (_: Exception) {
             }

@@ -56,6 +56,11 @@ class Repository(private val applicationContext: Context) {
         }
     }
 
+    suspend fun deleteUserProfile(): Flow<OperationOutcome?> = flow {
+        val operationOutcome = BWellSdk.user?.delete()
+        emit(operationOutcome)
+    }
+
     suspend fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest): Flow<OperationOutcome?> = flow {
         try {
             val outcome: OperationOutcome? = BWellSdk.device?.registerDevice(registerDeviceTokenRequest)

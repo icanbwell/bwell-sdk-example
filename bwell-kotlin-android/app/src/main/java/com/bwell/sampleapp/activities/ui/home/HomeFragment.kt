@@ -74,6 +74,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
             val config: BWellConfig = BWellConfig.Builder()
                 .clientKey("eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9")
+                //.clientKey("eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9")
                 .logLevel(LogLevel.DEBUG)
                 .timeout(20000)
                 .retryPolicy(RetryPolicy(maxRetries = 5, retryInterval = 500))
@@ -81,7 +82,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 .build()
 
             BWellSdk.initialize(config = config)
+            //Sandbox JWT
             val credentials = Credentials.OAuthCredentials("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF95czhpbE5NU0Rvd2h3ZklQZk1PMi9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDM4ODkwNTZ9.2rFiyAfvqiQ_CxWM8P_AUvpGxHbXTdBAzAQuUQLSUiFq3HRXBmtjjxvHDJzhKhSIP_rU9BrAo14PNvRqKW1c6g")
+            //Original Dev JWT
+            //val credentials = Credentials.OAuthCredentials("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF81c0w5M1JreGcyazhnd0ZHTXhYQS9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDQ4MjYyMTN9.Uy1J2Xwiyv2fXsy4comYa9WKe5gGktUs5LaQsswF6AihRAHzFL2VGQNkimFCSEMjm9Y_JXBi-Vr6B-kIkrHp6Q")
+            //Chase's Dev JWT
+            //val credentials = Credentials.OAuthCredentials("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF8ydTViSXRtTnF5cXk5aUVqTGVlTC9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDU0MTYwMDJ9.8evXEtpmRZuu4lwvCX19Jl8ejZK1qElqokAlncECa0_L0u7dw8z62D_85U3F-PEQos2NQWnrWiiVTC3mpv7L6A")
             Log.d("BWell Sample App", credentials.token)
 
             BWellSdk.authenticate(credentials)
