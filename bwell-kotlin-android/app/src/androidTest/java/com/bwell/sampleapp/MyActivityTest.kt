@@ -17,7 +17,7 @@ import org.junit.Assert.*
 class MyActivityTest {
 
     @Test
-    fun testSomeIntegrationBehavior() {
+    fun testGetStartedButton() {
         // Launch Activity
         val activityScenario = ActivityScenario.launch(NavigationActivity::class.java)
 
