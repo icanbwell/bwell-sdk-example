@@ -161,6 +161,25 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack()
             }
+            R.id.frameLayoutProceed -> {
+                val parentFrag: DataConnectionsFragment =
+                    this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
+
+                parentFrag.getOauthUrl("ascension_seton")
+
+                parentFrag.getDataSource("55a83bdc8d1eb1420aa1a71b")
+
+                //openUrl()
+
+                //val connectionCreateRequest: ConnectionCreateRequest = ConnectionCreateRequest.Builder()
+                //.connectionId(connectionId)
+                //.connectionId("55a83bdc8d1eb1420aa1a71b")
+                //.username(binding.editTextUsername.text.toString())
+                //.password(binding.editTextPassword.text.toString())
+                //.build()
+
+                //parentFrag.createConnection(connectionCreateRequest)
+            }
         }
     }
 }

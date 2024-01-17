@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.activity.requests.TaskRequest
 import com.bwell.common.models.domain.task.Task
+import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.databinding.FragmentHealthJourneyBinding

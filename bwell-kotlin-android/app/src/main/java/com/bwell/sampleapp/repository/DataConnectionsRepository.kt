@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -67,6 +68,26 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         }
     }
 
+    suspend fun getOAuthUrl(datasourceId: String): Flow<BWellResult<String>?> = flow {
+        try {
+            val urlOutcome = BWellSdk.connections?.getOauthUrl(datasourceId)
+            emit(urlOutcome)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun getDataSource(datasourceId: String): Flow<BWellResult<DataSource>?> = flow {
+        try {
+            val urlOutcome = BWellSdk.connections?.getDataSource(datasourceId)
+            emit(urlOutcome)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
     suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> = flow {
         val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
         emit(consentsResult)
@@ -76,6 +97,8 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         val updateOutcome = BWellSdk.user?.createConsent(request)
         emit(updateOutcome)
     }
+
+
 
 
     suspend fun getDataConnectionsCategoriesList() {

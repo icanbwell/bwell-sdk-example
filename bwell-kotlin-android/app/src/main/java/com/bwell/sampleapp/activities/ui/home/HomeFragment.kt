@@ -74,6 +74,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
             val config: BWellConfig = BWellConfig.Builder()
                 .clientKey("***REMOVED***")
+                //.clientKey("eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9")
                 .logLevel(LogLevel.DEBUG)
                 .timeout(20000)
                 .retryPolicy(RetryPolicy(maxRetries = 5, retryInterval = 500))
@@ -81,7 +82,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 .build()
 
             BWellSdk.initialize(config = config)
+            //Sandbox JWT
             val credentials = Credentials.OAuthCredentials("***REMOVED***")
+            //Original Dev JWT
+            //val credentials = Credentials.OAuthCredentials("***REMOVED***")
+            //Chase's Dev JWT
+            //val credentials = Credentials.OAuthCredentials("***REMOVED***")
             Log.d("BWell Sample App", credentials.token)
 
             BWellSdk.authenticate(credentials)
