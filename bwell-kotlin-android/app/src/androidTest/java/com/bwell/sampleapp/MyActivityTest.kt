@@ -26,7 +26,7 @@ class MyActivityTest {
             .perform(ViewActions.click())
 
 //        // Assert outcomes
-//        Espresso.onView(ViewMatchers.withId(R.id.titleTextView))
-//            .check(ViewAssertions.matches(ViewMatchers.withText("Data Connections")))
+        Espresso.onView(ViewMatchers.withId(R.id.header))
+            .check(ViewAssertions.matches(ViewMatchers.withText("Connect your health records")))
     }
 }
