@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
 import androidx.lifecycle.lifecycleScope
-import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.device.requests.deviceToken.DevicePlatform
@@ -64,7 +63,7 @@ class NavigationActivity : AppCompatActivity() {
             val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
             registerOutcome.collect { outcome ->
                 outcome?.let {
-                    if (outcome.status == Status.SUCCESS) {
+                    if (outcome.success()) {
                         //device registered successfully
                     } else {
                         //device not registered
@@ -89,7 +88,7 @@ class NavigationActivity : AppCompatActivity() {
             val unregisterOutcome = repository.unregisterDeviceToken(deviceToken)
             unregisterOutcome.collect { outcome ->
                 outcome?.let {
-                    if (outcome.status == Status.SUCCESS) {
+                    if (outcome.success()) {
                         //device registered successfully
                     } else {
                         //device not registered
