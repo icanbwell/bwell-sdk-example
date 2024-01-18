@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.activity.requests.TasksRequest
+import com.bwell.activity.requests.UpdateTaskRequest
 import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
@@ -63,7 +64,14 @@ class HealthJourneyFragment : Fragment() {
                 }
             }
         }
+        val updateTaskRequest = UpdateTaskRequest.Builder()
+            .taskId("test")
+            .newStatus(TaskStatus.COMPLETED)
+            .build()
+        healthJourneyViewModel.updateTaskStatus(updateTaskRequest)
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

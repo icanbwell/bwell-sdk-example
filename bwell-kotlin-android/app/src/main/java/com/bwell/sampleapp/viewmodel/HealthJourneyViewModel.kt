@@ -3,6 +3,7 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.activity.requests.TasksRequest
+import com.bwell.activity.requests.UpdateTaskRequest
 import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
@@ -31,10 +32,10 @@ class HealthJourneyViewModel (private val repository: HealthJourneyRepository?) 
     private val _updateResults = MutableStateFlow<BWellResult<Task>?>(null)
     val updateResults: StateFlow<BWellResult<Task>?> = _updateResults
 
-    fun updateTaskStatus(taskId: String, status: TaskStatus) {
+    fun updateTaskStatus(updateTaskRequest: UpdateTaskRequest) {
         viewModelScope.launch {
             try {
-                repository?.updateTaskStatus(taskId, status)?.collect { result ->
+                repository?.updateTaskStatus(updateTaskRequest)?.collect { result ->
                     _updateResults.emit(result)
                 }
             } catch (e: Exception) {
