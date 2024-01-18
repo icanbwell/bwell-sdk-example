@@ -2,6 +2,7 @@ package com.bwell.sampleapp.repository
 
 import com.bwell.BWellSdk
 import com.bwell.activity.requests.TasksRequest
+import com.bwell.activity.requests.UpdateTaskRequest
 import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
@@ -19,9 +20,9 @@ class HealthJourneyRepository {
         }
     }
 
-    suspend fun updateTaskStatus(taskId: String, taskStatus: TaskStatus): Flow<BWellResult<Task>?> = flow {
+    suspend fun updateTaskStatus(taskUpdateRequest: UpdateTaskRequest): Flow<BWellResult<Task>?> = flow {
         try {
-            val taskResult = BWellSdk.activity.updateTaskStatus(taskId, taskStatus)
+            val taskResult = BWellSdk.activity.updateTaskStatus(taskUpdateRequest)
             emit(taskResult)
         } catch (e: Exception) {
             emit(null)
