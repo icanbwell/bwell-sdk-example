@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.BWellSdk
+import com.bwell.common.models.responses.Status
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.KeyStoreConfig
 import com.bwell.core.config.LogLevel
@@ -135,7 +136,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             val registerOutcome = repository?.registerDeviceToken(registerDeviceTokenRequest)
             registerOutcome?.collect { outcome ->
                 outcome?.let {
-                    if (outcome.success()) {
+                    if (outcome.status == Status.SUCCESS) {
                         //device registered successfully
                     } else {
                         //device not registered
@@ -151,7 +152,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
             val registerOutcome = repository?.unregisterDeviceToken(deviceToken)
             registerOutcome?.collect { outcome ->
                 outcome?.let {
-                    if (outcome.success()) {
+                    if (outcome.status == Status.SUCCESS) {
                         //device registered successfully
                     } else {
                         //device not registered
