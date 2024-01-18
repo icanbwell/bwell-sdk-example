@@ -2,7 +2,7 @@ package com.bwell.sampleapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bwell.activity.requests.TaskRequest
+import com.bwell.activity.requests.TasksRequest
 import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
@@ -16,7 +16,7 @@ class HealthJourneyViewModel (private val repository: HealthJourneyRepository?) 
     private val _taskResults = MutableStateFlow<BWellResult<Task>?>(null)
     val taskResults: StateFlow<BWellResult<Task>?> = _taskResults
 
-    fun getTasks(taskRequest: TaskRequest) {
+    fun getTasks(taskRequest: TasksRequest) {
         viewModelScope.launch {
             try {
                 repository?.getTasks(taskRequest)?.collect { result ->

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bwell.activity.requests.TaskRequest
+import com.bwell.activity.requests.TasksRequest
 import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
@@ -52,7 +52,7 @@ class HealthJourneyFragment : Fragment() {
     }
 
     private fun getTasks() {
-        val taskRequest = TaskRequest.Builder()
+        val taskRequest = TasksRequest.Builder()
             .build()
         healthJourneyViewModel.getTasks(taskRequest)
         viewLifecycleOwner.lifecycleScope.launch {

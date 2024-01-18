@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.data.Connection
-import com.bwell.common.models.responses.Status
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -181,7 +180,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
                 viewLifecycleOwner.lifecycleScope.launch {
                     dataConnectionsViewModel.disconnectConnectionData.collect { disconnectOutcome ->
                         disconnectOutcome?.let {
-                            if (disconnectOutcome.status == Status.SUCCESS) {
+                            if (disconnectOutcome.success()) {
                                 val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_grey)
                                 frameLayoutConnectionStatus.background = drawable
                                 if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(0) is TextView) {

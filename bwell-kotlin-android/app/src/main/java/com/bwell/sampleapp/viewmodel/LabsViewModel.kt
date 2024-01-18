@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.lab.LabDetailRequest
-import com.bwell.healthdata.lab.LabKnowledgeRequest
-import com.bwell.healthdata.lab.LabRequest
+import com.bwell.healthdata.lab.requests.LabDetailsRequest
+import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
+import com.bwell.healthdata.lab.requests.LabsRequest
 import com.bwell.sampleapp.repository.LabsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,7 @@ class LabsViewModel (private val repository: LabsRepository?) : ViewModel() {
     private val _labsResults = MutableStateFlow<BWellResult<Observation>?>(null)
     val labsResults: StateFlow<BWellResult<Observation>?> = _labsResults
 
-    fun getLabsList(labsRequest: LabRequest) {
+    fun getLabsList(labsRequest: LabsRequest) {
         viewModelScope.launch {
             try {
                 repository?.getLabsList(labsRequest)?.collect { result ->
@@ -32,7 +32,7 @@ class LabsViewModel (private val repository: LabsRepository?) : ViewModel() {
     private val _labsDetailResults = MutableStateFlow<BWellResult<Observation>?>(null)
     val labsDetailResults: StateFlow<BWellResult<Observation>?> = _labsDetailResults
 
-    fun getLabsDetails(labsDetailRequest: LabDetailRequest) {
+    fun getLabsDetails(labsDetailRequest: LabDetailsRequest) {
         viewModelScope.launch {
             try {
                 repository?.getLabDetails(labsDetailRequest)?.collect { result ->

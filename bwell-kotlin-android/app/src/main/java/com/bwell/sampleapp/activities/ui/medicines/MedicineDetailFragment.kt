@@ -12,21 +12,17 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.healthdata.medication.MedicationComposition
-import com.bwell.common.models.domain.healthdata.medication.MedicationKnowledge
-import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.medication.MedicationKnowledgeRequest
-import com.bwell.healthdata.medication.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
+import com.bwell.healthdata.medication.requests.MedicationPricingRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
-import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.MedicineDetailViewBinding
 import com.bwell.sampleapp.utils.formatDate
 import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 class MedicineDetailFragment : Fragment(),View.OnClickListener {
 

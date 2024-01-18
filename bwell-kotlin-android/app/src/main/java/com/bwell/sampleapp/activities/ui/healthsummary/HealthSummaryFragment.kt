@@ -11,14 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.healthdata.healthsummary.communication.enums.CommunicationStatus
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceCompositeRequest
-import com.bwell.healthdata.healthsummary.careplan.CarePlanCompositeRequest
-import com.bwell.healthdata.healthsummary.communication.CommunicationRequest
-import com.bwell.healthdata.healthsummary.condition.ConditionCompositeRequest
-import com.bwell.healthdata.healthsummary.encounter.EncounterCompositeRequest
-import com.bwell.healthdata.healthsummary.immunization.ImmunizationCompositeRequest
-import com.bwell.healthdata.healthsummary.procedure.ProcedureCompositeRequest
-import com.bwell.healthdata.healthsummary.vitalsign.VitalSignCompositeRequest
+import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.communication.CommunicationsRequest
+import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentHealthSummaryParentBinding
@@ -59,28 +59,28 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             lateinit var  healthSummaryRequest: Any
             if(selectedList.category.toString() == resources.getString(R.string.care_plans))
             {
-                healthSummaryRequest = CarePlanCompositeRequest.Builder()
+                healthSummaryRequest = CarePlanGroupsRequest.Builder()
                     .build()
             }else if(selectedList.category.toString() == resources.getString(R.string.immunizations))
             {
-                healthSummaryRequest = ImmunizationCompositeRequest.Builder()
+                healthSummaryRequest = ImmunizationGroupsRequest.Builder()
                     .build()
             }else if(selectedList.category.toString() == resources.getString(R.string.procedures))
             {
-                healthSummaryRequest= ProcedureCompositeRequest.Builder()
+                healthSummaryRequest= ProcedureGroupsRequest.Builder()
                     .build()
             }else if(selectedList.category.toString() == resources.getString(R.string.vitals))
             {
-                healthSummaryRequest = VitalSignCompositeRequest.Builder()
+                healthSummaryRequest = VitalSignGroupsRequest.Builder()
                     .build()
             }else if(selectedList.category.toString() == resources.getString(R.string.visit_history))
             {
-                healthSummaryRequest = EncounterCompositeRequest.Builder()
+                healthSummaryRequest = EncounterGroupsRequest.Builder()
                     .build()
             }
             else if(selectedList.category.toString() == resources.getString(R.string.allergies))
             {
-                healthSummaryRequest = AllergyIntoleranceCompositeRequest.Builder()
+                healthSummaryRequest = AllergyIntoleranceGroupsRequest.Builder()
                     .build()
             }else if(selectedList.category.toString() == resources.getString(R.string.communications))
             {
@@ -98,7 +98,7 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                 val status = CommunicationStatus.COMPLETED
                 val subject = ""
                 val page = "0"
-                healthSummaryRequest = CommunicationRequest.Builder()
+                healthSummaryRequest = CommunicationsRequest.Builder()
                     .basedOn(basedOn)
                     .category(category)
                     .encounter(encounter)
@@ -116,7 +116,7 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                     .build()
             }else if(selectedList.category.toString() == resources.getString(R.string.conditions))
             {
-                healthSummaryRequest = ConditionCompositeRequest.Builder()
+                healthSummaryRequest = ConditionGroupsRequest.Builder()
                     .page(1)
                     .build()
             }
