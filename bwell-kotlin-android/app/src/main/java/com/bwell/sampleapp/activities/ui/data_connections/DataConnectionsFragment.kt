@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.Status
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.BWellSampleApplication
@@ -218,6 +219,18 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
 
     fun showDataConnectionCategories() {
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
+    }
+
+    fun createConnection(connectionCreateRequest: ConnectionCreateRequest) {
+        dataConnectionsViewModel.createConnection(connectionCreateRequest);
+    }
+
+    fun getDataSource(datasourceId: String) {
+        dataConnectionsViewModel.getDataSource(datasourceId)
+    }
+
+    fun getOAuthUrl(dataSourceId: String) {
+        dataConnectionsViewModel.getOAuthUrl(dataSourceId)
     }
 
 }
