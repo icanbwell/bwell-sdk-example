@@ -7,6 +7,7 @@ import com.bwell.BWellSdk
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
+import com.bwell.common.models.responses.Status
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
@@ -51,7 +52,7 @@ class Repository(private val applicationContext: Context) {
 
     suspend fun fetchUserProfile(): Flow<BWellResult<Person>?> = flow {
         val profileData = BWellSdk.user?.getProfile()
-        if(profileData?.operationOutcome()?.success() == true){
+        if(profileData?.operationOutcome?.status == Status.SUCCESS){
             emit(profileData)
         }
     }

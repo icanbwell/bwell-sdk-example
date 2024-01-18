@@ -30,6 +30,7 @@ import com.bwell.search.requests.connection.ConnectionRequest
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.SortField
 import com.bwell.common.models.domain.common.enums.SortOrder
+import com.bwell.common.models.responses.Status
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
@@ -238,7 +239,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
         viewLifecycleOwner.lifecycleScope.launch {
             providerViewModel.requestConnectionData.take(1).collect { connectionOutcome ->
                 connectionOutcome?.let {
-                    if (connectionOutcome.success()) {
+                    if (connectionOutcome.status == Status.SUCCESS) {
                         showSuccessDialog(resources.getString(R.string.success),resources.getString(R.string.success_data))
                     }else{
                         showSuccessDialog(resources.getString(R.string.error),resources.getString(R.string.error_data))
