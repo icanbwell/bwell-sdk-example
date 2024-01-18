@@ -47,7 +47,7 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
             try {
                 val operationOutcomeFlow: Flow<BWellResult<Person>?>? = repository?.saveUserProfile(userData)
                 operationOutcomeFlow?.collect { operationOutcome ->
-                        _userData.emit(userData)
+                    _userData.emit(userData)
                 }
             } catch (_: Exception) {
             }

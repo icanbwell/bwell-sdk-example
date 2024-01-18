@@ -46,7 +46,7 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             profileViewModel.userData.collect{
                 userData = it!!
-                 updateUI(userData)
+                updateUI(userData)
             }
         }
 

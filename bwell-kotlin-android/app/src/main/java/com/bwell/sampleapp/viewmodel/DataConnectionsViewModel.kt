@@ -5,7 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
+import com.bwell.common.models.domain.consent.ConsentCategory
+import com.bwell.common.models.domain.consent.ConsentCoding
+import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
+import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
+import com.bwell.common.models.domain.consent.enums.ConsentStatus
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.Status
@@ -89,6 +95,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
             try {
                 repository?.createConnection(connectionRequest)?.collect { connectionOutcome ->
                     _createConnectionData.emit(connectionOutcome)
+
+
                 }
             } catch (_: Exception) {
             }
@@ -101,6 +109,22 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
     fun disconnectConnection(connectionId: String) {
         viewModelScope.launch {
             try {
+                /*
+                                val myConsentUpdateRequest: ConsentCreateRequest = ConsentCreateRequest.Builder()
+                                    .provision(ConsentProvisionType.PERMIT)
+                                    .status(ConsentStatus.ACTIVE)
+                                    .category(ConsentCategoryCode.PROA_ATTESTATION)
+                                    .organizationId("Austin Regional Clinic")
+                                    .build()
+
+                                updateConsent(myConsentUpdateRequest)
+
+                                val myConsentRequest: ConsentRequest = ConsentRequest.Builder()
+                                    .category(ConsentCategoryCode.PROA_ATTESTATION)
+                                    .build()
+
+                                fetchConsents(myConsentRequest)
+                */
                 repository?.disconnectConnection(connectionId)?.collect { disconnectOutcome ->
                     _disconnectConnectionData.emit(disconnectOutcome)
                 }
@@ -128,7 +152,7 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
     fun getConnectionsAndObserve() {
         viewModelScope.launch {
             try {
-                repository?.getConnections()?.collect { connectionsResult ->
+                repository?.getMemberConnections()?.collect { connectionsResult ->
                     processConnectionsResult(connectionsResult)
                 }
             } catch (_: Exception) {
@@ -137,4 +161,33 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         }
     }
 
+    private val _dataSourceData = MutableStateFlow<BWellResult<DataSource>?>(null)
+    val dataSourceData: StateFlow<BWellResult<DataSource>?> = _dataSourceData
+
+    fun getDataSource(datasourceId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.getDataSource(datasourceId)?.collect { dataSourceResult ->
+                    _dataSourceData.emit(dataSourceResult)
+                }
+            } catch (_: Exception) {
+                // Handle exceptions
+            }
+        }
+    }
+
+    private val _oauthUrlData = MutableStateFlow<BWellResult<String>?>(null)
+    val oauthUrlData: StateFlow<BWellResult<String>?> = _oauthUrlData
+
+    fun getOAuthUrl(datasourceId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.getOAuthUrl(datasourceId)?.collect { oauthUrlResult ->
+                    _oauthUrlData.emit(oauthUrlResult)
+                }
+            } catch (_: Exception) {
+                // Handle exceptions
+            }
+        }
+    }
 }

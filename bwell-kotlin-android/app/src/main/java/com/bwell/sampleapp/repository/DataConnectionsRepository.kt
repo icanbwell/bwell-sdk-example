@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -19,6 +20,7 @@ import com.bwell.user.requests.consents.ConsentRequest
 import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+
 
 class DataConnectionsRepository(private val applicationContext: Context) {
 
@@ -37,10 +39,30 @@ class DataConnectionsRepository(private val applicationContext: Context) {
     val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = dataConnectionsClinicsLiveData
 
-    suspend fun getConnections(): Flow<BWellResult<Connection>?> = flow {
+    suspend fun getMemberConnections(): Flow<BWellResult<Connection>?> = flow {
         try {
-            val connectionsResult = BWellSdk.connections?.getConnections()
+            val connectionsResult = BWellSdk.connections?.getMemberConnections()
             emit(connectionsResult)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun getDataSource(connectionId: String): Flow<BWellResult<DataSource>?> = flow {
+        try {
+            val dataSourceResult = BWellSdk.connections?.getDataSource(connectionId)
+            emit(dataSourceResult)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun getOAuthUrl(datasourceId: String): Flow<BWellResult<String>?> = flow {
+        try {
+            val result = BWellSdk.connections?.getOauthUrl(datasourceId) as BWellResult<String>
+            emit(result)
         } catch (e: Exception) {
             // Handle exceptions, if any
             emit(null)

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
@@ -51,7 +52,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         if(connectionType.equals(resources.getString(R.string.hapi)))
         {
             binding.clinicDiscriptionTxt.text ="By providing  my "+
-                "${name} ${resources.getString(R.string.clinic_info_hapi)}"
+                    "${name} ${resources.getString(R.string.clinic_info_hapi)}"
             binding.editTextUsername.visibility = View.VISIBLE;
             binding.passwordLayout.visibility = View.VISIBLE;
         }else{
@@ -160,6 +161,24 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             }
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack()
+            }
+            R.id.frameLayoutProceed -> {
+                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
+
+                parentFrag.getOAuthUrl("epic_sandbox_r4c")
+
+                parentFrag.getDataSource("55a83bdc8d1eb1420aa1a71b")
+
+                //openUrl()
+
+                val connectionCreateRequest: ConnectionCreateRequest = ConnectionCreateRequest.Builder()
+                    //.connectionId(connectionId)
+                    .connectionId("55a83bdc8d1eb1420aa1a71b")
+                    .username(binding.editTextUsername.text.toString())
+                    .password(binding.editTextPassword.text.toString())
+                    .build()
+
+                parentFrag.createConnection(connectionCreateRequest)
             }
         }
     }
