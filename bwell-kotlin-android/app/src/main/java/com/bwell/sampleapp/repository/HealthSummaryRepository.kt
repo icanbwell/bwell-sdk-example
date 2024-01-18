@@ -6,21 +6,20 @@ import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceCompositeRequest
-import com.bwell.healthdata.healthsummary.careplan.CarePlanCompositeRequest
-import com.bwell.healthdata.healthsummary.communication.CommunicationRequest
-import com.bwell.healthdata.healthsummary.condition.ConditionCompositeRequest
-import com.bwell.healthdata.healthsummary.encounter.EncounterCompositeRequest
-import com.bwell.healthdata.healthsummary.immunization.ImmunizationCompositeRequest
-import com.bwell.healthdata.healthsummary.procedure.ProcedureCompositeRequest
-import com.bwell.healthdata.healthsummary.vitalsign.VitalSignCompositeRequest
+import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.communication.CommunicationsRequest
+import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.model.HealthSummaryListItems
 import com.bwell.sampleapp.utils.parseDateStringToDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.Date
 
 class HealthSummaryRepository(private val applicationContext: Context) {
 
@@ -29,34 +28,34 @@ class HealthSummaryRepository(private val applicationContext: Context) {
             lateinit var healthSummaryResult:BWellResult<Any>
             if(category.equals(applicationContext.getString(R.string.care_plans)))
             {
-                healthSummaryResult = BWellSdk.health.getCarePlanComposites(request as? CarePlanCompositeRequest)
+                healthSummaryResult = BWellSdk.health.getCarePlanGroups(request as? CarePlanGroupsRequest)
             }else if(category.equals(applicationContext.getString(R.string.immunizations)))
             {
-                healthSummaryResult = BWellSdk.health.getImmunizationComposites(request as? ImmunizationCompositeRequest)
+                healthSummaryResult = BWellSdk.health.getImmunizationGroups(request as? ImmunizationGroupsRequest)
             }
             else if(category.equals(applicationContext.getString(R.string.procedures)))
             {
-                healthSummaryResult = BWellSdk.health.getProcedureComposites(request as? ProcedureCompositeRequest)
+                healthSummaryResult = BWellSdk.health.getProcedureGroups(request as? ProcedureGroupsRequest)
             }
             else if(category.equals(applicationContext.getString(R.string.vitals)))
             {
-                healthSummaryResult = BWellSdk.health.getVitalSignComposites(request as? VitalSignCompositeRequest)
+                healthSummaryResult = BWellSdk.health.getVitalSignGroups(request as? VitalSignGroupsRequest)
             }
             else if(category.equals(applicationContext.getString(R.string.visit_history)))
             {
-                healthSummaryResult = BWellSdk.health.getEncounterComposites(request as? EncounterCompositeRequest)
+                healthSummaryResult = BWellSdk.health.getEncounterGroups(request as? EncounterGroupsRequest)
             }
             else if(category.equals(applicationContext.getString(R.string.allergies)))
             {
-                healthSummaryResult = BWellSdk.health.getAllergyIntoleranceComposites(request as AllergyIntoleranceCompositeRequest)
+                healthSummaryResult = BWellSdk.health.getAllergyIntoleranceGroups(request as AllergyIntoleranceGroupsRequest)
             }
             else if(category.equals(applicationContext.getString(R.string.communications)))
             {
-                healthSummaryResult = BWellSdk.health.getCommunications(request as CommunicationRequest)
+                healthSummaryResult = BWellSdk.health.getCommunications(request as CommunicationsRequest)
             }
             else if(category.equals(applicationContext.getString(R.string.conditions)))
             {
-                healthSummaryResult = BWellSdk.health.getConditionComposites(request as ConditionCompositeRequest)
+                healthSummaryResult = BWellSdk.health.getConditionGroups(request as ConditionGroupsRequest)
             }
             emit(healthSummaryResult)
         } catch (e: Exception) {
