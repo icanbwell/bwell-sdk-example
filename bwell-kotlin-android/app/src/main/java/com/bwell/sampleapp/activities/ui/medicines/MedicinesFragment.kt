@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.medication.MedicationSummary
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.medication.MedicationListRequest
 import com.bwell.common.models.domain.healthdata.medication.enums.MedicationStatus
+import com.bwell.healthdata.medication.requests.MedicationListRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentMedicinesBinding
