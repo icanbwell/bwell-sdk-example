@@ -18,9 +18,9 @@ import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.domain.healthdata.observation.performer.ObservationOrganizationPerformer
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.lab.LabDetailRequest
-import com.bwell.healthdata.lab.LabKnowledgeRequest
-import com.bwell.healthdata.lab.LabRequest
+import com.bwell.healthdata.lab.requests.LabDetailsRequest
+import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
+import com.bwell.healthdata.lab.requests.LabsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentLabsParentBinding
@@ -62,7 +62,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
         val page = "0"
         val pageSize = 30
 
-        val request = LabRequest.Builder()
+        val request = LabsRequest.Builder()
             .date(date)
             .page(page)
             .pageSize(pageSize)
@@ -107,7 +107,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
         val page = "0"
         val pageSize = 30
 
-        val request = LabDetailRequest.Builder()
+        val request = LabDetailsRequest.Builder()
             .id(id)
             .code(code)
             .date(date)

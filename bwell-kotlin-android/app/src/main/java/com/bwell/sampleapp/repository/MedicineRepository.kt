@@ -7,9 +7,9 @@ import com.bwell.common.models.domain.healthdata.medication.MedicationKnowledge
 import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
 import com.bwell.common.models.domain.healthdata.medication.MedicationSummary
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.medication.MedicationKnowledgeRequest
-import com.bwell.healthdata.medication.MedicationListRequest
-import com.bwell.healthdata.medication.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
+import com.bwell.healthdata.medication.requests.MedicationListRequest
+import com.bwell.healthdata.medication.requests.MedicationPricingRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
