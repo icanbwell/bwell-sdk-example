@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
@@ -162,5 +164,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
                 parentFragmentManager.popBackStack()
             }
         }
+
+        println("here")
     }
 }
