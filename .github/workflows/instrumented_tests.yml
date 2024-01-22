@@ -43,6 +43,13 @@ jobs:
         with:
           api-level: 29
           script: cd bwell-kotlin-android && ./gradlew connectedCheck
+
+      - name: Upload Test Reports Folder
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }} # IMPORTANT: Upload reports regardless of status
+        with:
+          name: reports
+          path: bwell-kotlin-android/app/build/outputs # path to where the xml test results are stored              
           
 
        
