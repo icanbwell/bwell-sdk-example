@@ -49,7 +49,7 @@ jobs:
         if: ${{ always() }} # IMPORTANT: Upload reports regardless of status
         with:
           name: reports
-          path: bwell-kotlin-android/app/build/outputs # path to where the xml test results are stored              
+          path: bwell-kotlin-android/app/build/outputs/**/*.xml # path to where the xml test results are stored              
           
 
        
