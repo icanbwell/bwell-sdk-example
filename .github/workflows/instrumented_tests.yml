@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Enable KVM
         run: |
@@ -42,10 +42,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
+          arch: x86_64
           script: cd bwell-kotlin-android && ./gradlew connectedCheck
 
       - name: Upload Test Reports Folder
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: ${{ always() }} # IMPORTANT: Upload reports regardless of status
         with:
           name: reports
@@ -58,7 +59,7 @@ jobs:
     if: ${{ always() }} # IMPORTANT: Execute report job regardless of status
     steps:
       - name: Download Test Reports Folder
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: reports
 
