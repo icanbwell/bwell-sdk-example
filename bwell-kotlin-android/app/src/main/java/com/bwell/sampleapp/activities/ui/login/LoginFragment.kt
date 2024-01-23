@@ -5,8 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.viewbinding.ViewBindings
 import com.bwell.BWellSdk
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.KeyStoreConfig
@@ -32,10 +35,10 @@ class LoginFragment : Fragment() {
     private val ARG_PARAM1: String = "A"
     private val ARG_PARAM2: String = "B"
 
+    private val TAG = "LoginFragment"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        initializeBWellSDK()
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -49,6 +52,24 @@ class LoginFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Initialize the button
+        val button: Button = view.findViewById(R.id.buttonLogin)
+        button.setOnClickListener {
+            // Call the function when the button is pressed
+            onButtonPressed()
+        }
+    }
+
+    private fun onButtonPressed() {
+        // Add your function logic here
+        initializeBWellSDK()
+
+        // Example: Show a toast message
+        Toast.makeText(context, "Button pressed!", Toast.LENGTH_SHORT).show()
     }
 
     companion object {
@@ -73,7 +94,7 @@ class LoginFragment : Fragment() {
 
     private fun initializeBWellSDK() {
         lifecycleScope.launch {
-
+            Log.i(TAG, "Initializing SDK")
             val keystore: KeyStoreConfig = KeyStoreConfig.Builder()
                 .path(requireContext().filesDir.absolutePath)
                 .build()
@@ -102,6 +123,8 @@ class LoginFragment : Fragment() {
             registerDeviceToken(registerDeviceTokenRequest)
 
             deregisterDeviceToken("34cb23e2f562dbb5")
+
+            Log.i(TAG, "Finished initializing SDK")
         }
     }
 
