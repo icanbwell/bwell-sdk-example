@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.viewbinding.ViewBindings
+import androidx.navigation.fragment.findNavController
 import com.bwell.BWellSdk
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.KeyStoreConfig
@@ -21,6 +22,7 @@ import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import kotlinx.coroutines.launch
+
 
 /**
  * A simple [Fragment] subclass.
@@ -36,6 +38,15 @@ class LoginFragment : Fragment() {
     private val ARG_PARAM2: String = "B"
 
     private val TAG = "LoginFragment"
+
+    private val clientKey =
+        "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
+
+    private val oAuthCredentials =
+        "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF95czhpbE5NU0Rvd2h3ZklQZk1PMi9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDM4ODkwNTZ9.2rFiyAfvqiQ_CxWM8P_AUvpGxHbXTdBAzAQuUQLSUiFq3HRXBmtjjxvHDJzhKhSIP_rU9BrAo14PNvRqKW1c6g"
+
+    private val deviceKey = "34cb23e2f562dbb5"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,20 +67,38 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val editTextClientKey: EditText = view.findViewById(R.id.editTextClientKey)
+        editTextClientKey.setText(clientKey)
+
+        val editTextOAuthCredentials: EditText = view.findViewById(R.id.editTextOAuthCredentials)
+        editTextOAuthCredentials.setText(oAuthCredentials)
+
         // Initialize the button
         val button: Button = view.findViewById(R.id.buttonLogin)
         button.setOnClickListener {
             // Call the function when the button is pressed
-            onButtonPressed()
+            onButtonPressed(
+                clientKey = editTextClientKey.text.toString(),
+                oAuthCredentials = editTextOAuthCredentials.text.toString()
+            )
         }
     }
 
-    private fun onButtonPressed() {
+    private fun onButtonPressed(
+        clientKey: String,
+        oAuthCredentials: String
+    ) {
         // Add your function logic here
-        initializeBWellSDK()
+        initializeBWellSDK(
+            clientKey,
+            oAuthCredentials
+        )
 
         // Example: Show a toast message
         Toast.makeText(context, "Button pressed!", Toast.LENGTH_SHORT).show()
+
+        findNavController().navigate(R.id.nav_home)
     }
 
     companion object {
@@ -92,7 +121,7 @@ class LoginFragment : Fragment() {
             }
     }
 
-    private fun initializeBWellSDK() {
+    private fun initializeBWellSDK(clientKey: String, oAuthCredentials: String) {
         lifecycleScope.launch {
             Log.i(TAG, "Initializing SDK")
             val keystore: KeyStoreConfig = KeyStoreConfig.Builder()
@@ -100,7 +129,7 @@ class LoginFragment : Fragment() {
                 .build()
 
             val config: BWellConfig = BWellConfig.Builder()
-                .clientKey("eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9")
+                .clientKey(clientKey)
                 .logLevel(LogLevel.DEBUG)
                 .timeout(20000)
                 .retryPolicy(RetryPolicy(maxRetries = 5, retryInterval = 500))
@@ -109,20 +138,20 @@ class LoginFragment : Fragment() {
 
             BWellSdk.initialize(config = config)
             val credentials =
-                Credentials.OAuthCredentials("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF95czhpbE5NU0Rvd2h3ZklQZk1PMi9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDM4ODkwNTZ9.2rFiyAfvqiQ_CxWM8P_AUvpGxHbXTdBAzAQuUQLSUiFq3HRXBmtjjxvHDJzhKhSIP_rU9BrAo14PNvRqKW1c6g")
+                Credentials.OAuthCredentials(oAuthCredentials)
             Log.d("BWell Sample App", credentials.token)
 
             BWellSdk.authenticate(credentials)
 
             val registerDeviceTokenRequest: RegisterDeviceTokenRequest =
                 RegisterDeviceTokenRequest.Builder()
-                    .deviceToken("34cb23e2f562dbb5")
+                    .deviceToken(deviceKey)
                     .applicationName("com.icanbwell.bwelldemo.staging")
                     .platform(DevicePlatform.ANDROID)
                     .build()
             registerDeviceToken(registerDeviceTokenRequest)
 
-            deregisterDeviceToken("34cb23e2f562dbb5")
+            deregisterDeviceToken(deviceKey)
 
             Log.i(TAG, "Finished initializing SDK")
         }
