@@ -48,8 +48,13 @@ class NavigationActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         navView.itemIconTintList = null
-        deviceId = getString(contentResolver, Secure.ANDROID_ID)
 
+        var tempDeviceId = getString(contentResolver, Secure.ANDROID_ID)
+
+        if (tempDeviceId == null) {
+            tempDeviceId = "foo"
+        }
+        deviceId = tempDeviceId
         val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
             .deviceToken(deviceId)
             .applicationName("Samsung Health PHR")
