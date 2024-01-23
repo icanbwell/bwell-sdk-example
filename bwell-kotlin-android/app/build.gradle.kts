@@ -89,6 +89,7 @@ dependencies {
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("androidx.annotation:annotation:1.7.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.11.1")
     testImplementation("androidx.test.ext:junit:1.1.5")

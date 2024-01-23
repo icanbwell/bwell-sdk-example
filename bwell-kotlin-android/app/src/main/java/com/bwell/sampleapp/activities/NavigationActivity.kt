@@ -31,7 +31,7 @@ class NavigationActivity : AppCompatActivity() {
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        repository = (this?.application as? BWellSampleApplication)?.bWellRepository!!
+        repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
 
         binding = ActivityNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
