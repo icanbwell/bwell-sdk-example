@@ -139,7 +139,7 @@ class LoginFragment : Fragment() {
             BWellSdk.initialize(config = config)
             val credentials =
                 Credentials.OAuthCredentials(oAuthCredentials)
-            Log.d("BWell Sample App", credentials.token)
+            Log.d(TAG, credentials.token)
 
             BWellSdk.authenticate(credentials)
 
