@@ -52,19 +52,12 @@ jobs:
           name: reports
           path: bwell-kotlin-android/app/build/outputs/**/*.xml # path to where the xml test results are stored  
 
-
-  report:
-    runs-on: ubuntu-latest
-    needs: test # The report job will run after test job
-    if: ${{ always() }} # IMPORTANT: Execute report job regardless of status
-    steps:
-      - name: Download Test Reports Folder
-        uses: actions/download-artifact@v4
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure() # always run even if the previous step fails
         with:
-          name: reports
-
-      - name: Android Test Report
-        uses: asadmansr/android-test-report-action@v1.2.0          
+          report_paths: 'bwell-kotlin-android/app/build/outputs/**/*.xml'
+  
     
           
 
