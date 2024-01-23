@@ -96,7 +96,7 @@ class LoginFragment : Fragment() {
         )
 
         // Example: Show a toast message
-        Toast.makeText(context, "Button pressed!", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(context, "Button pressed!", Toast.LENGTH_SHORT).show()
 
         findNavController().navigate(R.id.nav_home)
     }
