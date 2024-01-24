@@ -52,42 +52,42 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches?.get(position)
         when (launch) {
-            is CarePlanComposite -> {
+            is CarePlanGroup -> {
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = ("Started :  $formattedDate")
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
-            is ImmunizationComposite ->{
+            is ImmunizationGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Most Recent : $formattedDate"
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
-            is ProcedureComposite ->{
+            is ProcedureGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Started : $formattedDate"
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
-            is ObservationComposite ->{
+            is ObservationComposition ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Effective Date : $formattedDate"
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
-            is EncounterComposite ->{
+            is EncounterGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Started : $formattedDate"
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
-            is AllergyIntoleranceComposite ->{
+            is AllergyIntoleranceGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 holder.binding.textViewDate.text =launch.criticality.toString()
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
@@ -97,7 +97,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.textViewDate.text = launch.status.toString()
                 holder.binding.organizationName.text = "from "+ launch.meta?.source
             }
-            is ConditionComposite ->{
+            is ConditionGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
@@ -171,26 +171,26 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
 
     private fun getTitle(item: T?): String {
         return when (item) {
-            is CarePlanComposite -> item.name ?: ""
-            is ImmunizationComposite -> item.name ?: ""
-            is ProcedureComposite -> item.name ?: ""
-            is ObservationComposite -> item.name ?: ""
-            is EncounterComposite -> item.name ?: ""
-            is AllergyIntoleranceComposite -> item.name ?: ""
+            is CarePlanGroup -> item.name ?: ""
+            is ImmunizationGroup -> item.name ?: ""
+            is ProcedureGroup -> item.name ?: ""
+            is ObservationComposition -> item.name ?: ""
+            is EncounterGroup -> item.name ?: ""
+            is AllergyIntoleranceGroup -> item.name ?: ""
             is Communication -> item.category?.get(0)?.coding?.get(0)?.code ?: ""
-            is ConditionComposite -> item.name ?: ""
+            is ConditionGroup -> item.name ?: ""
             else -> ""
         }
     }
 
     private fun getDate(item: T?): String? {
         return when (item) {
-            is CarePlanComposite -> item.period?.start.toString()
-            is ImmunizationComposite -> item.occurrenceDateTime.toString()
-            is ProcedureComposite -> item.period?.start.toString()
-            is ObservationComposite -> item.effectiveDateTime.toString()
-            is EncounterComposite -> item.period?.start.toString()
-            is ConditionComposite -> item.recordedDate.toString()
+            is CarePlanGroup -> item.period?.start.toString()
+            is ImmunizationGroup -> item.occurrenceDateTime.toString()
+            is ProcedureGroup -> item.period?.start.toString()
+            is ObservationComposition -> item.effectiveDateTime.toString()
+            is EncounterGroup -> item.period?.start.toString()
+            is ConditionGroup -> item.recordedDate.toString()
             else -> null
         }
     }

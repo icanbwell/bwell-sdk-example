@@ -16,7 +16,6 @@ import kotlinx.coroutines.launch
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
 import androidx.lifecycle.lifecycleScope
-import com.bwell.common.models.responses.Status
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.device.requests.deviceToken.DevicePlatform
@@ -32,7 +31,7 @@ class NavigationActivity : AppCompatActivity() {
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        repository = (this?.application as? BWellSampleApplication)?.bWellRepository!!
+        repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
 
         binding = ActivityNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -43,14 +42,19 @@ class NavigationActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_navigation)
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home, R.id.nav_data_connections, R.id.nav_health_summary, R.id.nav_health_journey, R.id.nav_insurance, R.id.nav_profile, R.id.nav_labs, R.id.nav_medicines
+            setOf(R.id.nav_login, R.id.nav_home, R.id.nav_data_connections, R.id.nav_health_summary, R.id.nav_health_journey, R.id.nav_insurance, R.id.nav_profile, R.id.nav_labs, R.id.nav_medicines
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         navView.itemIconTintList = null
-        deviceId = getString(contentResolver, Secure.ANDROID_ID)
 
+        var tempDeviceId = getString(contentResolver, Secure.ANDROID_ID)
+
+        if (tempDeviceId == null) {
+            tempDeviceId = "foo"
+        }
+        deviceId = tempDeviceId
         val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
             .deviceToken(deviceId)
             .applicationName("Samsung Health PHR")
@@ -64,7 +68,7 @@ class NavigationActivity : AppCompatActivity() {
             val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
             registerOutcome.collect { outcome ->
                 outcome?.let {
-                    if (outcome.status == Status.SUCCESS) {
+                    if (outcome.success()) {
                         //device registered successfully
                     } else {
                         //device not registered
@@ -89,7 +93,7 @@ class NavigationActivity : AppCompatActivity() {
             val unregisterOutcome = repository.unregisterDeviceToken(deviceToken)
             unregisterOutcome.collect { outcome ->
                 outcome?.let {
-                    if (outcome.status == Status.SUCCESS) {
+                    if (outcome.success()) {
                         //device registered successfully
                     } else {
                         //device not registered
