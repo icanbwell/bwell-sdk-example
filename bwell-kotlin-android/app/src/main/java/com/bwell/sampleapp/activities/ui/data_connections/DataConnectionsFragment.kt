@@ -218,4 +218,15 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
     }
 
+    fun createConnection(connectionCreateRequest: ConnectionCreateRequest) {
+        dataConnectionsViewModel.createConnection(connectionCreateRequest);
+    }
+    fun getDataSource(datasourceId: String) {
+        dataConnectionsViewModel.getDataSource(datasourceId)
+    }
+
+    fun getOAuthUrl(dataSourceId: String) {
+        dataConnectionsViewModel.getOAuthUrl(dataSourceId)
+    }
+
 }

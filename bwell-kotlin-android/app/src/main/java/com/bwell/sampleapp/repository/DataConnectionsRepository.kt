@@ -1,11 +1,13 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -36,6 +38,27 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = dataConnectionsClinicsLiveData
+
+    suspend fun getDataSource(connectionId: String): Flow<BWellResult<DataSource>?> = flow {
+        try {
+            val dataSourceResult = BWellSdk.connections?.getDataSource(connectionId)
+            Log.d(dataSourceResult.toString(), "This is a debug message");
+            emit(dataSourceResult)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun getOAuthUrl(datasourceId: String): Flow<BWellResult<String>?> = flow {
+        try {
+            val result = BWellSdk.connections?.getOauthUrl(datasourceId) as BWellResult<String>
+            emit(result)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
 
     suspend fun getConnections(): Flow<BWellResult<Connection>?> = flow {
         try {
