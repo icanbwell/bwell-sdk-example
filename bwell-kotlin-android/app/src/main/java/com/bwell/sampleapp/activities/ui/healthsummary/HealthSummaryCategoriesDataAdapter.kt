@@ -5,23 +5,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bwell.BWellSdk
-import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceComposite
-import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanComposite
+import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.communication.Communication
-import com.bwell.common.models.domain.healthdata.healthsummary.condition.ConditionComposite
-import com.bwell.common.models.domain.healthdata.healthsummary.encounter.EncounterComposite
-import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationComposite
-import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureComposite
+import com.bwell.common.models.domain.healthdata.healthsummary.condition.ConditionGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.encounter.EncounterGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureGroup
 import com.bwell.common.models.domain.healthdata.observation.Observation
-import com.bwell.common.models.domain.healthdata.observation.ObservationComposite
+import com.bwell.common.models.domain.healthdata.observation.ObservationComposition
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceRequest
-import com.bwell.healthdata.healthsummary.careplan.CarePlanRequest
-import com.bwell.healthdata.healthsummary.condition.ConditionRequest
-import com.bwell.healthdata.healthsummary.encounter.EncounterRequest
-import com.bwell.healthdata.healthsummary.immunization.ImmunizationRequest
-import com.bwell.healthdata.healthsummary.procedure.ProcedureRequest
-import com.bwell.healthdata.healthsummary.vitalsign.VitalSignRequest
+import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntolerancesRequest
+import com.bwell.healthdata.healthsummary.requests.careplan.CarePlansRequest
+import com.bwell.healthdata.healthsummary.requests.condition.ConditionsRequest
+import com.bwell.healthdata.healthsummary.requests.encounter.EncountersRequest
+import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationsRequest
+import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
+import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
 import com.bwell.sampleapp.databinding.HealthSummaryCategoriesItemsViewBinding
 import com.bwell.sampleapp.utils.formatDate
 import kotlinx.coroutines.GlobalScope
@@ -113,43 +113,43 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
         holder.binding.root.setOnClickListener {
             val id = getId(launch)
             when (launch) {
-                is CarePlanComposite -> {
-                    val carePlanRequest = CarePlanRequest.Builder().ids(listOf(id)).build()
+                is CarePlanGroup -> {
+                    val carePlanRequest = CarePlansRequest.Builder().ids(listOf(id)).build()
                     GlobalScope.launch {
                         val carePlans = BWellSdk.health.getCarePlans(carePlanRequest) as BWellResult.ResourceCollection
                         printProperties(carePlans.data?.get(position))
                     }
                 }
-                is ImmunizationComposite ->{
-                    val immunizationRequest = ImmunizationRequest.Builder().ids(listOf(id)).build()
+                is ImmunizationGroup ->{
+                    val immunizationRequest = ImmunizationsRequest.Builder().ids(listOf(id)).build()
                     GlobalScope.launch {
                         val immunizations = BWellSdk.health.getImmunizations(immunizationRequest) as BWellResult.ResourceCollection
                         printProperties(immunizations.data?.get(position))
                     }
                 }
-                is ProcedureComposite ->{
+                is ProcedureGroup ->{
                     val proceduresRequest = ProcedureRequest.Builder().ids(listOf(id)).build()
                     GlobalScope.launch {
                         val procedures = BWellSdk.health.getProcedures(proceduresRequest) as BWellResult.ResourceCollection
                         printProperties(procedures.data?.get(position))
                     }
                 }
-                is ObservationComposite ->{
-                    val vitalSignsRequest = VitalSignRequest.Builder().ids(listOf(id)).build()
+                is ObservationComposition ->{
+                    val vitalSignsRequest = VitalSignsRequest.Builder().ids(listOf(id)).build()
                     GlobalScope.launch {
                         val vitalSigns = BWellSdk.health.getVitalSigns(vitalSignsRequest) as BWellResult.ResourceCollection
                         printProperties(vitalSigns.data?.get(position))
                     }
                 }
-                is EncounterComposite ->{
-                    val encountersRequest = EncounterRequest.Builder().ids(listOf(id)).build()
+                is EncounterGroup ->{
+                    val encountersRequest = EncountersRequest.Builder().ids(listOf(id)).build()
                     GlobalScope.launch {
                         val encounters = BWellSdk.health.getEncounters(encountersRequest) as BWellResult.ResourceCollection
                         printProperties(encounters.data?.get(position))
                     }
                 }
-                is AllergyIntoleranceComposite ->{
-                    val allergyIntoleranceRequest = AllergyIntoleranceRequest.Builder().ids(listOf(id)).build()
+                is AllergyIntoleranceGroup ->{
+                    val allergyIntoleranceRequest = AllergyIntolerancesRequest.Builder().ids(listOf(id)).build()
                     GlobalScope.launch {
                         val allergyIntolerances = BWellSdk.health.getAllergyIntolerances(allergyIntoleranceRequest) as BWellResult.ResourceCollection
                         printProperties(allergyIntolerances.data?.get(position))
@@ -158,8 +158,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 is Communication ->{
                     // do nothing
                 }
-                is ConditionComposite ->{
-                    val conditionsRequest = ConditionRequest.Builder().ids(listOf(id)).build()
+                is ConditionGroup ->{
+                    val conditionsRequest = ConditionsRequest.Builder().ids(listOf(id)).build()
                     GlobalScope.launch {
                         val conditions = BWellSdk.health.getConditions(conditionsRequest) as BWellResult.ResourceCollection
                         printProperties(conditions.data?.get(position))
@@ -197,12 +197,12 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
 
     private fun getId(item: T?): String {
         return when (item) {
-            is CarePlanComposite -> item.id ?: ""
-            is ImmunizationComposite -> item.id ?: ""
-            is ProcedureComposite -> item.id ?: ""
-            is ObservationComposite -> item.id ?: ""
-            is EncounterComposite -> item.id ?: ""
-            is ConditionComposite -> item.id ?: ""
+            is CarePlanGroup -> item.id ?: ""
+            is ImmunizationGroup -> item.id ?: ""
+            is ProcedureGroup -> item.id ?: ""
+            is ObservationComposition -> item.id ?: ""
+            is EncounterGroup -> item.id ?: ""
+            is ConditionGroup -> item.id ?: ""
             else -> ""
         }
     }
