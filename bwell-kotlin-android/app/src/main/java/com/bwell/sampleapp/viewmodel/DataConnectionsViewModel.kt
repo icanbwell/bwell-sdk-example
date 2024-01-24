@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -129,6 +130,35 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
             try {
                 repository?.getConnections()?.collect { connectionsResult ->
                     processConnectionsResult(connectionsResult)
+                }
+            } catch (_: Exception) {
+                // Handle exceptions
+            }
+        }
+    }
+
+    private val _dataSourceData = MutableStateFlow<BWellResult<DataSource>?>(null)
+    val dataSourceData: StateFlow<BWellResult<DataSource>?> = _dataSourceData
+    fun getDataSource(datasourceId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.getDataSource(datasourceId)?.collect { dataSourceResult ->
+                    _dataSourceData.emit(dataSourceResult)
+                }
+            } catch (_: Exception) {
+                // Handle exceptions
+            }
+        }
+    }
+
+    private val _oauthUrlData = MutableStateFlow<BWellResult<String>?>(null)
+    val oauthUrlData: StateFlow<BWellResult<String>?> = _oauthUrlData
+
+    fun getOAuthUrl(datasourceId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.getOAuthUrl(datasourceId)?.collect { oauthUrlResult ->
+                    _oauthUrlData.emit(oauthUrlResult)
                 }
             } catch (_: Exception) {
                 // Handle exceptions

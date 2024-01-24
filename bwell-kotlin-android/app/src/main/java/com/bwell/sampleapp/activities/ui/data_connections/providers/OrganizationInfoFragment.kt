@@ -12,17 +12,27 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.common.models.responses.BWellResult
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
+import com.bwell.sampleapp.repository.DataConnectionsRepository
+import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
+import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
+import com.bwell.common.models.domain.data.DataSource
 
 class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClickListener {
 
     private var _binding: FragmentOrganizationInfoViewBinding? = null
     private var organization: T? = organizationData
+    private var connectionType: String = ""
+    private var connectionId: String = ""
+    private lateinit var viewModel: DataConnectionsViewModel
+
 
     private val binding get() = _binding!!
 
@@ -35,7 +45,6 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         _binding = FragmentOrganizationInfoViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val organization = organization
-        var connectionType = ""
         var name = ""
         when (organization) {
             is Organization?->{
@@ -46,11 +55,14 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
                 connectionType = organization?.endpoint?.get(0)?.connectionType?.code.toString()
                 name = organization?.content.toString()
             }
-
         }
+
+        Log.d("OrganizationInfoFragment", "Connection Type: $organization?.endpoint?.get")
+//        connectionId = organization?.endpoint?.get(0)?.name?.toString()
+
         binding.clinicNametxt.text =
             "${resources.getString(R.string.connect_to)} ${name}"
-        if(connectionType.equals(resources.getString(R.string.hapi)))
+        if(connectionType.equals(resources.getString(R.string.open)))
         {
             binding.clinicDiscriptionTxt.text ="By providing  my "+
                 "${name} ${resources.getString(R.string.clinic_info_hapi)}"
@@ -104,6 +116,25 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             }
             override fun afterTextChanged(s: Editable?) {}
         })
+
+        // Initialize your ViewModel using the factory
+        val repository = DataConnectionsRepository(requireContext()) // Pass the context
+        val factory = DataConnectionsViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory).get(DataConnectionsViewModel::class.java)
+
+        // Observe dataSourceLiveData
+//        viewModel.dataSourceLiveData.observe(viewLifecycleOwner) { dataSourceResult ->
+//            // Handle the result here
+//            if (dataSourceResult is BWellResult.success) {
+//                val dataSource: DataSource? = dataSourceResult.data
+//                // Now you can use the dataSource in your UI or perform any other actions
+//                // For example, update UI components based on the dataSource
+//            } else if (dataSourceResult is BWellResult.error) {
+//                // Handle the error case
+//                val errorMessage: String? = dataSourceResult.error?.localizedMessage
+//                // Display an error message or take appropriate action
+//            }
+//        }
 
         return root
     }
@@ -163,8 +194,39 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack()
             }
-        }
+            R.id.frameLayoutProceed -> {
+                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
+//                Log.d("OrganizationInfoFragment", "Connection Type: $connectionType")
 
+                parentFrag.getDataSource("55a83bdc8d1eb1420aa1a71b")
+                // category Basic or OAuth
+
+                if (connectionType.equals("Open", ignoreCase = true)) {
+                    val connectionCreateRequest: ConnectionCreateRequest = ConnectionCreateRequest.Builder()
+                        //.connectionId(connectionId)
+                        .connectionId("55a83bdc8d1eb1420aa1a71b")
+                        .username(binding.editTextUsername.text.toString())
+                        .password(binding.editTextPassword.text.toString())
+                        .build()
+
+                    parentFrag.createConnection(connectionCreateRequest)
+
+                } else if (connectionType.equals("OAuth", ignoreCase = true)) {
+                    // Handle the case when connectionType is "oAuth"
+                    parentFrag.getOAuthUrl("epic_sandbox_r4c")
+                    //openUrl()
+                } else {
+                    // Handle other cases or provide a default behavior
+
+                }
+
+//                Log.d("OrganizationInfoFragment", "Organization details: $organization")
+
+
+
+            }
+        }
+//        Log.d("OrganizationInfoFragment", "Organization details: $organization")
         println("here")
     }
 }
