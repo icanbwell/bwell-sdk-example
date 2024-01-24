@@ -45,6 +45,7 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="lee_health">LEE HEALTH</string>
+    <string name="menu_login">Login</string>
     <string name="menu_home">Home</string>
     <string name="menu_data_connections">Data Connections</string>
     <string name="menu_health_summary">Health Summary</string>
@@ -173,11 +174,11 @@
     <string name="waht_is_it">What is it ?</string>
     <string name="pricing">About Pricing ?</string>
     <string name="note_info">NOTE: Your data will be connected into your Lee Health app for your personal use to help you manage your healthcare. Lee Health will not review your health data from these connections and will only have access to it if you have consented to share this data with Lee Health.</string>
-<string name="data_connection_category_insurance">Insurance</string>
-<string name="data_connection_category_providers">Providers</string>
-<string name="data_connection_category_clinics">Clinics, Hospitals and Health Systems</string>
-<string name="data_connection_category_lab">Labs</string>
-<string name="request_add_new_connection">Request that we add a new connection</string>
+    <string name="data_connection_category_insurance">Insurance</string>
+    <string name="data_connection_category_providers">Providers</string>
+    <string name="data_connection_category_clinics">Clinics, Hospitals and Health Systems</string>
+    <string name="data_connection_category_lab">Labs</string>
+    <string name="request_add_new_connection">Request that we add a new connection</string>
     <string name="request_connection">Request Connection</string>
     <string name="open">Open</string>
     <string name="hapi">hapi</string>
