@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class DataConnectionsViewModel(private val repository: DataConnectionsRepository?) : ViewModel() {
+
+    private val TAG = "DataConnectionsViewModel"
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository?.getDataConnectionsList()
@@ -62,7 +65,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.fetchUserConsents(consentsRequest)?.collect { consentsResult ->
                     _consentsData.emit(consentsResult)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -77,7 +81,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                         _consentsData.emit(updateOutcome)
                     }
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -91,7 +96,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.createConnection(connectionRequest)?.collect { connectionOutcome ->
                     _createConnectionData.emit(connectionOutcome)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -105,7 +111,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.disconnectConnection(connectionId)?.collect { disconnectOutcome ->
                     _disconnectConnectionData.emit(disconnectOutcome)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -133,8 +140,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.getConnections()?.collect { connectionsResult ->
                     processConnectionsResult(connectionsResult)
                 }
-            } catch (_: Exception) {
-                // Handle exceptions
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -148,7 +155,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.getOAuthUrl(datasourceId)?.collect { urlOutcome ->
                     _urlData.emit(urlOutcome)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -162,7 +170,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.getDataSource(datasourceId)?.collect { dataSourceOutcome ->
                     _dataSourceData.emit(dataSourceOutcome)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }

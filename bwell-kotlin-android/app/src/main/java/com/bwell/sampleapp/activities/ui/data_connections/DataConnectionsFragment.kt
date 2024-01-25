@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -105,7 +104,8 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         adapter.onItemClicked = { selectedDataConnection ->
             when (selectedDataConnection.connectionCategoryName) {
                 resources.getString(R.string.data_connection_category_clinics) -> {
-                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE
+                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility =
+                        View.GONE
                     val clinicsFragment = ClinicsSearchFragment()
                     binding.progressBar.visibility = View.VISIBLE
                     val transaction = childFragmentManager.beginTransaction()
@@ -115,8 +115,10 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                     transaction.commit()
                     binding.progressBar.visibility = View.INVISIBLE
                 }
+
                 resources.getString(R.string.data_connection_category_providers) -> {
-                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE
+                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility =
+                        View.GONE
                     val providersFragment = ProviderSearchFragment()
                     val transaction = childFragmentManager.beginTransaction()
                     binding.containerLayout.visibility = View.VISIBLE
@@ -124,8 +126,10 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                     transaction.addToBackStack(null)
                     transaction.commit()
                 }
+
                 resources.getString(R.string.data_connection_category_lab) -> {
-                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE
+                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility =
+                        View.GONE
                     val labsSearchFragment = LabsSearchFragment()
                     val transaction = childFragmentManager.beginTransaction()
                     binding.containerLayout.visibility = View.VISIBLE
@@ -210,7 +214,12 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                                     val textView =
                                         frameLayoutConnectionStatus.getChildAt(0) as TextView
                                     textView.text = resources.getString(R.string.disconnected)
-                                    textView.setTextColor(resources.getColor(R.color.black, context?.theme))
+                                    textView.setTextColor(
+                                        resources.getColor(
+                                            R.color.black,
+                                            context?.theme
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -258,10 +267,8 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
     }
 
     fun launchWebBrowser() {
-//        val navController = Navigation.findNavController(R.id.nav)
-//        navController.navigate(R.id.webFragment)
-
-        val webFragment = WebFragment()
+        val url: String = dataConnectionsViewModel.urlData.toString()
+        val webFragment = WebFragment(url)
         val transaction = childFragmentManager.beginTransaction()
 //        transaction.hide(this@DataConnectionsFragment)
         transaction.add(R.id.container_layout, webFragment)
