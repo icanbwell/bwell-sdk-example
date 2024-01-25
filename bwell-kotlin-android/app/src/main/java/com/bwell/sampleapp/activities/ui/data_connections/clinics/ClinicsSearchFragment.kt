@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,9 @@ import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ClinicsViewModel
 import com.bwell.sampleapp.viewmodel.ClinicsViewModelFactory
 import com.bwell.search.requests.provider.ProviderSearchRequest
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ClinicsSearchFragment : Fragment(), View.OnClickListener {
 
@@ -34,6 +37,8 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
     private lateinit var clinicsViewModel: ClinicsViewModel
     private lateinit var dataConnectionClinicsAdapter: DataConnectionsClinicsListAdapter
     private val binding get() = _binding!!
+
+    private val TAG = "LoginFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,18 +53,20 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
             ClinicsViewModelFactory(repository)
         )[ClinicsViewModel::class.java]
         binding.leftArrowImageView.setOnClickListener(this)
+        addSearchTextListeners()
 //        getConnections()
         return root
     }
 
     private fun getConnections() {
-//            val editTextClientKey: EditText? = view.findViewById(R.id.data_connection_heading_tv)
-//            val searchTerm = editTextClientKey.text.toString()
+        val searchTerm = binding.searchView.searchText.text.toString()
+        Log.i(TAG, "Getting connections for $searchTerm")
+
         binding.progressBar.visibility = View.VISIBLE
 
         lifecycleScope.launch {
-            Thread.sleep(5000)
-            val searchTerm = binding.searchView.searchText.text.toString()
+//            Thread.sleep(5000)
+            Log.i(TAG, "Loading connections")
             val request = ProviderSearchRequest.Builder()
                 .searchTerm(searchTerm)
                 .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
@@ -68,11 +75,17 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
                 .pageSize(100)
                 .build()
             clinicsViewModel.searchConnections(request)
+            Log.i(TAG, "Finished loading connections")
             clinicsViewModel.searchResults.collect { searchResult ->
                 if (searchResult != null) {
                     setDataConnectionClinicsAdapter(searchResult)
                 }
             }
+//            withContext(Dispatchers.Main) {
+//                // Update UI on the main thread
+//                binding.progressBar.visibility = View.GONE
+//            }
+
         }
     }
 
@@ -93,17 +106,19 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
                 before: Int,
                 count: Int
             ) {
-                clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
-                viewLifecycleOwner.lifecycleScope.launch {
-                    clinicsViewModel.filteredResults.collect { filteredList ->
-                        if (filteredList!!.isNotEmpty()) {
-                            displayClinicsAfterDataSearchView(filteredList.size)
-                        } else {
-                            displayClinicsAfterNoDataSearchView()
-                        }
-                        dataConnectionClinicsAdapter.updateList(filteredList)
-                    }
-                }
+                Log.i(TAG, "onTextChanged: ${charSequence.toString()}")
+//                clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
+                getConnections()
+//                viewLifecycleOwner.lifecycleScope.launch {
+//                    clinicsViewModel.filteredResults.collect { filteredList ->
+//                        if (filteredList!!.isNotEmpty()) {
+//                            displayClinicsAfterDataSearchView(filteredList.size)
+//                        } else {
+//                            displayClinicsAfterNoDataSearchView()
+//                        }
+//                        dataConnectionClinicsAdapter.updateList(filteredList)
+//                    }
+//                }
             }
 
             override fun afterTextChanged(editable: Editable?) {}
@@ -135,7 +150,6 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
         binding.clinicsAfterSearchDataBodyView.rvClinics.layoutManager =
             LinearLayoutManager(requireContext())
         binding.clinicsAfterSearchDataBodyView.rvClinics.adapter = dataConnectionClinicsAdapter
-        addSearchTextListeners()
     }
 
     private fun displayClinicsAfterNoDataSearchView() {

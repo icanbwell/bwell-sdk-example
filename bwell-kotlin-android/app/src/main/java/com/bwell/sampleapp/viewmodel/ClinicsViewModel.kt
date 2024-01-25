@@ -6,9 +6,11 @@ import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.ClinicsRepository
 import com.bwell.search.requests.provider.ProviderSearchRequest
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ClinicsViewModel(private val repository: ClinicsRepository?) : ViewModel() {
 
@@ -18,8 +20,10 @@ class ClinicsViewModel(private val repository: ClinicsRepository?) : ViewModel()
     fun searchConnections(providerSearchRequest: ProviderSearchRequest) {
         viewModelScope.launch {
             try {
-                repository?.searchConnections(providerSearchRequest)?.collect { searchResult ->
-                    _searchResults.emit(searchResult)
+                withContext(Dispatchers.IO) {
+                    repository?.searchConnections(providerSearchRequest)?.collect { searchResult ->
+                        _searchResults.emit(searchResult)
+                    }
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
