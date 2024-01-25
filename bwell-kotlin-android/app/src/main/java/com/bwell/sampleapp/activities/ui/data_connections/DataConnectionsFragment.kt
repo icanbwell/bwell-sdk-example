@@ -225,13 +225,11 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
     fun createConnection(connectionCreateRequest: ConnectionCreateRequest) {
         dataConnectionsViewModel.createConnection(connectionCreateRequest);
     }
-    fun getDataSource(datasourceId: String): StateFlow<BWellResult<DataSource>?> {
+    fun getDataSource(datasourceId: String) {
         dataConnectionsViewModel.getDataSource(datasourceId)
-        return dataConnectionsViewModel.dataSourceData;
     }
 
     fun getOAuthUrl(dataSourceId: String) {
         dataConnectionsViewModel.getOAuthUrl(dataSourceId)
     }
-
 }
