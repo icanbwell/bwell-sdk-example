@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
@@ -20,10 +19,17 @@ import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
-import com.bwell.sampleapp.repository.DataConnectionsRepository
-import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
-import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import com.bwell.common.models.domain.data.DataSource
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClickListener {
 
@@ -31,7 +37,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
     private var organization: T? = organizationData
     private var connectionType: String = ""
     private var connectionId: String = ""
-    private lateinit var viewModel: DataConnectionsViewModel
+    private var dataSource: DataSource? = null
 
 
     private val binding get() = _binding!!
@@ -58,14 +64,13 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         }
 
         Log.d("OrganizationInfoFragment", "Connection Type: $organization?.endpoint?.get")
-//        connectionId = organization?.endpoint?.get(0)?.name?.toString()
 
         binding.clinicNametxt.text =
             "${resources.getString(R.string.connect_to)} ${name}"
         if(connectionType.equals(resources.getString(R.string.open)))
         {
             binding.clinicDiscriptionTxt.text ="By providing  my "+
-                "${name} ${resources.getString(R.string.clinic_info_hapi)}"
+                    "${name} ${resources.getString(R.string.clinic_info_hapi)}"
             binding.editTextUsername.visibility = View.VISIBLE;
             binding.passwordLayout.visibility = View.VISIBLE;
         }else{
@@ -116,25 +121,6 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             }
             override fun afterTextChanged(s: Editable?) {}
         })
-
-        // Initialize your ViewModel using the factory
-        val repository = DataConnectionsRepository(requireContext()) // Pass the context
-        val factory = DataConnectionsViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(DataConnectionsViewModel::class.java)
-
-        // Observe dataSourceLiveData
-//        viewModel.dataSourceLiveData.observe(viewLifecycleOwner) { dataSourceResult ->
-//            // Handle the result here
-//            if (dataSourceResult is BWellResult.success) {
-//                val dataSource: DataSource? = dataSourceResult.data
-//                // Now you can use the dataSource in your UI or perform any other actions
-//                // For example, update UI components based on the dataSource
-//            } else if (dataSourceResult is BWellResult.error) {
-//                // Handle the error case
-//                val errorMessage: String? = dataSourceResult.error?.localizedMessage
-//                // Display an error message or take appropriate action
-//            }
-//        }
 
         return root
     }
@@ -196,12 +182,24 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             }
             R.id.frameLayoutProceed -> {
                 val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
-//                Log.d("OrganizationInfoFragment", "Connection Type: $connectionType")
+                Log.d("Vict organization", "$organization")
 
-                parentFrag.getDataSource("55a83bdc8d1eb1420aa1a71b")
+                val orgId = getId(organization)
+                    ?: throw Exception("OrgId was null. Bad things are happening here.")
+
+                Log.d("Organization.Id:", orgId)
+                val connectionData = parentFrag.getDataSource(orgId)//"55a83bdc8d1eb1420aa1a71b")
+                GlobalScope.launch (Dispatchers.Main) {
+                    dataSource = getDataSource(connectionData)
+
+                    Log.d("dataSource.type", dataSource?.type.toString())
+                    Log.d("dataSource.name", dataSource!!.name)
+                    Log.d("dataSource.id", dataSource!!.id)
+                    Log.d("dataSource.category", dataSource!!.category.toString())
+                }
                 // category Basic or OAuth
 
-                if (connectionType.equals("Open", ignoreCase = true)) {
+                if (dataSource!!.category.toString().equals("OPEN", ignoreCase = true)) {
                     val connectionCreateRequest: ConnectionCreateRequest = ConnectionCreateRequest.Builder()
                         //.connectionId(connectionId)
                         .connectionId("55a83bdc8d1eb1420aa1a71b")
@@ -211,22 +209,58 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
 
                     parentFrag.createConnection(connectionCreateRequest)
 
-                } else if (connectionType.equals("OAuth", ignoreCase = true)) {
+                } else if (connectionType.equals("OAUTH", ignoreCase = true)) {
                     // Handle the case when connectionType is "oAuth"
                     parentFrag.getOAuthUrl("epic_sandbox_r4c")
                     //openUrl()
-                } else {
-                    // Handle other cases or provide a default behavior
-
                 }
-
-//                Log.d("OrganizationInfoFragment", "Organization details: $organization")
-
-
-
             }
         }
-//        Log.d("OrganizationInfoFragment", "Organization details: $organization")
-        println("here")
+    }
+
+    suspend fun getDataSource(connectionData:StateFlow<BWellResult<DataSource>?>): DataSource {
+        val resultDeferred = CompletableDeferred<DataSource>()
+
+        connectionData.filterNotNull()
+            .filter { it.success() }
+            .mapNotNull { (it as? BWellResult.SingleResource<DataSource>)?.data }
+            .onEach {
+                resultDeferred.complete(it)
+            }
+            .first()
+
+        return resultDeferred.await()
+    }
+
+    fun getId(obj:T?): String? {
+        if(obj is Organization?){
+            val org = obj as Organization?
+
+            if(org != null){
+                // TODO: Use the right filter here
+                val endpoint = org.endpoint?.filter {
+                        ep -> ep?.identifier?.any {
+                        id -> id?.system ==  "https://integrationhub-web.prod.bwell.zone/connectionhub/clientconnections/oid" }
+                    ?: return "" }
+                    ?.first()
+
+                return endpoint?.name
+            }
+        } else if(obj is Provider?){
+            val prov = obj as Provider?
+
+            if(prov != null){
+                // TODO: Use the right filter here
+                val endpoint = prov.endpoint?.filter {
+                        ep -> ep?.identifier?.any {
+                        id -> id?.system ==  "https://integrationhub-web.prod.bwell.zone/connectionhub/clientconnections/oid" }
+                    ?: return "" }
+                    ?.first()
+
+                return endpoint?.name
+            }
+        }
+
+        return null
     }
 }
