@@ -70,7 +70,7 @@
                 android:orientation="horizontal">
                 <!-- Checkbox -->
                 <CheckBox
-                    android:id="@+id/checkbox"
+                    android:id="@+id/checkboxConsent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

@@ -67,7 +67,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(), View.OnCli
         binding.cancelTxt.setOnClickListener(this)
         binding.togglePassword.setOnClickListener(this)
         binding.leftArrowImageView.setOnClickListener(this)
-        binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxConsent.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val isShow = checkVisibilityOfProceed(connectionType)
                 if (isShow) {
@@ -142,7 +142,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(), View.OnCli
     private fun checkVisibilityOfProceed(connectionType: String?): Boolean {
         if (connectionType.equals(resources.getString(R.string.hapi))) {
             return !(binding.editTextUsername.text.toString() == "" || binding.editTextPassword.text.toString()
-                .equals("") || !binding.checkbox.isChecked)
+                .equals("") || !binding.checkboxConsent.isChecked)
         } else {
             return true
         }

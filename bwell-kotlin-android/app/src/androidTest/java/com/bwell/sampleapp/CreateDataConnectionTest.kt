@@ -74,16 +74,27 @@ class CreateDataConnectionTest {
         Espresso.onView(ViewMatchers.withId(R.id.searchText))
             .perform(ViewActions.typeText("bwell"))
 
-        Thread.sleep(2000)
+//        Thread.sleep(5000)
 
-        waitForView(ViewMatchers.withId(R.id.rv_clinics), 5000)
+        waitForView(ViewMatchers.withId(R.id.itemText), 10000)
 
         Espresso.onView(ViewMatchers.withId(R.id.itemText))
             .check(ViewAssertions.matches(withText("BWell PROA Demo")))
 
+        Espresso.onView(ViewMatchers.withId(R.id.itemText))
+            .perform(ViewActions.click())
+
+        waitForView(ViewMatchers.withId(R.id.checkbox_consent), 5000)
+
+        Espresso.onView(ViewMatchers.withId(R.id.checkbox_consent))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.frameLayoutProceed))
+            .perform(ViewActions.click())
+
         // Delay to keep the app open for a while after test completion
         runBlocking {
-            delay(10000) // Delay for 10 seconds
+            delay(50000) // Delay for 10 seconds
         }
     }
 }
