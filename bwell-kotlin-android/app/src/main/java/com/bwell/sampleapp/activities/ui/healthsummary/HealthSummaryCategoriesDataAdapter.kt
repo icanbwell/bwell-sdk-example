@@ -26,7 +26,6 @@ import com.bwell.sampleapp.databinding.HealthSummaryCategoriesItemsViewBinding
 import com.bwell.sampleapp.utils.formatDate
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlin.reflect.full.memberProperties
 
 /*
 *Display the Labs List in RecyclerView
@@ -212,7 +211,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
         if (obj == null) {
             return
         }
-        val properties = obj::class.memberProperties.joinToString(", ") { prop ->
+        val properties = obj::class.members.joinToString(", ") { prop ->
             "${prop.name} = ${prop.call(obj)}"
         }
         println("${obj::class.simpleName}($properties)")

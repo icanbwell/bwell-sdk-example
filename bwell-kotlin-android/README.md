@@ -51,3 +51,5 @@ import com.bwell.BWellSdk
 
 val helloStr = BWellSdk.hello()
 ```
+
+## Project Structure

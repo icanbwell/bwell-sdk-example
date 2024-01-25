@@ -104,21 +104,10 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
                 count: Int
             ) {
                 Log.i(TAG, "onTextChanged: ${charSequence.toString()}")
-//                clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
                 if (charSequence.toString().length >= 3)
                 {
                     getConnections()
                 }
-//                viewLifecycleOwner.lifecycleScope.launch {
-//                    clinicsViewModel.filteredResults.collect { filteredList ->
-//                        if (filteredList!!.isNotEmpty()) {
-//                            displayClinicsAfterDataSearchView(filteredList.size)
-//                        } else {
-//                            displayClinicsAfterNoDataSearchView()
-//                        }
-//                        dataConnectionClinicsAdapter.updateList(filteredList)
-//                    }
-//                }
             }
 
             override fun afterTextChanged(editable: Editable?) {}
