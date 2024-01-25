@@ -85,3 +85,9 @@ When the category is clicked, `setDataConnectionsCategoryAdapter()` function cho
 3. Labs Search: [activities/ui/data_connections/labs/LabsSearchFragment.kt](bwell-kotlin-android/app/src/main/java/com/bwell/sampleapp/activities/ui/data_connections/labs/LabsSearchFragment.kt)
    1. Layout: [layout/fragment_data_connections_labs.xml](bwell-kotlin-android/app/src/main/res/layout/fragment_data_connections_labs.xml)
 
+
+### Select Connection
+When the user clicks on an entry in the Clinic Search, they are navigated to:
+[layout/fragment_organization_info_view.xml](bwell-kotlin-android/app/src/main/res/layout/fragment_organization_info_view.xml)
+
+

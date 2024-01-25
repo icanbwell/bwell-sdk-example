@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
+import com.bwell.sampleapp.activities.ui.data_connections.proa.WebFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
 
 class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClickListener {
@@ -23,6 +25,8 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
     private var organization: T? = organizationData
 
     private val binding get() = _binding!!
+
+    private val TAG = "OrganizationInfoFragment"
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -68,10 +72,10 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
                 val isShow = checkVisibilityOfProceed(connectionType)
                 if(isShow)
                 {
-                    addListnersToProceed()
+                    addListenersToProceed()
                 }
             } else {
-                removeListnersToProceed()
+                removeListenersToProceed()
             }
         }
 
@@ -81,9 +85,9 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
                 val isShow = checkVisibilityOfProceed(connectionType)
                 if(isShow)
                 {
-                    addListnersToProceed()
+                    addListenersToProceed()
                 }else{
-                    removeListnersToProceed()
+                    removeListenersToProceed()
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
@@ -95,9 +99,9 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
                 val isShow = checkVisibilityOfProceed(connectionType)
                 if(isShow)
                 {
-                    addListnersToProceed()
+                    addListenersToProceed()
                 }else{
-                    removeListnersToProceed()
+                    removeListenersToProceed()
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
@@ -121,13 +125,13 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         passwordEditText.setSelection(passwordEditText.text.length)
     }
 
-    private fun removeListnersToProceed() {
+    private fun removeListenersToProceed() {
         val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_grey)
         binding.frameLayoutProceed.background = drawable
         binding.frameLayoutProceed.setOnClickListener(null)
     }
 
-    private fun addListnersToProceed() {
+    private fun addListenersToProceed() {
         val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_green)
         binding.frameLayoutProceed.background = drawable
         binding.frameLayoutProceed.setOnClickListener(this)
@@ -160,6 +164,15 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             }
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack()
+            }
+            R.id.frameLayoutProceed -> {
+                Log.i(TAG, "Proceed button pressed")
+                val webFragment = WebFragment()
+                val transaction = parentFragmentManager.beginTransaction()
+                transaction.hide(this@OrganizationInfoFragment)
+                transaction.add(R.id.container_layout, webFragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
             }
         }
     }
