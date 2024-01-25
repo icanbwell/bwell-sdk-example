@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -24,22 +25,22 @@ import kotlinx.coroutines.launch
 
 class DataConnectionsViewModel(private val repository: DataConnectionsRepository?) : ViewModel() {
     init {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             repository?.getDataConnectionsList()
         }
 
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             repository?.getDataConnectionsCategoriesList()
         }
     }
 
-    val suggestedDataConnections : LiveData<SuggestedDataConnectionsList>
+    val suggestedDataConnections: LiveData<SuggestedDataConnectionsList>
         get() = repository?.suggestedDataConnections!!
 
-    val suggestedDataConnectionsCategories : LiveData<SuggestedDataConnectionsCategoriesList>
+    val suggestedDataConnectionsCategories: LiveData<SuggestedDataConnectionsCategoriesList>
         get() = repository?.suggestedDataConnectionsCategories!!
 
-    val dataConnectionsClinics : LiveData<DataConnectionsClinicsList>
+    val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = repository?.dataConnectionsClinics!!
 
     // Add a MutableLiveData for the filtered list
@@ -69,7 +70,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
     fun updateConsent(request: ConsentCreateRequest) {
         viewModelScope.launch {
             try {
-                val updateOutcomeFlow: Flow<BWellResult<Consent>?>? = repository?.updateUserConsent(request)
+                val updateOutcomeFlow: Flow<BWellResult<Consent>?>? =
+                    repository?.updateUserConsent(request)
                 updateOutcomeFlow?.collect { updateOutcome ->
                     if (updateOutcome?.operationOutcome()?.success() == true) {
                         _consentsData.emit(updateOutcome)
@@ -118,6 +120,7 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
             is BWellResult.ResourceCollection -> {
                 connectionsResult.data ?: emptyList()
             }
+
             else -> emptyList()
         }
         _connectionsList.value = connectionList
@@ -136,4 +139,31 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         }
     }
 
+    private val _urlData = MutableStateFlow<BWellResult<String>?>(null)
+    val urlData: StateFlow<BWellResult<String>?> = _urlData
+
+    fun getOAuthUrl(datasourceId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.getOAuthUrl(datasourceId)?.collect { urlOutcome ->
+                    _urlData.emit(urlOutcome)
+                }
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    private val _dataSourceData = MutableStateFlow<BWellResult<DataSource>?>(null)
+    val dataSourceData: StateFlow<BWellResult<DataSource>?> = _dataSourceData
+
+    fun getDataSource(datasourceId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.getDataSource(datasourceId)?.collect { dataSourceOutcome ->
+                    _dataSourceData.emit(dataSourceOutcome)
+                }
+            } catch (_: Exception) {
+            }
+        }
+    }
 }

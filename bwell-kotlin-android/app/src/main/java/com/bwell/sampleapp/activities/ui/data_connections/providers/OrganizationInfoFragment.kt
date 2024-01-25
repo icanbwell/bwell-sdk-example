@@ -55,12 +55,12 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         if(connectionType.equals(resources.getString(R.string.hapi)))
         {
             binding.clinicDiscriptionTxt.text ="By providing  my "+
-                "${name} ${resources.getString(R.string.clinic_info_hapi)}"
+                "$name ${resources.getString(R.string.clinic_info_hapi)}"
             binding.editTextUsername.visibility = View.VISIBLE;
             binding.passwordLayout.visibility = View.VISIBLE;
         }else{
             binding.clinicDiscriptionTxt.text =
-                "${name} ${resources.getString(R.string.clinic_discription)}"
+                "$name ${resources.getString(R.string.clinic_discription)}"
             binding.editTextUsername.visibility = View.GONE;
             binding.passwordLayout.visibility = View.GONE;
         }

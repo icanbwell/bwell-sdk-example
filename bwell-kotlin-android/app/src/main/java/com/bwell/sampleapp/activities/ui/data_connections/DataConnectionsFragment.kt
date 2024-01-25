@@ -246,4 +246,11 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
     }
 
+    fun getOauthUrl(datasourceId: String) {
+        dataConnectionsViewModel.getOAuthUrl(datasourceId)
+    }
+
+    fun getDataSource(datasourceId: String) {
+        dataConnectionsViewModel.getDataSource(datasourceId)
+    }
 }
