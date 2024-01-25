@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.responses.BWellResult
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -24,7 +25,10 @@ import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
 import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSearchFragment
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.bwell.common.models.domain.data.DataSource
+
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnectionsListAdapter.DataConnectionsClickListener {
 
@@ -221,8 +225,9 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
     fun createConnection(connectionCreateRequest: ConnectionCreateRequest) {
         dataConnectionsViewModel.createConnection(connectionCreateRequest);
     }
-    fun getDataSource(datasourceId: String) {
+    fun getDataSource(datasourceId: String): StateFlow<BWellResult<DataSource>?> {
         dataConnectionsViewModel.getDataSource(datasourceId)
+        return dataConnectionsViewModel.dataSourceData;
     }
 
     fun getOAuthUrl(dataSourceId: String) {
