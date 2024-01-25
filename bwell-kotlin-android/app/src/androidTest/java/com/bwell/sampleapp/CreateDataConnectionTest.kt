@@ -10,6 +10,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.bwell.sampleapp.activities.NavigationActivity
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsCategoriesListAdapter
@@ -70,5 +71,12 @@ class CreateDataConnectionTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.searchText))
             .perform(ViewActions.typeText("bwell"))
+
+        Thread.sleep(2000)
+
+        waitForView(ViewMatchers.withId(R.id.rv_clinics), 5000)
+
+        Espresso.onView(ViewMatchers.withId(R.id.itemText))
+            .check(ViewAssertions.matches(withText("BWell PROA Demo")))
     }
 }
