@@ -103,6 +103,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation(kotlin("reflect"))
-
-
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
 }

@@ -91,3 +91,8 @@ When the user clicks on an entry in the Clinic Search, they are navigated to:
 [layout/fragment_organization_info_view.xml](bwell-kotlin-android/app/src/main/res/layout/fragment_organization_info_view.xml)
 
 
+### View Hierarchy
+content_navigation
+-> one of the fragments in mobile_navigation.xml is selected at a time
+-> when layout/fragment_data_connections.xml is selected
+-> -> Includes the RecyclerView rv_suggested_data_connections

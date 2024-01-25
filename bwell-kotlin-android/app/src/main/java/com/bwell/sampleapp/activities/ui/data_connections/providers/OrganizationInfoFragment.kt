@@ -19,11 +19,11 @@ import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragmen
 import com.bwell.sampleapp.activities.ui.data_connections.proa.WebFragment
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
 
-class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClickListener {
+class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentOrganizationInfoViewBinding? = null
     private var organization: T? = organizationData
-
+    private var organizationId: String? = null
     private val binding get() = _binding!!
 
     private val TAG = "OrganizationInfoFragment"
@@ -40,25 +40,25 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         var connectionType = ""
         var name = ""
         when (organization) {
-            is Organization?->{
+            is Organization? -> {
                 connectionType = organization?.endpoint?.get(0)?.connectionType?.code.toString()
                 name = organization?.name.toString()
             }
-            is Provider?->{
+
+            is Provider? -> {
                 connectionType = organization?.endpoint?.get(0)?.connectionType?.code.toString()
                 name = organization?.content.toString()
+                organizationId = organization?.id
             }
-
         }
         binding.clinicNametxt.text =
             "${resources.getString(R.string.connect_to)} ${name}"
-        if(connectionType.equals(resources.getString(R.string.hapi)))
-        {
-            binding.clinicDiscriptionTxt.text ="By providing  my "+
-                "$name ${resources.getString(R.string.clinic_info_hapi)}"
+        if (connectionType.equals(resources.getString(R.string.hapi))) {
+            binding.clinicDiscriptionTxt.text = "By providing  my " +
+                    "$name ${resources.getString(R.string.clinic_info_hapi)}"
             binding.editTextUsername.visibility = View.VISIBLE;
             binding.passwordLayout.visibility = View.VISIBLE;
-        }else{
+        } else {
             binding.clinicDiscriptionTxt.text =
                 "$name ${resources.getString(R.string.clinic_discription)}"
             binding.editTextUsername.visibility = View.GONE;
@@ -70,8 +70,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 val isShow = checkVisibilityOfProceed(connectionType)
-                if(isShow)
-                {
+                if (isShow) {
                     addListenersToProceed()
                 }
             } else {
@@ -83,13 +82,13 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val isShow = checkVisibilityOfProceed(connectionType)
-                if(isShow)
-                {
+                if (isShow) {
                     addListenersToProceed()
-                }else{
+                } else {
                     removeListenersToProceed()
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
 
@@ -97,13 +96,13 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val isShow = checkVisibilityOfProceed(connectionType)
-                if(isShow)
-                {
+                if (isShow) {
                     addListenersToProceed()
-                }else{
+                } else {
                     removeListenersToProceed()
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
 
@@ -113,7 +112,8 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
     private fun togglePasswordVisibility() {
         val passwordEditText = binding.editTextPassword
         val togglePasswordImageView = binding.togglePassword
-        val isPasswordVisible = passwordEditText.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        val isPasswordVisible =
+            passwordEditText.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
         if (isPasswordVisible) {
             passwordEditText.inputType =
                 InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -126,22 +126,24 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
     }
 
     private fun removeListenersToProceed() {
-        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_grey)
+        val drawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_grey)
         binding.frameLayoutProceed.background = drawable
         binding.frameLayoutProceed.setOnClickListener(null)
     }
 
     private fun addListenersToProceed() {
-        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_green)
+        val drawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_green)
         binding.frameLayoutProceed.background = drawable
         binding.frameLayoutProceed.setOnClickListener(this)
     }
 
-    private fun checkVisibilityOfProceed(connectionType:String?): Boolean {
-        if(connectionType.equals(resources.getString(R.string.hapi)))
-        {
-            return !(binding.editTextUsername.text.toString() == "" || binding.editTextPassword.text.toString().equals("") || !binding.checkbox.isChecked)
-        }else{
+    private fun checkVisibilityOfProceed(connectionType: String?): Boolean {
+        if (connectionType.equals(resources.getString(R.string.hapi))) {
+            return !(binding.editTextUsername.text.toString() == "" || binding.editTextPassword.text.toString()
+                .equals("") || !binding.checkbox.isChecked)
+        } else {
             return true
         }
 
@@ -156,23 +158,43 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(),View.OnClic
         when (view?.id) {
             R.id.cancel_txt -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
+                val parentFrag: DataConnectionsFragment =
+                    this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
                 parentFrag.showDataConnectionCategories()
             }
+
             R.id.togglePassword -> {
                 togglePasswordVisibility()
             }
+
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack()
             }
+
             R.id.frameLayoutProceed -> {
                 Log.i(TAG, "Proceed button pressed")
-                val webFragment = WebFragment()
-                val transaction = parentFragmentManager.beginTransaction()
-                transaction.hide(this@OrganizationInfoFragment)
-                transaction.add(R.id.container_layout, webFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+
+                if (organizationId != null) {
+                    val parentFrag: DataConnectionsFragment =
+                        this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
+
+                    parentFrag.getDataSource(organizationId.toString())
+
+                    parentFrag.getOauthUrl(organizationId.toString())
+
+                    parentFrag.launchWebBrowser()
+
+                    //openUrl()
+
+                    //val connectionCreateRequest: ConnectionCreateRequest = ConnectionCreateRequest.Builder()
+                    //.connectionId(connectionId)
+                    //.connectionId("55a83bdc8d1eb1420aa1a71b")
+                    //.username(binding.editTextUsername.text.toString())
+                    //.password(binding.editTextPassword.text.toString())
+                    //.build()
+
+                    //parentFrag.createConnection(connectionCreateRequest)
+                }
             }
         }
     }

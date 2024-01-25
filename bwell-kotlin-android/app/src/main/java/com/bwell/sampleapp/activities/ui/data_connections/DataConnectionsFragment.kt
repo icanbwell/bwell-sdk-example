@@ -19,6 +19,7 @@ import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.clinics.ClinicsSearchFragment
 import com.bwell.sampleapp.activities.ui.data_connections.labs.LabsSearchFragment
+import com.bwell.sampleapp.activities.ui.data_connections.proa.WebFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
@@ -135,9 +136,9 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         }
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
         binding.includeDataConnections.dataConnectionFragment.visibility = View.GONE
-        binding.includeDataConnectionCategory.rvSuggestedDataConnections.layoutManager =
+        binding.includeDataConnectionCategory.rvSuggestedDataConnectionCategories.layoutManager =
             LinearLayoutManager(requireContext())
-        binding.includeDataConnectionCategory.rvSuggestedDataConnections.adapter = adapter
+        binding.includeDataConnectionCategory.rvSuggestedDataConnectionCategories.adapter = adapter
     }
 
     private fun displayDataConnectionsHomeInfo() {
@@ -208,7 +209,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                                     val textView =
                                         frameLayoutConnectionStatus.getChildAt(0) as TextView
                                     textView.text = resources.getString(R.string.disconnected)
-                                    textView.setTextColor(resources.getColor(R.color.black))
+                                    textView.setTextColor(resources.getColor(R.color.black, context?.theme))
                                 }
                             }
                         }
@@ -227,16 +228,17 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         }
     }
 
+    @Suppress("LocalVariableName")
     override fun onChangeStatusClicked(
         connection: Connection,
-        parentView: ViewGroup,
-        statusChangeView: View,
+        parent_view: ViewGroup,
+        status_change_view: View,
         frameLayoutConnectionStatus: FrameLayout
     ) {
         Log.d("onChangeStatusClicked", "onChangeStatusClicked")
         binding.includeDataConnections.frameLayoutDisconnect.visibility = View.VISIBLE
         binding.includeDataConnections.frameLayoutDisconnect.y =
-            binding.includeDataConnections.rvSuggestedDataConnections.y + parentView.y + statusChangeView.y + statusChangeView.height.toFloat()
+            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y + status_change_view.height.toFloat()
         binding.includeDataConnections.frameLayoutDisconnect.setOnClickListener(this)
         this.connection = connection
         this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
@@ -252,5 +254,14 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
     fun getDataSource(datasourceId: String) {
         dataConnectionsViewModel.getDataSource(datasourceId)
+    }
+
+    fun launchWebBrowser() {
+        val webFragment = WebFragment()
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.hide(this@DataConnectionsFragment)
+        transaction.add(R.id.container_layout, webFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
