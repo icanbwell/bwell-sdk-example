@@ -17,6 +17,7 @@ class ProviderRepository {
             emit(searchResult)
         } catch (e: Exception) {
             emit(null)
+
         }
     }
 
