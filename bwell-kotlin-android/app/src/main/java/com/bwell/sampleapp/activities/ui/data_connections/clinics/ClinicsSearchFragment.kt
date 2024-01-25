@@ -76,16 +76,13 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
                 .build()
             clinicsViewModel.searchConnections(request)
             Log.i(TAG, "Finished loading connections")
+            binding.progressBar.visibility = View.GONE
+
             clinicsViewModel.searchResults.collect { searchResult ->
                 if (searchResult != null) {
                     setDataConnectionClinicsAdapter(searchResult)
                 }
             }
-//            withContext(Dispatchers.Main) {
-//                // Update UI on the main thread
-//                binding.progressBar.visibility = View.GONE
-//            }
-
         }
     }
 
@@ -108,7 +105,10 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
             ) {
                 Log.i(TAG, "onTextChanged: ${charSequence.toString()}")
 //                clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
-                getConnections()
+                if (charSequence.toString().length >= 3)
+                {
+                    getConnections()
+                }
 //                viewLifecycleOwner.lifecycleScope.launch {
 //                    clinicsViewModel.filteredResults.collect { filteredList ->
 //                        if (filteredList!!.isNotEmpty()) {
