@@ -6,15 +6,13 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.bwell.sampleapp.activities.NavigationActivity
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsCategoriesListAdapter
-
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
 @RunWith(AndroidJUnit4::class)
 class CreateDataConnectionTest {
 
@@ -38,7 +36,7 @@ class CreateDataConnectionTest {
         Espresso.onView(ViewMatchers.withId(R.id.btn_get_started))
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.rv_suggested_data_connections))
+        Espresso.onView(ViewMatchers.withId(R.id.rv_suggested_data_connection_categories))
             .perform(RecyclerViewActions.actionOnItemAtPosition<DataConnectionsCategoriesListAdapter.ViewHolder>(2, ViewActions.click()))
     }
 }
