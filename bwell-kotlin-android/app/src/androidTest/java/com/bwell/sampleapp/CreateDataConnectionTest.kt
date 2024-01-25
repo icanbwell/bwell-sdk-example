@@ -14,6 +14,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.bwell.sampleapp.activities.NavigationActivity
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsCategoriesListAdapter
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matcher
 import org.junit.Assert.*
 import org.junit.Test
@@ -23,7 +25,7 @@ import java.util.concurrent.TimeoutException
 @RunWith(AndroidJUnit4::class)
 class CreateDataConnectionTest {
 
-    fun waitForView(viewMatcher: Matcher<View>, timeout: Long): ViewInteraction {
+    private fun waitForView(viewMatcher: Matcher<View>, timeout: Long): ViewInteraction {
         val startTime = System.currentTimeMillis()
         val endTime = startTime + timeout
 
@@ -78,5 +80,10 @@ class CreateDataConnectionTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.itemText))
             .check(ViewAssertions.matches(withText("BWell PROA Demo")))
+
+        // Delay to keep the app open for a while after test completion
+        runBlocking {
+            delay(10000) // Delay for 10 seconds
+        }
     }
 }
