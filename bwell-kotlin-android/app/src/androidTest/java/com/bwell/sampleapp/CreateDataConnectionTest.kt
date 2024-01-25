@@ -89,7 +89,7 @@ class CreateDataConnectionTest {
         Espresso.onView(ViewMatchers.withId(R.id.checkbox_consent))
             .perform(ViewActions.click())
 
-        Espresso.onView(ViewMatchers.withId(R.id.frameLayoutProceed))
+        Espresso.onView(ViewMatchers.withId(R.id.textViewProceed))
             .perform(ViewActions.click())
 
         // Delay to keep the app open for a while after test completion

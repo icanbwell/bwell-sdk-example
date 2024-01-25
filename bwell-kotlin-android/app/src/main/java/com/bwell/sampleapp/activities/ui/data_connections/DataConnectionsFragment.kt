@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -257,9 +258,12 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
     }
 
     fun launchWebBrowser() {
+//        val navController = Navigation.findNavController(R.id.nav)
+//        navController.navigate(R.id.webFragment)
+
         val webFragment = WebFragment()
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.hide(this@DataConnectionsFragment)
+        val transaction = childFragmentManager.beginTransaction()
+//        transaction.hide(this@DataConnectionsFragment)
         transaction.add(R.id.container_layout, webFragment)
         transaction.addToBackStack(null)
         transaction.commit()
