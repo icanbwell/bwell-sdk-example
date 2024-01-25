@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.search.Provider
@@ -14,6 +15,8 @@ import kotlinx.coroutines.withContext
 
 class ClinicsViewModel(private val repository: ClinicsRepository?) : ViewModel() {
 
+    private val TAG = "ClinicsViewModel"
+
     private val _searchResults = MutableStateFlow<BWellResult<Provider>?>(null)
     val searchResults: StateFlow<BWellResult<Provider>?> = _searchResults
 
@@ -24,6 +27,7 @@ class ClinicsViewModel(private val repository: ClinicsRepository?) : ViewModel()
                     repository?.searchConnections(providerSearchRequest)?.collect { searchResult ->
                         _searchResults.emit(searchResult)
                     }
+                    Log.i(TAG, "Received ${getLength()} results")
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
@@ -41,13 +45,24 @@ class ClinicsViewModel(private val repository: ClinicsRepository?) : ViewModel()
                 if (searchResult is BWellResult.SearchResults) {
                     val dataConnectionsList = searchResult.data
                     val filteredList = dataConnectionsList?.filter { provider ->
-                        provider?.content?.contains(query, ignoreCase = true) == true
+                        provider.content?.contains(query, ignoreCase = true) == true
                     }
                     _filteredResults.emit(filteredList)
                 }
 
             }
         }
+    }
+
+    fun getLength(): Int? {
+        val searchResult = _searchResults.value
+        if (searchResult != null) {
+            if (searchResult is BWellResult.SearchResults) {
+                val dataConnectionsList = searchResult.data
+                return dataConnectionsList?.size
+            }
+        }
+        return 0
     }
 
 }
