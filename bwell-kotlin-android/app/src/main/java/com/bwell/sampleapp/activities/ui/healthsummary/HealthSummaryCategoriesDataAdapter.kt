@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bwell.BWellSdk
+import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.communication.Communication
@@ -13,10 +14,9 @@ import com.bwell.common.models.domain.healthdata.healthsummary.encounter.Encount
 import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.vitalsign.VitalSignGroup
-import com.bwell.common.models.requests.searchtoken.GroupCoding
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceRequest
-import com.bwell.healthdata.healthsummary.requests.careplan.CarePlansRequest
+import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncountersRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
@@ -117,9 +117,11 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
 
             when (launch) {
                 is CarePlanGroup -> {
-                    val carePlanRequest = CarePlansRequest.Builder()
+                    val carePlanRequest = CarePlanRequest.Builder()
                         .ids(listOf(id))
-                        //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.page(0)
+                        //.pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val carePlans = BWellSdk.health.getCarePlans(carePlanRequest) as BWellResult.ResourceCollection
@@ -129,7 +131,9 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 is ImmunizationGroup ->{
                     val immunizationRequest = ImmunizationRequest.Builder()
                         .ids(listOf(id))
-                        .groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        .page(0)
+                        .pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val immunizations = BWellSdk.health.getImmunizations(immunizationRequest) as BWellResult.ResourceCollection
@@ -139,7 +143,9 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 is ProcedureGroup ->{
                     val proceduresRequest = ProcedureRequest.Builder()
                         .ids(listOf(id))
-                        //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        .page(0)
+                        .pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val procedures = BWellSdk.health.getProcedures(proceduresRequest) as BWellResult.ResourceCollection
@@ -149,7 +155,9 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 is VitalSignGroup ->{
                     val vitalSignsRequest = VitalSignsRequest.Builder()
                         .ids(listOf(id))
-                        //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.page(0)
+                        .pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val vitalSigns = BWellSdk.health.getVitalSigns(vitalSignsRequest) as BWellResult.ResourceCollection
@@ -160,6 +168,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                     val encountersRequest = EncountersRequest.Builder()
                         .ids(listOf(id))
                         //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.page(0)
+                        .pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val encounters = BWellSdk.health.getEncounters(encountersRequest) as BWellResult.ResourceCollection
@@ -169,7 +179,9 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 is AllergyIntoleranceGroup ->{
                     val allergyIntoleranceRequest = AllergyIntoleranceRequest.Builder()
                         .ids(listOf(id))
-                        //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        .page(0)
+                        .pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val allergyIntolerances = BWellSdk.health.getAllergyIntolerances(allergyIntoleranceRequest) as BWellResult.ResourceCollection
@@ -181,8 +193,10 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 }
                 is ConditionGroup ->{
                     val conditionsRequest = ConditionRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        .ids(listOf(id))
+                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        .page(0)
+                        .pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val conditions = BWellSdk.health.getConditions(conditionsRequest) as BWellResult.ResourceCollection
