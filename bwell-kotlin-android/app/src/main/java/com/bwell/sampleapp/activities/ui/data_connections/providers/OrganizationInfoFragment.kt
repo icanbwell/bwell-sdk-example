@@ -51,6 +51,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(), View.OnCli
                 organizationId = organization?.id
             }
         }
+        Log.i(TAG, "Connection type $connectionType name $name id $organizationId")
         binding.clinicNametxt.text =
             "${resources.getString(R.string.connect_to)} ${name}"
         if (connectionType.equals(resources.getString(R.string.hapi))) {
@@ -179,7 +180,7 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(), View.OnCli
                         this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
 
                     // hardcoding because the real value "659880f47a3e8ad186c9bc66" is not working
-                    organizationId = "55a83bdc8d1eb1420aa1a71b"
+//                    organizationId = "55a83bdc8d1eb1420aa1a71b"
                     parentFrag.getDataSource(organizationId.toString())
 
                     parentFrag.getOauthUrl(organizationId.toString())

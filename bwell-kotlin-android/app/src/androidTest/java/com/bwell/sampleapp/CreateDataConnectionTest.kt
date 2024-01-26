@@ -1,5 +1,6 @@
 package com.bwell.sampleapp
 
+import android.util.Log
 import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
@@ -24,6 +25,8 @@ import java.util.concurrent.TimeoutException
 
 @RunWith(AndroidJUnit4::class)
 class CreateDataConnectionTest {
+
+    private val TAG = "CreateDataConnectionTest"
 
     private fun waitForView(viewMatcher: Matcher<View>, timeout: Long): ViewInteraction {
         val startTime = System.currentTimeMillis()
@@ -92,6 +95,7 @@ class CreateDataConnectionTest {
         Espresso.onView(ViewMatchers.withId(R.id.textViewProceed))
             .perform(ViewActions.click())
 
+        Log.i(TAG, "Test done.  waiting for 50 seconds before exiting")
         // Delay to keep the app open for a while after test completion
         runBlocking {
             delay(50000) // Delay for 10 seconds

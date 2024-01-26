@@ -10,6 +10,7 @@ import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
+import com.bwell.common.models.responses.error.BWellError
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
@@ -44,7 +45,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun getConnections(): Flow<BWellResult<Connection>?> = flow {
         try {
-            val connectionsResult = BWellSdk.connections?.getMemberConnections()
+            val connectionsResult = BWellSdk.connections.getMemberConnections()
             emit(connectionsResult)
         } catch (e: Exception) {
             // Handle exceptions, if any
@@ -54,7 +55,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun disconnectConnection(connectionId: String): Flow<OperationOutcome?> = flow {
         try {
-            val disconnectOutcome = BWellSdk.connections?.disconnectConnection(connectionId)
+            val disconnectOutcome = BWellSdk.connections.disconnectConnection(connectionId)
             emit(disconnectOutcome)
         } catch (e: Exception) {
             // Handle exceptions, if any
@@ -65,7 +66,7 @@ class DataConnectionsRepository(private val applicationContext: Context) {
     suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<OperationOutcome?> =
         flow {
             try {
-                val connectionOutcome = BWellSdk.connections?.createConnection(connectionRequest)
+                val connectionOutcome = BWellSdk.connections.createConnection(connectionRequest)
                 emit(connectionOutcome)
             } catch (e: Exception) {
                 // Handle exceptions, if any
@@ -76,12 +77,14 @@ class DataConnectionsRepository(private val applicationContext: Context) {
     suspend fun getOAuthUrl(datasourceId: String): Flow<BWellResult<String>?> = flow {
         try {
             val urlOutcome: BWellResult<String> = BWellSdk.connections.getOauthUrl(datasourceId)
-            Log.i(TAG, "Received url: $urlOutcome")
+            Log.i(TAG, "Received datasourceId: $datasourceId url: $urlOutcome")
             emit(urlOutcome)
         } catch (e: Exception) {
+            val urlOutcome: BWellResult<String> =
+                BWellResult.SingleResource(null, BWellError(e))
             // Handle exceptions, if any
             Log.e(TAG, e.toString())
-            emit(null)
+            emit(urlOutcome)
         }
     }
 
@@ -89,24 +92,26 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         try {
             val dataSource: BWellResult<DataSource> =
                 BWellSdk.connections.getDataSource(datasourceId)
-            Log.i(TAG, "Received data source: $dataSource")
+            Log.i(TAG, "Received for datasourceId: $datasourceId data source: $dataSource")
             emit(dataSource)
         } catch (e: Exception) {
+            val dataSource: BWellResult<DataSource> =
+                BWellResult.SingleResource(null, BWellError(e))
             // Handle exceptions, if any
             Log.e(TAG, e.toString())
-            emit(null)
+            emit(dataSource)
         }
     }
 
     suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> =
         flow {
-            val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
+            val consentsResult = BWellSdk.user.getConsents(consentsRequest)
             emit(consentsResult)
         }
 
     suspend fun updateUserConsent(request: ConsentCreateRequest): Flow<BWellResult<Consent>?> =
         flow {
-            val updateOutcome = BWellSdk.user?.createConsent(request)
+            val updateOutcome = BWellSdk.user.createConsent(request)
             emit(updateOutcome)
         }
 

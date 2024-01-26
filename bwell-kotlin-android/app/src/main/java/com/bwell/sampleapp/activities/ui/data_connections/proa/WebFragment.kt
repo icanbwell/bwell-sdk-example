@@ -1,16 +1,16 @@
 package com.bwell.sampleapp.activities.ui.data_connections.proa
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
@@ -56,10 +56,14 @@ class WebFragment : Fragment() {
         lifecycleScope.launch {
             dataConnectionsViewModel.urlData.collect { urlResult ->
                 if (urlResult != null) {
-                    val url = urlResult.toString()
-                    Log.i(TAG, "Loading url: $url")
-                    // Load a web URL
-                    webView.loadUrl(url)
+                    if (urlResult.success()) {
+                        val url = urlResult.toString()
+                        Log.i(TAG, "Loading url: $url")
+                        // Load a web URL
+                        webView.loadUrl(url)
+                    } else {
+                        Toast.makeText(context, urlResult.error.toString(), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
