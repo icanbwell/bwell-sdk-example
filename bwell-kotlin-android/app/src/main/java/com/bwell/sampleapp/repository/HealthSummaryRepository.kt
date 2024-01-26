@@ -109,12 +109,6 @@ class HealthSummaryRepository(private val applicationContext: Context) {
         suggestionsList.add(
             HealthSummaryListItems(
                 R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24,
-                "Communications", Period.Builder().start(parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
-            )
-        )
-        suggestionsList.add(
-            HealthSummaryListItems(
-                R.drawable.baseline_person_24, R.drawable.baseline_keyboard_arrow_right_24,
                 "Conditions", Period.Builder().start(parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
             )
         )
