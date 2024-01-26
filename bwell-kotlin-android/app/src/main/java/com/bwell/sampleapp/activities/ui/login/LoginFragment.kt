@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -77,11 +77,17 @@ class LoginFragment : Fragment() {
         // Initialize the button
         val button: Button = view.findViewById(R.id.buttonLogin)
         button.setOnClickListener {
+            Log.i(TAG, "Login Button Clicked")
+            val progressBar = view.findViewById<ProgressBar>(R.id.progressBarLogin)
+            progressBar.visibility = View.VISIBLE // To show the progress bar
+
             // Call the function when the button is pressed
             onButtonPressed(
                 clientKey = editTextClientKey.text.toString(),
                 oAuthCredentials = editTextOAuthCredentials.text.toString()
             )
+
+//            progressBar.visibility =View.GONE
         }
     }
 
@@ -89,6 +95,7 @@ class LoginFragment : Fragment() {
         clientKey: String,
         oAuthCredentials: String
     ) {
+
         // Add your function logic here
         initializeBWellSDK(
             clientKey,

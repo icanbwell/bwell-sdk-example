@@ -70,14 +70,14 @@
                 android:orientation="horizontal">
                 <!-- Checkbox -->
                 <CheckBox
-                    android:id="@+id/checkbox"
+                    android:id="@+id/checkboxConsent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="8dp"/>
                 <!-- TextView for checkbox -->
                 <TextView
-                    android:id="@+id/checkbox_txt"
+                    android:id="@+id/checkbox_consent_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -99,7 +99,7 @@
             android:focusable="true">
 
             <TextView
-                android:id="@+id/textViewLogout"
+                android:id="@+id/textViewProceed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/proceed"

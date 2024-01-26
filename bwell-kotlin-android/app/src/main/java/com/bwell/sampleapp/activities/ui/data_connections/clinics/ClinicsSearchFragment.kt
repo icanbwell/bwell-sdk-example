@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.enums.SortOrder
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.common.models.domain.search.enums.OrganizationType
+import com.bwell.common.models.domain.search.enums.SortField
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -24,16 +27,18 @@ import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ClinicsViewModel
 import com.bwell.sampleapp.viewmodel.ClinicsViewModelFactory
 import com.bwell.search.requests.provider.ProviderSearchRequest
-import com.bwell.common.models.domain.search.enums.OrganizationType
-import com.bwell.common.models.domain.search.enums.SortField
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ClinicsSearchFragment : Fragment(),View.OnClickListener {
+class ClinicsSearchFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentDataConnectionsClinicsBinding? = null
     private lateinit var clinicsViewModel: ClinicsViewModel
     private lateinit var dataConnectionClinicsAdapter: DataConnectionsClinicsListAdapter
     private val binding get() = _binding!!
+
+    private val TAG = "LoginFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,23 +48,36 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         _binding = FragmentDataConnectionsClinicsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.clinicsRepository
-        clinicsViewModel = ViewModelProvider(this, ClinicsViewModelFactory(repository))[ClinicsViewModel::class.java]
+        clinicsViewModel = ViewModelProvider(
+            this,
+            ClinicsViewModelFactory(repository)
+        )[ClinicsViewModel::class.java]
         binding.leftArrowImageView.setOnClickListener(this)
-        getConnections()
+        addSearchTextListeners()
+//        getConnections()
         return root
     }
 
     private fun getConnections() {
-        val searchTerm = ""
-        val request = ProviderSearchRequest.Builder()
-            .searchTerm(searchTerm)
-            .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
-            .sortBy(SortField.CONTENT, SortOrder.ASC)
-            .page(1)
-            .pageSize(100)
-            .build()
-        clinicsViewModel.searchConnections(request)
-        viewLifecycleOwner.lifecycleScope.launch {
+        val searchTerm = binding.searchView.searchText.text.toString()
+        Log.i(TAG, "Getting connections for $searchTerm")
+
+        binding.progressBar.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+//            Thread.sleep(5000)
+            Log.i(TAG, "Loading connections")
+            val request = ProviderSearchRequest.Builder()
+                .searchTerm(searchTerm)
+                .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
+                .sortBy(SortField.CONTENT, SortOrder.ASC)
+                .page(1)
+                .pageSize(100)
+                .build()
+            clinicsViewModel.searchConnections(request)
+            Log.i(TAG, "Finished loading connections")
+            binding.progressBar.visibility = View.GONE
+
             clinicsViewModel.searchResults.collect { searchResult ->
                 if (searchResult != null) {
                     setDataConnectionClinicsAdapter(searchResult)
@@ -71,21 +89,27 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
     private fun addSearchTextListeners() {
         binding.searchView.searchText.addTextChangedListener(object :
             TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
-                clinicsViewModel.filterDataConnectionsClinics(charSequence.toString())
-                viewLifecycleOwner.lifecycleScope.launch {
-                    clinicsViewModel.filteredResults.collect { filteredList ->
-                        if(filteredList!!.isNotEmpty())
-                        {
-                            displayClinicsAfterDataSearchView(filteredList.size)
-                        }else{
-                            displayClinicsAfterNoDataSearchView()
-                        }
-                        dataConnectionClinicsAdapter.updateList(filteredList)
-                    }
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                Log.i(TAG, "onTextChanged: ${charSequence.toString()}")
+                if (charSequence.toString().length >= 3)
+                {
+                    getConnections()
                 }
             }
+
             override fun afterTextChanged(editable: Editable?) {}
         })
     }
@@ -98,12 +122,12 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
                 dataConnectionClinicsAdapter = DataConnectionsClinicsListAdapter(connectionsList)
                 displayClinicsAfterDataSearchView(connectionsList?.size ?: 0)
             }
+
             else -> {}
         }
         dataConnectionClinicsAdapter.onItemClicked = { selectedList ->
-            hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
-            if((selectedList?.endpoint?.size ?: 0) > 0)
-            {
+            hideKeyboard(requireContext(), binding.searchView.searchText.windowToken)
+            if ((selectedList?.endpoint?.size ?: 0) > 0) {
                 val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
                 val transaction = parentFragmentManager.beginTransaction()
                 transaction.hide(this@ClinicsSearchFragment)
@@ -112,23 +136,27 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
                 transaction.commit()
             }
         }
-        binding.clinicsAfterSearchDataBodyView.rvClinics.layoutManager = LinearLayoutManager(requireContext())
+        binding.clinicsAfterSearchDataBodyView.rvClinics.layoutManager =
+            LinearLayoutManager(requireContext())
         binding.clinicsAfterSearchDataBodyView.rvClinics.adapter = dataConnectionClinicsAdapter
-        addSearchTextListeners()
     }
 
     private fun displayClinicsAfterNoDataSearchView() {
-        binding.clinicsBeforeSearchBodyView.clinicsBeforeSearchBodyView.visibility = View.GONE;
-        binding.clinicsAfterSearchNoDataBodyView.clinicsAfterSearchNoDataBodyView.visibility = View.VISIBLE;
-        binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.GONE;
+        binding.clinicsBeforeSearchBodyView.clinicsBeforeSearchBodyView.visibility = View.GONE
+        binding.clinicsAfterSearchNoDataBodyView.clinicsAfterSearchNoDataBodyView.visibility =
+            View.VISIBLE
+        binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility =
+            View.GONE
     }
 
     @SuppressLint("SetTextI18n")
-    private fun displayClinicsAfterDataSearchView(resultCount:Int) {
-        binding.clinicsBeforeSearchBodyView.clinicsBeforeSearchBodyView.visibility = View.GONE;
-        binding.clinicsAfterSearchNoDataBodyView.clinicsAfterSearchNoDataBodyView.visibility = View.GONE;
-        binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility = View.VISIBLE;
-        binding.clinicsAfterSearchDataBodyView.resultsText.text = "Results ($resultCount)";
+    private fun displayClinicsAfterDataSearchView(resultCount: Int) {
+        binding.clinicsBeforeSearchBodyView.clinicsBeforeSearchBodyView.visibility = View.GONE
+        binding.clinicsAfterSearchNoDataBodyView.clinicsAfterSearchNoDataBodyView.visibility =
+            View.GONE
+        binding.clinicsAfterSearchDataBodyView.clinicsAfterSearchDataBodyView.visibility =
+            View.VISIBLE
+        binding.clinicsAfterSearchDataBodyView.resultsText.text = "Results ($resultCount)"
     }
 
     override fun onDestroyView() {
@@ -140,7 +168,8 @@ class ClinicsSearchFragment : Fragment(),View.OnClickListener {
         when (view?.id) {
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val parentFrag: DataConnectionsFragment = this@ClinicsSearchFragment.getParentFragment() as DataConnectionsFragment
+                val parentFrag: DataConnectionsFragment =
+                    this@ClinicsSearchFragment.parentFragment as DataConnectionsFragment
                 parentFrag.showDataConnectionCategories()
             }
         }
