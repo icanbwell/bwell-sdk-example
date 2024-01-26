@@ -25,4 +25,11 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/WebFragment"
+        android:name="com.bwell.sampleapp.activities.ui.data_connections.proa.WebFragment"
+        tools:layout="@layout/fragment_web">
+    </fragment>
+
+
 </navigation>

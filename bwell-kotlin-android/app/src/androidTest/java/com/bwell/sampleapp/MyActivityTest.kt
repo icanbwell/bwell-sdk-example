@@ -21,12 +21,19 @@ class MyActivityTest {
         // Launch Activity
         val activityScenario = ActivityScenario.launch(NavigationActivity::class.java)
 
-//        // Interact with UI
+        // Click Login Button on Login Screen
+        Espresso.onView(ViewMatchers.withId(R.id.buttonLogin))
+            .perform(ViewActions.click())
+
+        // Click Get Started button on Home screen
         Espresso.onView(ViewMatchers.withId(R.id.btn_get_started))
             .perform(ViewActions.click())
 
-//        // Assert outcomes
+        // Assert outcomes
         Espresso.onView(ViewMatchers.withId(R.id.header))
             .check(ViewAssertions.matches(ViewMatchers.withText("Connect your health records")))
+
+        Espresso.onView(ViewMatchers.withId(R.id.btn_get_started))
+            .perform(ViewActions.click())
     }
 }
