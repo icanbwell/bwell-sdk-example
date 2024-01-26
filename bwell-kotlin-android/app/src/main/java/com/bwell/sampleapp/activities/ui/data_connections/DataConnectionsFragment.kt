@@ -19,6 +19,7 @@ import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.clinics.ClinicsSearchFragment
 import com.bwell.sampleapp.activities.ui.data_connections.labs.LabsSearchFragment
+import com.bwell.sampleapp.activities.ui.data_connections.proa.WebFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
@@ -26,14 +27,15 @@ import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSear
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import kotlinx.coroutines.launch
 
-class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnectionsListAdapter.DataConnectionsClickListener {
+class DataConnectionsFragment : Fragment(), View.OnClickListener,
+    DataConnectionsListAdapter.DataConnectionsClickListener {
 
 
     private var mBinding: FragmentDataConnectionsParentBinding? = null
     private val binding get() = mBinding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
     private lateinit var connection: Connection
-    private lateinit var frameLayoutConnectionStatus:FrameLayout
+    private lateinit var frameLayoutConnectionStatus: FrameLayout
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
@@ -43,12 +45,17 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
     ): View {
         mBinding = FragmentDataConnectionsParentBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val repository = (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
+        val repository =
+            (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
 
-        dataConnectionsViewModel = ViewModelProvider(this, DataConnectionsViewModelFactory(repository))[DataConnectionsViewModel::class.java]
+        dataConnectionsViewModel = ViewModelProvider(
+            this,
+            DataConnectionsViewModelFactory(repository)
+        )[DataConnectionsViewModel::class.java]
 
         binding.includeHomeView.header.text = resources.getString(R.string.connect_health_records)
-        binding.includeHomeView.subText.text = resources.getString(R.string.connect_health_records_sub_txt)
+        binding.includeHomeView.subText.text =
+            resources.getString(R.string.connect_health_records_sub_txt)
         binding.includeHomeView.btnGetStarted.text = resources.getString(R.string.lets_go)
         binding.includeHomeView.btnGetStarted.setOnClickListener(this)
 
@@ -63,12 +70,12 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
             try {
                 dataConnectionsViewModel.getConnectionsAndObserve()
             } catch (e: Exception) {
-                Log.d("","$e.message")
+                Log.d("", "$e.message")
             }
         }
 
         dataConnectionsViewModel.connectionsList.observe(viewLifecycleOwner) { connectionListItems ->
-            if(connectionListItems.size > 0)
+            if (connectionListItems.isNotEmpty())
                 setDataConnectionsAdapter(connectionListItems)
             else
                 displayDataConnectionsHomeInfo()
@@ -83,10 +90,11 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
     private fun setDataConnectionsAdapter(suggestedActivitiesLIst: List<Connection>) {
         val adapter = DataConnectionsListAdapter(suggestedActivitiesLIst)
         adapter.dataConnectionsClickListener = this
-        binding.includeDataConnections.dataConnectionFragment.visibility = View.VISIBLE;
-        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
-        binding.includeHomeView.headerView.visibility = View.GONE;
-        binding.includeDataConnections.rvSuggestedDataConnections.layoutManager = LinearLayoutManager(requireContext())
+        binding.includeDataConnections.dataConnectionFragment.visibility = View.VISIBLE
+        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE
+        binding.includeHomeView.headerView.visibility = View.GONE
+        binding.includeDataConnections.rvSuggestedDataConnections.layoutManager =
+            LinearLayoutManager(requireContext())
         binding.includeDataConnections.rvSuggestedDataConnections.adapter = adapter
         binding.includeDataConnections.addConnectionsView.setOnClickListener(this)
     }
@@ -94,49 +102,58 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
     private fun setDataConnectionsCategoryAdapter(suggestedActivitiesLIst: List<DataConnectionCategoriesListItems>) {
         val adapter = DataConnectionsCategoriesListAdapter(suggestedActivitiesLIst)
         adapter.onItemClicked = { selectedDataConnection ->
-            if(selectedDataConnection.connectionCategoryName.equals(resources.getString(R.string.data_connection_category_clinics)))
-            {
-                binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
-                val clinicsFragment = ClinicsSearchFragment()
-                val transaction = childFragmentManager.beginTransaction()
-                binding.containerLayout.visibility = View.VISIBLE;
-                transaction.replace(R.id.container_layout, clinicsFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
-            }else if(selectedDataConnection.connectionCategoryName.equals(resources.getString(R.string.data_connection_category_providers)))
-            {
-                binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
-                val providersFragment = ProviderSearchFragment()
-                val transaction = childFragmentManager.beginTransaction()
-                binding.containerLayout.visibility = View.VISIBLE;
-                transaction.replace(R.id.container_layout, providersFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
-            }else if(selectedDataConnection.connectionCategoryName.equals(resources.getString(R.string.data_connection_category_lab)))
-            {
-                binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
-                val labsSearchFragment = LabsSearchFragment()
-                val transaction = childFragmentManager.beginTransaction()
-                binding.containerLayout.visibility = View.VISIBLE;
-                transaction.replace(R.id.container_layout, labsSearchFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+            when (selectedDataConnection.connectionCategoryName) {
+                resources.getString(R.string.data_connection_category_clinics) -> {
+                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility =
+                        View.GONE
+                    val clinicsFragment = ClinicsSearchFragment()
+                    binding.progressBar.visibility = View.VISIBLE
+                    val transaction = childFragmentManager.beginTransaction()
+                    binding.containerLayout.visibility = View.VISIBLE
+                    transaction.replace(R.id.container_layout, clinicsFragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                    binding.progressBar.visibility = View.INVISIBLE
+                }
+
+                resources.getString(R.string.data_connection_category_providers) -> {
+                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility =
+                        View.GONE
+                    val providersFragment = ProviderSearchFragment()
+                    val transaction = childFragmentManager.beginTransaction()
+                    binding.containerLayout.visibility = View.VISIBLE
+                    transaction.replace(R.id.container_layout, providersFragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                }
+
+                resources.getString(R.string.data_connection_category_lab) -> {
+                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility =
+                        View.GONE
+                    val labsSearchFragment = LabsSearchFragment()
+                    val transaction = childFragmentManager.beginTransaction()
+                    binding.containerLayout.visibility = View.VISIBLE
+                    transaction.replace(R.id.container_layout, labsSearchFragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                }
             }
         }
-        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE;
-        binding.includeDataConnections.dataConnectionFragment.visibility = View.GONE;
-        binding.includeDataConnectionCategory.rvSuggestedDataConnections.layoutManager = LinearLayoutManager(requireContext())
-        binding.includeDataConnectionCategory.rvSuggestedDataConnections.adapter = adapter
+        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
+        binding.includeDataConnections.dataConnectionFragment.visibility = View.GONE
+        binding.includeDataConnectionCategory.rvSuggestedDataConnectionCategories.layoutManager =
+            LinearLayoutManager(requireContext())
+        binding.includeDataConnectionCategory.rvSuggestedDataConnectionCategories.adapter = adapter
     }
 
     private fun displayDataConnectionsHomeInfo() {
-        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE;
-        binding.includeDataConnections.dataConnectionFragment.visibility = View.GONE;
-        binding.includeHomeView.headerView.visibility = View.VISIBLE;
+        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE
+        binding.includeDataConnections.dataConnectionFragment.visibility = View.GONE
+        binding.includeHomeView.headerView.visibility = View.VISIBLE
     }
 
     private fun displayDataConnectionsCategoriesList() {
-        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE;
+        binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
     }
 
     override fun onClick(view: View?) {
@@ -144,12 +161,15 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
             R.id.btn_get_started -> {
                 showDataConnectionsCategories()
             }
+
             R.id.addConnectionsView -> {
                 showDataConnectionsCategories()
             }
+
             R.id.cancel_txt -> {
                 displayDataConnectionsCategoriesList()
             }
+
             R.id.frameLayoutProceed -> {
                 lifecycleScope.launch {
                     val connectionRequest = ConnectionCreateRequest.Builder()
@@ -167,8 +187,9 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
                     }
                 }
             }
+
             R.id.frameLayoutDisconnect -> {
-                binding.includeDataConnections.frameLayoutDisconnect.visibility = View.GONE;
+                binding.includeDataConnections.frameLayoutDisconnect.visibility = View.GONE
                 lifecycleScope.launch {
                     try {
                         val connectionId = connection.id
@@ -181,12 +202,24 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
                     dataConnectionsViewModel.disconnectConnectionData.collect { disconnectOutcome ->
                         disconnectOutcome?.let {
                             if (disconnectOutcome.success()) {
-                                val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_rectangle_grey)
+                                val drawable = ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.rounded_rectangle_grey
+                                )
                                 frameLayoutConnectionStatus.background = drawable
-                                if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(0) is TextView) {
-                                    val textView = frameLayoutConnectionStatus.getChildAt(0) as TextView
+                                if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(
+                                        0
+                                    ) is TextView
+                                ) {
+                                    val textView =
+                                        frameLayoutConnectionStatus.getChildAt(0) as TextView
                                     textView.text = resources.getString(R.string.disconnected)
-                                    textView.setTextColor(resources.getColor(R.color.black))
+                                    textView.setTextColor(
+                                        resources.getColor(
+                                            R.color.black,
+                                            context?.theme
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -205,10 +238,17 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
         }
     }
 
-    override fun onChangeStatusClicked(connection: Connection,parentView:ViewGroup,statusChangeView: View,frameLayoutConnectionStatus: FrameLayout) {
-        Log.d("onChangeStatusClicked","onChangeStatusClicked")
-        binding.includeDataConnections.frameLayoutDisconnect.visibility = View.VISIBLE;
-        binding.includeDataConnections.frameLayoutDisconnect.y =binding.includeDataConnections.rvSuggestedDataConnections.y +parentView.y+statusChangeView.y+statusChangeView.height.toFloat()
+    @Suppress("LocalVariableName")
+    override fun onChangeStatusClicked(
+        connection: Connection,
+        parent_view: ViewGroup,
+        status_change_view: View,
+        frameLayoutConnectionStatus: FrameLayout
+    ) {
+        Log.d("onChangeStatusClicked", "onChangeStatusClicked")
+        binding.includeDataConnections.frameLayoutDisconnect.visibility = View.VISIBLE
+        binding.includeDataConnections.frameLayoutDisconnect.y =
+            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y + status_change_view.height.toFloat()
         binding.includeDataConnections.frameLayoutDisconnect.setOnClickListener(this)
         this.connection = connection
         this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
@@ -218,4 +258,20 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener, DataConnection
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
     }
 
+    fun getOauthUrl(datasourceId: String) {
+        dataConnectionsViewModel.getOAuthUrl(datasourceId)
+    }
+
+    fun getDataSource(datasourceId: String) {
+        dataConnectionsViewModel.getDataSource(datasourceId)
+    }
+
+    fun launchWebBrowser() {
+        val webFragment = WebFragment()
+        val transaction = childFragmentManager.beginTransaction()
+//        transaction.hide(this@DataConnectionsFragment)
+        transaction.add(R.id.container_layout, webFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 }

@@ -397,7 +397,7 @@
         android:focusable="true">
 
         <TextView
-            android:id="@+id/textViewLogout"
+            android:id="@+id/textViewProceed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/apply_filters"
