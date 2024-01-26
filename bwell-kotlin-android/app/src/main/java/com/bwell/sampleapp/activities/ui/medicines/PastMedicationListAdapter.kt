@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.bwell.common.models.domain.healthdata.medication.MedicationSummary
+import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.MedicineItemsViewBinding
 import com.bwell.sampleapp.utils.removeHtmlTags
 
 
-class PastMedicationListAdapter(private var launches: List<MedicationSummary>?) :
+class PastMedicationListAdapter(private var launches: List<MedicationGroup>?) :
     RecyclerView.Adapter<PastMedicationListAdapter.ViewHolder>() {
 
 
@@ -28,7 +28,7 @@ class PastMedicationListAdapter(private var launches: List<MedicationSummary>?) 
     }
 
     var onEndOfListReached: (() -> Unit)? = null
-    var onItemClicked: ((MedicationSummary?) -> Unit)? = null
+    var onItemClicked: ((MedicationGroup?) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches?.get(position)
@@ -48,7 +48,7 @@ class PastMedicationListAdapter(private var launches: List<MedicationSummary>?) 
     }
 
     // Add a function to update the list
-    fun updateList(newList:List<MedicationSummary>?) {
+    fun updateList(newList:List<MedicationGroup>?) {
         launches = newList
         notifyDataSetChanged()
     }
