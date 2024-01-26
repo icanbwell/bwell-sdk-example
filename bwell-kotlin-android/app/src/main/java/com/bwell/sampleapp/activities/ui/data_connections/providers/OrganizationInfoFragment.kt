@@ -22,16 +22,18 @@ import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragmen
 import com.bwell.sampleapp.databinding.FragmentOrganizationInfoViewBinding
 import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.domain.data.enums.ConnectionCategory
+import com.bwell.connections.requests.ConnectionCreateRequest
+import com.bwell.sampleapp.activities.ui.data_connections.OAuthConnectionWebViewClient
+import com.bwell.sampleapp.activities.ui.data_connections.WebViewCallback
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
 import kotlinx.coroutines.launch
 
-class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListener {
+class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListener,WebViewCallback {
 
     private var _binding: FragmentOrganizationInfoViewBinding? = null
     private var entity: T = entityData ?: throw Exception("Cannot create view without entityData")
     private var entityName: String = getName(entity)
     private var entityId: String = getId(entity)
-    private var connectionType: String = getConnectionType(entity)
     private var authType: ConnectionCategory? = null
     private var dataSourceId: String? = null
     private lateinit var viewModel: DataConnectionsViewModel
@@ -60,11 +62,7 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         binding.leftArrowImageView.setOnClickListener(this)
         binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                val isShow = checkVisibilityOfProceed(connectionType)
-                if(isShow)
-                {
-                    addListenersToProceed()
-                }
+                addListenersToProceed()
             } else {
                 removeListenersToProceed()
             }
@@ -73,13 +71,8 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         binding.editTextUsername.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val isShow = checkVisibilityOfProceed(connectionType)
-                if(isShow)
-                {
-                    addListenersToProceed()
-                }else{
-                    removeListenersToProceed()
-                }
+                // TODO this should be checking that s is non-empty
+                // decide whether to enable or disable proceed based on ^
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -87,13 +80,8 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         binding.editTextPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val isShow = checkVisibilityOfProceed(connectionType)
-                if(isShow)
-                {
-                    addListenersToProceed()
-                }else{
-                    removeListenersToProceed()
-                }
+                // TODO this should be checking that s is non-empty
+                // decide whether to enable or disable proceed based on ^
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -148,15 +136,6 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         }
     }
 
-    private fun checkVisibilityOfProceed(connectionType:String?): Boolean {
-        // TODO:Question - We should probably always be able to proceed? Either with the BASIC auth or to the OAuth URL, right? Or is this connectionType not the same as AuthType?
-        return if(connectionType.equals(resources.getString(R.string.hapi))) {
-            !(binding.editTextUsername.text.toString() == "" || binding.editTextPassword.text.toString() == "" || !binding.checkbox.isChecked)
-        }else{
-            true
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -173,7 +152,18 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
                 togglePasswordVisibility()
             }
             R.id.leftArrowImageView -> {
-                parentFragmentManager.popBackStack()
+                if(binding.textViewLogout.text == "Done"){
+                    parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                }
+
+                if(binding.constraintLayout.visibility == View.VISIBLE) {
+                    parentFragmentManager.popBackStack()
+                }
+
+                if(binding.constraintWebLayout.visibility == View.VISIBLE) {
+                    binding.constraintLayout.visibility = View.VISIBLE
+                    binding.constraintWebLayout.visibility = View.GONE
+                }
             }
             R.id.frameLayoutProceed -> {
                 // should never get here anymore!!
@@ -191,6 +181,13 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
     private fun onClickProceedBasic(){
         // do the Basic things here
         Log.d("onClickProceedBasic", "Basically, lets proceed")
+
+        val connectionRequest = ConnectionCreateRequest.Builder()
+            .connectionId(dataSourceId ?: throw Exception("If you got here, sad things happened.")) // Use the dataSourceId
+            .username(binding.editTextUsername.text.toString())
+            .password(binding.editTextPassword.text.toString())
+            .build()
+        viewModel.createConnection(connectionRequest)
     }
 
     private fun showLogin(){
@@ -236,13 +233,11 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         binding.clinicDescriptionTxt.text = resources.getString(R.string.clinic_description, entityName) // TODO this description references Lee Health TOS
         binding.editTextUsername.visibility = View.GONE
         binding.passwordLayout.visibility = View.GONE
-        // TODO:Question - what about these?
-        // binding.checkbox.visibility = View.GONE
-        // binding.checkboxTxt.visibility = View.GONE
 
         Log.d("showOAuthLogin", "End")
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun openOAuthView(){
         Log.d("openOAuthView", "Begin")
         viewModel.getOAuthUrl(dataSourceId ?: throw Exception("Tried to open an oauthUrl before dataSource found"))
@@ -255,22 +250,31 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
 
                     // do something here:
                     Log.d("OAuth Url", oauthData)
+
+                    binding.constraintLayout.visibility = View.GONE
+                    binding.constraintWebLayout.visibility = View.VISIBLE
+                    binding.oauthWebView.visibility = View.VISIBLE
+                    binding.oauthWebView.webViewClient = OAuthConnectionWebViewClient(this@OrganizationInfoFragment)
+                    binding.oauthWebView.settings.javaScriptEnabled = true
+                    // TODO: Is there a setting to allow HTTP?
+
+
+                    // binding.oauthWebView.loadUrl("https://google.com")
+                    binding.oauthWebView.loadUrl(oauthData)
                 }
             }
         }
     }
 
-    private fun getConnectionType(entity: T?): String {
-        when (val nonNullEntity = requireNotNull(entity) { "Entity cannot be null in OrganizationInfoFragment" }) {
-            is Organization -> {
-                return nonNullEntity.endpoint?.get(0)?.connectionType?.code.toString()
-            }
-            is Provider -> {
-                return nonNullEntity.endpoint?.get(0)?.connectionType?.code.toString()
-            }
-        }
+    override fun onWebViewSuccess(){
+        binding.constraintWebLayout.visibility = View.GONE
+        binding.constraintLayout.visibility = View.VISIBLE
+        binding.checkbox.visibility = View.GONE
+        binding.checkboxTxt.visibility = View.GONE
+        binding.cancelTxt.visibility = View.GONE
+        binding.textViewLogout.text = "Done"
 
-        throw IllegalStateException("Could not get connection type. Must be either Provider or Organization.")
+        binding.clinicDescriptionTxt.text = "OAuth Login Successful!!!!!! You're the best!"
     }
 
     private fun getName(entity: T?): String {
@@ -290,20 +294,18 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
 
         when (val nonNullEntity = requireNotNull(entity) { "Entity cannot be null in OrganizationInfoFragment" }) {
             is Organization -> {
-                // TODO: Use the right filter here
                 val endpoint = nonNullEntity.endpoint?.filter {
                         ep -> ep?.identifier?.any {
-                        id -> id?.system ==  "https://integrationhub-web.prod.bwell.zone/connectionhub/clientconnections/oid" }
+                        id -> id?.system?.contains("connectionhub/clientconnections") ?: false }
                     ?: return "" }
                     ?.first() ?: throw Exception("No clientConnections endpoint present on Organization entity.")
 
                 return endpoint.name ?: throw Exception("No name present on Organization endpoint")
             }
             is Provider -> {
-                // TODO: Use the right filter here
                 val endpoint = nonNullEntity.endpoint?.filter {
                         ep -> ep?.identifier?.any {
-                        id -> id?.system ==  "https://integrationhub-web.prod.bwell.zone/connectionhub/clientconnections/oid" }
+                        id -> id?.system?.contains("connectionhub/clientconnections") ?: false }
                     ?: return "" }
                     ?.first() ?: throw Exception("No clientConnections endpoint present on Provider entity.")
 
