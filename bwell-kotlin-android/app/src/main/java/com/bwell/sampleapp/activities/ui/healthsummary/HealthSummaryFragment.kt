@@ -82,8 +82,13 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             {
                 healthSummaryRequest = AllergyIntoleranceGroupsRequest.Builder()
                     .build()
-            }else if(selectedList.category.toString() == resources.getString(R.string.communications))
+            }
+            else if(selectedList.category.toString() == resources.getString(R.string.conditions))
             {
+                healthSummaryRequest = ConditionGroupsRequest.Builder()
+                    .build()
+            }
+            else if(selectedList.category.toString() == resources.getString(R.string.communications)) {
                 val basedOn = ""
                 val category = selectedList.category
                 val encounter = ""
@@ -114,12 +119,8 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                     .subject(subject)
                     .page(page)
                     .build()
-            }else if(selectedList.category.toString() == resources.getString(R.string.conditions))
-            {
-                healthSummaryRequest = ConditionGroupsRequest.Builder()
-                    .page(1)
-                    .build()
             }
+
             healthSummaryViewModel.getHealthSummaryData(healthSummaryRequest,selectedList.category)
 
             viewLifecycleOwner.lifecycleScope.launch {
