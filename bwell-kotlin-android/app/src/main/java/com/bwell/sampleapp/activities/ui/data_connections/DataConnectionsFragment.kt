@@ -267,8 +267,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
     }
 
     fun launchWebBrowser() {
-        val url: String = dataConnectionsViewModel.urlData.toString()
-        val webFragment = WebFragment(url)
+        val webFragment = WebFragment()
         val transaction = childFragmentManager.beginTransaction()
 //        transaction.hide(this@DataConnectionsFragment)
         transaction.add(R.id.container_layout, webFragment)

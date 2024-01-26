@@ -9,10 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
+import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
+import kotlinx.coroutines.launch
 
-class WebFragment(private val url: String) : Fragment() {
+class WebFragment : Fragment() {
 
     private lateinit var viewModel: WebViewModel
 
@@ -40,9 +45,24 @@ class WebFragment(private val url: String) : Fragment() {
         webView = view.findViewById(R.id.webview)
         webView.settings.javaScriptEnabled = true // Enable JavaScript if required
 
-        Log.i(TAG, "Loading url: $url")
-        // Load a web URL
-        webView.loadUrl(url)
+        val repository =
+            (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
+
+        val dataConnectionsViewModel = ViewModelProvider(
+            this,
+            DataConnectionsViewModelFactory(repository)
+        )[DataConnectionsViewModel::class.java]
+
+        lifecycleScope.launch {
+            dataConnectionsViewModel.urlData.collect { urlResult ->
+                if (urlResult != null) {
+                    val url = urlResult.toString()
+                    Log.i(TAG, "Loading url: $url")
+                    // Load a web URL
+                    webView.loadUrl(url)
+                }
+            }
+        }
     }
 
     // Optional: Handle back navigation within the WebView
