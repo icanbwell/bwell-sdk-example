@@ -17,6 +17,14 @@
         android:id="@+id/data_connections_parent"
         android:padding="20dp">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:visibility="gone"/>
+
         <FrameLayout
             android:id="@+id/container_layout"
             android:layout_width="match_parent"

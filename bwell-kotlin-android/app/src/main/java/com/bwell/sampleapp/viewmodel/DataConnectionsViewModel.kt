@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,23 +25,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class DataConnectionsViewModel(private val repository: DataConnectionsRepository?) : ViewModel() {
+
+    private val TAG = "DataConnectionsViewModel"
     init {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             repository?.getDataConnectionsList()
         }
 
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             repository?.getDataConnectionsCategoriesList()
         }
     }
 
-    val suggestedDataConnections : LiveData<SuggestedDataConnectionsList>
+    val suggestedDataConnections: LiveData<SuggestedDataConnectionsList>
         get() = repository?.suggestedDataConnections!!
 
-    val suggestedDataConnectionsCategories : LiveData<SuggestedDataConnectionsCategoriesList>
+    val suggestedDataConnectionsCategories: LiveData<SuggestedDataConnectionsCategoriesList>
         get() = repository?.suggestedDataConnectionsCategories!!
 
-    val dataConnectionsClinics : LiveData<DataConnectionsClinicsList>
+    val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = repository?.dataConnectionsClinics!!
 
     // Add a MutableLiveData for the filtered list
@@ -62,7 +65,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.fetchUserConsents(consentsRequest)?.collect { consentsResult ->
                     _consentsData.emit(consentsResult)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -70,13 +74,15 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
     fun updateConsent(request: ConsentCreateRequest) {
         viewModelScope.launch {
             try {
-                val updateOutcomeFlow: Flow<BWellResult<Consent>?>? = repository?.updateUserConsent(request)
+                val updateOutcomeFlow: Flow<BWellResult<Consent>?>? =
+                    repository?.updateUserConsent(request)
                 updateOutcomeFlow?.collect { updateOutcome ->
                     if (updateOutcome?.operationOutcome()?.success() == true) {
                         _consentsData.emit(updateOutcome)
                     }
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -90,7 +96,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.createConnection(connectionRequest)?.collect { connectionOutcome ->
                     _createConnectionData.emit(connectionOutcome)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -104,7 +111,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.disconnectConnection(connectionId)?.collect { disconnectOutcome ->
                     _disconnectConnectionData.emit(disconnectOutcome)
                 }
-            } catch (_: Exception) {
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -119,6 +127,7 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
             is BWellResult.ResourceCollection -> {
                 connectionsResult.data ?: emptyList()
             }
+
             else -> emptyList()
         }
         _connectionsList.value = connectionList
@@ -131,8 +140,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.getConnections()?.collect { connectionsResult ->
                     processConnectionsResult(connectionsResult)
                 }
-            } catch (_: Exception) {
-                // Handle exceptions
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -145,8 +154,8 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.getDataSource(datasourceId)?.collect { dataSourceResult ->
                     _dataSourceData.emit(dataSourceResult)
                 }
-            } catch (_: Exception) {
-                // Handle exceptions
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
@@ -160,10 +169,9 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 repository?.getOAuthUrl(datasourceId)?.collect { oauthUrlResult ->
                     _oauthUrlData.emit(oauthUrlResult)
                 }
-            } catch (_: Exception) {
-                // Handle exceptions
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
             }
         }
     }
-
 }
