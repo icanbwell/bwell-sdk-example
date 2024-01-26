@@ -57,10 +57,10 @@
 
             <!-- TextView 1 -->
             <TextView
-                android:id="@+id/clinic_discription_txt"
+                android:id="@+id/clinic_description_txt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/clinic_discription"
+                android:text="@string/clinic_description"
                 android:gravity="center"/>
             <!-- Checkbox and TextView 1 -->
             <LinearLayout
