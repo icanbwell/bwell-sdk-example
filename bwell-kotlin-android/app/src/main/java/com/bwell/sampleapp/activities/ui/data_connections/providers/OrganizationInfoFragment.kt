@@ -178,6 +178,8 @@ class OrganizationInfoFragment<T>(organizationData: T?) : Fragment(), View.OnCli
                     val parentFrag: DataConnectionsFragment =
                         this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
 
+                    // hardcoding because the real value "659880f47a3e8ad186c9bc66" is not working
+                    organizationId = "55a83bdc8d1eb1420aa1a71b"
                     parentFrag.getDataSource(organizationId.toString())
 
                     parentFrag.getOauthUrl(organizationId.toString())

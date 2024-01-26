@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
@@ -23,12 +24,15 @@ import kotlinx.coroutines.flow.flow
 
 class DataConnectionsRepository(private val applicationContext: Context) {
 
+    private val TAG = "DataConnectionsRepository"
+
     private val suggestedDataConnectionsLiveData = MutableLiveData<SuggestedDataConnectionsList>()
 
     val suggestedDataConnections: LiveData<SuggestedDataConnectionsList>
         get() = suggestedDataConnectionsLiveData
 
-    private val suggestedDataConnectionsCategoriesLiveData = MutableLiveData<SuggestedDataConnectionsCategoriesList>()
+    private val suggestedDataConnectionsCategoriesLiveData =
+        MutableLiveData<SuggestedDataConnectionsCategoriesList>()
 
     val suggestedDataConnectionsCategories: LiveData<SuggestedDataConnectionsCategoriesList>
         get() = suggestedDataConnectionsCategoriesLiveData
@@ -58,45 +62,53 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         }
     }
 
-    suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<OperationOutcome?> = flow {
-        try {
-            val connectionOutcome = BWellSdk.connections?.createConnection(connectionRequest)
-            emit(connectionOutcome)
-        } catch (e: Exception) {
-            // Handle exceptions, if any
-            emit(null)
+    suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<OperationOutcome?> =
+        flow {
+            try {
+                val connectionOutcome = BWellSdk.connections?.createConnection(connectionRequest)
+                emit(connectionOutcome)
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+                emit(null)
+            }
         }
-    }
 
     suspend fun getOAuthUrl(datasourceId: String): Flow<BWellResult<String>?> = flow {
         try {
-            val urlOutcome = BWellSdk.connections?.getOauthUrl(datasourceId)
+            val urlOutcome: BWellResult<String> = BWellSdk.connections.getOauthUrl(datasourceId)
+            Log.i(TAG, "Received url: $urlOutcome")
             emit(urlOutcome)
         } catch (e: Exception) {
             // Handle exceptions, if any
+            Log.e(TAG, e.toString())
             emit(null)
         }
     }
 
     suspend fun getDataSource(datasourceId: String): Flow<BWellResult<DataSource>?> = flow {
         try {
-            val urlOutcome = BWellSdk.connections?.getDataSource(datasourceId)
-            emit(urlOutcome)
+            val dataSource: BWellResult<DataSource> =
+                BWellSdk.connections.getDataSource(datasourceId)
+            Log.i(TAG, "Received data source: $dataSource")
+            emit(dataSource)
         } catch (e: Exception) {
             // Handle exceptions, if any
+            Log.e(TAG, e.toString())
             emit(null)
         }
     }
 
-    suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> = flow {
-        val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
-        emit(consentsResult)
-    }
+    suspend fun fetchUserConsents(consentsRequest: ConsentRequest): Flow<BWellResult<Consent>?> =
+        flow {
+            val consentsResult = BWellSdk.user?.getConsents(consentsRequest)
+            emit(consentsResult)
+        }
 
-    suspend fun updateUserConsent(request: ConsentCreateRequest): Flow<BWellResult<Consent>?> = flow {
-        val updateOutcome = BWellSdk.user?.createConsent(request)
-        emit(updateOutcome)
-    }
+    suspend fun updateUserConsent(request: ConsentCreateRequest): Flow<BWellResult<Consent>?> =
+        flow {
+            val updateOutcome = BWellSdk.user?.createConsent(request)
+            emit(updateOutcome)
+        }
 
 
     suspend fun getDataConnectionsCategoriesList() {
@@ -106,25 +118,29 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         // Category A
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                applicationContext.getString(R.string.data_connection_category_insurance), R.drawable.circle,
+                applicationContext.getString(R.string.data_connection_category_insurance),
+                R.drawable.circle,
                 "Get your claims and financials, plus a record of the providers you see from common insurance plans and Medicare."
             )
         )
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                applicationContext.getString(R.string.data_connection_category_providers), R.drawable.plus_icon,
+                applicationContext.getString(R.string.data_connection_category_providers),
+                R.drawable.plus_icon,
                 "See your core health info, such as provider visit summaries, diagnosis, treatment history, prescriptions, and labs."
             )
         )
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                applicationContext.getString(R.string.data_connection_category_clinics), R.drawable.ic_placeholder,
+                applicationContext.getString(R.string.data_connection_category_clinics),
+                R.drawable.ic_placeholder,
                 "See your core health info, such as your diagnosis, procedures, treatment history, prescriptions, and labs."
             )
         )
         suggestionsList.add(
             DataConnectionCategoriesListItems(
-                applicationContext.getString(R.string.data_connection_category_lab), R.drawable.vaccine_icon,
+                applicationContext.getString(R.string.data_connection_category_lab),
+                R.drawable.vaccine_icon,
                 "View your lab results to track your numbers over time."
             )
         )
@@ -140,7 +156,10 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         // Category A
         suggestionsList.add(
             DataConnectionListItems(
-                "Epic Sandbox R4C", R.drawable.baseline_person_pin_24, "Pending", R.drawable.baseline_more_vert_24
+                "Epic Sandbox R4C",
+                R.drawable.baseline_person_pin_24,
+                "Pending",
+                R.drawable.baseline_more_vert_24
             )
         )
         suggestionsList.add(
@@ -159,8 +178,6 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         val activityList = SuggestedDataConnectionsList(suggestionsList)
         suggestedDataConnectionsLiveData.postValue(activityList)
     }
-
-
 
 
 }
