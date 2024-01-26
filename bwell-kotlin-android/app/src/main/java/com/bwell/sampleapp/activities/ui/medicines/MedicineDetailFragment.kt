@@ -168,7 +168,8 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
         binding.medicinePriceView.priceContainerLayout.removeAllViews()
         val request = MedicationKnowledgeRequest.Builder()
-            .compositionId(medicationId)
+            //.medicationStatementId(medicationId)
+            .medicationStatementId("69a2b5b8-5f6f-50d6-8973-8fa8898a71bb")
             .build()
         medicinesViewModel.getMedicationKnowledge(request)
         viewLifecycleOwner.lifecycleScope.launch {

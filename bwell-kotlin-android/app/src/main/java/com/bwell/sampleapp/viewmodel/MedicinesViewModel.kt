@@ -3,10 +3,11 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.medication.MedicationComposition
+import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.domain.healthdata.medication.MedicationKnowledge
 import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
-import com.bwell.common.models.domain.healthdata.medication.MedicationSummary
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationListRequest
 import com.bwell.healthdata.medication.requests.MedicationPricingRequest
@@ -16,13 +17,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MedicinesViewModel(private val repository: MedicineRepository?) : ViewModel() {
-    private val _activeMedicationResults = MutableStateFlow<BWellResult<MedicationSummary>?>(null)
-    val activeMedicationResults: StateFlow<BWellResult<MedicationSummary>?> = _activeMedicationResults
+    private val _activeMedicationResults = MutableStateFlow<BWellResult<MedicationGroup>?>(null)
+    val activeMedicationResults: StateFlow<BWellResult<MedicationGroup>?> = _activeMedicationResults
 
-    fun getActiveMedicationList(medicationRequest: MedicationListRequest) {
+    fun getActiveMedicationGroups(medicationRequest: MedicationGroupsRequest) {
         viewModelScope.launch {
             try {
-                repository?.getMedicationList(medicationRequest)?.collect { result ->
+                repository?.getMedicationGroups(medicationRequest)?.collect { result ->
                     _activeMedicationResults.emit(result)
                 }
             } catch (e: Exception) {
@@ -31,13 +32,13 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
         }
     }
 
-    private val _pastMedicationResults = MutableStateFlow<BWellResult<MedicationSummary>?>(null)
-    val pastMedicationResults: StateFlow<BWellResult<MedicationSummary>?> = _pastMedicationResults
+    private val _pastMedicationResults = MutableStateFlow<BWellResult<MedicationGroup>?>(null)
+    val pastMedicationResults: StateFlow<BWellResult<MedicationGroup>?> = _pastMedicationResults
 
-    fun getPastMedicationList(medicationRequest: MedicationListRequest) {
+    fun getPastMedicationList(medicationRequest: MedicationGroupsRequest) {
         viewModelScope.launch {
             try {
-                repository?.getMedicationList(medicationRequest)?.collect { result ->
+                repository?.getMedicationGroups(medicationRequest)?.collect { result ->
                     _pastMedicationResults.emit(result)
                 }
             } catch (e: Exception) {
@@ -46,8 +47,8 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
         }
     }
 
-    private val _filteredActiveMedicationResults = MutableStateFlow<List<MedicationSummary>?>(null)
-    val filteredActiveMedicationResults: StateFlow<List<MedicationSummary>?> = _filteredActiveMedicationResults
+    private val _filteredActiveMedicationResults = MutableStateFlow<List<MedicationGroup>?>(null)
+    val filteredActiveMedicationResults: StateFlow<List<MedicationGroup>?> = _filteredActiveMedicationResults
 
     fun filterActiveMedicationList(query: String) {
         viewModelScope.launch {
@@ -61,8 +62,8 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
         }
     }
 
-    private val _filteredPastMedicationResults = MutableStateFlow<List<MedicationSummary>?>(null)
-    val filteredPastMedicationResults: StateFlow<List<MedicationSummary>?> = _filteredPastMedicationResults
+    private val _filteredPastMedicationResults = MutableStateFlow<List<MedicationGroup>?>(null)
+    val filteredPastMedicationResults: StateFlow<List<MedicationGroup>?> = _filteredPastMedicationResults
 
     fun filterPastMedicationList(query: String) {
         viewModelScope.launch {

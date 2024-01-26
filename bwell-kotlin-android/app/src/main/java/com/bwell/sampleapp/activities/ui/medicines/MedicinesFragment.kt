@@ -11,9 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Period
-import com.bwell.common.models.domain.healthdata.medication.MedicationSummary
+import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.domain.healthdata.medication.enums.MedicationStatus
+import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.healthdata.medication.requests.MedicationListRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -44,12 +45,12 @@ class MedicinesFragment : Fragment() {
         medicinesViewModel = ViewModelProvider(this, MedicineViewModelFactory(repository))[MedicinesViewModel::class.java]
 
         getActiveMedicationList()
-        getPastMedicationList()
+        //getPastMedicationList()
         addSearchTextListeners()
         return root
     }
 
-    private fun setActiveMedicinesAdapter(result:BWellResult<MedicationSummary>) {
+    private fun setActiveMedicinesAdapter(result:BWellResult<MedicationGroup>) {
         when (result) {
             is BWellResult.ResourceCollection -> {
                 val dataList = result.data
@@ -64,14 +65,14 @@ class MedicinesFragment : Fragment() {
         }
     }
 
-    private fun showDetailedView(selectedMedicine: MedicationSummary?) {
+    private fun showDetailedView(selectedMedicine: MedicationGroup?) {
         binding.includeHomeView.headerView.visibility = View.GONE
         binding.searchView.searchView.visibility = View.GONE
         binding.medicineActiveView.medicineActiveView.visibility = View.GONE
         binding.medicinePastView.medicinePastView.visibility = View.GONE
         val medicineDetailFragment = MedicineDetailFragment()
         val bundle = Bundle()
-        bundle.putString("id", selectedMedicine?.reference)
+        bundle.putString("id", selectedMedicine?.id)
         medicineDetailFragment.arguments = bundle
         val transaction = childFragmentManager.beginTransaction()
         binding.containerLayout.visibility = View.VISIBLE;
@@ -80,7 +81,7 @@ class MedicinesFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun setPastMedicinesAdapter(result:BWellResult<MedicationSummary>) {
+    private fun setPastMedicinesAdapter(result:BWellResult<MedicationGroup>) {
         when (result) {
             is BWellResult.ResourceCollection -> {
                 val dataList = result.data
@@ -101,12 +102,17 @@ class MedicinesFragment : Fragment() {
             parseDateStringToDate("2023-01-01", "yyyy-MM-dd")
         ).end(parseDateStringToDate("2023-12-31", "yyyy-MM-dd")).build()
         val status = MedicationStatus.ACTIVE
-        val request = MedicationListRequest.Builder()
+        /*val request = MedicationListRequest.Builder()
             .name(name)
             .date(date)
             .status(status)
             .build()
-        medicinesViewModel.getActiveMedicationList(request)
+            */
+         val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
+             //.page(0)
+             //.pageSize(1)
+             .build()
+        medicinesViewModel.getActiveMedicationGroups(groupsRequest)
             viewLifecycleOwner.lifecycleScope.launch {
                 medicinesViewModel.activeMedicationResults.collect { result ->
                     if (result != null) {
@@ -122,13 +128,16 @@ class MedicinesFragment : Fragment() {
         val date = Period.Builder().start(
             parseDateStringToDate("2023-01-01", "yyyy-MM-dd")
         ).end(parseDateStringToDate("2023-12-31", "yyyy-MM-dd")).build()
-        val status = MedicationStatus.HISTORICAL
-        val request = MedicationListRequest.Builder()
+        val status = MedicationStatus.INACTIVE
+        /*val request = MedicationListRequest.Builder()
             .name(name)
             .date(date)
             .status(status)
             .build()
-        medicinesViewModel.getPastMedicationList(request)
+            */
+        val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
+            .build()
+        medicinesViewModel.getPastMedicationList(groupsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
             medicinesViewModel.pastMedicationResults.collect { result ->
                 if (result != null) {
