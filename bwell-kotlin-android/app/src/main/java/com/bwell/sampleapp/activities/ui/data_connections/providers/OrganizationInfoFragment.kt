@@ -2,6 +2,7 @@ package com.bwell.sampleapp.activities.ui.data_connections.providers
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
@@ -28,18 +30,38 @@ import com.bwell.sampleapp.activities.ui.data_connections.WebViewCallback
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
 import kotlinx.coroutines.launch
 
-class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListener,WebViewCallback {
+class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCallback {
+
 
     private var _binding: FragmentOrganizationInfoViewBinding? = null
-    private var entity: T = entityData ?: throw Exception("Cannot create view without entityData")
-    private var entityName: String = getName(entity)
-    private var entityId: String = getId(entity)
+    private var entity: T? = null
+    private lateinit var entityName: String
+    private lateinit var entityId: String
     private var authType: ConnectionCategory? = null
     private var dataSourceId: String? = null
     private lateinit var viewModel: DataConnectionsViewModel
 
-
     private val binding get() = _binding!!
+
+    companion object {
+        private const val ARG_ENTITY = "entity"
+
+        // factory method to create a new instance of the fragment with parameters
+        fun <T> newInstance(entity: T): OrganizationInfoFragment<T> {
+            val fragment = OrganizationInfoFragment<T>()
+            val args = Bundle()
+
+            args.putParcelable(ARG_ENTITY, entity as Parcelable)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    constructor(entity: T) : this() {
+        this.entity = entity ?: throw Exception("Cannot create view without entityData")
+        this.entityName = getName(entity)
+        this.entityId = getId(entity)
+    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -47,6 +69,9 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        arguments?.let { entity= it.getParcelable(ARG_ENTITY) }
+
         _binding = FragmentOrganizationInfoViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -60,7 +85,7 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         binding.cancelTxt.setOnClickListener(this)
         binding.togglePassword.setOnClickListener(this)
         binding.leftArrowImageView.setOnClickListener(this)
-        binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxConsent.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 addListenersToProceed()
             } else {
@@ -117,7 +142,7 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
             return
         }
 
-        if(!binding.checkbox.isChecked) {
+        if(!binding.checkboxConsent.isChecked) {
             Log.d("addListenersToProceed", "prevented listener add - attestation not checked")
             removeListenersToProceed()
             return
@@ -152,10 +177,6 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
                 togglePasswordVisibility()
             }
             R.id.leftArrowImageView -> {
-                if(binding.textViewLogout.text == "Done"){
-                    parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                }
-
                 if(binding.constraintLayout.visibility == View.VISIBLE) {
                     parentFragmentManager.popBackStack()
                 }
@@ -165,9 +186,6 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
                     binding.constraintWebLayout.visibility = View.GONE
                 }
             }
-            R.id.frameLayoutProceed -> {
-                // should never get here anymore!!
-            }
         }
     }
 
@@ -176,6 +194,7 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
         Log.d("onClickProceedOAuth", "Hey there, would you like some OAuth today?")
 
         openOAuthView()
+        binding.frameLayoutProceed.setOnClickListener { onClickDoneOAuth() }
     }
 
     private fun onClickProceedBasic(){
@@ -188,6 +207,10 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
             .password(binding.editTextPassword.text.toString())
             .build()
         viewModel.createConnection(connectionRequest)
+    }
+
+    private fun onClickDoneOAuth(){
+        //findNavController().navigate(R.id.action_data_connections__to__nav_home)
     }
 
     private fun showLogin(){
@@ -269,10 +292,10 @@ class OrganizationInfoFragment<T>(entityData: T?) : Fragment(),View.OnClickListe
     override fun onWebViewSuccess(){
         binding.constraintWebLayout.visibility = View.GONE
         binding.constraintLayout.visibility = View.VISIBLE
-        binding.checkbox.visibility = View.GONE
-        binding.checkboxTxt.visibility = View.GONE
+        binding.checkboxConsent.visibility = View.GONE
+        binding.checkboxConsentTxt.visibility = View.GONE
         binding.cancelTxt.visibility = View.GONE
-        binding.textViewLogout.text = "Done"
+        binding.textViewProceed.text = "Done"
 
         binding.clinicDescriptionTxt.text = "OAuth Login Successful!!!!!! You're the best!"
     }

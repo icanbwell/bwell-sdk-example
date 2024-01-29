@@ -83,7 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColorHint="#0076AB"
-                android:hint="Username or Email *"/>
+                android:hint="Username or Email *"
+                android:visibility="gone"/>
 
             <!-- Password EditText -->
             <RelativeLayout
@@ -91,7 +92,8 @@
                 android:layout_marginTop="10dp"
                 android:background="#F2FAFC"
                 android:id="@+id/password_layout"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/editTextPassword"
