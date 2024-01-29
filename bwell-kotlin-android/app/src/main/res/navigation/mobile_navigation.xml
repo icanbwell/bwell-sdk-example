@@ -22,12 +22,6 @@
         android:name="com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment"
         android:label="@string/menu_data_connections"
         tools:layout="@layout/fragment_data_connections" >
-<!--        <action-->
-<!--            android:id="@+id/action_data_connections__to__nav_home"-->
-<!--            app:destination="@id/nav_home"-->
-<!--            app:popUpTo="@id/nav_home"-->
-<!--            app:popUpToInclusive="true"-->
-<!--            app:launchSingleTop="true" />-->
     </fragment>
 
     <fragment

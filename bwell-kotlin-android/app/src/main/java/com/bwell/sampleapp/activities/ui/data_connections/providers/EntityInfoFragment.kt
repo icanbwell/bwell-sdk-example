@@ -2,7 +2,6 @@ package com.bwell.sampleapp.activities.ui.data_connections.providers
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -28,40 +27,23 @@ import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.activities.ui.data_connections.OAuthConnectionWebViewClient
 import com.bwell.sampleapp.activities.ui.data_connections.WebViewCallback
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
+import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 import kotlinx.coroutines.launch
 
-class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCallback {
+class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
 
+    private val TAG = "OrganizationInfoFragment"
+    private lateinit var entityInfoViewModel: EntityInfoViewModel
+    private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
 
     private var _binding: FragmentOrganizationInfoViewBinding? = null
-    private var entity: T? = null
+
     private lateinit var entityName: String
     private lateinit var entityId: String
     private var authType: ConnectionCategory? = null
-    private var dataSourceId: String? = null
-    private lateinit var viewModel: DataConnectionsViewModel
+    private lateinit var dataSourceId: String
 
     private val binding get() = _binding!!
-
-    companion object {
-        private const val ARG_ENTITY = "entity"
-
-        // factory method to create a new instance of the fragment with parameters
-        fun <T> newInstance(entity: T): OrganizationInfoFragment<T> {
-            val fragment = OrganizationInfoFragment<T>()
-            val args = Bundle()
-
-            args.putParcelable(ARG_ENTITY, entity as Parcelable)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
-    constructor(entity: T) : this() {
-        this.entity = entity ?: throw Exception("Cannot create view without entityData")
-        this.entityName = getName(entity)
-        this.entityId = getId(entity)
-    }
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -70,13 +52,24 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
         savedInstanceState: Bundle?
     ): View {
 
-        arguments?.let { entity= it.getParcelable(ARG_ENTITY) }
+        val parentFragment = requireParentFragment()
+        dataConnectionsViewModel = ViewModelProvider(parentFragment)[DataConnectionsViewModel::class.java]
+        entityInfoViewModel = ViewModelProvider(parentFragment)[EntityInfoViewModel::class.java]
+
+        // Get entity info
+        if(entityInfoViewModel.provider != null){
+            Log.d(TAG, "Received Provider")
+            entityName = getName(entityInfoViewModel.provider)
+            entityId = getId(entityInfoViewModel.provider)
+        }
+        else if(entityInfoViewModel.organization != null){
+            Log.d(TAG, "Received Provider")
+            entityName = getName(entityInfoViewModel.organization)
+            entityId = getId(entityInfoViewModel.organization)
+        }
 
         _binding = FragmentOrganizationInfoViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val parentFragment = requireParentFragment()
-        viewModel = ViewModelProvider(parentFragment)[DataConnectionsViewModel::class.java]
 
         // Certain login components need customization based on entity info
         showLogin()
@@ -170,7 +163,7 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
         when (view?.id) {
             R.id.cancel_txt -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val parentFrag: DataConnectionsFragment = this@OrganizationInfoFragment.parentFragment as DataConnectionsFragment
+                val parentFrag: DataConnectionsFragment = this@EntityInfoFragment.parentFragment as DataConnectionsFragment
                 parentFrag.showDataConnectionCategories()
             }
             R.id.togglePassword -> {
@@ -202,23 +195,23 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
         Log.d("onClickProceedBasic", "Basically, lets proceed")
 
         val connectionRequest = ConnectionCreateRequest.Builder()
-            .connectionId(dataSourceId ?: throw Exception("If you got here, sad things happened.")) // Use the dataSourceId
+            .connectionId(dataSourceId) // Use the dataSourceId
             .username(binding.editTextUsername.text.toString())
             .password(binding.editTextPassword.text.toString())
             .build()
-        viewModel.createConnection(connectionRequest)
+        dataConnectionsViewModel.createConnection(connectionRequest)
     }
 
     private fun onClickDoneOAuth(){
-        //findNavController().navigate(R.id.action_data_connections__to__nav_home)
+        findNavController().navigate(R.id.nav_data_connections)
     }
 
     private fun showLogin(){
         // show different login components based on dataSource Connection type
         Log.d("showLogin", "Begin")
-        viewModel.getDataSource(entityId)
+        dataConnectionsViewModel.getDataSource(entityId)
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.dataSourceData.collect { result ->
+            dataConnectionsViewModel.dataSourceData.collect { result ->
                 if(result != null){
                     Log.d("showLogin", "collected dataSource")
                     // based on data source connection, either show basic or oauth login
@@ -253,7 +246,7 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
         Log.d("showOAuthLogin", "Begin")
 
         binding.clinicNametxt.text = resources.getString(R.string.connect_to_entity, entityName)
-        binding.clinicDescriptionTxt.text = resources.getString(R.string.clinic_description, entityName) // TODO this description references Lee Health TOS
+        binding.clinicDescriptionTxt.text = resources.getString(R.string.clinic_description, entityName)
         binding.editTextUsername.visibility = View.GONE
         binding.passwordLayout.visibility = View.GONE
 
@@ -263,9 +256,9 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
     @SuppressLint("SetJavaScriptEnabled")
     private fun openOAuthView(){
         Log.d("openOAuthView", "Begin")
-        viewModel.getOAuthUrl(dataSourceId ?: throw Exception("Tried to open an oauthUrl before dataSource found"))
+        dataConnectionsViewModel.getOAuthUrl(dataSourceId)
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.oauthUrlData.collect { result ->
+            dataConnectionsViewModel.oauthUrlData.collect { result ->
                 if(result != null){
                     Log.d("openOAuthView", "collected oauthData")
                     // openUrl
@@ -277,7 +270,7 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
                     binding.constraintLayout.visibility = View.GONE
                     binding.constraintWebLayout.visibility = View.VISIBLE
                     binding.oauthWebView.visibility = View.VISIBLE
-                    binding.oauthWebView.webViewClient = OAuthConnectionWebViewClient(this@OrganizationInfoFragment)
+                    binding.oauthWebView.webViewClient = OAuthConnectionWebViewClient(this@EntityInfoFragment)
                     binding.oauthWebView.settings.javaScriptEnabled = true
                     // TODO: Is there a setting to allow HTTP?
 
@@ -300,7 +293,7 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
         binding.clinicDescriptionTxt.text = "OAuth Login Successful!!!!!! You're the best!"
     }
 
-    private fun getName(entity: T?): String {
+    private fun<T> getName(entity: T?): String {
         when (val nonNullEntity = requireNotNull(entity) { "Entity cannot be null in OrganizationInfoFragment" }) {
             is Organization -> {
                 return nonNullEntity.name.toString()
@@ -313,7 +306,7 @@ class OrganizationInfoFragment<T>() : Fragment(),View.OnClickListener,WebViewCal
         throw IllegalStateException("Could not get entity name. Must be either Provider or Organization.")
     }
 
-    private fun getId(entity:T?): String {
+    private fun<T> getId(entity:T?): String {
 
         when (val nonNullEntity = requireNotNull(entity) { "Entity cannot be null in OrganizationInfoFragment" }) {
             is Organization -> {

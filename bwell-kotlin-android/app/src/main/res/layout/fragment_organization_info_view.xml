@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/clinic_info_view"
-        tools:context=".activities.ui.data_connections.providers.OrganizationInfoFragment">
+        tools:context=".activities.ui.data_connections.providers.EntityInfoFragment">
 
     <!-- Clinic Title -->
         <ImageView

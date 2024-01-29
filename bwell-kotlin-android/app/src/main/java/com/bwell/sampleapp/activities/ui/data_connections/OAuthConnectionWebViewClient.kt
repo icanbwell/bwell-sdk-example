@@ -4,12 +4,12 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.util.Log
-import android.webkit.WebResourceResponse
 
 
 class OAuthConnectionWebViewClient (private val webViewCallback: WebViewCallback) : WebViewClient() {
     private val TAG = OAuthConnectionWebViewClient::class.simpleName
     private var counter = 0
+
     override fun shouldOverrideUrlLoading(
         view: WebView?,
         request: WebResourceRequest?

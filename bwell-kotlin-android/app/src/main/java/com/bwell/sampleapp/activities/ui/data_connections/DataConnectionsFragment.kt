@@ -10,9 +10,11 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -29,15 +31,17 @@ import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.bwell.common.models.domain.data.DataSource
+import com.bwell.common.models.domain.search.Provider
+import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener,
     DataConnectionsListAdapter.DataConnectionsClickListener {
 
-
     private var mBinding: FragmentDataConnectionsParentBinding? = null
     private val binding get() = mBinding!!
     private lateinit var dataConnectionsViewModel: DataConnectionsViewModel
+    private lateinit var entityInfoViewModel: EntityInfoViewModel
     private lateinit var connection: Connection
     private lateinit var frameLayoutConnectionStatus: FrameLayout
 
@@ -56,6 +60,8 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             this,
             DataConnectionsViewModelFactory(repository)
         )[DataConnectionsViewModel::class.java]
+
+        entityInfoViewModel = ViewModelProvider(this)[EntityInfoViewModel::class.java]
 
         binding.includeHomeView.header.text = resources.getString(R.string.connect_health_records)
         binding.includeHomeView.subText.text =
