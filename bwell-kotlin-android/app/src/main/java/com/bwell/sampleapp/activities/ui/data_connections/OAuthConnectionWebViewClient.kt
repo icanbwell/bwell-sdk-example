@@ -8,6 +8,7 @@ import android.webkit.WebResourceResponse
 
 
 class OAuthConnectionWebViewClient (private val webViewCallback: WebViewCallback) : WebViewClient() {
+    private val TAG = OAuthConnectionWebViewClient::class.simpleName
     private var counter = 0
     override fun shouldOverrideUrlLoading(
         view: WebView?,
@@ -16,12 +17,14 @@ class OAuthConnectionWebViewClient (private val webViewCallback: WebViewCallback
 
         // Check the URL here
         val url = request?.url.toString()
-        Log.d("OAuthConnectionWebViewClient", "url: $url")
+        Log.d(TAG, "url: $url")
 
         view?.loadUrl(url)
+
         // Add your logic to determine if the form was successfully submitted
-        if (counter++ > 1) { // TODO what defines successful OAuth
-            Log.d("OAuthConnectionWebViewClient", "in if! counter: $counter, url: $url")
+        if (url == "https://proxy-pages.client-sandbox.icanbwell.com/index.html?status_code=success") {
+            // TODO what defines successful OAuth
+            Log.d(TAG, "in if! counter: $counter, url: $url")
 
             // Form successfully submitted
             // Notify the fragment or take appropriate action
@@ -31,14 +34,5 @@ class OAuthConnectionWebViewClient (private val webViewCallback: WebViewCallback
 
         // Continue loading the URL
         return super.shouldOverrideUrlLoading(view, request)
-    }
-
-    override fun shouldInterceptRequest(
-        view: WebView?,
-        request: WebResourceRequest?
-    ): WebResourceResponse? {
-
-        Log.d("shouldInterceptRequest", "${request?.url}")
-        return super.shouldInterceptRequest(view, request)
     }
 }
