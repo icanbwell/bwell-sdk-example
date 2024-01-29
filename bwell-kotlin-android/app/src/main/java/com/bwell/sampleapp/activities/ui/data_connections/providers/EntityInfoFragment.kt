@@ -187,7 +187,7 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
         Log.d("onClickProceedOAuth", "Hey there, would you like some OAuth today?")
 
         openOAuthView()
-        binding.frameLayoutProceed.setOnClickListener { onClickDoneOAuth() }
+        binding.frameLayoutProceed.setOnClickListener { onClickDone() }
     }
 
     private fun onClickProceedBasic(){
@@ -200,9 +200,19 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
             .password(binding.editTextPassword.text.toString())
             .build()
         dataConnectionsViewModel.createConnection(connectionRequest)
+
+        binding.passwordLayout.visibility = View.GONE
+        binding.editTextUsername.visibility = View.GONE
+        binding.checkboxConsent.visibility = View.GONE
+        binding.checkboxConsentTxt.visibility = View.GONE
+        binding.cancelTxt.visibility = View.GONE
+        binding.textViewProceed.text = "Done"
+        binding.frameLayoutProceed.setOnClickListener { onClickDone() }
+
+        binding.clinicDescriptionTxt.text = "Basic Login Successful!!!!!!"
     }
 
-    private fun onClickDoneOAuth(){
+    private fun onClickDone(){
         findNavController().navigate(R.id.nav_data_connections)
     }
 
