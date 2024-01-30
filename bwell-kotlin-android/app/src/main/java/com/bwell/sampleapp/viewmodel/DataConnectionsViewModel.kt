@@ -146,14 +146,13 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         }
     }
 
-    private val _urlData = MutableStateFlow<BWellResult<String>?>(null)
-    val urlData: StateFlow<BWellResult<String>?> = _urlData
-
-    fun getOAuthUrl(datasourceId: String) {
+    private val _dataSourceData = MutableStateFlow<BWellResult<DataSource>?>(null)
+    val dataSourceData: StateFlow<BWellResult<DataSource>?> = _dataSourceData
+    fun getDataSource(datasourceId: String) {
         viewModelScope.launch {
             try {
-                repository?.getOAuthUrl(datasourceId)?.collect { urlOutcome ->
-                    _urlData.emit(urlOutcome)
+                repository?.getDataSource(datasourceId)?.collect { dataSourceResult ->
+                    _dataSourceData.emit(dataSourceResult)
                 }
             } catch (ex: Exception) {
                 Log.i(TAG, ex.toString())
@@ -161,14 +160,14 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         }
     }
 
-    private val _dataSourceData = MutableStateFlow<BWellResult<DataSource>?>(null)
-    val dataSourceData: StateFlow<BWellResult<DataSource>?> = _dataSourceData
+    private val _oauthUrlData = MutableStateFlow<BWellResult<String>?>(null)
+    val oauthUrlData: StateFlow<BWellResult<String>?> = _oauthUrlData
 
-    fun getDataSource(datasourceId: String) {
+    fun getOAuthUrl(datasourceId: String) {
         viewModelScope.launch {
             try {
-                repository?.getDataSource(datasourceId)?.collect { dataSourceOutcome ->
-                    _dataSourceData.emit(dataSourceOutcome)
+                repository?.getOAuthUrl(datasourceId)?.collect { oauthUrlResult ->
+                    _oauthUrlData.emit(oauthUrlResult)
                 }
             } catch (ex: Exception) {
                 Log.i(TAG, ex.toString())

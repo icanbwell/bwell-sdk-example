@@ -21,18 +21,18 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
-import com.bwell.sampleapp.activities.ui.data_connections.providers.OrganizationInfoFragment
+import com.bwell.sampleapp.activities.ui.data_connections.providers.EntityInfoFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsClinicsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ClinicsViewModel
 import com.bwell.sampleapp.viewmodel.ClinicsViewModelFactory
+import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 import com.bwell.search.requests.provider.ProviderSearchRequest
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ClinicsSearchFragment : Fragment(), View.OnClickListener {
 
+    private lateinit var entityInfoViewModel: EntityInfoViewModel
     private var _binding: FragmentDataConnectionsClinicsBinding? = null
     private lateinit var clinicsViewModel: ClinicsViewModel
     private lateinit var dataConnectionClinicsAdapter: DataConnectionsClinicsListAdapter
@@ -45,6 +45,8 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val parentFragment = requireParentFragment()
+        entityInfoViewModel = ViewModelProvider(parentFragment)[EntityInfoViewModel::class.java]
         _binding = FragmentDataConnectionsClinicsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.clinicsRepository
@@ -128,7 +130,11 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
         dataConnectionClinicsAdapter.onItemClicked = { selectedList ->
             hideKeyboard(requireContext(), binding.searchView.searchText.windowToken)
             if ((selectedList?.endpoint?.size ?: 0) > 0) {
-                val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
+                // Set the entity on the viewModel
+                entityInfoViewModel.provider = selectedList
+
+                // Create the fragment
+                val organizationFragment = EntityInfoFragment()
                 val transaction = parentFragmentManager.beginTransaction()
                 transaction.hide(this@ClinicsSearchFragment)
                 transaction.add(R.id.container_layout, organizationFragment)

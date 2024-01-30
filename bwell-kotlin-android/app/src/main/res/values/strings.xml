@@ -131,13 +131,14 @@
     <string name="search_connection_by_provider">Search Connections by Provider</string>
     <string name="search_50_miles_from_current_location">Searching 50 miles from Current Location</string>
     <string name="contact_us">Contact us</string>
-    <string name="connect_to">Connect to </string>
+    <string name="connect_to">Connect to</string>
+    <string name="connect_to_entity">Connect to %s</string>
     <string name="provider_filters">Provider Filters</string>
     <string name="select_connection_for">Select a connection for </string>
     <string name="request_connection_for">Request a connection for </string>
     <string name="no_data_labs">We likely cannot connect to your lab at this time. Please contact support if you have any questions.</string>
-    <string name="clinic_discription"> <![CDATA[
-     will ask for your credentials and consent for b.well to retrieve your data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.
+    <string name="clinic_description"> <![CDATA[
+     %s will ask for your credentials and consent for b.well to retrieve your data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.
      \n   \n NOTE: Please turn off your browser\'s popup blocker in order to proceed and complete the data sync. ]]></string>
     <string name="before_search_clinics_body_txt">Search by clinic, hospital, or health system name where your healthcare provider works, not by your provider’s name.</string>
     <string name="clinic_checkbox_txt">I attest that these are my credentials and i authorize b.well to retrive my health data for my use in Lee Health Connect</string>
@@ -182,7 +183,7 @@
     <string name="request_connection">Request Connection</string>
     <string name="open">Open</string>
     <string name="hapi">hapi</string>
-    <string name="clinic_info_hapi">credentials, I consent for b.well to retrieve my health data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.</string>
+    <string name="clinic_info_hapi">By providing my %s credentials, I consent for b.well to retrieve my health data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.</string>
     <string name="disconnected">Disconneted</string>
     <string name="procedures">Procedures</string>
     <string name="vitals">Vitals</string>
