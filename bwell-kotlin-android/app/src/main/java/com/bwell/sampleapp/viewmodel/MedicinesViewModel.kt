@@ -2,15 +2,15 @@ package com.bwell.sampleapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bwell.common.models.domain.healthdata.medication.MedicationComposition
 import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.domain.healthdata.medication.MedicationKnowledge
 import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
+import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
-import com.bwell.healthdata.medication.requests.MedicationListRequest
 import com.bwell.healthdata.medication.requests.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import com.bwell.sampleapp.repository.MedicineRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -77,14 +77,14 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
         }
     }
 
-    private val _medicationOverviewResults = MutableStateFlow<BWellResult<MedicationComposition>?>(null)
-    val medicationOverviewResults: StateFlow<BWellResult<MedicationComposition>?> = _medicationOverviewResults
+    private val _medicationStatementResults = MutableStateFlow<BWellResult<MedicationStatement>?>(null)
+    val medicationStatementResults: StateFlow<BWellResult<MedicationStatement>?> = _medicationStatementResults
 
-    fun getMedicationOverview(medicationId: String) {
+    fun getMedicationStatements(medicationStatementRequest: MedicationStatementsRequest) {
         viewModelScope.launch {
             try {
-                repository?.getMedicationOverview(medicationId)?.collect { result ->
-                    _medicationOverviewResults.emit(result)
+                repository?.getMedicationStatements(medicationStatementRequest)?.collect { result ->
+                    _medicationStatementResults.emit(result)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any

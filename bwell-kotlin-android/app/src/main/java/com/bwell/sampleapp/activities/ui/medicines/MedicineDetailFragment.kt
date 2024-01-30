@@ -1,7 +1,6 @@
 package com.bwell.sampleapp.activities.ui.medicines
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.bwell.common.models.domain.healthdata.medication.MedicationComposition
+import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.MedicineDetailViewBinding
@@ -132,20 +132,24 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.pricingTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
         binding.medicinePriceView.priceContainerLayout.removeAllViews()
-        medicinesViewModel.getMedicationOverview(medicationId)
+
+        val medicationStatementsRequest = MedicationStatementsRequest.Builder()
+            .build()
+
+        medicinesViewModel.getMedicationStatements(medicationStatementsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationOverviewResults.take(1).collect { result ->
+            medicinesViewModel.medicationStatementResults.take(1).collect { result ->
                 if (result != null) {
-                    if (result is BWellResult.SingleResource<MedicationComposition>){
-                        val medicationOverview = result.data
-                        binding.medicineOverviewView.medicineTitleTextView.text = medicationOverview?.name
-                        binding.medicineOverviewView.rxValueTextView.text = medicationOverview?.prescriptionNumber
-                        binding.medicineOverviewView.quantityValueTextView.text = medicationOverview?.quantity.toString()
-                        binding.medicineOverviewView.lastRefilledValueTextView.text = formatDate(medicationOverview?.refills?.get(0)?.refillDate.toString())
-                        binding.medicineOverviewView.refillsRemainingValueTextView.text = medicationOverview?.refillsRemaining.toString()
-                        binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationOverview?.startDate.toString())
-                        binding.medicineOverviewView.datePrescribedValueTextView.text = formatDate(medicationOverview?.datePrescribed.toString())
-                        binding.medicineOverviewView.organizationName.text = "from "+medicationOverview?.source
+                    if (result is BWellResult.SingleResource<MedicationStatement>){
+                        val medicationStatement = result.data
+                        binding.medicineOverviewView.medicineTitleTextView.text = medicationStatement?.medication?.text.toString()
+                        //binding.medicineOverviewView.rxValueTextView.text = medicationStatement?.prescriptionNumber
+                        //binding.medicineOverviewView.quantityValueTextView.text = medicationStatement?.quantity.toString()
+                        //binding.medicineOverviewView.lastRefilledValueTextView.text = formatDate(medicationStatement?.refills?.get(0)?.refillDate.toString())
+                        //binding.medicineOverviewView.refillsRemainingValueTextView.text = medicationStatement?.refillsRemaining.toString()
+                        //binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationStatement?.startDate.toString())
+                        //binding.medicineOverviewView.datePrescribedValueTextView.text = formatDate(medicationStatement?.datePrescribed.toString())
+                        //binding.medicineOverviewView.organizationName.text = "from "+medicationStatement?.source
                     }
                 }
             }
