@@ -32,7 +32,7 @@ class MedicinesFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var medicinesViewModel: MedicinesViewModel
     private lateinit var activeMedicationListAdapter: ActiveMedicationListAdapter
-    private lateinit var pastMedicationListAdapter: PastMedicationListAdapter
+    //private lateinit var pastMedicationListAdapter: PastMedicationListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,7 +81,7 @@ class MedicinesFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun setPastMedicinesAdapter(result:BWellResult<MedicationGroup>) {
+    /*private fun setPastMedicinesAdapter(result:BWellResult<MedicationGroup>) {
         when (result) {
             is BWellResult.ResourceCollection -> {
                 val dataList = result.data
@@ -94,7 +94,7 @@ class MedicinesFragment : Fragment() {
             }
             else -> {}
         }
-    }
+    }*/
 
     private fun getActiveMedicationList() {
         val name = ""
@@ -123,7 +123,7 @@ class MedicinesFragment : Fragment() {
         }
     }
 
-    private fun getPastMedicationList() {
+    /*private fun getPastMedicationList() {
         val name = ""
         val date = Period.Builder().start(
             parseDateStringToDate("2023-01-01", "yyyy-MM-dd")
@@ -145,7 +145,7 @@ class MedicinesFragment : Fragment() {
                 }
             }
         }
-    }
+    }*/
 
     private fun addSearchTextListeners() {
         binding.searchView.searchText.addTextChangedListener(object :
@@ -159,12 +159,12 @@ class MedicinesFragment : Fragment() {
                         activeMedicationListAdapter.updateList(filteredList)
                     }
                 }
-                medicinesViewModel.filterPastMedicationList(charSequence.toString())
+                /*medicinesViewModel.filterPastMedicationList(charSequence.toString())
                 viewLifecycleOwner.lifecycleScope.launch {
                     medicinesViewModel.filteredPastMedicationResults.collect { filteredList ->
                         pastMedicationListAdapter.updateList(filteredList)
                     }
-                }
+                }*/
             }
 
             override fun afterTextChanged(editable: Editable?) {}

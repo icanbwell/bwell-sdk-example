@@ -2,14 +2,15 @@ package com.bwell.sampleapp.repository
 
 import android.content.Context
 import com.bwell.BWellSdk
-import com.bwell.common.models.domain.healthdata.medication.MedicationComposition
 import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.domain.healthdata.medication.MedicationKnowledge
 import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
+import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -24,10 +25,10 @@ class MedicineRepository(private val applicationContext: Context) {
         }
     }
 
-    suspend fun getMedicationOverview(medicationId: String): Flow<BWellResult<MedicationComposition>?> = flow {
+    suspend fun getMedicationStatements(medicationStatementRequest: MedicationStatementsRequest): Flow<BWellResult<MedicationStatement>?> = flow {
         try {
-            val carePlanResult = BWellSdk.health?.getMedication(medicationId)
-            emit(carePlanResult)
+            val medicationStatementResult = BWellSdk.health?.getMedicationStatements(medicationStatementRequest)
+            emit(medicationStatementResult)
         } catch (e: Exception) {
             emit(null)
         }
