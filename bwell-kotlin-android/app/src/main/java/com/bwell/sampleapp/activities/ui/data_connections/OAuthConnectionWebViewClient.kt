@@ -22,7 +22,7 @@ class OAuthConnectionWebViewClient (private val webViewCallback: WebViewCallback
         view?.loadUrl(url)
 
         // Add your logic to determine if the form was successfully submitted
-        if (url == "https://proxy-pages.client-sandbox.icanbwell.com/index.html?status_code=success") {
+        if (url.contains("status_code=success")) {
             // TODO what defines successful OAuth
             Log.d(TAG, "in if! counter: $counter, url: $url")
 
