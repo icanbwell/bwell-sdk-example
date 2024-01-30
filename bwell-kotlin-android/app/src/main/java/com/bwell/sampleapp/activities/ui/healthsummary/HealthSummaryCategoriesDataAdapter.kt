@@ -117,8 +117,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             when (launch) {
                 is CarePlanGroup -> {
                     val carePlanRequest = CarePlanRequest.Builder()
-                        .ids(listOf(id))
-                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.ids(listOf(id))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
                         //.page(0)
                         //.pageSize(1)
                         .build()
@@ -129,10 +129,10 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 }
                 is ImmunizationGroup ->{
                     val immunizationRequest = ImmunizationRequest.Builder()
-                        .ids(listOf(id))
-                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        .page(0)
-                        .pageSize(1)
+                        //.ids(listOf(id))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.page(0)
+                        //.pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val immunizations = BWellSdk.health.getImmunizations(immunizationRequest) as BWellResult.ResourceCollection
@@ -141,10 +141,10 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 }
                 is ProcedureGroup ->{
                     val proceduresRequest = ProcedureRequest.Builder()
-                        .ids(listOf(id))
-                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        .page(0)
-                        .pageSize(1)
+                        //.ids(listOf(id))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.page(0)
+                        //.pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val procedures = BWellSdk.health.getProcedures(proceduresRequest) as BWellResult.ResourceCollection
@@ -153,10 +153,11 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 }
                 is VitalSignGroup ->{
                     val vitalSignsRequest = VitalSignsRequest.Builder()
-                        .ids(listOf(id))
-                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.ids(listOf(id))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.groupCode(listOf(Coding(code = "8302-2", system = "http://loinc.org")))
                         //.page(0)
-                        .pageSize(1)
+                        //.pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val vitalSigns = BWellSdk.health.getVitalSigns(vitalSignsRequest) as BWellResult.ResourceCollection
@@ -165,7 +166,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 }
                 is EncounterGroup ->{
                     val encountersRequest = EncountersRequest.Builder()
-                        .ids(listOf(id))
+                        //.ids(listOf(id))
                         //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
                         //.page(0)
                         .pageSize(1)
@@ -177,10 +178,10 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 }
                 is AllergyIntoleranceGroup ->{
                     val allergyIntoleranceRequest = AllergyIntoleranceRequest.Builder()
-                        .ids(listOf(id))
-                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        .page(0)
-                        .pageSize(1)
+                        //.ids(listOf(id))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.page(0)
+                        //.pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val allergyIntolerances = BWellSdk.health.getAllergyIntolerances(allergyIntoleranceRequest) as BWellResult.ResourceCollection
@@ -192,10 +193,10 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 }
                 is ConditionGroup ->{
                     val conditionsRequest = ConditionRequest.Builder()
-                        .ids(listOf(id))
-                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        .page(0)
-                        .pageSize(1)
+                        //.ids(listOf(id))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.page(0)
+                        //.pageSize(1)
                         .build()
                     GlobalScope.launch {
                         val conditions = BWellSdk.health.getConditions(conditionsRequest) as BWellResult.ResourceCollection
@@ -224,7 +225,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
         return when (item) {
             is CarePlanGroup -> item.period?.start.toString()
             is ImmunizationGroup -> item.occurrenceDateTime.toString()
-            is ProcedureGroup -> item.period?.start.toString()
+            is ProcedureGroup -> item.performedDate.toString()
             is VitalSignGroup -> item.effectiveDateTime.toString()
             is EncounterGroup -> item.period?.start.toString()
             is ConditionGroup -> item.recordedDate.toString()
