@@ -21,7 +21,8 @@
         android:id="@+id/nav_data_connections"
         android:name="com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment"
         android:label="@string/menu_data_connections"
-        tools:layout="@layout/fragment_data_connections" />
+        tools:layout="@layout/fragment_data_connections" >
+    </fragment>
 
     <fragment
         android:id="@+id/nav_health_summary"
@@ -57,5 +58,4 @@
         android:name="com.bwell.sampleapp.activities.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
-
 </navigation>

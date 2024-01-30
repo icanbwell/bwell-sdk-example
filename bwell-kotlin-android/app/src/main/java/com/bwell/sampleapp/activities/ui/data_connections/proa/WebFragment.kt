@@ -42,31 +42,31 @@ class WebFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        webView = view.findViewById(R.id.webview)
-        webView.settings.javaScriptEnabled = true // Enable JavaScript if required
-
-        val repository =
-            (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
-
-        val dataConnectionsViewModel = ViewModelProvider(
-            this,
-            DataConnectionsViewModelFactory(repository)
-        )[DataConnectionsViewModel::class.java]
-
-        lifecycleScope.launch {
-            dataConnectionsViewModel.urlData.collect { urlResult ->
-                if (urlResult != null) {
-                    if (urlResult.success()) {
-                        val url = urlResult.toString()
-                        Log.i(TAG, "Loading url: $url")
-                        // Load a web URL
-                        webView.loadUrl(url)
-                    } else {
-                        Toast.makeText(context, urlResult.error.toString(), Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
+//        webView = view.findViewById(R.id.webview)
+//        webView.settings.javaScriptEnabled = true // Enable JavaScript if required
+//
+//        val repository =
+//            (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
+//
+//        val dataConnectionsViewModel = ViewModelProvider(
+//            this,
+//            DataConnectionsViewModelFactory(repository)
+//        )[DataConnectionsViewModel::class.java]
+//
+//        lifecycleScope.launch {
+//            dataConnectionsViewModel.urlData.collect { urlResult ->
+//                if (urlResult != null) {
+//                    if (urlResult.success()) {
+//                        val url = urlResult.toString()
+//                        Log.i(TAG, "Loading url: $url")
+//                        // Load a web URL
+//                        webView.loadUrl(url)
+//                    } else {
+//                        Toast.makeText(context, urlResult.error.toString(), Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            }
+//        }
     }
 
     // Optional: Handle back navigation within the WebView
