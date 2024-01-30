@@ -76,27 +76,24 @@ class DataConnectionsRepository(private val applicationContext: Context) {
 
     suspend fun getOAuthUrl(datasourceId: String): Flow<BWellResult<String>?> = flow {
         try {
-            val urlOutcome: BWellResult<String> = BWellSdk.connections.getOauthUrl(datasourceId)
-            Log.i(TAG, "Received datasourceId: $datasourceId url: $urlOutcome")
-            emit(urlOutcome)
+            val result = BWellSdk.connections.getOauthUrl(datasourceId) as BWellResult<String>
+            Log.i(TAG, "Received datasourceId: $datasourceId url: $result")
+            emit(result)
         } catch (e: Exception) {
-            val urlOutcome: BWellResult<String> =
-                BWellResult.SingleResource(null, BWellError(e))
+            val urlOutcome: BWellResult<String> = BWellResult.SingleResource(null, BWellError(e))
             // Handle exceptions, if any
             Log.e(TAG, e.toString())
             emit(urlOutcome)
         }
     }
 
-    suspend fun getDataSource(datasourceId: String): Flow<BWellResult<DataSource>?> = flow {
+    suspend fun getDataSource(entityId: String): Flow<BWellResult<DataSource>?> = flow {
         try {
-            val dataSource: BWellResult<DataSource> =
-                BWellSdk.connections.getDataSource(datasourceId)
-            Log.i(TAG, "Received for datasourceId: $datasourceId data source: $dataSource")
-            emit(dataSource)
+            val dataSourceResult = BWellSdk.connections.getDataSource(entityId)
+            Log.i(TAG, "Received for datasourceId: $entityId data source: $dataSourceResult")
+            emit(dataSourceResult)
         } catch (e: Exception) {
-            val dataSource: BWellResult<DataSource> =
-                BWellResult.SingleResource(null, BWellError(e))
+            val dataSource: BWellResult<DataSource> = BWellResult.SingleResource(null, BWellError(e))
             // Handle exceptions, if any
             Log.e(TAG, e.toString())
             emit(dataSource)

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,17 +18,19 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
-import com.bwell.sampleapp.activities.ui.data_connections.providers.OrganizationInfoFragment
+import com.bwell.sampleapp.activities.ui.data_connections.providers.EntityInfoFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsLabsBinding
 import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.OrganizationType
+import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 import kotlinx.coroutines.launch
 
 class LabsSearchFragment : Fragment(),View.OnClickListener {
 
+    private val providerInfoViewModel: EntityInfoViewModel by viewModels()
     private var _binding: FragmentDataConnectionsLabsBinding? = null
     private lateinit var dataConnectionLabsViewModel: DataConnectionLabsViewModel
     private lateinit var dataConnectionsLabsListAdapter: DataConnectionsLabsListAdapter
@@ -115,7 +118,11 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
             hideKeyboard(requireContext(),binding.searchView.searchText.windowToken)
             if((selectedList?.endpoint?.size ?: 0) > 0)
             {
-                val organizationFragment = OrganizationInfoFragment<Provider?>(selectedList)
+                // set the entity on the viewModel
+                providerInfoViewModel.provider = selectedList
+
+                // create the fragment
+                val organizationFragment = EntityInfoFragment()
                 val transaction = parentFragmentManager.beginTransaction()
                 transaction.hide(this@LabsSearchFragment)
                 transaction.add(R.id.container_layout, organizationFragment)

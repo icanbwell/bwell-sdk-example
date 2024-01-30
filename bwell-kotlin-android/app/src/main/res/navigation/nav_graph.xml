@@ -30,6 +30,4 @@
         android:name="com.bwell.sampleapp.activities.ui.data_connections.proa.WebFragment"
         tools:layout="@layout/fragment_web">
     </fragment>
-
-
 </navigation>
