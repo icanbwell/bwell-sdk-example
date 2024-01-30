@@ -148,7 +148,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 is VitalSignGroup ->{
                     val vitalSignsRequest = VitalSignsRequest.Builder()
                         //.ids(listOf(id))
-                        //.groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
+                        //.groupCode(listOf(Coding(code = "8302-2", system = "http://loinc.org")))
                         //.page(0)
                         //.pageSize(1)
                         .build()
