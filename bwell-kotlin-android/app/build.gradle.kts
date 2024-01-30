@@ -66,7 +66,7 @@ android {
 dependencies {
 
     // BWell SDK Usage
-    implementation("com.bwell:bwell-sdk-kotlin:0.13.0")
+    implementation("com.bwell:bwell-sdk-kotlin:0.14.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")

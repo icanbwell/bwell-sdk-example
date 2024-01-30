@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.BWellSdk
@@ -68,6 +69,8 @@ class HealthSummaryRepository(private val applicationContext: Context) {
         get() = healthSummaryLiveData
 
     suspend fun getHealthSummaryList() {
+        val healthSummary = BWellSdk.health.getHealthSummary()
+        Log.d("BWell Sample App", healthSummary.toString())
         val suggestionsList = mutableListOf<HealthSummaryListItems>()
         suggestionsList.add(
             HealthSummaryListItems(
