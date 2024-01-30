@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,12 +30,15 @@ import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.SortField
 import com.bwell.common.models.domain.common.enums.SortOrder
+import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 import com.bwell.search.requests.connection.RequestConnectionRequest
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.PopupListener,
     OrganizationAdapter.OrganizationClickListener {
+
+    private val organizationInfoViewModel: EntityInfoViewModel by viewModels()
 
     private var _binding: FragmentProviderViewBinding? = null
     private lateinit var providerViewModel: ProviderViewModel
@@ -66,7 +70,11 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
 
 
     override fun onOrganizationClick(organization: Organization?) {
-        val organizationFragment = OrganizationInfoFragment<Organization?>(organization)
+        // Set the entity on the viewModel
+        organizationInfoViewModel.organization = organization;
+
+        // create the fragment
+        val organizationFragment = EntityInfoFragment()
         val transaction = parentFragmentManager.beginTransaction()
         transaction.hide(this@ProviderSearchFragment)
         transaction.add(R.id.container_layout, organizationFragment)
