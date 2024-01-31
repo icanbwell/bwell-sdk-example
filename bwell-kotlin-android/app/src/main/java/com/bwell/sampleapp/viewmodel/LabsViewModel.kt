@@ -3,6 +3,7 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
+import com.bwell.common.models.domain.healthdata.lab.LabKnowledge
 import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.procedure.LabGroupsRequest
@@ -45,8 +46,8 @@ class LabsViewModel (private val repository: LabsRepository?) : ViewModel() {
         }
     }
 
-    private val _labsKnowledgeResults = MutableStateFlow<BWellResult<String>?>(null)
-    val labsKnowledgeResults: StateFlow<BWellResult<String>?> = _labsKnowledgeResults
+    private val _labsKnowledgeResults = MutableStateFlow<BWellResult<LabKnowledge>?>(null)
+    val labsKnowledgeResults: StateFlow<BWellResult<LabKnowledge>?> = _labsKnowledgeResults
 
     fun getLabKnowledge(labKnowledgeRequest: LabKnowledgeRequest) {
         viewModelScope.launch {
