@@ -9,7 +9,6 @@ import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
-import com.bwell.healthdata.healthsummary.requests.communication.CommunicationsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
@@ -49,10 +48,6 @@ class HealthSummaryRepository(private val applicationContext: Context) {
             else if(category.equals(applicationContext.getString(R.string.allergies)))
             {
                 healthSummaryResult = BWellSdk.health.getAllergyIntoleranceGroups(request as AllergyIntoleranceGroupsRequest)
-            }
-            else if(category.equals(applicationContext.getString(R.string.communications)))
-            {
-                healthSummaryResult = BWellSdk.health.getCommunications(request as CommunicationsRequest)
             }
             else if(category.equals(applicationContext.getString(R.string.conditions)))
             {

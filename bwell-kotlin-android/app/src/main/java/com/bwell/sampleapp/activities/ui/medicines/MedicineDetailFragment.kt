@@ -13,12 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
-import com.bwell.healthdata.medication.requests.MedicationPricingRequest
 import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.MedicineDetailViewBinding
-import com.bwell.sampleapp.utils.formatDate
 import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import kotlinx.coroutines.flow.take
@@ -90,31 +88,6 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
         binding.medicinePriceView.priceContainerLayout.removeAllViews()
-        val request = MedicationPricingRequest.Builder()
-            .compositionId(medicationId)
-            .build()
-        medicinesViewModel.getMedicationPricing(request)
-        viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationPricingResults.take(1).collect { result ->
-                if (result != null) {
-                    when (result) {
-                        is BWellResult.ResourceCollection -> {
-                            val dataList = result.data
-                            for (i in 0 until (dataList?.size ?: 0)) {
-                                val item = dataList?.get(i)
-                                val priceValue = item?.price?.value
-                                val currency = item?.price?.currency
-                                val pharmacy = item?.pharmacy
-                                val textView = TextView(requireContext())
-                                textView.text = "$pharmacy price is $${String.format("%.2f", priceValue)} $currency"
-                                binding.medicinePriceView.priceContainerLayout.addView(textView)
-                            }
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        }
     }
 
     private fun showOverView() {
