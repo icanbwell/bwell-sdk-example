@@ -17,11 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
+import com.bwell.common.models.domain.healthdata.lab.LabKnowledge
 import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.domain.healthdata.observation.performer.ObservationOrganizationPerformer
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.procedure.LabGroupsRequest
-import com.bwell.healthdata.lab.requests.LabDetailsRequest
 import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
 import com.bwell.healthdata.lab.requests.LabsRequest
 import com.bwell.sampleapp.BWellSampleApplication
@@ -93,7 +93,6 @@ class LabsFragment : Fragment(), View.OnClickListener {
             binding.includelabsData.labsFragment.visibility = View.GONE
             binding.includeLabsDetail.labDetailFragment.visibility = View.VISIBLE
             showLabDetailedView(selectedLabType)
-            showLabKnowledgeView(selectedLabType)
         }
         binding.includelabsData.rvLabs.layoutManager = LinearLayoutManager(requireContext())
         binding.includelabsData.rvLabs.adapter = adapter
@@ -123,14 +122,15 @@ class LabsFragment : Fragment(), View.OnClickListener {
                             val dataList = result.data
                             Log.d("dataList", "dataList$dataList")
                             val details:Observation? = dataList?.get(0)
-                            binding.includeLabsDetail.typeText.text = details?.code?.text
+                            binding.includeLabsDetail.typeText.text = details?.code?.coding?.first()?.display
                             binding.includeLabsDetail.dateText.text =
                                 ("as of " + details?.effectiveDateTime?.toString().let { formatDate(it) })
-                            binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as ObservationOrganizationPerformer).organizationName
+                            //binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as ObservationOrganizationPerformer).organizationName
                             addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)
                             addTextField(details?.referenceRange?.get(0)?.text.toString(),false)
+                            showLabKnowledgeView(details?.id)
                         }
                         else -> {}
                     }
@@ -156,11 +156,11 @@ class LabsFragment : Fragment(), View.OnClickListener {
         binding.includeLabsDetail.labDataLl.addView(textView)
     }
 
-    private fun showLabKnowledgeView(selectedLabType: LabGroup?) {
-        val labId = selectedLabType?.id
+    private fun showLabKnowledgeView(labId: String?) {
 
         val request = LabKnowledgeRequest.Builder()
-            .labId(labId.toString())
+            //.labId(labId.toString())
+            .labId("f001-b")
             .build()
 
         labsViewModel.getLabKnowledge(request)
@@ -169,11 +169,12 @@ class LabsFragment : Fragment(), View.OnClickListener {
                 if (result != null) {
                     Log.d("result", "result$result")
                     when (result) {
-                        is BWellResult.SingleResource -> {
-                            val data = result.data
+                        is BWellResult.ResourceCollection -> {
+                            val dataList = result.data
+                            val labKnowledge:LabKnowledge? = dataList?.get(0)
                             val webView = WebView(requireContext())
                             webView.loadDataWithBaseURL(null,
-                                data.toString(), "text/html", "utf-8", null)
+                                labKnowledge?.content.toString(), "text/html", "utf-8", null)
                             binding.includeLabsDetail.containerLayout.addView(webView)
                         }
                         else -> {}

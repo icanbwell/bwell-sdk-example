@@ -9,11 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bwell.common.models.domain.healthdata.healthsummary.communication.enums.CommunicationStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
-import com.bwell.healthdata.healthsummary.requests.communication.CommunicationsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
@@ -83,41 +81,8 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                 healthSummaryRequest = AllergyIntoleranceGroupsRequest.Builder()
                     .build()
             }
-            else if(selectedList.category.toString() == resources.getString(R.string.conditions))
-            {
+            else if(selectedList.category.toString() == resources.getString(R.string.conditions)) {
                 healthSummaryRequest = ConditionGroupsRequest.Builder()
-                    .build()
-            }
-            else if(selectedList.category.toString() == resources.getString(R.string.communications)) {
-                val basedOn = ""
-                val category = selectedList.category
-                val encounter = ""
-                val identifier = ""
-                val medium = ""
-                val partOf = ""
-                val patient = ""
-                val received = selectedList.date
-                val recipient = ""
-                val sender = ""
-                val sent = selectedList.date
-                val status = CommunicationStatus.COMPLETED
-                val subject = ""
-                val page = "0"
-                healthSummaryRequest = CommunicationsRequest.Builder()
-                    .basedOn(basedOn)
-                    .category(category)
-                    .encounter(encounter)
-                    .identifier(identifier)
-                    .medium(medium)
-                    .partOf(partOf)
-                    .patient(patient)
-                    .received(received)
-                    .recipient(recipient)
-                    .sender(sender)
-                    .sent(sent)
-                    .status(status)
-                    .subject(subject)
-                    .page(page)
                     .build()
             }
 
