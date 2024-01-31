@@ -14,10 +14,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.common.Period
+import com.bwell.common.models.domain.healthdata.lab.LabGroup
 import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.domain.healthdata.observation.performer.ObservationOrganizationPerformer
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.healthsummary.requests.procedure.LabGroupsRequest
 import com.bwell.healthdata.lab.requests.LabDetailsRequest
 import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
 import com.bwell.healthdata.lab.requests.LabsRequest
@@ -50,28 +53,27 @@ class LabsFragment : Fragment(), View.OnClickListener {
 
         labsViewModel = ViewModelProvider(this, LabsViewModelFactory(repository))[LabsViewModel::class.java]
 
-        getLabsList()
+        getLabGroups()
 
         binding.includeLabsDetail.leftArrowImageView.setOnClickListener(this)
         return root
     }
 
-    private fun getLabsList() {
+    private fun getLabGroups() {
         val date = Period.Builder().start(
             parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
-        val page = "0"
-        val pageSize = 30
+        val page = 0
+        val pageSize = 10
 
-        val request = LabsRequest.Builder()
-            .date(date)
+        val request = LabGroupsRequest.Builder()
             .page(page)
             .pageSize(pageSize)
             .build()
-        labsViewModel.getLabsList(request)
+        labsViewModel.getLabGroups(request)
         viewLifecycleOwner.lifecycleScope.launch {
-            labsViewModel.labsResults.take(1).collect { result ->
+            labsViewModel.labGroupsResults.take(1).collect { result ->
                 if (result != null) {
-                    Log.e("result", "result-$result")
+                    Log.d("BWell Sample App", "result-$result")
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
@@ -85,7 +87,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun setLabsAdapter(dataList: List<Observation>?) {
+    private fun setLabsAdapter(dataList: List<LabGroup>?) {
         val adapter = LabsListAdapter(dataList)
         adapter.onItemClicked = { selectedLabType ->
             binding.includelabsData.labsFragment.visibility = View.GONE
@@ -98,24 +100,20 @@ class LabsFragment : Fragment(), View.OnClickListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun showLabDetailedView(selectedLabType: Observation?) {
+    private fun showLabDetailedView(selectedLabType: LabGroup?) {
         binding.includeLabsDetail.labDataLl.removeAllViews()
-        val id = selectedLabType?.id
-        val code = selectedLabType?.code?.coding?.get(0)?.code
-        val date = Period.Builder().start(
-            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")).build()
-        val page = "0"
+        val groupCodeCode = selectedLabType?.coding?.code.toString()
+        val groupCodeSystem = selectedLabType?.coding?.system.toString()
+        val page = 0
         val pageSize = 30
 
-        val request = LabDetailsRequest.Builder()
-            .id(id)
-            .code(code)
-            .date(date)
+        val request = LabsRequest.Builder()
+            .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
             .page(page)
             .pageSize(pageSize)
             .build()
 
-        labsViewModel.getLabsDetails(request)
+        labsViewModel.getLabs(request)
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labsDetailResults.take(1).collect { result ->
                 if (result != null) {
@@ -158,7 +156,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
         binding.includeLabsDetail.labDataLl.addView(textView)
     }
 
-    private fun showLabKnowledgeView(selectedLabType: Observation?) {
+    private fun showLabKnowledgeView(selectedLabType: LabGroup?) {
         val labId = selectedLabType?.id
 
         val request = LabKnowledgeRequest.Builder()

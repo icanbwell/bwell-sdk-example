@@ -18,7 +18,7 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
-import com.bwell.healthdata.healthsummary.requests.encounter.EncountersRequest
+import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
@@ -165,7 +165,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                     }
                 }
                 is EncounterGroup ->{
-                    val encountersRequest = EncountersRequest.Builder()
+                    val encountersRequest = EncounterRequest.Builder()
                         //.ids(listOf(id))
                         //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
                         //.page(0)
