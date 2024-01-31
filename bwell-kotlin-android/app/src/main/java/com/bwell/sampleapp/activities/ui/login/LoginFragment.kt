@@ -40,12 +40,10 @@ class LoginFragment : Fragment() {
     private val TAG = "LoginFragment"
 
     private val clientKey =
-        "eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9"
-        //"eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
+        "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
 
     private val oAuthCredentials =
-        "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF9IM3FUSmNoeWJQUXlRT015M29qZS9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDYxMTA3NzF9.3D-4HYfsZFYfyL_QsDEmjBgxyajg7XrIXda48xm_PbkmrbhURG7Pa_ijOGKHIfGSMJ7sWkZDkbx5nsLu-pKgjg"
-        //"eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF95czhpbE5NU0Rvd2h3ZklQZk1PMi9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDM4ODkwNTZ9.2rFiyAfvqiQ_CxWM8P_AUvpGxHbXTdBAzAQuUQLSUiFq3HRXBmtjjxvHDJzhKhSIP_rU9BrAo14PNvRqKW1c6g"
+        "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF95czhpbE5NU0Rvd2h3ZklQZk1PMi9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDM4ODkwNTZ9.2rFiyAfvqiQ_CxWM8P_AUvpGxHbXTdBAzAQuUQLSUiFq3HRXBmtjjxvHDJzhKhSIP_rU9BrAo14PNvRqKW1c6g"
 
     private val deviceKey = "34cb23e2f562dbb5"
 
