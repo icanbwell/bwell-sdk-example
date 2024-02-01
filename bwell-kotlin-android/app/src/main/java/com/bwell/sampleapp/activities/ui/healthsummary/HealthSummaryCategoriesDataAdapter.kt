@@ -161,9 +161,9 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 is EncounterGroup ->{
                     val encountersRequest = EncounterRequest.Builder()
                         //.ids(listOf(id))
-                        //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
                         //.page(0)
-                        .pageSize(1)
+                        .pageSize(10)
                         .build()
                     GlobalScope.launch {
                         val encounters = BWellSdk.health.getEncounters(encountersRequest) as BWellResult.ResourceCollection
@@ -243,7 +243,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is ImmunizationGroup -> item.coding?.system.toString()
             is ProcedureGroup -> item.coding?.system.toString()
             is VitalSignGroup -> item.coding?.system.toString()
-            //is EncounterGroup -> item.coding?.system.toString()
+            is EncounterGroup -> item.coding?.system.toString()
             is ConditionGroup -> item.coding?.system.toString()
             is AllergyIntoleranceGroup -> item.coding?.system.toString()
             else -> ""
@@ -256,7 +256,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is ImmunizationGroup -> item.coding?.code.toString()
             is ProcedureGroup -> item.coding?.code.toString()
             is VitalSignGroup -> item.coding?.code.toString()
-            //is EncounterGroup -> item.coding?.code.toString()
+            is EncounterGroup -> item.coding?.code.toString()
             is ConditionGroup -> item.coding?.code.toString()
             is AllergyIntoleranceGroup -> item.coding?.code.toString()
             else -> ""

@@ -90,7 +90,6 @@ class LabsFragment : Fragment(), View.OnClickListener {
             binding.includelabsData.labsFragment.visibility = View.GONE
             binding.includeLabsDetail.labDetailFragment.visibility = View.VISIBLE
             showLabDetailedView(selectedLabType)
-            showLabKnowledgeView(selectedLabType)
         }
         binding.includelabsData.rvLabs.layoutManager = LinearLayoutManager(requireContext())
         binding.includelabsData.rvLabs.adapter = adapter
@@ -125,11 +124,12 @@ class LabsFragment : Fragment(), View.OnClickListener {
                             binding.includeLabsDetail.typeText.text = details?.code?.text
                             binding.includeLabsDetail.dateText.text =
                                 ("as of " + details?.effectiveDateTime?.toString().let { formatDate(it) })
-                            binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as ObservationOrganizationPerformer).organizationName
+                            //binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as ObservationOrganizationPerformer).organizationName
                             addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
                             addTextField(details?.interpretation?.get(0)?.text.toString(),false)
                             addTextField(resources.getString(R.string.healthy_range),true)
                             addTextField(details?.referenceRange?.get(0)?.text.toString(),false)
+                            showLabKnowledgeView(details?.id)
                         }
                         else -> {}
                     }
@@ -155,9 +155,7 @@ class LabsFragment : Fragment(), View.OnClickListener {
         binding.includeLabsDetail.labDataLl.addView(textView)
     }
 
-    private fun showLabKnowledgeView(selectedLabType: LabGroup?) {
-        val labId = selectedLabType?.id
-
+    private fun showLabKnowledgeView(labId: String?) {
         val request = LabKnowledgeRequest.Builder()
             .labId(labId.toString())
             .build()
