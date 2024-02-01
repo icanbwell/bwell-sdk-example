@@ -15,7 +15,6 @@ import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.domain.healthdata.medication.enums.MedicationStatus
 import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
-import com.bwell.healthdata.medication.requests.MedicationListRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentMedicinesBinding
