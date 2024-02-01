@@ -9,11 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bwell.common.models.domain.healthdata.healthsummary.communication.enums.CommunicationStatus
+import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
-import com.bwell.healthdata.healthsummary.requests.communication.CommunicationsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
@@ -26,7 +25,6 @@ import com.bwell.sampleapp.model.HealthSummaryListItems
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.take
 
 class HealthSummaryFragment : Fragment(), View.OnClickListener {
 
@@ -53,97 +51,67 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
 
     private fun setHealthSummaryAdapter(suggestedActivitiesLIst: List<HealthSummaryListItems>) {
         val adapter = HealthSummaryListAdapter(suggestedActivitiesLIst)
+
         adapter.onItemClicked = { selectedList ->
             binding.healthSummaryCategoriesView.healthSummaryCategoriesView.visibility = View.GONE
             binding.healthSummaryCategoriesDataView.healthSummaryCategoriesDataView.visibility = View.VISIBLE
-            lateinit var  healthSummaryRequest: Any
-            if(selectedList.category.toString() == resources.getString(R.string.care_plans))
-            {
-                healthSummaryRequest = CarePlanGroupsRequest.Builder()
-                    .build()
-            }else if(selectedList.category.toString() == resources.getString(R.string.immunizations))
-            {
-                healthSummaryRequest = ImmunizationGroupsRequest.Builder()
-                    .build()
-            }else if(selectedList.category.toString() == resources.getString(R.string.procedures))
-            {
-                healthSummaryRequest= ProcedureGroupsRequest.Builder()
-                    .build()
-            }else if(selectedList.category.toString() == resources.getString(R.string.vitals))
-            {
-                healthSummaryRequest = VitalSignGroupsRequest.Builder()
-                    .build()
-            }else if(selectedList.category.toString() == resources.getString(R.string.visit_history))
-            {
-                healthSummaryRequest = EncounterGroupsRequest.Builder()
-                    .build()
-            }
-            else if(selectedList.category.toString() == resources.getString(R.string.allergies))
-            {
-                healthSummaryRequest = AllergyIntoleranceGroupsRequest.Builder()
-                    .build()
-            }
-            else if(selectedList.category.toString() == resources.getString(R.string.conditions))
-            {
-                healthSummaryRequest = ConditionGroupsRequest.Builder()
-                    .build()
-            }
-            else if(selectedList.category.toString() == resources.getString(R.string.communications)) {
-                val basedOn = ""
-                val category = selectedList.category
-                val encounter = ""
-                val identifier = ""
-                val medium = ""
-                val partOf = ""
-                val patient = ""
-                val received = selectedList.date
-                val recipient = ""
-                val sender = ""
-                val sent = selectedList.date
-                val status = CommunicationStatus.COMPLETED
-                val subject = ""
-                val page = "0"
-                healthSummaryRequest = CommunicationsRequest.Builder()
-                    .basedOn(basedOn)
-                    .category(category)
-                    .encounter(encounter)
-                    .identifier(identifier)
-                    .medium(medium)
-                    .partOf(partOf)
-                    .patient(patient)
-                    .received(received)
-                    .recipient(recipient)
-                    .sender(sender)
-                    .sent(sent)
-                    .status(status)
-                    .subject(subject)
-                    .page(page)
-                    .build()
+
+            val  healthSummaryRequest: Any? = when (selectedList.category) {
+                HealthSummaryCategory.CARE_PLAN -> {
+                    CarePlanGroupsRequest.Builder().build()
+                }
+                HealthSummaryCategory.IMMUNIZATION -> {
+                    ImmunizationGroupsRequest.Builder().build()
+                }
+                HealthSummaryCategory.PROCEDURE -> {
+                    ProcedureGroupsRequest.Builder().build()
+                }
+                HealthSummaryCategory.VITAL_SIGNS -> {
+                    VitalSignGroupsRequest.Builder().build()
+                }
+                HealthSummaryCategory.ENCOUNTER -> {
+                    EncounterGroupsRequest.Builder().build()
+                }
+                HealthSummaryCategory.ALLERGY_INTOLERANCE -> {
+                    AllergyIntoleranceGroupsRequest.Builder().build()
+                }
+                HealthSummaryCategory.CONDITION -> {
+                    ConditionGroupsRequest.Builder().build()
+                }
+                else -> {
+                    null
+                }
             }
 
-            healthSummaryViewModel.getHealthSummaryData(healthSummaryRequest,selectedList.category)
+            if(healthSummaryRequest != null) {
+                binding.healthSummaryCategoriesDataView.titleTextView.text = selectedList.categoryFriendlyName + " (" + selectedList.count + ")"
+                healthSummaryViewModel.getHealthSummaryData(
+                    healthSummaryRequest,
+                    selectedList.category
+                )
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
-                    if (result != null) {
-                        setDataAdapter(result,selectedList.category.toString())
+                viewLifecycleOwner.lifecycleScope.launch {
+                    healthSummaryViewModel.healthSummaryResults.collect { result ->
+                        if (result != null) {
+                            setDataAdapter(result)
+                        }
                     }
                 }
             }
         }
+
         binding.healthSummaryCategoriesView.rvHealthSummary.layoutManager = LinearLayoutManager(requireContext())
         binding.healthSummaryCategoriesView.rvHealthSummary.adapter = adapter
     }
 
     @SuppressLint("SetTextI18n")
-    private fun <T> setDataAdapter(result: BWellResult<T>, category:String?) {
+    private fun <T> setDataAdapter(result: BWellResult<T>) {
         when (result) {
             is BWellResult.ResourceCollection -> {
                 val dataList = result.data
                 val adapter = HealthSummaryCategoriesDataAdapter(dataList)
                 binding.healthSummaryCategoriesDataView.rvHealthSummaryCategories.layoutManager = LinearLayoutManager(requireContext())
                 binding.healthSummaryCategoriesDataView.rvHealthSummaryCategories.adapter = adapter
-                binding.healthSummaryCategoriesDataView.titleTextView.text = category+" ("+dataList?.size+")"
             }
             else -> {}
         }
