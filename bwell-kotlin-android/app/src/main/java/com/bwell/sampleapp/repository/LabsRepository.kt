@@ -1,7 +1,7 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
 import com.bwell.common.models.domain.healthdata.lab.LabKnowledge
 import com.bwell.common.models.domain.healthdata.observation.Observation
