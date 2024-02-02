@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
@@ -27,6 +28,8 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
     private var _binding: MedicineDetailViewBinding? = null
     private lateinit var medicinesViewModel: MedicinesViewModel
     private lateinit var medicationId: String
+    private lateinit var groupCode: String
+    private lateinit var groupSystem: String
 
     private val binding get() = _binding!!
 
@@ -43,6 +46,8 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItTextView.setOnClickListener(this)
         binding.pricingTextView.setOnClickListener(this)
         medicationId = arguments?.getString("id").toString()
+        groupCode = arguments?.getString("groupCode").toString()
+        groupSystem = arguments?.getString("groupSystem").toString()
 
         showOverView()
 
@@ -107,6 +112,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.medicinePriceView.priceContainerLayout.removeAllViews()
 
         val medicationStatementsRequest = MedicationStatementsRequest.Builder()
+            .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
             .page(0)
             .pageSize(10)
             .build()
@@ -117,7 +123,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
                 if (result != null) {
                     if (result is BWellResult.SingleResource<MedicationStatement>){
                         val medicationStatement = result.data
-                        //binding.medicineOverviewView.medicineTitleTextView.text = medicationOverview?.name
+                        binding.medicineOverviewView.medicineTitleTextView.text = medicationStatement?.medication?.text.toString()
                         //binding.medicineOverviewView.rxValueTextView.text = medicationOverview?.prescriptionNumber
                         //binding.medicineOverviewView.quantityValueTextView.text = medicationOverview?.quantity.toString()
                         //binding.medicineOverviewView.lastRefilledValueTextView.text = formatDate(medicationOverview?.refills?.get(0)?.refillDate.toString())

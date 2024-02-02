@@ -72,6 +72,8 @@ class MedicinesFragment : Fragment() {
         val medicineDetailFragment = MedicineDetailFragment()
         val bundle = Bundle()
         bundle.putString("id", selectedMedicine?.id)
+        bundle.putString("groupCode", selectedMedicine?.coding?.code.toString())
+        bundle.putString("groupSystem", selectedMedicine?.coding?.system.toString())
         medicineDetailFragment.arguments = bundle
         val transaction = childFragmentManager.beginTransaction()
         binding.containerLayout.visibility = View.VISIBLE;
