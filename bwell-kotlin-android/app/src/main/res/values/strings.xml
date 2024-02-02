@@ -168,8 +168,7 @@
     <string name="history_description">
     <![CDATA[ 31/10/2023 \n   \n 0.3 mg/dl \n  \n Healthy Range \n  0.1 mg/dl-1.0 mg/dl \n   \n from Memorial health]]>
 </string>
-    <string name="active">Active</string>
-    <string name="past">Past</string>
+    <string name="medicine_groupings">Medicine Groups</string>
     <string name="medicine_detail">Medicine Detail</string>
     <string name="overview">Overview</string>
     <string name="waht_is_it">What is it ?</string>
@@ -189,7 +188,6 @@
     <string name="vitals">Vitals</string>
     <string name="visit_history">Visit History</string>
     <string name="allergies">Allergies</string>
-    <string name="communications">Communications</string>
     <string name="conditions">Conditions</string>
     <string name="bodysite">Body Site</string>
     <string name="reason">Reason</string>

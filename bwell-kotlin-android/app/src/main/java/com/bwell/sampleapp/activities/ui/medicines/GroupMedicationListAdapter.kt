@@ -1,7 +1,5 @@
 package com.bwell.sampleapp.activities.ui.medicines
 
-import android.os.Build
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -12,8 +10,8 @@ import com.bwell.sampleapp.databinding.MedicineItemsViewBinding
 import com.bwell.sampleapp.utils.removeHtmlTags
 
 
-class PastMedicationListAdapter(private var launches: List<MedicationGroup>?) :
-    RecyclerView.Adapter<PastMedicationListAdapter.ViewHolder>() {
+class GroupMedicationListAdapter(private var launches: List<MedicationGroup>?) :
+    RecyclerView.Adapter<GroupMedicationListAdapter.ViewHolder>() {
 
 
     class ViewHolder(val binding: MedicineItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
@@ -52,7 +50,5 @@ class PastMedicationListAdapter(private var launches: List<MedicationGroup>?) :
         launches = newList
         notifyDataSetChanged()
     }
-
-
 
 }

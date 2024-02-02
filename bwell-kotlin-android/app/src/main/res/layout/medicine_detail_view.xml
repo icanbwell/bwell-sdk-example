@@ -125,13 +125,5 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabs_view_ll" />
-    <include
-        layout="@layout/medicine_price_view"
-        android:id="@+id/medicine_price_view"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabs_view_ll" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

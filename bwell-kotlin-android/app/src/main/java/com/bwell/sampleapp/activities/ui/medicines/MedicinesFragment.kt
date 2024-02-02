@@ -30,8 +30,7 @@ class MedicinesFragment : Fragment() {
 
     private val binding get() = _binding!!
     private lateinit var medicinesViewModel: MedicinesViewModel
-    private lateinit var activeMedicationListAdapter: ActiveMedicationListAdapter
-    private lateinit var pastMedicationListAdapter: PastMedicationListAdapter
+    private lateinit var groupMedicationListAdapter: GroupMedicationListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,20 +42,19 @@ class MedicinesFragment : Fragment() {
         val repository = (activity?.application as? BWellSampleApplication)?.medicineRepository
         medicinesViewModel = ViewModelProvider(this, MedicineViewModelFactory(repository))[MedicinesViewModel::class.java]
 
-        getActiveMedicationList()
-        //getPastMedicationList()
+        getGroupMedicationList()
         addSearchTextListeners()
         return root
     }
 
-    private fun setActiveMedicinesAdapter(result:BWellResult<MedicationGroup>) {
+    private fun setMedicinesGroupsAdapter(result:BWellResult<MedicationGroup>) {
         when (result) {
             is BWellResult.ResourceCollection -> {
                 val dataList = result.data
-                 activeMedicationListAdapter = ActiveMedicationListAdapter(dataList)
-                binding.medicineActiveView.rvActiveMedicine.layoutManager = LinearLayoutManager(requireContext())
-                binding.medicineActiveView.rvActiveMedicine.adapter = activeMedicationListAdapter
-                activeMedicationListAdapter.onItemClicked= { selectedMedicine ->
+                groupMedicationListAdapter = GroupMedicationListAdapter(dataList)
+                binding.medicineGroupingView.rvGroupMedicine.layoutManager  = LinearLayoutManager(requireContext())
+                binding.medicineGroupingView.rvGroupMedicine.adapter = groupMedicationListAdapter
+                groupMedicationListAdapter.onItemClicked= { selectedMedicine ->
                     showDetailedView(selectedMedicine)
                 }
             }
@@ -67,8 +65,7 @@ class MedicinesFragment : Fragment() {
     private fun showDetailedView(selectedMedicine: MedicationGroup?) {
         binding.includeHomeView.headerView.visibility = View.GONE
         binding.searchView.searchView.visibility = View.GONE
-        binding.medicineActiveView.medicineActiveView.visibility = View.GONE
-        binding.medicinePastView.medicinePastView.visibility = View.GONE
+        binding.medicineGroupingView.medicineGroupingView.visibility = View.GONE
         val medicineDetailFragment = MedicineDetailFragment()
         val bundle = Bundle()
         bundle.putString("id", selectedMedicine?.id)
@@ -82,67 +79,14 @@ class MedicinesFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun setPastMedicinesAdapter(result:BWellResult<MedicationGroup>) {
-        when (result) {
-            is BWellResult.ResourceCollection -> {
-                val dataList = result.data
-                 pastMedicationListAdapter = PastMedicationListAdapter(dataList)
-                binding.medicinePastView.rvPastMedicine.layoutManager = LinearLayoutManager(requireContext())
-                binding.medicinePastView.rvPastMedicine.adapter = pastMedicationListAdapter
-                pastMedicationListAdapter.onItemClicked= { selectedMedicine ->
-                    showDetailedView(selectedMedicine)
-                }
-            }
-            else -> {}
-        }
-    }
-
-    private fun getActiveMedicationList() {
-        val name = ""
-        val date = Period.Builder().start(
-            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")
-        ).end(parseDateStringToDate("2023-12-31", "yyyy-MM-dd")).build()
-        val status = MedicationStatus.ACTIVE
-        /*val request = MedicationListRequest.Builder()
-            .name(name)
-            .date(date)
-            .status(status)
-            .build()
-            */
+    private fun getGroupMedicationList() {
          val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
-             //.page(0)
-             //.pageSize(1)
              .build()
-        medicinesViewModel.getActiveMedicationGroups(groupsRequest)
+        medicinesViewModel.getMedicationGroups(groupsRequest)
             viewLifecycleOwner.lifecycleScope.launch {
-                medicinesViewModel.activeMedicationResults.collect { result ->
+                medicinesViewModel.groupMedicationResults.collect { result ->
                     if (result != null) {
-                        setActiveMedicinesAdapter(result)
-
-                }
-            }
-        }
-    }
-
-    private fun getPastMedicationList() {
-        val name = ""
-        val date = Period.Builder().start(
-            parseDateStringToDate("2023-01-01", "yyyy-MM-dd")
-        ).end(parseDateStringToDate("2023-12-31", "yyyy-MM-dd")).build()
-        val status = MedicationStatus.INACTIVE
-        /*val request = MedicationListRequest.Builder()
-            .name(name)
-            .date(date)
-            .status(status)
-            .build()
-            */
-        val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
-            .build()
-        medicinesViewModel.getPastMedicationList(groupsRequest)
-        viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.pastMedicationResults.collect { result ->
-                if (result != null) {
-                    setPastMedicinesAdapter(result)
+                        setMedicinesGroupsAdapter(result)
                 }
             }
         }
@@ -154,16 +98,10 @@ class MedicinesFragment : Fragment() {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
-                medicinesViewModel.filterActiveMedicationList(charSequence.toString())
+                medicinesViewModel.filterGroupMedicationList(charSequence.toString())
                 viewLifecycleOwner.lifecycleScope.launch {
-                    medicinesViewModel.filteredActiveMedicationResults.collect { filteredList ->
-                        activeMedicationListAdapter.updateList(filteredList)
-                    }
-                }
-                medicinesViewModel.filterPastMedicationList(charSequence.toString())
-                viewLifecycleOwner.lifecycleScope.launch {
-                    medicinesViewModel.filteredPastMedicationResults.collect { filteredList ->
-                        pastMedicationListAdapter.updateList(filteredList)
+                    medicinesViewModel.filteredGroupMedicationResults.collect { filteredList ->
+                        groupMedicationListAdapter.updateList(filteredList)
                     }
                 }
             }
@@ -180,8 +118,6 @@ class MedicinesFragment : Fragment() {
     fun showMedicinesList() {
         binding.includeHomeView.headerView.visibility = View.VISIBLE
         binding.searchView.searchView.visibility = View.VISIBLE
-        binding.medicineActiveView.medicineActiveView.visibility = View.VISIBLE
-        binding.medicinePastView.medicinePastView.visibility = View.VISIBLE
+        binding.medicineGroupingView.medicineGroupingView.visibility = View.VISIBLE
     }
-
 }

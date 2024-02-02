@@ -81,7 +81,6 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
     private fun showPriceView() {
         binding.medicineOverviewView.medicineOverviewView.visibility = View.GONE
         binding.medicineKnowledgeView.medicineKnowledgeView.visibility = View.GONE
-        binding.medicinePriceView.medicinePriceView.visibility = View.VISIBLE
         binding.pricingTextView.setTextColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.pricingwunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setTextColor(resources.getColor(R.color.black))
@@ -92,13 +91,11 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.overviewTextView.setOnClickListener(this)
         binding.whatIsItTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
-        binding.medicinePriceView.priceContainerLayout.removeAllViews()
     }
 
     private fun showOverView() {
         binding.medicineOverviewView.medicineOverviewView.visibility = View.VISIBLE
         binding.medicineKnowledgeView.medicineKnowledgeView.visibility = View.GONE
-        binding.medicinePriceView.medicinePriceView.visibility = View.GONE
         binding.whatIsItTextView.setTextColor(resources.getColor(R.color.black))
         binding.whatIsItunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
         binding.overviewTextView.setTextColor(resources.getColor(R.color.medicine_tabs_selected_color))
@@ -109,7 +106,6 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItTextView.setOnClickListener(this)
         binding.pricingTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
-        binding.medicinePriceView.priceContainerLayout.removeAllViews()
 
         val medicationStatementsRequest = MedicationStatementsRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
@@ -140,7 +136,6 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
     private fun showKnowledgeView() {
         binding.medicineOverviewView.medicineOverviewView.visibility = View.GONE
         binding.medicineKnowledgeView.medicineKnowledgeView.visibility = View.VISIBLE
-        binding.medicinePriceView.medicinePriceView.visibility = View.GONE
         binding.whatIsItTextView.setTextColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.whatIsItunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setTextColor(resources.getColor(R.color.black))
@@ -151,7 +146,6 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.pricingTextView.setOnClickListener(this)
         binding.whatIsItTextView.setOnClickListener(null)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
-        binding.medicinePriceView.priceContainerLayout.removeAllViews()
         val request = MedicationKnowledgeRequest.Builder()
             .medicationStatementId(medicationId)
             //.medicationStatementId("b7fd4e54-77cd-5b82-a50f-d66c91beeb9e")
