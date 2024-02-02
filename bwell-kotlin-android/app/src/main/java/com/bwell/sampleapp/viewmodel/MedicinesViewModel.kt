@@ -18,11 +18,7 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
     private val _activeMedicationResults = MutableStateFlow<BWellResult<MedicationGroup>?>(null)
     val activeMedicationResults: StateFlow<BWellResult<MedicationGroup>?> = _activeMedicationResults
 
-<<<<<<< Updated upstream
     fun getActiveMedicationGroups(medicationRequest: MedicationGroupsRequest) {
-=======
-    fun getMedicationGroups(medicationRequest: MedicationGroupsRequest?) {
->>>>>>> Stashed changes
         viewModelScope.launch {
             try {
                 repository?.getMedicationGroups(medicationRequest)?.collect { result ->
