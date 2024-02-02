@@ -80,14 +80,17 @@ class MedicinesFragment : Fragment() {
     }
 
     private fun getGroupMedicationList() {
-         val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
-             .build()
-        medicinesViewModel.getMedicationGroups(groupsRequest)
+         //val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
+         //    .build()
+        medicinesViewModel.getMedicationGroups(null)
             viewLifecycleOwner.lifecycleScope.launch {
                 medicinesViewModel.groupMedicationResults.collect { result ->
                     if (result != null) {
+                        println("MEDICATON GROUPS NOT EMPTY: $result")
                         setMedicinesGroupsAdapter(result)
-                }
+                } else {
+                        println("MEDICATON GROUPS EMPTY: ")
+                    }
             }
         }
     }
