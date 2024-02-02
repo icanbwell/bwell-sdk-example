@@ -153,12 +153,12 @@ class LoginFragment : Fragment() {
             val registerDeviceTokenRequest: RegisterDeviceTokenRequest =
                 RegisterDeviceTokenRequest.Builder()
                     .deviceToken(deviceKey)
-                    .applicationName("com.icanbwell.bwelldemo.staging")
+                    .applicationName("com.sec.android.app.shealth")
                     .platform(DevicePlatform.ANDROID)
                     .build()
             registerDeviceToken(registerDeviceTokenRequest)
 
-            deregisterDeviceToken(deviceKey)
+            //deregisterDeviceToken(deviceKey)
 
             Log.i(TAG, "Finished initializing SDK")
         }

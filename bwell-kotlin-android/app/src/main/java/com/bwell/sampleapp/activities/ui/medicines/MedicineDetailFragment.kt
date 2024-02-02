@@ -1,7 +1,6 @@
 package com.bwell.sampleapp.activities.ui.medicines
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.bwell.common.models.domain.healthdata.medication.MedicationComposition
+import com.bwell.common.models.domain.common.Coding
+import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
-import com.bwell.healthdata.medication.requests.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.MedicineDetailViewBinding
-import com.bwell.sampleapp.utils.formatDate
 import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import kotlinx.coroutines.flow.take
@@ -29,6 +28,8 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
     private var _binding: MedicineDetailViewBinding? = null
     private lateinit var medicinesViewModel: MedicinesViewModel
     private lateinit var medicationId: String
+    private lateinit var groupCode: String
+    private lateinit var groupSystem: String
 
     private val binding get() = _binding!!
 
@@ -45,6 +46,8 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItTextView.setOnClickListener(this)
         binding.pricingTextView.setOnClickListener(this)
         medicationId = arguments?.getString("id").toString()
+        groupCode = arguments?.getString("groupCode").toString()
+        groupSystem = arguments?.getString("groupSystem").toString()
 
         showOverView()
 
@@ -90,31 +93,6 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
         binding.medicinePriceView.priceContainerLayout.removeAllViews()
-        val request = MedicationPricingRequest.Builder()
-            .compositionId(medicationId)
-            .build()
-        medicinesViewModel.getMedicationPricing(request)
-        viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationPricingResults.take(1).collect { result ->
-                if (result != null) {
-                    when (result) {
-                        is BWellResult.ResourceCollection -> {
-                            val dataList = result.data
-                            for (i in 0 until (dataList?.size ?: 0)) {
-                                val item = dataList?.get(i)
-                                val priceValue = item?.price?.value
-                                val currency = item?.price?.currency
-                                val pharmacy = item?.pharmacy
-                                val textView = TextView(requireContext())
-                                textView.text = "$pharmacy price is $${String.format("%.2f", priceValue)} $currency"
-                                binding.medicinePriceView.priceContainerLayout.addView(textView)
-                            }
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        }
     }
 
     private fun showOverView() {
@@ -132,20 +110,27 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.pricingTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
         binding.medicinePriceView.priceContainerLayout.removeAllViews()
-        medicinesViewModel.getMedicationOverview(medicationId)
+
+        val medicationStatementsRequest = MedicationStatementsRequest.Builder()
+            .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
+            .page(0)
+            .pageSize(10)
+            .build()
+
+        medicinesViewModel.getMedicationStatements(medicationStatementsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationOverviewResults.take(1).collect { result ->
+            medicinesViewModel.medicationStatementsResults.take(1).collect { result ->
                 if (result != null) {
-                    if (result is BWellResult.SingleResource<MedicationComposition>){
-                        val medicationOverview = result.data
-                        binding.medicineOverviewView.medicineTitleTextView.text = medicationOverview?.name
-                        binding.medicineOverviewView.rxValueTextView.text = medicationOverview?.prescriptionNumber
-                        binding.medicineOverviewView.quantityValueTextView.text = medicationOverview?.quantity.toString()
-                        binding.medicineOverviewView.lastRefilledValueTextView.text = formatDate(medicationOverview?.refills?.get(0)?.refillDate.toString())
-                        binding.medicineOverviewView.refillsRemainingValueTextView.text = medicationOverview?.refillsRemaining.toString()
-                        binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationOverview?.startDate.toString())
-                        binding.medicineOverviewView.datePrescribedValueTextView.text = formatDate(medicationOverview?.datePrescribed.toString())
-                        binding.medicineOverviewView.organizationName.text = "from "+medicationOverview?.source
+                    if (result is BWellResult.SingleResource<MedicationStatement>){
+                        val medicationStatement = result.data
+                        binding.medicineOverviewView.medicineTitleTextView.text = medicationStatement?.medication?.text.toString()
+                        //binding.medicineOverviewView.rxValueTextView.text = medicationOverview?.prescriptionNumber
+                        //binding.medicineOverviewView.quantityValueTextView.text = medicationOverview?.quantity.toString()
+                        //binding.medicineOverviewView.lastRefilledValueTextView.text = formatDate(medicationOverview?.refills?.get(0)?.refillDate.toString())
+                        //binding.medicineOverviewView.refillsRemainingValueTextView.text = medicationOverview?.refillsRemaining.toString()
+                        //binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationOverview?.startDate.toString())
+                        //binding.medicineOverviewView.datePrescribedValueTextView.text = formatDate(medicationOverview?.datePrescribed.toString())
+                        binding.medicineOverviewView.organizationName.text = "from "+medicationStatement?.requester?.toString()
                     }
                 }
             }

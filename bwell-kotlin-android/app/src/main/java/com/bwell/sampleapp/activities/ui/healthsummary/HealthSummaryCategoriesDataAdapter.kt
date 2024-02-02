@@ -8,7 +8,6 @@ import com.bwell.BWellSdk
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanGroup
-import com.bwell.common.models.domain.healthdata.healthsummary.communication.Communication
 import com.bwell.common.models.domain.healthdata.healthsummary.condition.ConditionGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.encounter.EncounterGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
@@ -18,7 +17,7 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
-import com.bwell.healthdata.healthsummary.requests.encounter.EncountersRequest
+import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
@@ -91,11 +90,6 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.textViewDate.text =launch.criticality.toString()
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
-            is Communication ->{
-                holder.binding.header.text = getTitle(launch)
-                holder.binding.textViewDate.text = launch.status.toString()
-                holder.binding.organizationName.text = "from "+ launch.meta?.source
-            }
             is ConditionGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
@@ -165,11 +159,11 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                     }
                 }
                 is EncounterGroup ->{
-                    val encountersRequest = EncountersRequest.Builder()
+                    val encountersRequest = EncounterRequest.Builder()
                         //.ids(listOf(id))
-                        //.groupCode(listOf(GroupCoding(code = groupCodeCode, system = groupCodeSystem)))
+                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
                         //.page(0)
-                        .pageSize(1)
+                        .pageSize(10)
                         .build()
                     GlobalScope.launch {
                         val encounters = BWellSdk.health.getEncounters(encountersRequest) as BWellResult.ResourceCollection
@@ -187,9 +181,6 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                         val allergyIntolerances = BWellSdk.health.getAllergyIntolerances(allergyIntoleranceRequest) as BWellResult.ResourceCollection
                         //printProperties(allergyIntolerances.data?.get(position))
                     }
-                }
-                is Communication ->{
-                    // do nothing
                 }
                 is ConditionGroup ->{
                     val conditionsRequest = ConditionRequest.Builder()
@@ -215,7 +206,6 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is VitalSignGroup -> item.name ?: ""
             is EncounterGroup -> item.name ?: ""
             is AllergyIntoleranceGroup -> item.name ?: ""
-            is Communication -> item.category?.get(0)?.coding?.get(0)?.code ?: ""
             is ConditionGroup -> item.name ?: ""
             else -> ""
         }
@@ -253,7 +243,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is ImmunizationGroup -> item.coding?.system.toString()
             is ProcedureGroup -> item.coding?.system.toString()
             is VitalSignGroup -> item.coding?.system.toString()
-            //is EncounterGroup -> item.coding?.system.toString()
+            is EncounterGroup -> item.coding?.system.toString()
             is ConditionGroup -> item.coding?.system.toString()
             is AllergyIntoleranceGroup -> item.coding?.system.toString()
             else -> ""
@@ -266,7 +256,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is ImmunizationGroup -> item.coding?.code.toString()
             is ProcedureGroup -> item.coding?.code.toString()
             is VitalSignGroup -> item.coding?.code.toString()
-            //is EncounterGroup -> item.coding?.code.toString()
+            is EncounterGroup -> item.coding?.code.toString()
             is ConditionGroup -> item.coding?.code.toString()
             is AllergyIntoleranceGroup -> item.coding?.code.toString()
             else -> ""
