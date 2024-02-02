@@ -1,6 +1,6 @@
 package com.bwell.sampleapp.repository
 
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome

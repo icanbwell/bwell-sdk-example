@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.HealthSummary
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.responses.BWellResult

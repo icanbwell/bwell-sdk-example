@@ -16,11 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.bwell.sampleapp.ui.theme.MyTestAppTheme
 // BWell SDK Usage
-import com.bwell.BWellSdk
 import com.bwell.core.network.auth.Credentials
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.LogLevel
 import com.bwell.core.config.RetryPolicy
+import com.bwell.sampleapp.singletons.BWellSdk
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {

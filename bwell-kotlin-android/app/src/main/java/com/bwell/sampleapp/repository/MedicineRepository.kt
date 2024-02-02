@@ -1,7 +1,7 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.domain.healthdata.medication.MedicationKnowledge
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 
 class MedicineRepository(private val applicationContext: Context) {
 
-    suspend fun getMedicationGroups(medicationRequest: MedicationGroupsRequest): Flow<BWellResult<MedicationGroup>?> = flow {
+    suspend fun getMedicationGroups(medicationRequest: MedicationGroupsRequest?): Flow<BWellResult<MedicationGroup>?> = flow {
         try {
             val medicationGroupsResult = BWellSdk.health?.getMedicationGroups(medicationRequest)
             emit(medicationGroupsResult)

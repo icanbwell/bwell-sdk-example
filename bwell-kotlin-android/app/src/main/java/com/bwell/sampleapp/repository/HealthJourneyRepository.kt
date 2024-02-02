@@ -1,6 +1,6 @@
 package com.bwell.sampleapp.repository
 
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.activity.requests.TasksRequest
 import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.responses.BWellResult

@@ -47,7 +47,7 @@ In the same file ensure that the minSdk level is set to 24.
 ## Import the SDK and Use It
 ```
 // BWell SDK Usage
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 
 val helloStr = BWellSdk.hello()
 ```
