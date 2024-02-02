@@ -57,7 +57,7 @@ class NavigationActivity : AppCompatActivity() {
         deviceId = tempDeviceId
         val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
             .deviceToken(deviceId)
-            .applicationName("Samsung Health PHR")
+            .applicationName("com.sec.android.app.shealth")
             .platform(DevicePlatform.ANDROID)
             .build()
         registerDeviceToken(registerDeviceTokenRequest)
@@ -84,7 +84,7 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        unregisterDeviceToken(deviceId)
+        //unregisterDeviceToken(deviceId)
         super.onDestroy()
     }
 
