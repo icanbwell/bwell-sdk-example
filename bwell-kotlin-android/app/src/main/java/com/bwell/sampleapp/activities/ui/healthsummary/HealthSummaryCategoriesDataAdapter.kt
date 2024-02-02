@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanGroup
