@@ -99,7 +99,7 @@ class LoginFragment : Fragment() {
             val inputStream: InputStream? =
                 context?.assets?.open("env.properties")
             properties.load(inputStream)
-            oAuthCredentials = properties.getProperty("authToken")
+            oAuthCredentials = properties.getProperty("authToken") ?: "MISSING OAUTH TOKEN"
             // Use the configuration values as needed
         } catch (e: IOException) {
             e.printStackTrace()
