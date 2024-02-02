@@ -11,7 +11,7 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bwell.BWellSdk
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.KeyStoreConfig
 import com.bwell.core.config.LogLevel
