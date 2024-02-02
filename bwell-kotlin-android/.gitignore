@@ -4,7 +4,7 @@
 /.idea
 .DS_Store
 /build
-/src/main/assets/env.properties
+*env.properties
 /captures
 .externalNativeBuild
 .cxx
