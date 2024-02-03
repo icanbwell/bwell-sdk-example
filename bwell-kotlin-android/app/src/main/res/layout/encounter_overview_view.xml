@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
-    android:id="@+id/medicine_overview_view"
+    android:id="@+id/encounter_overview_view"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/medicineTitleTextView"
+        android:id="@+id/encounterTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medicine"
+        android:text="Encounter"
         android:textStyle="bold"
         android:textColor="#0076AB"
         android:textSize="26sp"
@@ -24,18 +24,18 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/encounterTitleTextView"
         app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
 
     <TextView
-        android:id="@+id/startDateTitleTextView"
+        android:id="@+id/classTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Start Date"
+        android:text="Class"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRx"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/encounterTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/nameTitleTextView"/>
 
     <TextView
-        android:id="@+id/startDateValueTextView"
+        android:id="@+id/classValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
@@ -81,10 +81,10 @@
         app:layout_constraintTop_toBottomOf="@+id/nameValueTextView"/>
 
     <TextView
-        android:id="@+id/endDateTitleTextView"
+        android:id="@+id/participantTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="End Date"
+        android:text="Participant"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRefills"
@@ -107,10 +107,9 @@
         app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
 
     <TextView
-        android:id="@+id/refillsRemainingValueTextView"
+        android:id="@+id/participantValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueRefills"
         app:layout_constraintTop_toTopOf="@+id/statusValueTextView"/>
@@ -136,7 +135,7 @@
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueDatePrescribed"
-        app:layout_constraintTop_toTopOf="@+id/refillsRemainingValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/participantValueTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueDatePrescribed"
@@ -152,7 +151,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/refillsRemainingValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/participantValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"

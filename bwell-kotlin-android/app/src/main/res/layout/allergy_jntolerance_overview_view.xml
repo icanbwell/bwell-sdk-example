@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
-    android:id="@+id/medicine_overview_view"
+    android:id="@+id/allergyIntolerance_overview_view"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/medicineTitleTextView"
+        android:id="@+id/allergyIntoleranceTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medicine"
+        android:text="Allergy Intolerance"
         android:textStyle="bold"
         android:textColor="#0076AB"
         android:textSize="26sp"
@@ -24,18 +24,18 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/allergyIntoleranceTitleTextView"
         app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
 
     <TextView
-        android:id="@+id/startDateTitleTextView"
+        android:id="@+id/onsetTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Start Date"
+        android:text="Onset Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRx"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/allergyIntoleranceTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/nameTitleTextView"/>
 
     <TextView
-        android:id="@+id/startDateValueTextView"
+        android:id="@+id/onsetValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
@@ -71,10 +71,10 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/statusTitleTextView"
+        android:id="@+id/criticalityTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="Criticality"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -84,11 +84,11 @@
         android:id="@+id/endDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="End Date"
+        android:text="Last Occurance Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRefills"
-        app:layout_constraintTop_toTopOf="@+id/statusTitleTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/criticalityTitleTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTitleRefills"
@@ -98,22 +98,21 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/statusValueTextView"
+        android:id="@+id/criticalityValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/criticalityTitleTextView"/>
 
     <TextView
-        android:id="@+id/refillsRemainingValueTextView"
+        android:id="@+id/lastOccuranceValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueRefills"
-        app:layout_constraintTop_toTopOf="@+id/statusValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/criticalityValueTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueRefills"
@@ -136,7 +135,7 @@
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueDatePrescribed"
-        app:layout_constraintTop_toTopOf="@+id/refillsRemainingValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/lastOccuranceValueTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueDatePrescribed"
@@ -152,7 +151,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/refillsRemainingValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/lastOccuranceValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"

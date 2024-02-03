@@ -18,6 +18,7 @@ import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.MedicineDetailViewBinding
+import com.bwell.sampleapp.utils.formatDate
 import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import kotlinx.coroutines.flow.take
@@ -30,6 +31,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
     private lateinit var medicationId: String
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
+    private lateinit var name: String
 
     private val binding get() = _binding!!
 
@@ -44,10 +46,10 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         medicinesViewModel = ViewModelProvider(this, MedicineViewModelFactory(repository))[MedicinesViewModel::class.java]
         binding.leftArrowImageView.setOnClickListener(this)
         binding.whatIsItTextView.setOnClickListener(this)
-        binding.pricingTextView.setOnClickListener(this)
         medicationId = arguments?.getString("id").toString()
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
+        name = arguments?.getString("name").toString()
 
         showOverView()
 
@@ -69,28 +71,10 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
             R.id.overviewTextView -> {
               showOverView()
             }
-            R.id.pricingTextView -> {
-              showPriceView()
-            }
             R.id.whatIsItTextView -> {
                showKnowledgeView()
             }
         }
-    }
-
-    private fun showPriceView() {
-        binding.medicineOverviewView.medicineOverviewView.visibility = View.GONE
-        binding.medicineKnowledgeView.medicineKnowledgeView.visibility = View.GONE
-        binding.pricingTextView.setTextColor(resources.getColor(R.color.medicine_tabs_selected_color))
-        binding.pricingwunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
-        binding.overviewTextView.setTextColor(resources.getColor(R.color.black))
-        binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
-        binding.whatIsItTextView.setTextColor(resources.getColor(R.color.black))
-        binding.whatIsItunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
-        binding.pricingTextView.setOnClickListener(null)
-        binding.overviewTextView.setOnClickListener(this)
-        binding.whatIsItTextView.setOnClickListener(this)
-        binding.medicineKnowledgeView.containerLayout.removeAllViews()
     }
 
     private fun showOverView() {
@@ -100,34 +84,26 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
         binding.overviewTextView.setTextColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
-        binding.pricingTextView.setTextColor(resources.getColor(R.color.black))
-        binding.pricingwunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
         binding.overviewTextView.setOnClickListener(null)
         binding.whatIsItTextView.setOnClickListener(this)
-        binding.pricingTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
 
         val medicationStatementsRequest = MedicationStatementsRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
-            .page(0)
-            .pageSize(10)
             .build()
 
         medicinesViewModel.getMedicationStatements(medicationStatementsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
             medicinesViewModel.medicationStatementsResults.take(1).collect { result ->
-                if (result != null) {
-                    if (result is BWellResult.SingleResource<MedicationStatement>){
-                        val medicationStatement = result.data
-                        binding.medicineOverviewView.medicineTitleTextView.text = medicationStatement?.medication?.text.toString()
-                        //binding.medicineOverviewView.rxValueTextView.text = medicationOverview?.prescriptionNumber
-                        //binding.medicineOverviewView.quantityValueTextView.text = medicationOverview?.quantity.toString()
-                        //binding.medicineOverviewView.lastRefilledValueTextView.text = formatDate(medicationOverview?.refills?.get(0)?.refillDate.toString())
-                        //binding.medicineOverviewView.refillsRemainingValueTextView.text = medicationOverview?.refillsRemaining.toString()
-                        //binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationOverview?.startDate.toString())
-                        //binding.medicineOverviewView.datePrescribedValueTextView.text = formatDate(medicationOverview?.datePrescribed.toString())
-                        binding.medicineOverviewView.organizationName.text = "from "+medicationStatement?.requester?.toString()
-                    }
+                println("MEDICATION_STATEMENT: result: $result")
+                if (result != null && result is BWellResult.SingleResource<MedicationStatement>) {
+                    val medicationStatement = result.data
+                    binding.medicineOverviewView.medicineTitleTextView.text = medicationStatement?.medication?.text.toString()
+                    binding.medicineOverviewView.nameValueTextView.text = name
+                    binding.medicineOverviewView.statusValueTextView.text = medicationStatement?.status?.display
+                    binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.start.toString())
+                    binding.medicineOverviewView.endDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.end.toString())
+                    binding.medicineOverviewView.organizationName.text = "from " + medicationStatement?.requester?.toString()
                 }
             }
         }
@@ -140,10 +116,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setTextColor(resources.getColor(R.color.black))
         binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
-        binding.pricingTextView.setTextColor(resources.getColor(R.color.black))
-        binding.pricingwunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
         binding.overviewTextView.setOnClickListener(this)
-        binding.pricingTextView.setOnClickListener(this)
         binding.whatIsItTextView.setOnClickListener(null)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
         val request = MedicationKnowledgeRequest.Builder()

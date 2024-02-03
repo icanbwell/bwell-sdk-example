@@ -171,7 +171,7 @@
     <string name="medicine_groupings">Medicine Groups</string>
     <string name="medicine_detail">Medicine Detail</string>
     <string name="overview">Overview</string>
-    <string name="waht_is_it">What is it ?</string>
+    <string name="what_is_it">What is it ?</string>
     <string name="pricing">About Pricing ?</string>
     <string name="note_info">NOTE: Your data will be connected into your Lee Health app for your personal use to help you manage your healthcare. Lee Health will not review your health data from these connections and will only have access to it if you have consented to share this data with Lee Health.</string>
     <string name="data_connection_category_insurance">Insurance</string>

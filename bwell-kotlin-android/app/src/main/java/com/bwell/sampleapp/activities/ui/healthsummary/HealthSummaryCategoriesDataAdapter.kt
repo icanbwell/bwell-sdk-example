@@ -87,7 +87,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             }
             is AllergyIntoleranceGroup ->{
                 holder.binding.header.text = getTitle(launch)
-                holder.binding.textViewDate.text =launch.criticality.toString()
+                holder.binding.textViewDate.text =launch.criticality?.display
                 holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
             }
             is ConditionGroup ->{
@@ -219,7 +219,6 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is VitalSignGroup -> item.effectiveDateTime.toString()
             is EncounterGroup -> item.period?.start.toString()
             is ConditionGroup -> item.recordedDate.toString()
-
             else -> null
         }
     }

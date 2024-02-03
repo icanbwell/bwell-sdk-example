@@ -52,7 +52,6 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getOAuthToken()
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -74,6 +73,7 @@ class LoginFragment : Fragment() {
         editTextClientKey.setText(clientKey)
 
         val editTextOAuthCredentials: EditText = view.findViewById(R.id.editTextOAuthCredentials)
+        getOAuthToken()
         editTextOAuthCredentials.setText(oAuthCredentials)
 
         // Initialize the button
@@ -85,8 +85,8 @@ class LoginFragment : Fragment() {
 
             // Call the function when the button is pressed
             onButtonPressed(
-                clientKey = editTextClientKey.text.toString(),
-                oAuthCredentials = editTextOAuthCredentials.text.toString()
+                clientKey = editTextClientKey.text.toString().trim(),
+                oAuthCredentials = editTextOAuthCredentials.text.toString().trim()
             )
 
 //            progressBar.visibility =View.GONE
@@ -99,7 +99,7 @@ class LoginFragment : Fragment() {
             val inputStream: InputStream? =
                 context?.assets?.open("env.properties")
             properties.load(inputStream)
-            oAuthCredentials = properties.getProperty("authToken") ?: "MISSING OAUTH TOKEN"
+            oAuthCredentials = properties.getProperty("authToken") ?: "MISSING OAUTH TOKEN. Please see README"
             // Use the configuration values as needed
         } catch (e: IOException) {
             e.printStackTrace()
