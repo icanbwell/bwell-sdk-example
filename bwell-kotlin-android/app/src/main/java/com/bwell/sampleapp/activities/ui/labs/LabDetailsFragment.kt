@@ -1,4 +1,4 @@
-package com.bwell.sampleapp.activities.ui.medicines
+package com.bwell.sampleapp.activities.ui.labs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,24 +11,24 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.common.Coding
-import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
+import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
-import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
+import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
+import com.bwell.healthdata.lab.requests.LabsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
-import com.bwell.sampleapp.databinding.MedicineDetailViewBinding
+import com.bwell.sampleapp.databinding.LabDetailViewBinding
 import com.bwell.sampleapp.utils.formatDate
-import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
-import com.bwell.sampleapp.viewmodel.MedicinesViewModel
+import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
+import com.bwell.sampleapp.viewmodel.LabsViewModel
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
-class MedicineDetailFragment : Fragment(),View.OnClickListener {
+class LabDetailsFragment : Fragment(), View.OnClickListener {
 
-    private var _binding: MedicineDetailViewBinding? = null
-    private lateinit var medicinesViewModel: MedicinesViewModel
-    private lateinit var medicationId: String
+    private var _binding: LabDetailViewBinding? = null
+    private lateinit var labsViewModel: LabsViewModel
+    private lateinit var labId: String
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
@@ -40,13 +40,12 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = MedicineDetailViewBinding.inflate(inflater, container, false)
+        _binding = LabDetailViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val repository = (activity?.application as? BWellSampleApplication)?.medicineRepository
-        medicinesViewModel = ViewModelProvider(this, MedicineViewModelFactory(repository))[MedicinesViewModel::class.java]
+        val repository = (activity?.application as? BWellSampleApplication)?.labsRepository
+        labsViewModel = ViewModelProvider(this, LabsViewModelFactory(repository))[LabsViewModel::class.java]
         binding.leftArrowImageView.setOnClickListener(this)
-        binding.whatIsItTextView.setOnClickListener(this)
-        medicationId = arguments?.getString("id").toString()
+        labId = arguments?.getString("id").toString()
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
@@ -65,75 +64,78 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         when (view?.id) {
             R.id.leftArrowImageView -> {
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                val parentFrag: MedicinesFragment = this@MedicineDetailFragment.getParentFragment() as MedicinesFragment
-                parentFrag.showMedicinesList()
+                val parentFrag: LabsFragment = this@LabDetailsFragment.parentFragment as LabsFragment
+                parentFrag.showLabsList()
             }
             R.id.overviewTextView -> {
-              showOverView()
+                showOverView()
             }
             R.id.whatIsItTextView -> {
-               showKnowledgeView()
+                showKnowledgeView()
             }
         }
     }
 
     private fun showOverView() {
-        binding.medicineOverviewView.medicineOverviewView.visibility = View.VISIBLE
-        binding.medicineKnowledgeView.medicineKnowledgeView.visibility = View.GONE
+        binding.labOverviewView.labOverviewView.visibility = View.VISIBLE
+        binding.labKnowledgeView.labKnowledgeView.visibility = View.GONE
         binding.whatIsItTextView.setTextColor(resources.getColor(R.color.black))
         binding.whatIsItunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
         binding.overviewTextView.setTextColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setOnClickListener(null)
         binding.whatIsItTextView.setOnClickListener(this)
-        binding.medicineKnowledgeView.containerLayout.removeAllViews()
+        binding.labKnowledgeView.containerLayout.removeAllViews()
 
-        val medicationStatementsRequest = MedicationStatementsRequest.Builder()
+        val labsRequest = LabsRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
             .build()
 
-        medicinesViewModel.getMedicationStatements(medicationStatementsRequest)
+        labsViewModel.getLabs(labsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationStatementsResults.take(1).collect { result ->
-                println("MEDICATION_STATEMENT: result: $result")
-                if (result != null && result is BWellResult.SingleResource<MedicationStatement>) {
-                    val medicationStatement = result.data
-                    binding.medicineOverviewView.medicineTitleTextView.text = medicationStatement?.medication?.text.toString()
-                    binding.medicineOverviewView.nameValueTextView.text = name
-                    binding.medicineOverviewView.statusValueTextView.text = medicationStatement?.status?.display
-                    binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.start.toString())
-                    binding.medicineOverviewView.endDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.end.toString())
-                    binding.medicineOverviewView.organizationName.text = "from " + medicationStatement?.requester?.toString()
+            labsViewModel.labResults.take(1).collect { result ->
+                if (result != null && result is BWellResult.SingleResource<Observation>) {
+                    val lab = result.data
+                    binding.labOverviewView.nameValueTextView.text = name
+                    binding.labOverviewView.codeValueTextView.text = lab?.code?.text
+                    binding.labOverviewView.effectiveDateTitleTextView.text = formatDate(lab?.effectiveDateTime?.toString())
+                    binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.first()?.location?.name
+                    //binding.labOverviewView.organizationName.text = "from " + lab?.?.toString()
                 }
             }
         }
     }
 
     private fun showKnowledgeView() {
-        binding.medicineOverviewView.medicineOverviewView.visibility = View.GONE
-        binding.medicineKnowledgeView.medicineKnowledgeView.visibility = View.VISIBLE
+        binding.labOverviewView.labOverviewView.visibility = View.GONE
+        binding.labKnowledgeView.labKnowledgeView.visibility = View.VISIBLE
         binding.whatIsItTextView.setTextColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.whatIsItunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setTextColor(resources.getColor(R.color.black))
         binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_non_selected_color))
         binding.overviewTextView.setOnClickListener(this)
         binding.whatIsItTextView.setOnClickListener(null)
-        binding.medicineKnowledgeView.containerLayout.removeAllViews()
-        val request = MedicationKnowledgeRequest.Builder()
-            .medicationStatementId(medicationId)
+        binding.labKnowledgeView.containerLayout.removeAllViews()
+        val request = LabKnowledgeRequest.Builder()
+            .labId(labId)
             .build()
-        medicinesViewModel.getMedicationKnowledge(request)
+        labsViewModel.getLabKnowledge(request)
         viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationKnowledgeResults.take(1).collect { result ->
+            labsViewModel.labKnowledgeResults.take(1).collect { result ->
                 if (result != null) {
                     when (result) {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
                             for (i in 0 until (dataList?.size ?: 0)) {
+                                val contextTextView = TextView(requireContext())
+                                contextTextView.text = dataList?.get(i)?.content
+                                contextTextView.textSize = 18f
+                                contextTextView.setTextColor(resources.getColor(R.color.black))
+                                binding.labKnowledgeView.containerLayout.addView(contextTextView)
                                 val webView = WebView(requireContext())
                                 webView.loadDataWithBaseURL(null,
                                     dataList?.get(i)?.content.toString(), "text/html", "utf-8", null)
-                                binding.medicineKnowledgeView.containerLayout.addView(webView)
+                                binding.labKnowledgeView.containerLayout.addView(webView)
                             }
                         }
                         else -> {}

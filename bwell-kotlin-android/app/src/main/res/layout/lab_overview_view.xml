@@ -58,7 +58,6 @@
         android:id="@+id/effectiveDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueRx"
         app:layout_constraintTop_toTopOf="@+id/nameValueTextView"/>
@@ -128,15 +127,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"/>
 
-    <TextView
-        android:id="@+id/endDateValueTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineValueDatePrescribed"
-        app:layout_constraintTop_toTopOf="@+id/encounterValueTextView"/>
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueDatePrescribed"
         android:layout_width="0dp"
@@ -144,33 +134,11 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"/>
 
-    <LinearLayout
-        android:id="@+id/organization_ll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/encounterValueTextView">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/icon_data_connection"/>
-        <TextView
-            android:id="@+id/organization_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="16dp"
-            android:text="" />
-
-    </LinearLayout>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/note_info"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/organization_ll"/>
+        app:layout_constraintTop_toBottomOf="@+id/encounterValueTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

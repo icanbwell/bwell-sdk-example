@@ -10,19 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.common.models.domain.healthdata.medication.enums.MedicationStatus
 import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentMedicinesBinding
-import com.bwell.sampleapp.utils.parseDateStringToDate
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import kotlinx.coroutines.launch
-import java.util.Date
 
 class MedicinesFragment : Fragment() {
 
@@ -81,9 +77,9 @@ class MedicinesFragment : Fragment() {
     }
 
     private fun getGroupMedicationList() {
-         //val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
-         //    .build()
-        medicinesViewModel.getMedicationGroups(null)
+         val groupsRequest: MedicationGroupsRequest = MedicationGroupsRequest.Builder()
+             .build()
+        medicinesViewModel.getMedicationGroups(groupsRequest)
             viewLifecycleOwner.lifecycleScope.launch {
                 medicinesViewModel.groupMedicationResults.collect { result ->
                     if (result != null) {

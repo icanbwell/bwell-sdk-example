@@ -9,10 +9,8 @@ import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.MedicineItemsViewBinding
 import com.bwell.sampleapp.utils.removeHtmlTags
 
-
 class GroupMedicationListAdapter(private var launches: List<MedicationGroup>?) :
     RecyclerView.Adapter<GroupMedicationListAdapter.ViewHolder>() {
-
 
     class ViewHolder(val binding: MedicineItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -50,5 +48,4 @@ class GroupMedicationListAdapter(private var launches: List<MedicationGroup>?) :
         launches = newList
         notifyDataSetChanged()
     }
-
 }
