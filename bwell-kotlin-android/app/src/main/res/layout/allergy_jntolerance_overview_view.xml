@@ -81,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/nameValueTextView"/>
 
     <TextView
-        android:id="@+id/endDateTitleTextView"
+        android:id="@+id/lastOccuranceDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Last Occurance Date"
@@ -129,7 +129,7 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/endDateValueTextView"
+        android:id="@+id/lastOccuranceDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""

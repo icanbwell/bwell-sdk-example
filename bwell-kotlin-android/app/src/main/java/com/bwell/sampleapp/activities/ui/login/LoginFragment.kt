@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
         editTextClientKey.setText(clientKey)
 
         val editTextOAuthCredentials: EditText = view.findViewById(R.id.editTextOAuthCredentials)
-        //getOAuthToken()
+        getOAuthToken()
         editTextOAuthCredentials.setText(oAuthCredentials)
 
         // Initialize the button

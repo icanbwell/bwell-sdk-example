@@ -23,8 +23,23 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
     val healthSummaryData : LiveData<HealthSummaryList>
         get() = repository?.healthSummary!!
 
+    private val _healthSummaryGroupResults = MutableStateFlow<BWellResult<Any>?>(null)
+    val healthSummaryGroupResults: StateFlow<BWellResult<Any>?> = _healthSummaryGroupResults
+
     private val _healthSummaryResults = MutableStateFlow<BWellResult<Any>?>(null)
     val healthSummaryResults: StateFlow<BWellResult<Any>?> = _healthSummaryResults
+
+    fun <T> getHealthSummaryGroupData(request: T, category: HealthSummaryCategory?) {
+        viewModelScope.launch {
+            try {
+                repository?.getHealthSummaryGroupData(request, category)?.collect { result ->
+                    _healthSummaryGroupResults.emit(result)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
 
     fun <T> getHealthSummaryData(request: T, category: HealthSummaryCategory?) {
         viewModelScope.launch {
