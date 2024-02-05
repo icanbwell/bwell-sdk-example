@@ -1,8 +1,9 @@
 package com.bwell.sampleapp.activities.ui.labs
 
-import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,170 +15,101 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bwell.common.models.domain.common.Coding
-import com.bwell.common.models.domain.common.Period
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
-import com.bwell.common.models.domain.healthdata.observation.Observation
-import com.bwell.common.models.domain.healthdata.observation.performer.ObservationOrganizationPerformer
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.procedure.LabGroupsRequest
-import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
-import com.bwell.healthdata.lab.requests.LabsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
-import com.bwell.sampleapp.databinding.FragmentLabsParentBinding
-import com.bwell.sampleapp.utils.formatDate
-import com.bwell.sampleapp.viewmodel.LabsViewModel
+import com.bwell.sampleapp.databinding.FragmentLabsBinding
 import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
-import kotlinx.coroutines.flow.take
+import com.bwell.sampleapp.viewmodel.LabsViewModel
 import kotlinx.coroutines.launch
 
-import com.bwell.sampleapp.utils.parseDateStringToDate
+class LabsFragment : Fragment() {
 
-class LabsFragment : Fragment(), View.OnClickListener {
-
-    private var _binding: FragmentLabsParentBinding? = null
+    private var _binding: FragmentLabsBinding? = null
 
     private val binding get() = _binding!!
     private lateinit var labsViewModel: LabsViewModel
+    private lateinit var groupLabListAdapter: GroupLabsListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLabsParentBinding.inflate(inflater, container, false)
+        _binding = FragmentLabsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.labsRepository
-
         labsViewModel = ViewModelProvider(this, LabsViewModelFactory(repository))[LabsViewModel::class.java]
 
-        getLabGroups()
-
-        binding.includeLabsDetail.leftArrowImageView.setOnClickListener(this)
+        getGroupLabList()
+        addSearchTextListeners()
         return root
     }
 
-    private fun getLabGroups() {
-        val page = 0
-        val pageSize = 30
+    private fun setLabsGroupsAdapter(result:BWellResult<LabGroup>) {
+        when (result) {
+            is BWellResult.ResourceCollection -> {
+                val dataList = result.data
+                groupLabListAdapter = GroupLabsListAdapter(dataList)
+                binding.labGroupingView.rvGroupLab.layoutManager  = LinearLayoutManager(requireContext())
+                binding.labGroupingView.rvGroupLab.adapter = groupLabListAdapter
+                groupLabListAdapter.onItemClicked= { selectedLab ->
+                    showDetailedView(selectedLab)
+                }
+            }
+            else -> {}
+        }
+    }
 
-        val request = LabGroupsRequest.Builder()
-            .page(page)
-            .pageSize(pageSize)
+    private fun showDetailedView(selectedLab: LabGroup?) {
+        binding.includeHomeView.headerView.visibility = View.GONE
+        binding.searchView.searchView.visibility = View.GONE
+        binding.labGroupingView.labGroupingView.visibility = View.GONE
+        val labDetailFragment = LabDetailsFragment()
+        val bundle = Bundle()
+        bundle.putString("id", selectedLab?.id)
+        bundle.putString("groupCode", selectedLab?.coding?.code.toString())
+        bundle.putString("groupSystem", selectedLab?.coding?.system.toString())
+        bundle.putString("name", selectedLab?.name)
+        labDetailFragment.arguments = bundle
+        val transaction = childFragmentManager.beginTransaction()
+        binding.containerLayout.visibility = View.VISIBLE;
+        transaction.replace(R.id.container_layout, labDetailFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    private fun getGroupLabList() {
+        val groupsRequest: LabGroupsRequest = LabGroupsRequest.Builder()
             .build()
-        labsViewModel.getLabGroups(request)
+        labsViewModel.getLabGroups(groupsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
-            labsViewModel.labGroupsResults.take(1).collect { result ->
+            labsViewModel.groupLabResults.collect { result ->
                 if (result != null) {
-                    Log.e("result", "result-$result")
-                    when (result) {
-                        is BWellResult.ResourceCollection -> {
-                            val dataList = result.data
-                            setLabsAdapter(dataList)
-                        }
-
-                        else -> {}
-                    }
+                    setLabsGroupsAdapter(result)
                 }
             }
         }
     }
 
-    private fun setLabsAdapter(dataList: List<LabGroup>?) {
-        val adapter = LabsListAdapter(dataList)
-        adapter.onItemClicked = { selectedLabType ->
-            binding.includelabsData.labsFragment.visibility = View.GONE
-            binding.includeLabsDetail.labDetailFragment.visibility = View.VISIBLE
-            showLabDetailedView(selectedLabType)
-        }
-        binding.includelabsData.rvLabs.layoutManager = LinearLayoutManager(requireContext())
-        binding.includelabsData.rvLabs.adapter = adapter
-    }
+    private fun addSearchTextListeners() {
+        binding.searchView.searchText.addTextChangedListener(object :
+            TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
 
-    @SuppressLint("SetTextI18n")
-    private fun showLabDetailedView(selectedLabType: LabGroup?) {
-        binding.includeLabsDetail.labDataLl.removeAllViews()
-        val id = selectedLabType?.id
-        val groupCodeCode = selectedLabType?.coding?.code
-        val groupCodeSystem = selectedLabType?.coding?.system
-
-        val page = 0
-        val pageSize = 30
-
-        val request = LabsRequest.Builder()
-            .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-            .page(page)
-            .pageSize(pageSize)
-            .build()
-
-        labsViewModel.getLabs(request)
-        viewLifecycleOwner.lifecycleScope.launch {
-            labsViewModel.labsResults.take(1).collect { result ->
-                if (result != null) {
-                    Log.d("result", "result$result")
-                    when (result) {
-                        is BWellResult.ResourceCollection -> {
-                            val dataList = result.data
-                            Log.d("dataList", "dataList$dataList")
-                            val details:Observation? = dataList?.get(0)
-                            binding.includeLabsDetail.typeText.text = details?.code?.text
-                            binding.includeLabsDetail.dateText.text =
-                                ("as of " + details?.effectiveDateTime?.toString().let { formatDate(it) })
-                            //binding.includeLabsDetail.organizationName.text = "from "+(details?.performer?.get(1) as ObservationOrganizationPerformer).organizationName
-                            addTextField(details?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---",false)
-                            addTextField(details?.interpretation?.get(0)?.text.toString(),false)
-                            addTextField(resources.getString(R.string.healthy_range),true)
-                            addTextField(details?.referenceRange?.get(0)?.text.toString(),false)
-                            showLabKnowledgeView(details?.id)
-                        }
-                        else -> {}
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                labsViewModel.filterGroupLabList(charSequence.toString())
+                viewLifecycleOwner.lifecycleScope.launch {
+                    labsViewModel.filteredGroupLabResults.collect { filteredList ->
+                        groupLabListAdapter.updateList(filteredList)
                     }
                 }
             }
-        }
-    }
 
-    private fun addTextField(data: String, isTitle: Boolean) {
-        val textView = TextView(requireContext())
-        textView.text = data
-        if (isTitle) {
-            textView.setTypeface(null, Typeface.BOLD)
-        } else {
-            textView.setTypeface(null, Typeface.NORMAL)
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            params.setMargins(0, 0, 0, 20)
-            textView.layoutParams = params
-        }
-        binding.includeLabsDetail.labDataLl.addView(textView)
-    }
-
-    private fun showLabKnowledgeView(labId: String?) {
-        val request = LabKnowledgeRequest.Builder()
-            .labId(labId.toString())
-            .build()
-
-        labsViewModel.getLabKnowledge(request)
-        viewLifecycleOwner.lifecycleScope.launch {
-            labsViewModel.labsKnowledgeResults.take(1).collect { result ->
-                if (result != null) {
-                    Log.d("result", "result$result")
-                    when (result) {
-                        is BWellResult.SingleResource -> {
-                            val data = result.data
-                            val webView = WebView(requireContext())
-                            webView.loadDataWithBaseURL(null,
-                                data.toString(), "text/html", "utf-8", null)
-                            binding.includeLabsDetail.containerLayout.addView(webView)
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        }
+            override fun afterTextChanged(editable: Editable?) {}
+        })
     }
 
     override fun onDestroyView() {
@@ -185,12 +117,9 @@ class LabsFragment : Fragment(), View.OnClickListener {
         _binding = null
     }
 
-    override fun onClick(view: View?) {
-        when (view?.id) {
-            R.id.leftArrowImageView -> {
-                binding.includelabsData.labsFragment.visibility = View.VISIBLE
-                binding.includeLabsDetail.labDetailFragment.visibility = View.GONE
-            }
-        }
+    fun showLabsList() {
+        binding.includeHomeView.headerView.visibility = View.VISIBLE
+        binding.searchView.searchView.visibility = View.VISIBLE
+        binding.labGroupingView.labGroupingView.visibility = View.VISIBLE
     }
 }

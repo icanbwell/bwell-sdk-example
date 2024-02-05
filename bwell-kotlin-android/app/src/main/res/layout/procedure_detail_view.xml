@@ -21,7 +21,7 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/medicine_detail"
+        android:text="Procedure Details"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#0076AB"
@@ -37,7 +37,7 @@
         android:orientation="horizontal"
         android:gravity="bottom"
         app:layout_constraintStart_toStartOf="parent"
-        android:weightSum="2"
+        android:weightSum="1"
         app:layout_constraintTop_toBottomOf="@+id/leftArrowImageView">
         <LinearLayout
             android:layout_width="0dp"
@@ -62,41 +62,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewDate"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="bottom"
-            android:layout_weight="1">
-            <TextView
-                android:id="@+id/whatIsItTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/what_is_it"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:textStyle="bold"/>
-            <View
-                android:id="@+id/whatIsItunderline"
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="#30333333"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDate"/>
-        </LinearLayout>
     </LinearLayout>
 
     <include
-        layout="@layout/medicine_overview_view"
-        android:id="@+id/medicine_overview_view"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabs_view_ll" />
-    <include
-        layout="@layout/medicine_knowledge_view"
-        android:id="@+id/medicine_knowledge_view"
+        layout="@layout/procedure_overview_view"
+        android:id="@+id/procedure_overview_view"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

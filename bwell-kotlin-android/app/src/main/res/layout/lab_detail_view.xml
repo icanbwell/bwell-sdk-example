@@ -21,7 +21,7 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/medicine_detail"
+        android:text="Lab Details"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#0076AB"
@@ -87,16 +87,17 @@
     </LinearLayout>
 
     <include
-        layout="@layout/medicine_overview_view"
-        android:id="@+id/medicine_overview_view"
+        layout="@layout/lab_overview_view"
+        android:id="@+id/lab_overview_view"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabs_view_ll" />
+
     <include
-        layout="@layout/medicine_knowledge_view"
-        android:id="@+id/medicine_knowledge_view"
+        layout="@layout/lab_knowledge_view"
+        android:id="@+id/lab_knowledge_view"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

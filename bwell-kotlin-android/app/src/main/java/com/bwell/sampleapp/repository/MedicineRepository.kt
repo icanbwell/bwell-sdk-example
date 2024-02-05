@@ -25,8 +25,8 @@ class MedicineRepository(private val applicationContext: Context) {
 
     suspend fun getMedicationStatements(medicationStatementsRequest: MedicationStatementsRequest): Flow<BWellResult<MedicationStatement>?> = flow {
         try {
-            val carePlanResult = BWellSdk.health?.getMedicationStatements(medicationStatementsRequest)
-            emit(carePlanResult)
+            val medicationStatementsResult = BWellSdk.health?.getMedicationStatements(medicationStatementsRequest)
+            emit(medicationStatementsResult)
         } catch (e: Exception) {
             emit(null)
         }

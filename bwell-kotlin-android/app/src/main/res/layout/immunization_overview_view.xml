@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
-    android:id="@+id/medicine_overview_view"
+    android:id="@+id/immunization_overview_view"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/medicineTitleTextView"
+        android:id="@+id/immunizationTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medicine"
+        android:text="Immunization"
         android:textStyle="bold"
         android:textColor="#0076AB"
         android:textSize="26sp"
@@ -17,25 +17,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
     <TextView
-        android:id="@+id/medicationTitleTextView"
+        android:id="@+id/vaccineCodeTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Medication"
+        android:text="Vaccine Code"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/immunizationTitleTextView"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
 
     <TextView
-        android:id="@+id/startDateTitleTextView"
+        android:id="@+id/occuranceDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Start Date"
+        android:text="Occurance Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/immunizationTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -46,7 +46,7 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/medicationValueTextView"
+        android:id="@+id/vaccineCodeValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
@@ -54,10 +54,10 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/vaccineCodeTitleTextView"/>
 
     <TextView
-        android:id="@+id/startDateValueTextView"
+        android:id="@+id/occuranceDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
@@ -65,7 +65,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/medicationValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/vaccineCodeValueTextView"/>
 
     <TextView
         android:id="@+id/statusTitleTextView"
@@ -75,13 +75,13 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/vaccineCodeValueTextView"/>
 
     <TextView
-        android:id="@+id/endDateTitleTextView"
+        android:id="@+id/doseQuantityTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="End Date"
+        android:text="Dose Quantity"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
@@ -99,15 +99,14 @@
         app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
 
     <TextView
-        android:id="@+id/endDateValueTextView"
+        android:id="@+id/doseQuantityValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
         android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateTitleTextView"/>
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/statusValueTextView"/>
 
     <LinearLayout
         android:id="@+id/organization_ll"
@@ -116,7 +115,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/doseQuantityValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"

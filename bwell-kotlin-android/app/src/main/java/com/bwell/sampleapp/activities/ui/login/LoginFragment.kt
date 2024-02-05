@@ -11,7 +11,6 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.KeyStoreConfig
 import com.bwell.core.config.LogLevel
@@ -21,7 +20,11 @@ import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.singletons.BWellSdk
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.io.InputStream
+import java.util.Properties
 
 
 /**
@@ -42,15 +45,13 @@ class LoginFragment : Fragment() {
     private val clientKey =
         "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
 
-    private val oAuthCredentials =
-        "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF95czhpbE5NU0Rvd2h3ZklQZk1PMi9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDM4ODkwNTZ9.2rFiyAfvqiQ_CxWM8P_AUvpGxHbXTdBAzAQuUQLSUiFq3HRXBmtjjxvHDJzhKhSIP_rU9BrAo14PNvRqKW1c6g"
+    private var oAuthCredentials: String? = null
 
     private val deviceKey = "34cb23e2f562dbb5"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -72,6 +73,7 @@ class LoginFragment : Fragment() {
         editTextClientKey.setText(clientKey)
 
         val editTextOAuthCredentials: EditText = view.findViewById(R.id.editTextOAuthCredentials)
+        getOAuthToken()
         editTextOAuthCredentials.setText(oAuthCredentials)
 
         // Initialize the button
@@ -83,11 +85,24 @@ class LoginFragment : Fragment() {
 
             // Call the function when the button is pressed
             onButtonPressed(
-                clientKey = editTextClientKey.text.toString(),
-                oAuthCredentials = editTextOAuthCredentials.text.toString()
+                clientKey = editTextClientKey.text.toString().trim(),
+                oAuthCredentials = editTextOAuthCredentials.text.toString().trim()
             )
 
 //            progressBar.visibility =View.GONE
+        }
+    }
+
+    private fun getOAuthToken() {
+        val properties = Properties()
+        try {
+            val inputStream: InputStream? =
+                context?.assets?.open("env.properties")
+            properties.load(inputStream)
+            oAuthCredentials = properties.getProperty("authToken") ?: "MISSING OAUTH TOKEN. Please see README"
+            // Use the configuration values as needed
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 

@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
-    android:id="@+id/medicine_overview_view"
+    android:id="@+id/procedure_overview_view"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/medicineTitleTextView"
+        android:id="@+id/procedureTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medicine"
+        android:text="Procedure"
         android:textStyle="bold"
         android:textColor="#0076AB"
         android:textSize="26sp"
@@ -17,25 +17,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
     <TextView
-        android:id="@+id/medicationTitleTextView"
+        android:id="@+id/outcomeTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Medication"
+        android:text="Outcome"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/procedureTitleTextView"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
 
     <TextView
-        android:id="@+id/startDateTitleTextView"
+        android:id="@+id/performedDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Start Date"
+        android:text="Performed Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/procedureTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -46,7 +46,7 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/medicationValueTextView"
+        android:id="@+id/outcomeValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
@@ -54,18 +54,18 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/outcomeTitleTextView"/>
 
     <TextView
-        android:id="@+id/startDateValueTextView"
+        android:id="@+id/performedDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/medicationValueTextView"/>
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/outcomeValueTextView"/>
 
     <TextView
         android:id="@+id/statusTitleTextView"
@@ -75,13 +75,13 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/outcomeValueTextView"/>
 
     <TextView
-        android:id="@+id/endDateTitleTextView"
+        android:id="@+id/categoryTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="End Date"
+        android:text="Category"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
@@ -94,20 +94,28 @@
         android:text=""
         android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintEnd_toEndOf="@id/verticalDivider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
+
+    <TextView
+        android:id="@+id/categoryValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:lines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/statusValueTextView"/>
 
     <TextView
         android:id="@+id/endDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
-        android:lines="1"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateTitleTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/categoryValueTextView"/>
 
     <LinearLayout
         android:id="@+id/organization_ll"
@@ -116,7 +124,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/categoryValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -134,7 +142,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="@string/note_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/organization_ll"/>

@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
-    android:id="@+id/medicine_overview_view"
+    android:id="@+id/vitalSign_overview_view"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/medicineTitleTextView"
+        android:id="@+id/vitalSignTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medicine"
+        android:text="Vital Signs"
         android:textStyle="bold"
         android:textColor="#0076AB"
         android:textSize="26sp"
@@ -17,25 +17,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
     <TextView
-        android:id="@+id/medicationTitleTextView"
+        android:id="@+id/encounterTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Medication"
+        android:text="Encounter"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/vitalSignTitleTextView"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
 
     <TextView
-        android:id="@+id/startDateTitleTextView"
+        android:id="@+id/effectiveStartDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Start Date"
+        android:text="Effective Start Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/vitalSignTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -46,7 +46,7 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/medicationValueTextView"
+        android:id="@+id/encounterValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
@@ -54,60 +54,68 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/encounterTitleTextView"/>
 
     <TextView
-        android:id="@+id/startDateValueTextView"
+        android:id="@+id/effectiveStartDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/medicationValueTextView"/>
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toBottomOf="@+id/effectiveStartDateTitleTextView"/>
 
     <TextView
-        android:id="@+id/statusTitleTextView"
+        android:id="@+id/codeTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="Code"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/encounterValueTextView"/>
 
     <TextView
-        android:id="@+id/endDateTitleTextView"
+        android:id="@+id/effectiveEndDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="End Date"
+        android:text="Effective End Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintTop_toTopOf="@+id/statusTitleTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/codeTitleTextView"/>
 
     <TextView
-        android:id="@+id/statusValueTextView"
+        android:id="@+id/codeValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintEnd_toEndOf="@id/verticalDivider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/codeTitleTextView"/>
+
+    <TextView
+        android:id="@+id/effectiveEndDateValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/codeValueTextView"/>
 
     <TextView
         android:id="@+id/endDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
-        android:lines="1"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateTitleTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/effectiveEndDateValueTextView"/>
 
     <LinearLayout
         android:id="@+id/organization_ll"
@@ -116,7 +124,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/effectiveEndDateValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -134,7 +142,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:text="@string/note_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/organization_ll"/>
