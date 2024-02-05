@@ -9,7 +9,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntolerance
+import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.condition.ConditionGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.encounter.EncounterGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
+import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.vitalsign.VitalSignGroup
+import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
@@ -20,6 +29,7 @@ import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequ
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.activities.ui.medicines.MedicineDetailFragment
 import com.bwell.sampleapp.databinding.FragmentHealthSummaryParentBinding
 import com.bwell.sampleapp.model.HealthSummaryListItems
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
@@ -51,7 +61,6 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
 
     private fun setHealthSummaryAdapter(suggestedActivitiesLIst: List<HealthSummaryListItems>) {
         val adapter = HealthSummaryListAdapter(suggestedActivitiesLIst)
-
         adapter.onItemClicked = { selectedList ->
             binding.healthSummaryCategoriesView.healthSummaryCategoriesView.visibility = View.GONE
             binding.healthSummaryCategoriesDataView.healthSummaryCategoriesDataView.visibility = View.VISIBLE
@@ -85,13 +94,13 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
 
             if(healthSummaryRequest != null) {
                 binding.healthSummaryCategoriesDataView.titleTextView.text = selectedList.categoryFriendlyName + " (" + selectedList.count + ")"
-                healthSummaryViewModel.getHealthSummaryData(
+                healthSummaryViewModel.getHealthSummaryGroupData(
                     healthSummaryRequest,
                     selectedList.category
                 )
 
                 viewLifecycleOwner.lifecycleScope.launch {
-                    healthSummaryViewModel.healthSummaryResults.collect { result ->
+                    healthSummaryViewModel.healthSummaryGroupResults.collect { result ->
                         if (result != null) {
                             setDataAdapter(result)
                         }
@@ -112,6 +121,47 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                 val adapter = HealthSummaryCategoriesDataAdapter(dataList)
                 binding.healthSummaryCategoriesDataView.rvHealthSummaryCategories.layoutManager = LinearLayoutManager(requireContext())
                 binding.healthSummaryCategoriesDataView.rvHealthSummaryCategories.adapter = adapter
+                adapter.onItemClicked= { selectedResource ->
+                    var fragment: Fragment? = null
+                    when (selectedResource) {
+                        is AllergyIntoleranceGroup -> {
+                            fragment = AllergyIntoleranceDetailFragment()
+                        }
+                        is CarePlanGroup -> {
+                            fragment = CarePlanDetailFragment()
+                        }
+                        is ConditionGroup -> {
+                            fragment = ConditionDetailFragment()
+                        }
+                        is EncounterGroup -> {
+                            fragment = EncounterDetailFragment()
+                        }
+                        is ImmunizationGroup -> {
+                            fragment = ImmunizationDetailFragment()
+                        }
+                        is ProcedureGroup -> {
+                            fragment = ProcedureDetailFragment()
+                        }
+                        is VitalSignGroup -> {
+                            fragment = VitalSignDetailFragment()
+                        }
+                    }
+                    if (fragment != null) {
+                        val bundle = Bundle()
+                        bundle.putString("id", adapter.getId(selectedResource))
+                        bundle.putString("groupCode", adapter.getGroupCodeCode(selectedResource))
+                        bundle.putString("groupSystem", adapter.getGroupCodeSystem(selectedResource))
+                        bundle.putString("name", adapter.getName(selectedResource))
+                        bundle.putString("from", adapter.getSource(selectedResource))
+                        binding.healthSummaryCategoriesDataView.healthSummaryCategoriesDataView.visibility = View.GONE
+                        fragment?.arguments = bundle
+                        val transaction = childFragmentManager.beginTransaction()
+                        binding.containerLayout.visibility = View.VISIBLE;
+                        transaction.replace(R.id.container_layout, fragment)
+                        transaction.addToBackStack(null)
+                        transaction.commit()
+                    }
+                }
             }
             else -> {}
         }
@@ -129,5 +179,9 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                 binding.healthSummaryCategoriesDataView.healthSummaryCategoriesDataView.visibility = View.GONE
             }
         }
+    }
+
+    fun showHealthSummaryList() {
+        binding.healthSummaryCategoriesView.healthSummaryCategoriesView.visibility = View.VISIBLE
     }
 }

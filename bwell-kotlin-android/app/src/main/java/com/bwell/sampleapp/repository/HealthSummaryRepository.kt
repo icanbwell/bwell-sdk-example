@@ -9,12 +9,19 @@ import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.Hea
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.model.HealthSummaryListItems
@@ -34,7 +41,7 @@ class HealthSummaryRepository(private val applicationContext: Context) {
         repositoryScope.cancel()
     }
 
-    suspend fun <T : Any> getHealthSummaryData(request: T?, category: HealthSummaryCategory?): Flow<BWellResult<Any>?> = flow {
+    suspend fun <T : Any> getHealthSummaryGroupData(request: T?, category: HealthSummaryCategory?): Flow<BWellResult<Any>?> = flow {
         try {
             val healthSummaryResult:BWellResult<Any>? = when (category) {
                 HealthSummaryCategory.CARE_PLAN -> {
@@ -62,7 +69,40 @@ class HealthSummaryRepository(private val applicationContext: Context) {
                     null
                 }
             }
+            emit(healthSummaryResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
 
+    suspend fun <T : Any> getHealthSummaryData(request: T?, category: HealthSummaryCategory?): Flow<BWellResult<Any>?> = flow {
+        try {
+            val healthSummaryResult:BWellResult<Any>? = when (category) {
+                HealthSummaryCategory.CARE_PLAN -> {
+                    BWellSdk.health.getCarePlans(request as? CarePlanRequest)
+                }
+                HealthSummaryCategory.IMMUNIZATION -> {
+                    BWellSdk.health.getImmunizations(request as? ImmunizationRequest)
+                }
+                HealthSummaryCategory.PROCEDURE -> {
+                    BWellSdk.health.getProcedures(request as? ProcedureRequest)
+                }
+                HealthSummaryCategory.VITAL_SIGNS -> {
+                    BWellSdk.health.getVitalSigns(request as? VitalSignsRequest)
+                }
+                HealthSummaryCategory.ENCOUNTER -> {
+                    BWellSdk.health.getEncounters(request as? EncounterRequest)
+                }
+                HealthSummaryCategory.ALLERGY_INTOLERANCE -> {
+                    BWellSdk.health.getAllergyIntolerances(request as AllergyIntoleranceRequest)
+                }
+                HealthSummaryCategory.CONDITION -> {
+                    BWellSdk.health.getConditions(request as ConditionRequest)
+                }
+                else -> {
+                    null
+                }
+            }
             emit(healthSummaryResult)
         } catch (e: Exception) {
             emit(null)

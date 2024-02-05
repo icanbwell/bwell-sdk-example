@@ -244,7 +244,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
             .state(state).build()
         providerViewModel.requestConnection(connectionRequest)
         viewLifecycleOwner.lifecycleScope.launch {
-            providerViewModel.requestConnectionData.take(1).collect { connectionOutcome ->
+            providerViewModel.requestConnectionData.collect { connectionOutcome ->
                 connectionOutcome?.let {
                     if (connectionOutcome.success()) {
                         showSuccessDialog(resources.getString(R.string.success),resources.getString(R.string.success_data))

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 
 class LabsRepository(private val applicationContext: Context) {
 
-    suspend fun getLabGroups(labGroupsRequest: LabGroupsRequest): Flow<BWellResult<LabGroup>?> = flow {
+    suspend fun getLabGroups(labGroupsRequest: LabGroupsRequest?): Flow<BWellResult<LabGroup>?> = flow {
         try {
             val labGroupsResult = BWellSdk.health?.getLabGroups(labGroupsRequest)
             emit(labGroupsResult)

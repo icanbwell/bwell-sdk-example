@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_margin="10dp"
-    android:id="@+id/medicine_overview_view"
+    android:id="@+id/condition_overview_view"
     android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/medicineTitleTextView"
+        android:id="@+id/conditionTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medicine"
+        android:text="Condition"
         android:textStyle="bold"
         android:textColor="#0076AB"
         android:textSize="26sp"
@@ -17,25 +17,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
     <TextView
-        android:id="@+id/medicationTitleTextView"
+        android:id="@+id/severityTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Medication"
+        android:text="Severity"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/conditionTitleTextView"
         app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
 
     <TextView
-        android:id="@+id/startDateTitleTextView"
+        android:id="@+id/recordedTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Start Date"
+        android:text="Recorded Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintTop_toBottomOf="@+id/medicineTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/conditionTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -46,18 +46,18 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/medicationValueTextView"
+        android:id="@+id/severityValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationTitleTextView"/>
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintTop_toBottomOf="@+id/severityTitleTextView"/>
 
     <TextView
-        android:id="@+id/startDateValueTextView"
+        android:id="@+id/recordedValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
@@ -65,49 +65,48 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/medicationValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/severityValueTextView"/>
 
     <TextView
-        android:id="@+id/statusTitleTextView"
+        android:id="@+id/clinicalStatusTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="Clinical Status"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/medicationValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/severityValueTextView"/>
 
     <TextView
-        android:id="@+id/endDateTitleTextView"
+        android:id="@+id/recorderTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="End Date"
+        android:text="Recorder"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
-        app:layout_constraintTop_toTopOf="@+id/statusTitleTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/clinicalStatusTitleTextView"/>
 
     <TextView
-        android:id="@+id/statusValueTextView"
+        android:id="@+id/clinicalStatusValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintTop_toBottomOf="@+id/clinicalStatusTitleTextView"/>
 
     <TextView
-        android:id="@+id/endDateValueTextView"
+        android:id="@+id/recorderValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
-        android:lines="1"
         android:textStyle="bold"
+        android:lines="1"
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateTitleTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/clinicalStatusValueTextView"/>
 
     <LinearLayout
         android:id="@+id/organization_ll"
@@ -116,7 +115,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/recorderValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"

@@ -15,14 +15,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MedicinesViewModel(private val repository: MedicineRepository?) : ViewModel() {
-    private val _activeMedicationResults = MutableStateFlow<BWellResult<MedicationGroup>?>(null)
-    val activeMedicationResults: StateFlow<BWellResult<MedicationGroup>?> = _activeMedicationResults
+    private val _groupMedicationResults = MutableStateFlow<BWellResult<MedicationGroup>?>(null)
+    val groupMedicationResults: StateFlow<BWellResult<MedicationGroup>?> = _groupMedicationResults
 
-    fun getActiveMedicationGroups(medicationRequest: MedicationGroupsRequest) {
+    fun getMedicationGroups(medicationRequest: MedicationGroupsRequest?) {
         viewModelScope.launch {
             try {
                 repository?.getMedicationGroups(medicationRequest)?.collect { result ->
-                    _activeMedicationResults.emit(result)
+                    _groupMedicationResults.emit(result)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
@@ -30,47 +30,17 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
         }
     }
 
-    private val _pastMedicationResults = MutableStateFlow<BWellResult<MedicationGroup>?>(null)
-    val pastMedicationResults: StateFlow<BWellResult<MedicationGroup>?> = _pastMedicationResults
+    private val _filteredGroupMedicationResults = MutableStateFlow<List<MedicationGroup>?>(null)
+    val filteredGroupMedicationResults: StateFlow<List<MedicationGroup>?> = _filteredGroupMedicationResults
 
-    fun getPastMedicationList(medicationRequest: MedicationGroupsRequest) {
+    fun filterGroupMedicationList(query: String) {
         viewModelScope.launch {
-            try {
-                repository?.getMedicationGroups(medicationRequest)?.collect { result ->
-                    _pastMedicationResults.emit(result)
-                }
-            } catch (e: Exception) {
-                // Handle exceptions, if any
-            }
-        }
-    }
-
-    private val _filteredActiveMedicationResults = MutableStateFlow<List<MedicationGroup>?>(null)
-    val filteredActiveMedicationResults: StateFlow<List<MedicationGroup>?> = _filteredActiveMedicationResults
-
-    fun filterActiveMedicationList(query: String) {
-        viewModelScope.launch {
-            val activeMedicationResult = _activeMedicationResults.value
-            if (activeMedicationResult != null) {
-                val filteredList = (activeMedicationResult as BWellResult.ResourceCollection).data?.filter { medication ->
+            val groupMedicationResult = _groupMedicationResults.value
+            if (groupMedicationResult != null) {
+                val filteredList = (groupMedicationResult as BWellResult.ResourceCollection).data?.filter { medication ->
                     medication.name?.contains(query, ignoreCase = true) == true
                 }?.map { it } // Extracting names
-                _filteredActiveMedicationResults.value = filteredList
-            }
-        }
-    }
-
-    private val _filteredPastMedicationResults = MutableStateFlow<List<MedicationGroup>?>(null)
-    val filteredPastMedicationResults: StateFlow<List<MedicationGroup>?> = _filteredPastMedicationResults
-
-    fun filterPastMedicationList(query: String) {
-        viewModelScope.launch {
-            val pastMedicationResult = _pastMedicationResults.value
-            if (pastMedicationResult != null) {
-                val filteredList = (pastMedicationResult as BWellResult.ResourceCollection).data?.filter { medication ->
-                    medication.name?.contains(query, ignoreCase = true) == true
-                }?.map { it } // Extracting names
-                _filteredPastMedicationResults.value = filteredList
+                _filteredGroupMedicationResults.value = filteredList
             }
         }
     }

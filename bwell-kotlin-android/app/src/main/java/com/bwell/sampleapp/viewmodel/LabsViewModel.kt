@@ -14,16 +14,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class LabsViewModel (private val repository: LabsRepository?) : ViewModel() {
+class LabsViewModel(private val repository: LabsRepository?) : ViewModel() {
+    private val _groupLabResults = MutableStateFlow<BWellResult<LabGroup>?>(null)
+    val groupLabResults: StateFlow<BWellResult<LabGroup>?> = _groupLabResults
 
-    private val _labGroupsResults = MutableStateFlow<BWellResult<LabGroup>?>(null)
-    val labGroupsResults: StateFlow<BWellResult<LabGroup>?> = _labGroupsResults
-
-    fun getLabGroups(labGroupsRequest: LabGroupsRequest) {
+    fun getLabGroups(labRequest: LabGroupsRequest?) {
         viewModelScope.launch {
             try {
-                repository?.getLabGroups(labGroupsRequest)?.collect { result ->
-                    _labGroupsResults.emit(result)
+                repository?.getLabGroups(labRequest)?.collect { result ->
+                    _groupLabResults.emit(result)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
@@ -31,14 +30,29 @@ class LabsViewModel (private val repository: LabsRepository?) : ViewModel() {
         }
     }
 
-    private val _labsResults = MutableStateFlow<BWellResult<Observation>?>(null)
-    val labsResults: StateFlow<BWellResult<Observation>?> = _labsResults
+    private val _filteredGroupLabResults = MutableStateFlow<List<LabGroup>?>(null)
+    val filteredGroupLabResults: StateFlow<List<LabGroup>?> = _filteredGroupLabResults
 
-    fun getLabs(labsRequest: LabsRequest) {
+    fun filterGroupLabList(query: String) {
+        viewModelScope.launch {
+            val groupLabResult = _groupLabResults.value
+            if (groupLabResult != null) {
+                val filteredList = (groupLabResult as BWellResult.ResourceCollection).data?.filter { lab ->
+                    lab.name?.contains(query, ignoreCase = true) == true
+                }?.map { it } // Extracting names
+                _filteredGroupLabResults.value = filteredList
+            }
+        }
+    }
+
+    private val _labStatementsResults = MutableStateFlow<BWellResult<Observation>?>(null)
+    val labResults: StateFlow<BWellResult<Observation>?> = _labStatementsResults
+
+    fun getLabs(labRequest: LabsRequest) {
         viewModelScope.launch {
             try {
-                repository?.getLabs(labsRequest)?.collect { result ->
-                    _labsResults.emit(result)
+                repository?.getLabs(labRequest)?.collect { result ->
+                    _labStatementsResults.emit(result)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
@@ -46,14 +60,14 @@ class LabsViewModel (private val repository: LabsRepository?) : ViewModel() {
         }
     }
 
-    private val _labsKnowledgeResults = MutableStateFlow<BWellResult<LabKnowledge>?>(null)
-    val labsKnowledgeResults: StateFlow<BWellResult<LabKnowledge>?> = _labsKnowledgeResults
+    private val _labKnowledgeResults = MutableStateFlow<BWellResult<LabKnowledge>?>(null)
+    val labKnowledgeResults: StateFlow<BWellResult<LabKnowledge>?> = _labKnowledgeResults
 
     fun getLabKnowledge(labKnowledgeRequest: LabKnowledgeRequest) {
         viewModelScope.launch {
             try {
                 repository?.getLabKnowledge(labKnowledgeRequest)?.collect { result ->
-                    _labsKnowledgeResults.emit(result)
+                    _labKnowledgeResults.emit(result)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any

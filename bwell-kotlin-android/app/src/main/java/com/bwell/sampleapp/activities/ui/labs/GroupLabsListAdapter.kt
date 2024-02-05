@@ -4,15 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
-import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.sampleapp.databinding.LabsItemsViewBinding
 import com.bwell.sampleapp.utils.formatDate
 
 /*
 *Display the Labs List in RecyclerView
 * */
-class LabsListAdapter(private val launches: List<LabGroup>?) :
-    RecyclerView.Adapter<LabsListAdapter.ViewHolder>() {
+class GroupLabsListAdapter(private var launches: List<LabGroup>?) :
+    RecyclerView.Adapter<GroupLabsListAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: LabsItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -33,6 +32,7 @@ class LabsListAdapter(private val launches: List<LabGroup>?) :
         holder.binding.header.text = launch?.name.toString()
         holder.binding.textViewDate.text = launch?.effectiveDateTime?.toString()?.let { formatDate(it) } ?: "---"
         holder.binding.textViewStatus.text = launch?.interpretation?.get(0)?.text ?: "---"
+
         if (position == (launches?.size ?: 0) - 1) {
             onEndOfListReached?.invoke()
         }
@@ -40,5 +40,10 @@ class LabsListAdapter(private val launches: List<LabGroup>?) :
         holder.binding.root.setOnClickListener {
             onItemClicked?.invoke(launch)
         }
+    }
+
+    fun updateList(newList:List<LabGroup>?) {
+        launches = newList
+        notifyDataSetChanged()
     }
 }

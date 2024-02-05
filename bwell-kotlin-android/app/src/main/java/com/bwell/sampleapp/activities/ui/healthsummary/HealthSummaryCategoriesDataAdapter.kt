@@ -2,6 +2,7 @@ package com.bwell.sampleapp.activities.ui.healthsummary
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bwell.sampleapp.singletons.BWellSdk
@@ -13,18 +14,8 @@ import com.bwell.common.models.domain.healthdata.healthsummary.encounter.Encount
 import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.vitalsign.VitalSignGroup
-import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceRequest
-import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
-import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
-import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
-import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
-import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
-import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
 import com.bwell.sampleapp.databinding.HealthSummaryCategoriesItemsViewBinding
 import com.bwell.sampleapp.utils.formatDate
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /*
 *Display the Labs List in RecyclerView
@@ -55,47 +46,54 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = ("Started :  $formattedDate")
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is ImmunizationGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Most Recent : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is ProcedureGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Started : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is VitalSignGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Effective Date : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is EncounterGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Started : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is AllergyIntoleranceGroup ->{
                 holder.binding.header.text = getTitle(launch)
-                holder.binding.textViewDate.text =launch.criticality.toString()
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.textViewDate.text =launch.criticality?.display
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is ConditionGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Recorded Date : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             else -> ""
         }
@@ -104,97 +102,20 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             onEndOfListReached?.invoke()
         }
         holder.binding.root.setOnClickListener {
-            val id = getId(launch)
-            val groupCodeCode = getGroupCodeCode(launch)
-            val groupCodeSystem = getGroupCodeSystem(launch)
+            onItemClicked?.invoke(launch)
+        }
+    }
 
-            when (launch) {
-                is CarePlanGroup -> {
-                    val carePlanRequest = CarePlanRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        //.page(0)
-                        //.pageSize(1)
-                        .build()
-                    GlobalScope.launch {
-                        val carePlans = BWellSdk.health.getCarePlans(carePlanRequest) as BWellResult.ResourceCollection
-                        //printProperties(carePlans.data?.get(position))
-                    }
-                }
-                is ImmunizationGroup ->{
-                    val immunizationRequest = ImmunizationRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        //.page(0)
-                        //.pageSize(1)
-                        .build()
-                    GlobalScope.launch {
-                        val immunizations = BWellSdk.health.getImmunizations(immunizationRequest) as BWellResult.ResourceCollection
-                        //printProperties(immunizations.data?.get(position))
-                    }
-                }
-                is ProcedureGroup ->{
-                    val proceduresRequest = ProcedureRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        //.page(0)
-                        //.pageSize(1)
-                        .build()
-                    GlobalScope.launch {
-                        val procedures = BWellSdk.health.getProcedures(proceduresRequest) as BWellResult.ResourceCollection
-                        //printProperties(procedures.data?.get(position))
-                    }
-                }
-                is VitalSignGroup ->{
-                    val vitalSignsRequest = VitalSignsRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        //.groupCode(listOf(Coding(code = "8302-2", system = "http://loinc.org")))
-                        //.page(0)
-                        //.pageSize(1)
-                        .build()
-                    GlobalScope.launch {
-                        val vitalSigns = BWellSdk.health.getVitalSigns(vitalSignsRequest) as BWellResult.ResourceCollection
-                        //printProperties(vitalSigns.data?.get(position))
-                    }
-                }
-                is EncounterGroup ->{
-                    val encountersRequest = EncounterRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        //.page(0)
-                        .pageSize(10)
-                        .build()
-                    GlobalScope.launch {
-                        val encounters = BWellSdk.health.getEncounters(encountersRequest) as BWellResult.ResourceCollection
-                        //printProperties(encounters.data?.get(position))
-                    }
-                }
-                is AllergyIntoleranceGroup ->{
-                    val allergyIntoleranceRequest = AllergyIntoleranceRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        //.page(0)
-                        //.pageSize(1)
-                        .build()
-                    GlobalScope.launch {
-                        val allergyIntolerances = BWellSdk.health.getAllergyIntolerances(allergyIntoleranceRequest) as BWellResult.ResourceCollection
-                        //printProperties(allergyIntolerances.data?.get(position))
-                    }
-                }
-                is ConditionGroup ->{
-                    val conditionsRequest = ConditionRequest.Builder()
-                        //.ids(listOf(id))
-                        .groupCode(listOf(Coding(code = groupCodeCode, system = groupCodeSystem)))
-                        //.page(0)
-                        //.pageSize(1)
-                        .build()
-                    GlobalScope.launch {
-                        val conditions = BWellSdk.health.getConditions(conditionsRequest) as BWellResult.ResourceCollection
-                        //printProperties(conditions.data?.get(position))
-                    }
-                }
-            }
+    fun getSource(item: T?): String {
+        return when (item) {
+            is CarePlanGroup -> item.source?.joinToString(", ") ?: ""
+            is ImmunizationGroup -> item.source?.joinToString(", ") ?: ""
+            is ProcedureGroup -> item.source?.joinToString(", ") ?: ""
+            is VitalSignGroup -> item.source?.joinToString(", ") ?: ""
+            is EncounterGroup -> item.source?.joinToString(", ") ?: ""
+            is AllergyIntoleranceGroup -> item.source?.joinToString(", ") ?: ""
+            is ConditionGroup -> item.source?.joinToString(", ") ?: ""
+            else -> ""
         }
     }
 
@@ -219,12 +140,11 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is VitalSignGroup -> item.effectiveDateTime.toString()
             is EncounterGroup -> item.period?.start.toString()
             is ConditionGroup -> item.recordedDate.toString()
-
             else -> null
         }
     }
 
-    private fun getId(item: T?): String {
+    fun getId(item: T?): String {
         return when (item) {
             is CarePlanGroup -> item.id ?: ""
             is ImmunizationGroup -> item.id ?: ""
@@ -237,7 +157,20 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
         }
     }
 
-    private fun getGroupCodeSystem(item: T?): String {
+    fun getName(item: T?): String {
+        return when (item) {
+            is CarePlanGroup -> item.name ?: ""
+            is ImmunizationGroup -> item.name ?: ""
+            is ProcedureGroup -> item.name ?: ""
+            is VitalSignGroup -> item.name ?: ""
+            is EncounterGroup -> item.name ?: ""
+            is ConditionGroup -> item.name ?: ""
+            is AllergyIntoleranceGroup -> item.name ?: ""
+            else -> ""
+        }
+    }
+
+    fun getGroupCodeSystem(item: T?): String {
         return when (item) {
             is CarePlanGroup -> item.coding?.system.toString()
             is ImmunizationGroup -> item.coding?.system.toString()
@@ -250,7 +183,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
         }
     }
 
-    private fun getGroupCodeCode(item: T?): String {
+    fun getGroupCodeCode(item: T?): String {
         return when (item) {
             is CarePlanGroup -> item.coding?.code.toString()
             is ImmunizationGroup -> item.coding?.code.toString()
