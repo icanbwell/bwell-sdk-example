@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
     private val TAG = "LoginFragment"
 
     private val clientKey =
-        "eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9"
+        "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
 
     private var oAuthCredentials: String? = null
 
