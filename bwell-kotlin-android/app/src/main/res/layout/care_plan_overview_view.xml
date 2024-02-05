@@ -34,24 +34,19 @@
         android:text="Date Start"
         android:textColor="#0076AB"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineTitleRx"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintTop_toBottomOf="@+id/carePlanTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTitleRx"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
         android:id="@+id/intentValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
+        android:lines="1"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintTop_toBottomOf="@+id/intentTitleTextView"/>
 
     <TextView
@@ -60,15 +55,8 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineValueRx"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintTop_toTopOf="@+id/intentValueTextView"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineValueRx"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
         android:id="@+id/statusTitleTextView"
@@ -87,11 +75,11 @@
         android:text="Date End"
         android:textColor="#0076AB"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineTitleRefills"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintTop_toTopOf="@+id/statusTitleTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTitleRefills"
+        android:id="@+id/verticalDivider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -102,8 +90,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
+        android:lines="1"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
 
     <TextView
@@ -111,38 +101,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineValueRefills"
+        android:lines="1"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/statusValueTextView"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineValueRefills"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTitleDatePrescribed"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
         android:id="@+id/endDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
+        android:lines="1"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineValueDatePrescribed"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/dateEndValueTextView"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineValueDatePrescribed"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
 
     <LinearLayout
         android:id="@+id/organization_ll"
@@ -169,6 +142,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="@string/note_info"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/organization_ll"/>

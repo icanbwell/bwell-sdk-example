@@ -30,6 +30,7 @@ class CarePlanDetailFragment : Fragment(), View.OnClickListener {
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
+    private var from: String? = null
 
     private val binding get() = _binding!!
 
@@ -47,6 +48,7 @@ class CarePlanDetailFragment : Fragment(), View.OnClickListener {
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
+        from = arguments?.getString("from")
 
         showOverView()
 
@@ -85,13 +87,17 @@ class CarePlanDetailFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
-                    val carePlan = (result.data as? List<CarePlan>)?.first()
+                    val carePlan = (result.data as? List<CarePlan>)?.firstOrNull()
                     binding.carePlanOverviewView.carePlanTitleTextView.text = name
                     binding.carePlanOverviewView.dateStartValueTextView.text = formatDate(carePlan?.period?.start?.toString())
                     binding.carePlanOverviewView.dateStartValueTextView.text = formatDate(carePlan?.period?.end?.toString())
                     binding.carePlanOverviewView.statusValueTextView.text = carePlan?.status?.display
                     binding.carePlanOverviewView.intentValueTextView.text = carePlan?.intent?.display
-                    //binding.carePlanOverviewView.organizationName.text = "from " + carePlan?.requester?.toString()
+                    if (!from.isNullOrBlank()) {
+                        binding.carePlanOverviewView.organizationName.text = "from " + from.toString()
+                    } else {
+                        binding.carePlanOverviewView.organizationLl.visibility = View.GONE
+                    }
                 }
             }
         }

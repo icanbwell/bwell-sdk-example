@@ -152,6 +152,7 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                         bundle.putString("groupCode", adapter.getGroupCodeCode(selectedResource))
                         bundle.putString("groupSystem", adapter.getGroupCodeSystem(selectedResource))
                         bundle.putString("name", adapter.getName(selectedResource))
+                        bundle.putString("from", adapter.getSource(selectedResource))
                         binding.healthSummaryCategoriesDataView.healthSummaryCategoriesDataView.visibility = View.GONE
                         fragment?.arguments = bundle
                         val transaction = childFragmentManager.beginTransaction()

@@ -23,6 +23,7 @@ import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class MedicineDetailFragment : Fragment(),View.OnClickListener {
 
@@ -32,6 +33,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
+    private var from: String? = null
 
     private val binding get() = _binding!!
 
@@ -50,6 +52,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
+        from = arguments?.getString("from")
 
         showOverView()
 
@@ -95,15 +98,20 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         medicinesViewModel.getMedicationStatements(medicationStatementsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
             medicinesViewModel.medicationStatementsResults.collect { result ->
-                println("MEDICATION_STATEMENT: result: $result")
-                if (result != null && result is BWellResult.SingleResource<MedicationStatement>) {
-                    val medicationStatement = result.data
+                if (result != null && result is BWellResult.ResourceCollection<MedicationStatement>) {
+                    val medicationStatement = result.data?.firstOrNull()
                     binding.medicineOverviewView.medicineTitleTextView.text = name
-                    binding.medicineOverviewView.medicationValueTextView.text = medicationStatement?.medication?.text
+                    binding.medicineOverviewView.medicationValueTextView.text = medicationStatement?.medication?.coding?.firstOrNull()?.display ?: medicationStatement?.medication?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.medicineOverviewView.statusValueTextView.text = medicationStatement?.status?.display
                     binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.start.toString())
                     binding.medicineOverviewView.endDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.end.toString())
                     binding.medicineOverviewView.organizationName.text = "from " + medicationStatement?.requester?.toString()
+                    if (!from.isNullOrBlank()) {
+                        binding.medicineOverviewView.organizationName.text = "from " + from.toString()
+                    } else {
+                        binding.medicineOverviewView.organizationLl.visibility = View.GONE
+                    }
                 }
             }
         }

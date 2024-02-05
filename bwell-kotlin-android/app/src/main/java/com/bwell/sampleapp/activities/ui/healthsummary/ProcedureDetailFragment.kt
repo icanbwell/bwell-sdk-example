@@ -21,6 +21,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class ProcedureDetailFragment : Fragment(), View.OnClickListener {
 
@@ -30,6 +31,7 @@ class ProcedureDetailFragment : Fragment(), View.OnClickListener {
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
+    private var from: String? = null
 
     private val binding get() = _binding!!
 
@@ -47,6 +49,7 @@ class ProcedureDetailFragment : Fragment(), View.OnClickListener {
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
+        from = arguments?.getString("from")
 
         showOverView()
 
@@ -85,13 +88,19 @@ class ProcedureDetailFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
-                    val procedure = (result.data as? List<Procedure>)?.first()
+                    val procedure = (result.data as? List<Procedure>)?.firstOrNull()
                     binding.procedureOverviewView.procedureTitleTextView.text = name
-                    binding.procedureOverviewView.outcomeValueTextView.text = procedure?.outcome?.text
+                    binding.procedureOverviewView.outcomeValueTextView.text = procedure?.outcome?.coding?.firstOrNull()?.display ?: procedure?.outcome?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.procedureOverviewView.statusValueTextView.text = procedure?.status?.display
                     binding.procedureOverviewView.performedDateValueTextView.text = formatDate(procedure?.performedDateTime?.toString())
-                    binding.procedureOverviewView.categoryValueTextView.text = procedure?.category?.text
-                    //binding.procedureOverviewView.organizationName.text = "from " + procedure?.requester?.toString()
+                    binding.procedureOverviewView.categoryValueTextView.text = procedure?.category?.coding?.firstOrNull()?.display ?: procedure?.category?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
+                    if (!from.isNullOrBlank()) {
+                        binding.procedureOverviewView.organizationName.text = "from " + from.toString()
+                    } else {
+                        binding.procedureOverviewView.organizationLl.visibility = View.GONE
+                    }
                 }
             }
         }

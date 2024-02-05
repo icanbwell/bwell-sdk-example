@@ -21,6 +21,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class ConditionDetailFragment : Fragment(), View.OnClickListener {
 
@@ -30,6 +31,7 @@ class ConditionDetailFragment : Fragment(), View.OnClickListener {
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
+    private var from: String? = null
 
     private val binding get() = _binding!!
 
@@ -47,6 +49,7 @@ class ConditionDetailFragment : Fragment(), View.OnClickListener {
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
+        from = arguments?.getString("from")
 
         showOverView()
 
@@ -85,13 +88,19 @@ class ConditionDetailFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
-                    val condition = (result.data as? List<Condition>)?.first()
+                    val condition = (result.data as? List<Condition>)?.firstOrNull()
                     binding.conditionOverviewView.conditionTitleTextView.text = name
-                    binding.conditionOverviewView.severityValueTextView.text = condition?.severity?.text
-                    binding.conditionOverviewView.clinicalStatusValueTextView.text = condition?.clinicalStatus?.text
+                    binding.conditionOverviewView.severityValueTextView.text = condition?.severity?.coding?.firstOrNull()?.display ?: condition?.severity?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
+                    binding.conditionOverviewView.clinicalStatusValueTextView.text = condition?.clinicalStatus?.coding?.firstOrNull()?.display ?: condition?.clinicalStatus?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.conditionOverviewView.recordedValueTextView.text = formatDate(condition?.recordedDate?.toString())
-                    binding.conditionOverviewView.recorderValueTextView.text = condition?.recorder?.name?.first()?.text
-                    //binding.conditionOverviewView.organizationName.text = "from " + condition?.requester?.toString()
+                    binding.conditionOverviewView.recorderValueTextView.text = condition?.recorder?.name?.firstOrNull()?.text
+                    if (!from.isNullOrBlank()) {
+                        binding.conditionOverviewView.organizationName.text = "from " + from.toString()
+                    } else {
+                        binding.conditionOverviewView.organizationLl.visibility = View.GONE
+                    }
                 }
             }
         }

@@ -15,7 +15,7 @@
         android:textSize="26sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
+        app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
     <TextView
         android:id="@+id/encounterTitleTextView"
         android:layout_width="0dp"
@@ -25,7 +25,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/labTitleTextView"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
+        app:layout_constraintEnd_toStartOf="@+id/verticalDivider"/>
 
     <TextView
         android:id="@+id/effectiveStartDateTitleTextView"
@@ -34,12 +34,12 @@
         android:text="Effective Start Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineTitleRx"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintTop_toBottomOf="@+id/labTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTitleRx"
+        android:id="@+id/verticalDivider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -50,24 +50,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
+        android:lines="1"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintTop_toBottomOf="@+id/encounterTitleTextView"/>
 
     <TextView
         android:id="@+id/effectiveStartDateValueTextView"
         android:layout_width="0dp"
+        android:lines="1"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineValueRx"
-        app:layout_constraintTop_toTopOf="@+id/encounterValueTextView"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineValueRx"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/effectiveStartDateTitleTextView"/>
 
     <TextView
         android:id="@+id/codeTitleTextView"
@@ -86,23 +83,18 @@
         android:text="Effective End Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineTitleRefills"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintTop_toTopOf="@+id/codeTitleTextView"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTitleRefills"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
         android:id="@+id/codeValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
+        android:lines="1"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
         app:layout_constraintTop_toBottomOf="@+id/codeTitleTextView"/>
 
     <TextView
@@ -110,34 +102,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/guidelineValueRefills"
-        app:layout_constraintTop_toTopOf="@+id/codeValueTextView"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineValueRefills"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineTitleDatePrescribed"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineValueDatePrescribed"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
+        android:lines="1"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/effectiveEndDateTitleTextView"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/note_info"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/effectiveEndDateValueTextView"/>
 

@@ -21,6 +21,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class VitalSignDetailFragment : Fragment(), View.OnClickListener {
 
@@ -85,13 +86,13 @@ class VitalSignDetailFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
-                    val vitalSign = (result.data as? List<Observation>)?.first()
+                    val vitalSign = (result.data as? List<Observation>)?.firstOrNull()
                     binding.vitalSignOverviewView.vitalSignTitleTextView.text = name
-                    binding.vitalSignOverviewView.codeValueTextView.text = vitalSign?.code?.text
+                    binding.vitalSignOverviewView.codeValueTextView.text = vitalSign?.code?.coding?.firstOrNull()?.display ?: vitalSign?.code?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.vitalSignOverviewView.effectiveStartDateValueTextView.text = formatDate(vitalSign?.effectivePeriod?.start?.toString())
                     binding.vitalSignOverviewView.effectiveEndDateValueTextView.text = formatDate(vitalSign?.effectivePeriod?.end?.toString())
-                    binding.vitalSignOverviewView.encounterValueTextView.text = vitalSign?.encounter?.location?.first()?.location?.name
-                    //binding.vitalSignOverviewView.organizationName.text = "from " + vitalSign?.requester?.toString()
+                    binding.vitalSignOverviewView.encounterValueTextView.text = vitalSign?.encounter?.location?.firstOrNull()?.location?.name
                 }
             }
         }

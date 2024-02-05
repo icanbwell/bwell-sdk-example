@@ -23,6 +23,7 @@ import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
 import com.bwell.sampleapp.viewmodel.LabsViewModel
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class LabDetailsFragment : Fragment(), View.OnClickListener {
 
@@ -94,13 +95,14 @@ class LabDetailsFragment : Fragment(), View.OnClickListener {
         labsViewModel.getLabs(labsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.labResults.collect { result ->
-                if (result != null && result is BWellResult.SingleResource<Observation>) {
-                    val lab = result.data
+                if (result != null && result is BWellResult.ResourceCollection<Observation>) {
+                    val lab = result.data?.firstOrNull()
                     binding.labOverviewView.labTitleTextView.text = name
-                    binding.labOverviewView.codeValueTextView.text = lab?.code?.text
+                    binding.labOverviewView.codeValueTextView.text = lab?.code?.coding?.firstOrNull()?.display ?: lab?.code?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.labOverviewView.effectiveStartDateValueTextView.text = formatDate(lab?.effectivePeriod?.start.toString())
                     binding.labOverviewView.effectiveEndDateValueTextView.text = formatDate(lab?.effectivePeriod?.end.toString())
-                    binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.first()?.location?.name
+                    binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.firstOrNull()?.location?.name
                     //binding.labOverviewView.organizationName.text = "from " + lab?.?.toString()
                 }
             }

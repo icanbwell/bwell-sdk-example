@@ -21,6 +21,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
 
@@ -30,6 +31,7 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
+    private var from: String? = null
 
     private val binding get() = _binding!!
 
@@ -47,6 +49,7 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
+        from = arguments?.getString("from")
 
         showOverView()
 
@@ -85,13 +88,18 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
-                    val immunization = (result.data as? List<Immunization>)?.first()
+                    val immunization = (result.data as? List<Immunization>)?.firstOrNull()
                     binding.immunizationOverviewView.immunizationTitleTextView.text = name
-                    binding.immunizationOverviewView.vaccineCodeValueTextView.text = immunization?.vaccineCode?.text
+                    binding.immunizationOverviewView.vaccineCodeValueTextView.text = immunization?.vaccineCode?.coding?.firstOrNull()?.display ?: immunization?.vaccineCode?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.immunizationOverviewView.statusValueTextView.text = immunization?.status?.display
                     binding.immunizationOverviewView.occuranceDateValueTextView.text = formatDate(immunization?.occurrenceDateTime?.toString())
                     binding.immunizationOverviewView.doseQuantityValueTextView.text = immunization?.doseQuantity?.value?.toString()
-                    //binding.immunizationOverviewView.organizationName.text = "from " + immunization?.requester?.toString()
+                    if (!from.isNullOrBlank()) {
+                        binding.immunizationOverviewView.organizationName.text = "from " + from.toString()
+                    } else {
+                        binding.immunizationOverviewView.organizationLl.visibility = View.GONE
+                    }
                 }
             }
         }

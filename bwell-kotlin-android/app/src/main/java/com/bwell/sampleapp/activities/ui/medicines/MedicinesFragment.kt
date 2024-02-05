@@ -68,6 +68,7 @@ class MedicinesFragment : Fragment() {
         bundle.putString("groupCode", selectedMedicine?.coding?.code.toString())
         bundle.putString("groupSystem", selectedMedicine?.coding?.system.toString())
         bundle.putString("name", selectedMedicine?.name)
+        bundle.putString("from", selectedMedicine?.source?.joinToString(", ") ?: "")
         medicineDetailFragment.arguments = bundle
         val transaction = childFragmentManager.beginTransaction()
         binding.containerLayout.visibility = View.VISIBLE;
@@ -83,10 +84,7 @@ class MedicinesFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 medicinesViewModel.groupMedicationResults.collect { result ->
                     if (result != null) {
-                        println("MEDICATON GROUPS NOT EMPTY: $result")
                         setMedicinesGroupsAdapter(result)
-                } else {
-                        println("MEDICATON GROUPS EMPTY: ")
                     }
             }
         }

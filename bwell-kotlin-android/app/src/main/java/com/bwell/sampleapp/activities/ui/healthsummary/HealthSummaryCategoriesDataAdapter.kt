@@ -2,6 +2,7 @@ package com.bwell.sampleapp.activities.ui.healthsummary
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bwell.sampleapp.singletons.BWellSdk
@@ -45,47 +46,54 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = ("Started :  $formattedDate")
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is ImmunizationGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Most Recent : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is ProcedureGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Started : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is VitalSignGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Effective Date : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is EncounterGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Started : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is AllergyIntoleranceGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 holder.binding.textViewDate.text =launch.criticality?.display
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             is ConditionGroup ->{
                 holder.binding.header.text = getTitle(launch)
                 val startDate = getDate(launch)
                 val formattedDate = startDate?.let { formatDate(it) }
                 holder.binding.textViewDate.text = "Recorded Date : $formattedDate"
-                holder.binding.organizationName.text = "from "+ launch.source?.joinToString(", ")
+                holder.binding.organizationName.text = "from "+ getSource(launch)
+                holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
             else -> ""
         }
@@ -95,6 +103,19 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
         }
         holder.binding.root.setOnClickListener {
             onItemClicked?.invoke(launch)
+        }
+    }
+
+    fun getSource(item: T?): String {
+        return when (item) {
+            is CarePlanGroup -> item.source?.joinToString(", ") ?: ""
+            is ImmunizationGroup -> item.source?.joinToString(", ") ?: ""
+            is ProcedureGroup -> item.source?.joinToString(", ") ?: ""
+            is VitalSignGroup -> item.source?.joinToString(", ") ?: ""
+            is EncounterGroup -> item.source?.joinToString(", ") ?: ""
+            is AllergyIntoleranceGroup -> item.source?.joinToString(", ") ?: ""
+            is ConditionGroup -> item.source?.joinToString(", ") ?: ""
+            else -> ""
         }
     }
 

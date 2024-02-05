@@ -21,6 +21,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class AllergyIntoleranceDetailFragment : Fragment(), View.OnClickListener {
 
@@ -30,6 +31,7 @@ class AllergyIntoleranceDetailFragment : Fragment(), View.OnClickListener {
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
+    private var from: String? = null
 
     private val binding get() = _binding!!
 
@@ -47,6 +49,7 @@ class AllergyIntoleranceDetailFragment : Fragment(), View.OnClickListener {
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
+        from = arguments?.getString("from")
 
         showOverView()
 
@@ -84,15 +87,19 @@ class AllergyIntoleranceDetailFragment : Fragment(), View.OnClickListener {
         healthSummaryViewModel.getHealthSummaryData(allergyIntolerancRequest, category = HealthSummaryCategory.ALLERGY_INTOLERANCE)
         viewLifecycleOwner.lifecycleScope.launch {
             healthSummaryViewModel.healthSummaryResults.collect { result ->
-                println("ALLERGY_INTOLERANCE: result: $result")
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
-                    val allergyIntolerance = (result.data as? List<AllergyIntolerance>)?.first()
+                    val allergyIntolerance = (result.data as? List<AllergyIntolerance>)?.firstOrNull()
                     binding.allergyIntoleranceOverviewView.allergyIntoleranceTitleTextView.text = name
-                    binding.allergyIntoleranceOverviewView.verificationStatusValueTextView.text = allergyIntolerance?.verificationStatus?.text
+                    binding.allergyIntoleranceOverviewView.verificationStatusValueTextView.text = allergyIntolerance?.verificationStatus?.coding?.firstOrNull()?.display ?: allergyIntolerance?.verificationStatus?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.allergyIntoleranceOverviewView.criticalityValueTextView.text = allergyIntolerance?.criticality?.display
                     binding.allergyIntoleranceOverviewView.onsetValueTextView.text = formatDate(allergyIntolerance?.onsetDateTime?.toString())
                     binding.allergyIntoleranceOverviewView.lastOccuranceDateValueTextView.text = formatDate(allergyIntolerance?.lastOccurrence.toString())
-                    //binding.allergyIntoleranceOverviewView.organizationName.text = "from " + allergyIntolerance?.requester?.toString()
+                    if (!from.isNullOrBlank()) {
+                        binding.allergyIntoleranceOverviewView.organizationName.text = "from " + from.toString()
+                    } else {
+                        binding.allergyIntoleranceOverviewView.organizationLl.visibility = View.GONE
+                    }
                 }
             }
         }

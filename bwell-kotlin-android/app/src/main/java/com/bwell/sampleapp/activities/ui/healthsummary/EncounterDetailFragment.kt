@@ -21,6 +21,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class EncounterDetailFragment : Fragment(), View.OnClickListener {
 
@@ -30,6 +31,7 @@ class EncounterDetailFragment : Fragment(), View.OnClickListener {
     private lateinit var groupCode: String
     private lateinit var groupSystem: String
     private lateinit var name: String
+    private var from: String? = null
 
     private val binding get() = _binding!!
 
@@ -47,6 +49,7 @@ class EncounterDetailFragment : Fragment(), View.OnClickListener {
         groupCode = arguments?.getString("groupCode").toString()
         groupSystem = arguments?.getString("groupSystem").toString()
         name = arguments?.getString("name").toString()
+        from = arguments?.getString("from")
 
         showOverView()
 
@@ -85,13 +88,18 @@ class EncounterDetailFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
-                    val encounter = (result.data as? List<Encounter>)?.first()
+                    val encounter = (result.data as? List<Encounter>)?.firstOrNull()
                     binding.encounterOverviewView.encounterTitleTextView.text = name
-                    binding.encounterOverviewView.typeValueTextView.text = encounter?.type?.first()?.text
+                    binding.encounterOverviewView.typeValueTextView.text = encounter?.type?.firstOrNull()?.coding?.firstOrNull()?.display ?: encounter?.type?.firstOrNull()?.coding?.firstOrNull()?.code?.capitalize(
+                        Locale.ROOT)
                     binding.encounterOverviewView.statusValueTextView.text = encounter?.status?.display
                     binding.encounterOverviewView.classValueTextView.text = encounter?.`class`?.display
-                    binding.encounterOverviewView.participantValueTextView.text = encounter?.participant?.first()?.individual?.name?.first()?.text
-                    //binding.encounterOverviewView.organizationName.text = "from " + encounter?.requester?.toString()
+                    binding.encounterOverviewView.participantValueTextView.text = encounter?.participant?.firstOrNull()?.individual?.name?.firstOrNull()?.text
+                    if (!from.isNullOrBlank()) {
+                        binding.encounterOverviewView.organizationName.text = "from " + from.toString()
+                    } else {
+                        binding.encounterOverviewView.organizationLl.visibility = View.GONE
+                    }
                 }
             }
         }

@@ -88,10 +88,7 @@ class LabsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             labsViewModel.groupLabResults.collect { result ->
                 if (result != null) {
-                    println("LAB GROUPS NOT EMPTY: $result")
                     setLabsGroupsAdapter(result)
-                } else {
-                    println("LAB GROUPS EMPTY: ")
                 }
             }
         }
