@@ -94,12 +94,12 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
 
         medicinesViewModel.getMedicationStatements(medicationStatementsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationStatementsResults.take(1).collect { result ->
+            medicinesViewModel.medicationStatementsResults.collect { result ->
                 println("MEDICATION_STATEMENT: result: $result")
                 if (result != null && result is BWellResult.SingleResource<MedicationStatement>) {
                     val medicationStatement = result.data
-                    binding.medicineOverviewView.medicineTitleTextView.text = medicationStatement?.medication?.text.toString()
-                    binding.medicineOverviewView.nameValueTextView.text = name
+                    binding.medicineOverviewView.medicineTitleTextView.text = name
+                    binding.medicineOverviewView.medicationValueTextView.text = medicationStatement?.medication?.text
                     binding.medicineOverviewView.statusValueTextView.text = medicationStatement?.status?.display
                     binding.medicineOverviewView.startDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.start.toString())
                     binding.medicineOverviewView.endDateValueTextView.text = formatDate(medicationStatement?.effectiveDate?.end.toString())
@@ -124,7 +124,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
             .build()
         medicinesViewModel.getMedicationKnowledge(request)
         viewLifecycleOwner.lifecycleScope.launch {
-            medicinesViewModel.medicationKnowledgeResults.take(1).collect { result ->
+            medicinesViewModel.medicationKnowledgeResults.collect { result ->
                 if (result != null) {
                     when (result) {
                         is BWellResult.ResourceCollection -> {

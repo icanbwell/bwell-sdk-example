@@ -83,12 +83,13 @@ class CarePlanDetailFragment : Fragment(), View.OnClickListener {
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.CARE_PLAN)
         viewLifecycleOwner.lifecycleScope.launch {
-            healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
+            healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
                     val carePlan = (result.data as? List<CarePlan>)?.first()
-                    binding.carePlanOverviewView.nameValueTextView.text = name
+                    binding.carePlanOverviewView.carePlanTitleTextView.text = name
+                    binding.carePlanOverviewView.dateStartValueTextView.text = formatDate(carePlan?.period?.start?.toString())
+                    binding.carePlanOverviewView.dateStartValueTextView.text = formatDate(carePlan?.period?.end?.toString())
                     binding.carePlanOverviewView.statusValueTextView.text = carePlan?.status?.display
-                    binding.carePlanOverviewView.createdValueTextView.text = formatDate(carePlan?.created?.toString())
                     binding.carePlanOverviewView.intentValueTextView.text = carePlan?.intent?.display
                     //binding.carePlanOverviewView.organizationName.text = "from " + carePlan?.requester?.toString()
                 }

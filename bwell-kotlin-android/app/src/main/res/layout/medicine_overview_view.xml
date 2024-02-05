@@ -17,10 +17,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
     <TextView
-        android:id="@+id/nameTitleTextView"
+        android:id="@+id/medicationTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="Medication"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,13 +46,13 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/nameValueTextView"
+        android:id="@+id/medicationValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/medicationTitleTextView"/>
 
     <TextView
         android:id="@+id/startDateValueTextView"
@@ -61,7 +61,7 @@
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueRx"
-        app:layout_constraintTop_toTopOf="@+id/nameValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/medicationValueTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueRx"
@@ -78,7 +78,7 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/medicationValueTextView"/>
 
     <TextView
         android:id="@+id/endDateTitleTextView"

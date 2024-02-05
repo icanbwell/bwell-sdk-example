@@ -13,18 +13,8 @@ import com.bwell.common.models.domain.healthdata.healthsummary.encounter.Encount
 import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.vitalsign.VitalSignGroup
-import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceRequest
-import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
-import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
-import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
-import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
-import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
-import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
 import com.bwell.sampleapp.databinding.HealthSummaryCategoriesItemsViewBinding
 import com.bwell.sampleapp.utils.formatDate
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /*
 *Display the Labs List in RecyclerView

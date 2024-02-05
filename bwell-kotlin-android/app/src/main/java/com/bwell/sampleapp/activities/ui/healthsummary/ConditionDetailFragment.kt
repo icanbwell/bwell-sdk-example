@@ -83,10 +83,11 @@ class ConditionDetailFragment : Fragment(), View.OnClickListener {
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.CONDITION)
         viewLifecycleOwner.lifecycleScope.launch {
-            healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
+            healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
                     val condition = (result.data as? List<Condition>)?.first()
-                    binding.conditionOverviewView.nameValueTextView.text = name
+                    binding.conditionOverviewView.conditionTitleTextView.text = name
+                    binding.conditionOverviewView.severityValueTextView.text = condition?.severity?.text
                     binding.conditionOverviewView.clinicalStatusValueTextView.text = condition?.clinicalStatus?.text
                     binding.conditionOverviewView.recordedValueTextView.text = formatDate(condition?.recordedDate?.toString())
                     binding.conditionOverviewView.recorderValueTextView.text = condition?.recorder?.name?.first()?.text

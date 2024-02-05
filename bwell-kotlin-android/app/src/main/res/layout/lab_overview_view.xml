@@ -17,10 +17,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
     <TextView
-        android:id="@+id/nameTitleTextView"
+        android:id="@+id/encounterTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="Encounter"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,10 +28,10 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
 
     <TextView
-        android:id="@+id/effectiveDateTitleTextView"
+        android:id="@+id/effectiveStartDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Effective Date"
+        android:text="Effective Start Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRx"
@@ -46,21 +46,21 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/nameValueTextView"
+        android:id="@+id/encounterValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/encounterTitleTextView"/>
 
     <TextView
-        android:id="@+id/effectiveDateValueTextView"
+        android:id="@+id/effectiveStartDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueRx"
-        app:layout_constraintTop_toTopOf="@+id/nameValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/encounterValueTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueRx"
@@ -77,13 +77,13 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/encounterValueTextView"/>
 
     <TextView
-        android:id="@+id/encounterTitleTextView"
+        android:id="@+id/effectiveEndDateTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Encounter"
+        android:text="Effective End Date"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRefills"
@@ -106,7 +106,7 @@
         app:layout_constraintTop_toBottomOf="@+id/codeTitleTextView"/>
 
     <TextView
-        android:id="@+id/encounterValueTextView"
+        android:id="@+id/effectiveEndDateValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -139,6 +139,6 @@
         android:layout_height="wrap_content"
         android:text="@string/note_info"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/encounterValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/effectiveEndDateValueTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

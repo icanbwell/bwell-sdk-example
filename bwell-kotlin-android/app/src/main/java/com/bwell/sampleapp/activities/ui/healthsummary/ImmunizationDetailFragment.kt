@@ -83,10 +83,11 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.IMMUNIZATION)
         viewLifecycleOwner.lifecycleScope.launch {
-            healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
+            healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
                     val immunization = (result.data as? List<Immunization>)?.first()
-                    binding.immunizationOverviewView.nameValueTextView.text = name
+                    binding.immunizationOverviewView.immunizationTitleTextView.text = name
+                    binding.immunizationOverviewView.vaccineCodeValueTextView.text = immunization?.vaccineCode?.text
                     binding.immunizationOverviewView.statusValueTextView.text = immunization?.status?.display
                     binding.immunizationOverviewView.occuranceDateValueTextView.text = formatDate(immunization?.occurrenceDateTime?.toString())
                     binding.immunizationOverviewView.doseQuantityValueTextView.text = immunization?.doseQuantity?.value?.toString()

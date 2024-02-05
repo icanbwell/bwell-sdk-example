@@ -83,12 +83,13 @@ class VitalSignDetailFragment : Fragment(), View.OnClickListener {
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.VITAL_SIGNS)
         viewLifecycleOwner.lifecycleScope.launch {
-            healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
+            healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
                     val vitalSign = (result.data as? List<Observation>)?.first()
-                    binding.vitalSignOverviewView.nameValueTextView.text = name
+                    binding.vitalSignOverviewView.vitalSignTitleTextView.text = name
                     binding.vitalSignOverviewView.codeValueTextView.text = vitalSign?.code?.text
-                    binding.vitalSignOverviewView.effectiveDateValueTextView.text = formatDate(vitalSign?.effectiveDateTime?.toString())
+                    binding.vitalSignOverviewView.effectiveStartDateValueTextView.text = formatDate(vitalSign?.effectivePeriod?.start?.toString())
+                    binding.vitalSignOverviewView.effectiveEndDateValueTextView.text = formatDate(vitalSign?.effectivePeriod?.end?.toString())
                     binding.vitalSignOverviewView.encounterValueTextView.text = vitalSign?.encounter?.location?.first()?.location?.name
                     //binding.vitalSignOverviewView.organizationName.text = "from " + vitalSign?.requester?.toString()
                 }

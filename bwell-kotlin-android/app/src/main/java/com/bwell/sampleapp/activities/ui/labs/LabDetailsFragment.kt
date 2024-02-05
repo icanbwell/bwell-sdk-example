@@ -93,12 +93,13 @@ class LabDetailsFragment : Fragment(), View.OnClickListener {
 
         labsViewModel.getLabs(labsRequest)
         viewLifecycleOwner.lifecycleScope.launch {
-            labsViewModel.labResults.take(1).collect { result ->
+            labsViewModel.labResults.collect { result ->
                 if (result != null && result is BWellResult.SingleResource<Observation>) {
                     val lab = result.data
-                    binding.labOverviewView.nameValueTextView.text = name
+                    binding.labOverviewView.labTitleTextView.text = name
                     binding.labOverviewView.codeValueTextView.text = lab?.code?.text
-                    binding.labOverviewView.effectiveDateTitleTextView.text = formatDate(lab?.effectiveDateTime?.toString())
+                    binding.labOverviewView.effectiveStartDateValueTextView.text = formatDate(lab?.effectivePeriod?.start.toString())
+                    binding.labOverviewView.effectiveEndDateValueTextView.text = formatDate(lab?.effectivePeriod?.end.toString())
                     binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.first()?.location?.name
                     //binding.labOverviewView.organizationName.text = "from " + lab?.?.toString()
                 }
@@ -121,7 +122,7 @@ class LabDetailsFragment : Fragment(), View.OnClickListener {
             .build()
         labsViewModel.getLabKnowledge(request)
         viewLifecycleOwner.lifecycleScope.launch {
-            labsViewModel.labKnowledgeResults.take(1).collect { result ->
+            labsViewModel.labKnowledgeResults.collect { result ->
                 if (result != null) {
                     when (result) {
                         is BWellResult.ResourceCollection -> {

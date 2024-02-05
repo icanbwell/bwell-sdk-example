@@ -17,10 +17,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
     <TextView
-        android:id="@+id/nameTitleTextView"
+        android:id="@+id/intentTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="Intent"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,10 +28,10 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
 
     <TextView
-        android:id="@+id/createdTitleTextView"
+        android:id="@+id/dateStartTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Created Date"
+        android:text="Date Start"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRx"
@@ -46,22 +46,22 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <TextView
-        android:id="@+id/nameValueTextView"
+        android:id="@+id/intentValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTitleTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/intentTitleTextView"/>
 
     <TextView
-        android:id="@+id/createdValueTextView"
+        android:id="@+id/dateStartValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueRx"
-        app:layout_constraintTop_toTopOf="@+id/nameValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/intentValueTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueRx"
@@ -78,13 +78,13 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameValueTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/intentValueTextView"/>
 
     <TextView
-        android:id="@+id/intentTitleTextView"
+        android:id="@+id/dateEndTitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Intent"
+        android:text="Date End"
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineTitleRefills"
@@ -107,7 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/statusTitleTextView"/>
 
     <TextView
-        android:id="@+id/intentValueTextView"
+        android:id="@+id/dateEndValueTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -135,7 +135,7 @@
         android:text=""
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/guidelineValueDatePrescribed"
-        app:layout_constraintTop_toTopOf="@+id/intentValueTextView"/>
+        app:layout_constraintTop_toTopOf="@+id/dateEndValueTextView"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineValueDatePrescribed"
@@ -151,7 +151,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/intentValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/dateEndValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"

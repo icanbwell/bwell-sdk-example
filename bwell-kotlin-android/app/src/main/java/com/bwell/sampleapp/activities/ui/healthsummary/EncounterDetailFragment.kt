@@ -83,10 +83,11 @@ class EncounterDetailFragment : Fragment(), View.OnClickListener {
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.ENCOUNTER)
         viewLifecycleOwner.lifecycleScope.launch {
-            healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
+            healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
                     val encounter = (result.data as? List<Encounter>)?.first()
-                    binding.encounterOverviewView.nameValueTextView.text = name
+                    binding.encounterOverviewView.encounterTitleTextView.text = name
+                    binding.encounterOverviewView.typeValueTextView.text = encounter?.type?.first()?.text
                     binding.encounterOverviewView.statusValueTextView.text = encounter?.status?.display
                     binding.encounterOverviewView.classValueTextView.text = encounter?.`class`?.display
                     binding.encounterOverviewView.participantValueTextView.text = encounter?.participant?.first()?.individual?.name?.first()?.text

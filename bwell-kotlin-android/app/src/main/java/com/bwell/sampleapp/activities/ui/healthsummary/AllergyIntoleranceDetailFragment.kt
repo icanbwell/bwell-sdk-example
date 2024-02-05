@@ -83,11 +83,12 @@ class AllergyIntoleranceDetailFragment : Fragment(), View.OnClickListener {
 
         healthSummaryViewModel.getHealthSummaryData(allergyIntolerancRequest, category = HealthSummaryCategory.ALLERGY_INTOLERANCE)
         viewLifecycleOwner.lifecycleScope.launch {
-            healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
+            healthSummaryViewModel.healthSummaryResults.collect { result ->
                 println("ALLERGY_INTOLERANCE: result: $result")
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
                     val allergyIntolerance = (result.data as? List<AllergyIntolerance>)?.first()
-                    binding.allergyIntoleranceOverviewView.nameValueTextView.text = name
+                    binding.allergyIntoleranceOverviewView.allergyIntoleranceTitleTextView.text = name
+                    binding.allergyIntoleranceOverviewView.verificationStatusValueTextView.text = allergyIntolerance?.verificationStatus?.text
                     binding.allergyIntoleranceOverviewView.criticalityValueTextView.text = allergyIntolerance?.criticality?.display
                     binding.allergyIntoleranceOverviewView.onsetValueTextView.text = formatDate(allergyIntolerance?.onsetDateTime?.toString())
                     binding.allergyIntoleranceOverviewView.lastOccuranceDateValueTextView.text = formatDate(allergyIntolerance?.lastOccurrence.toString())

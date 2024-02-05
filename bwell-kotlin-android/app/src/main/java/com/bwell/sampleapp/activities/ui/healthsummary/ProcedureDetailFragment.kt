@@ -83,10 +83,11 @@ class ProcedureDetailFragment : Fragment(), View.OnClickListener {
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.PROCEDURE)
         viewLifecycleOwner.lifecycleScope.launch {
-            healthSummaryViewModel.healthSummaryResults.take(1).collect { result ->
+            healthSummaryViewModel.healthSummaryResults.collect { result ->
                 if (result != null && result is BWellResult.ResourceCollection<*>) {
                     val procedure = (result.data as? List<Procedure>)?.first()
-                    binding.procedureOverviewView.nameValueTextView.text = name
+                    binding.procedureOverviewView.procedureTitleTextView.text = name
+                    binding.procedureOverviewView.outcomeValueTextView.text = procedure?.outcome?.text
                     binding.procedureOverviewView.statusValueTextView.text = procedure?.status?.display
                     binding.procedureOverviewView.performedDateValueTextView.text = formatDate(procedure?.performedDateTime?.toString())
                     binding.procedureOverviewView.categoryValueTextView.text = procedure?.category?.text
