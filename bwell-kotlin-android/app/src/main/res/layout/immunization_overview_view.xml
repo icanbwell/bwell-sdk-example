@@ -108,6 +108,233 @@
         app:layout_constraintStart_toEndOf="@+id/verticalDivider"
         app:layout_constraintTop_toTopOf="@+id/statusValueTextView"/>
 
+    <TextView
+        android:id="@+id/lotNumberTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Lot Number"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusValueTextView"/>
+
+    <TextView
+        android:id="@+id/siteTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Site"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/lotNumberTitleTextView"/>
+
+
+    <TextView
+        android:id="@+id/lotNumberValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lotNumberTitleTextView"/>
+
+    <TextView
+        android:id="@+id/siteValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/lotNumberValueTextView"/>
+
+    <TextView
+        android:id="@+id/routeTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Route"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lotNumberValueTextView"/>
+
+    <TextView
+        android:id="@+id/routeValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/routeTitleTextView"/>
+
+    <TextView
+        android:id="@+id/primarySourceTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Primary Source"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/routeTitleTextView"/>
+
+    <TextView
+        android:id="@+id/primarySourceValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/routeValueTextView"/>
+
+    <TextView
+        android:id="@+id/performerTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Performer"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/routeValueTextView"/>
+
+    <TextView
+        android:id="@+id/performerValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/performerTitleTextView"/>
+
+    <TextView
+        android:id="@+id/reactionTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Reaction"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/performerTitleTextView"/>
+
+    <TextView
+        android:id="@+id/reactionValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/performerValueTextView"/>
+
+    <TextView
+        android:id="@+id/protocolAppliedTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Protocol Applied"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/performerValueTextView"/>
+
+    <TextView
+        android:id="@+id/protocolAppliedValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/protocolAppliedTitleTextView"/>
+
+    <TextView
+        android:id="@+id/manufacturerTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Manufacturer"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/protocolAppliedTitleTextView"/>
+
+    <TextView
+        android:id="@+id/manufacturerValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/protocolAppliedValueTextView"/>
+
+    <TextView
+        android:id="@+id/locationTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/protocolAppliedValueTextView"/>
+
+    <TextView
+        android:id="@+id/locationValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationTitleTextView"/>
+
+    <TextView
+        android:id="@+id/encounterTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Encounter Participant"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/locationTitleTextView"/>
+
+    <TextView
+        android:id="@+id/encounterParticipantValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verticalDivider"
+        app:layout_constraintTop_toTopOf="@+id/locationValueTextView"/>
+
+    <TextView
+        android:id="@+id/reasonCodeTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="ReasonCode"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationValueTextView"/>
+
+    <TextView
+        android:id="@+id/reasonCodeValueTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:lines="1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/verticalDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reasonCodeTitleTextView"/>
+
     <LinearLayout
         android:id="@+id/organization_ll"
         android:layout_width="wrap_content"
@@ -115,7 +342,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doseQuantityValueTextView">
+        app:layout_constraintTop_toBottomOf="@+id/reasonCodeValueTextView">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
