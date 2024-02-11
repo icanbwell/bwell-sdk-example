@@ -19,7 +19,6 @@ import com.bwell.sampleapp.databinding.ImmunizationDetailViewBinding
 import com.bwell.sampleapp.utils.formatDate
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -100,6 +99,17 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
                     } else {
                         binding.immunizationOverviewView.organizationLl.visibility = View.GONE
                     }
+                    binding.immunizationOverviewView.lotNumberValueTextView.text = immunization?.lotNumber
+                    binding.immunizationOverviewView.siteValueTextView.text = immunization?.site?.text.toString()
+                    binding.immunizationOverviewView.routeValueTextView.text = immunization?.route?.text.toString()
+                    binding.immunizationOverviewView.primarySourceValueTextView.text = immunization?.primarySource.toString()
+                    binding.immunizationOverviewView.performerValueTextView.text = immunization?.performer?.joinToString(", ")
+                    binding.immunizationOverviewView.reactionValueTextView.text = immunization?.reaction?.joinToString(", ")
+                    binding.immunizationOverviewView.protocolAppliedValueTextView.text = immunization?.protocolApplied?.joinToString(", ")
+                    binding.immunizationOverviewView.manufacturerValueTextView.text = immunization?.manufacturer?.name.toString()
+                    binding.immunizationOverviewView.locationValueTextView.text = immunization?.location?.name.toString()
+                    binding.immunizationOverviewView.encounterParticipantValueTextView.text = immunization?.encounter?.participant?.firstOrNull()?.individual?.name.toString()
+                    binding.immunizationOverviewView.reasonCodeValueTextView.text = immunization?.reasonCode?.joinToString(", ")
                 }
             }
         }
