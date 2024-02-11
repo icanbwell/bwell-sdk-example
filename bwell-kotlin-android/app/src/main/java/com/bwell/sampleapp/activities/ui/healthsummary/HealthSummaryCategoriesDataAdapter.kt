@@ -138,7 +138,7 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is ImmunizationGroup -> item.occurrenceDateTime.toString()
             is ProcedureGroup -> item.performedDate.toString()
             is VitalSignGroup -> item.effectiveDateTime.toString()
-            is EncounterGroup -> item.period?.start.toString()
+            is EncounterGroup -> item.date.toString()
             is ConditionGroup -> item.recordedDate.toString()
             else -> null
         }

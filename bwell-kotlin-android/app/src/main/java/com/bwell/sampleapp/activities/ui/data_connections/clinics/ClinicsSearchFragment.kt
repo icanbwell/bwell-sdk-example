@@ -73,7 +73,7 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
                 .searchTerm(searchTerm)
                 .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
                 .sortBy(SortField.CONTENT, SortOrder.ASC)
-                .page(1)
+                .page(0)
                 .pageSize(100)
                 .build()
             clinicsViewModel.searchConnections(request)
