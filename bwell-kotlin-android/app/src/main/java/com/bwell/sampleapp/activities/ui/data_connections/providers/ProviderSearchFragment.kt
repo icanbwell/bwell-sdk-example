@@ -129,7 +129,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
         val longitude = -76.702898
         val distance = 200.0
         //val gender = Gender.MALE
-        val page = 1
+        val page = 0
         val pageSize = 100
 
         val request = ProviderSearchRequest.Builder()
