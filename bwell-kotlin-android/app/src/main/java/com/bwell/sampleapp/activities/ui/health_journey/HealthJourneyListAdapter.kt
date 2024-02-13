@@ -30,7 +30,7 @@ class HealthJourneyListAdapter(private val launches: List<Task>?) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches?.get(position)
-        holder.binding.typeText.text = launch?.code?.coding?.get(0)?.code?: ""
+        holder.binding.typeText.text = getActivityNameFromTask(launch)
         holder.binding.descriptionTxt.text = launch?.description?: ""
         holder.binding.typeLogo.load(R.drawable.vaccine_icon) {
             placeholder(R.drawable.vaccine_icon)
@@ -46,5 +46,9 @@ class HealthJourneyListAdapter(private val launches: List<Task>?) :
         holder.binding.root.setOnClickListener {
             onItemClicked?.invoke(launch)
         }
+    }
+
+    private fun getActivityNameFromTask(task: Task?): String? {
+        return task?.identifier?.firstOrNull { it.id == "activityName" }?.value
     }
 }
