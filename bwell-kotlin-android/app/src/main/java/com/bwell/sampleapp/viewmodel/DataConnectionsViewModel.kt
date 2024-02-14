@@ -87,14 +87,14 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         }
     }
 
-    private val _createConnectionData = MutableStateFlow<OperationOutcome?>(null)
-    val createConnectionData: StateFlow<OperationOutcome?> = _createConnectionData
+    private val _createConnectionData = MutableStateFlow<BWellResult<Connection>?>(null)
+    val createConnectionData: StateFlow<BWellResult<Connection>?> = _createConnectionData
 
     fun createConnection(connectionRequest: ConnectionCreateRequest) {
         viewModelScope.launch {
             try {
                 repository?.createConnection(connectionRequest)?.collect { connectionOutcome ->
-                    _createConnectionData.emit(connectionOutcome)
+                     _createConnectionData.emit(connectionOutcome)
                 }
             } catch (ex: Exception) {
                 Log.i(TAG, ex.toString())

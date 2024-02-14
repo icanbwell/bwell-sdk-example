@@ -40,7 +40,7 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
 
     private lateinit var entityName: String
     private lateinit var entityId: String
-    private var authType: ConnectionCategory? = null
+    private lateinit var authType: ConnectionCategory
     private lateinit var dataSourceId: String
 
     private val binding get() = _binding!!
@@ -147,8 +147,8 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
         when(authType) {
             ConnectionCategory.BASIC -> binding.frameLayoutProceed.setOnClickListener { onClickProceedBasic() }
             ConnectionCategory.OAUTH -> binding.frameLayoutProceed.setOnClickListener { onClickProceedOAuth() }
-            null -> {
-                Log.w("addListenersToProceed", "tried to set listeners with null authType")
+            ConnectionCategory.UNRECOGNIZED -> {
+                Log.w("addListenersToProceed", "tried to set listeners with UNKNOWN authType")
                 return
             }
         }

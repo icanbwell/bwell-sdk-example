@@ -63,11 +63,11 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         }
     }
 
-    suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<OperationOutcome?> =
+    suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<BWellResult<Connection>?> =
         flow {
             try {
-                val connectionOutcome = BWellSdk.connections.createConnection(connectionRequest)
-                emit(connectionOutcome)
+                val result = BWellSdk.connections.createConnection(connectionRequest)
+                emit(result)
             } catch (e: Exception) {
                 // Handle exceptions, if any
                 emit(null)
