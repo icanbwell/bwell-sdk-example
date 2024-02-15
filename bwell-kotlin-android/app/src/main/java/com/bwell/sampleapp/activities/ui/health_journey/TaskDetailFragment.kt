@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,7 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.TaskDetailViewBinding
+import com.bwell.sampleapp.utils.loadRemoteImageIntoImageView
 import com.bwell.sampleapp.viewmodel.HealthJourneyViewModel
 import com.bwell.sampleapp.viewmodel.HealthJourneyViewModelFactory
 import kotlinx.coroutines.launch
@@ -73,8 +75,27 @@ class TaskDetailFragment : Fragment(), View.OnClickListener {
                         is BWellResult.ResourceCollection -> {
                             val dataList = result.data
                             for (i in 0 until (dataList?.size ?: 0)) {
-                                getContentData(dataList?.get(i))?.let {
-                                    binding.taskWebView.loadDataWithBaseURL(null,
+                                val task = dataList?.get(i)
+
+                                // set title
+                                binding.titleTextView.text = name
+
+                                // set image
+                                loadRemoteImageIntoImageView(binding.taskImageView, tasksViewModel.getContentImage(task))
+
+                                // set description
+                                tasksViewModel.getContentDescription(task)?.let {
+                                    binding.taskDescriptionWebview.loadDataWithBaseURL(null,
+                                        it, "text/html", "utf-8", null)
+                                }
+
+                                // set button
+                                val buttonText = tasksViewModel.getContentButtonText(task)
+                                binding.taskButton.text = buttonText
+
+                                // set references
+                                tasksViewModel.getContentReferences(task)?.let {
+                                    binding.taskReferencesWebview.loadDataWithBaseURL(null,
                                         it, "text/html", "utf-8", null)
                                 }
                             }
@@ -84,11 +105,5 @@ class TaskDetailFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
-    }
-
-    private fun getContentData(task: Task?): String? {
-        return task?.extension?.firstOrNull {
-            it.url == "https://www.icanbwell.com/contentDescription"
-        }?.valueString
     }
 }
