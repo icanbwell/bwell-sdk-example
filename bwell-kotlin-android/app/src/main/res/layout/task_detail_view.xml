@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/health_journey_task_data_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/health_summary_categories_data_view"
-    android:layout_margin="20dp"
-    tools:context=".activities.ui.healthsummary.HealthSummaryFragment">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/leftArrowImageView"
@@ -15,31 +11,70 @@
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_arrow_back_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="Task Detail"
+        android:textColor="#0076AB"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#0076AB"
-        android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@+id/leftArrowImageView"
-        app:layout_constraintTop_toTopOf="@+id/leftArrowImageView"/>
+        app:layout_constraintTop_toTopOf="@+id/leftArrowImageView" />
+
+    <ImageView
+        android:id="@+id/taskImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
     <WebView
-        android:id="@+id/taskWebView"
-        android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
+        android:id="@+id/taskDescriptionWebview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toTopOf="@id/task_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/leftArrowImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/taskImageView" />
+
+    <Button
+        android:id="@+id/task_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Action Button"
+        app:layout_constraintBottom_toTopOf="@id/taskReferencesTitleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/taskReferencesTitleTextView"
+        android:layout_width="0dp"
+        android:layout_marginBottom="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:text="References"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="WebViewLayout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-
+    <WebView
+        android:id="@+id/taskReferencesWebview"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

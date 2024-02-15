@@ -34,7 +34,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/description_txt"
+        android:id="@+id/status_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/pending"

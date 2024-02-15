@@ -26,4 +26,28 @@ class HealthJourneyViewModel (private val repository: HealthJourneyRepository?) 
             }
         }
     }
+
+    fun getContentDescription(task: Task?): String? {
+        return task?.extension?.firstOrNull {
+            it.url == "https://www.icanbwell.com/contentDescription"
+        }?.valueString
+    }
+
+    fun getContentImage(task: Task?): String? {
+        return task?.extension?.firstOrNull {
+            it.url == "https://www.icanbwell.com/contentImage"
+        }?.valueString
+    }
+
+    fun getContentButtonText(task: Task?): String? {
+        return task?.extension?.firstOrNull {
+            it.url == "https://www.icanbwell.com/contentButtonText"
+        }?.valueString
+    }
+
+    fun getContentReferences(task: Task?): String? {
+        return task?.extension?.firstOrNull {
+            it.url == "https://www.icanbwell.com/contentReferences"
+        }?.valueString
+    }
 }
