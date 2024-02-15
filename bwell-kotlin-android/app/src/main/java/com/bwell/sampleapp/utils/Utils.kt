@@ -12,6 +12,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import android.graphics.BitmapFactory
+import android.widget.ImageView
+import kotlinx.coroutines.*
 
 fun hideKeyboard(context : Context,windowToken : IBinder){
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -71,5 +74,25 @@ fun parseDateStringToDate(dateString: String, dateFormatPattern: String): Date? 
         dateFormat.parse(dateString)
     } catch (e: Exception) {
         null
+    }
+}
+
+fun loadRemoteImageIntoImageView(imageView: ImageView, imageUrl: String?) {
+    // Launch a new coroutine in the background to download the image
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val url = java.net.URL(imageUrl)
+            val connection = url.openConnection()
+            connection.connect()
+            val inputStream = connection.getInputStream()
+
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+
+            withContext(Dispatchers.Main) {
+                imageView.setImageBitmap(bitmap)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
