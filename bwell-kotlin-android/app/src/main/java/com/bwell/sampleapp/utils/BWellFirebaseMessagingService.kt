@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import com.bwell.sampleapp.activities.NavigationActivity
@@ -51,7 +50,7 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             if (action.startsWith("ActivityDefinition/")) {
                 resultIntent = Intent(this, NavigationActivity::class.java)
                 val bundle = Bundle().apply {
-                    putString("notification_action", action)
+                    putString("action", action)
                 }
                 resultIntent.putExtras(bundle)
             }

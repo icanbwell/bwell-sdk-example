@@ -39,6 +39,7 @@ class NavigationActivity : AppCompatActivity() {
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("TEST_LOG: onCreate called")
         repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
 
         binding = ActivityNavigationBinding.inflate(layoutInflater)
@@ -70,12 +71,16 @@ class NavigationActivity : AppCompatActivity() {
             .build()
         registerDeviceToken(registerDeviceTokenRequest)
         askNotificationPermission()
-
-        handleDeepLink()
     }
 
-    private fun handleDeepLink() {
-        intent.extras?.getString("notification_action")?.let { action ->
+    override fun onResume() {
+        super.onResume()
+        println("TEST_LOG: onResume called")
+        handleDeeplink()
+    }
+
+    private fun handleDeeplink() {
+        intent.extras?.getString("action")?.let { action ->
             if (action.startsWith("ActivityDefinition/")) {
                 val bundle = Bundle().apply {
                     val taskId = action.replace("ActivityDefinition/", "")
