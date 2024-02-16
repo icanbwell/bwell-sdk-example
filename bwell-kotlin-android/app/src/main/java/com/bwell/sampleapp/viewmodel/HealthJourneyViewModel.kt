@@ -27,6 +27,10 @@ class HealthJourneyViewModel (private val repository: HealthJourneyRepository?) 
         }
     }
 
+    fun getActivityName(task: Task?): String? {
+        return task?.identifier?.firstOrNull { it.id == "activityName" }?.value
+    }
+
     fun getContentDescription(task: Task?): String? {
         return task?.extension?.firstOrNull {
             it.url == "https://www.icanbwell.com/contentDescription"

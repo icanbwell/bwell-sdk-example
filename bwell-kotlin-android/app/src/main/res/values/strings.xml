@@ -44,6 +44,10 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="encrypted_shared_preferences">ENCRYPTED_SHARED_PREFERENCES</string>
+    <string name="shared_preferences">SHARED_PREFERENCES</string>
+    <string name="fcm_device_token">FCM_DEVICE_TOKEN</string>
+    <string name="fcm_device_token_registered">FCM_DEVICE_TOKEN_REGISTERED</string>
     <string name="lee_health">LEE HEALTH</string>
     <string name="menu_login">Login</string>
     <string name="menu_home">Home</string>

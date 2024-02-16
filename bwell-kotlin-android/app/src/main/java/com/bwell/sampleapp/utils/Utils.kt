@@ -1,10 +1,17 @@
 package com.bwell.sampleapp.utils
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.IBinder
 import android.text.Html
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import com.bwell.sampleapp.R
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
@@ -12,9 +19,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import android.graphics.BitmapFactory
-import android.widget.ImageView
-import kotlinx.coroutines.*
 
 fun hideKeyboard(context : Context,windowToken : IBinder){
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -95,4 +99,22 @@ fun loadRemoteImageIntoImageView(imageView: ImageView, imageUrl: String?) {
             e.printStackTrace()
         }
     }
+}
+
+fun getEncryptedSharedPreferences(context: Context): EncryptedSharedPreferences {
+    var masterKeyAlias = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+        .build()
+
+    return EncryptedSharedPreferences.create(
+        context,
+        R.string.encrypted_shared_preferences.toString(),
+        masterKeyAlias,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    ) as EncryptedSharedPreferences
+}
+
+fun getSharedPreferences(context: Context): SharedPreferences {
+    return context.getSharedPreferences(R.string.shared_preferences.toString(), Context.MODE_PRIVATE)
 }
