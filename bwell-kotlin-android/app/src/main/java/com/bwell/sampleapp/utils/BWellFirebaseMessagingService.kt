@@ -1,10 +1,12 @@
 package com.bwell.sampleapp.utils
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import com.bwell.sampleapp.R
@@ -52,7 +54,7 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun createNotification(title: String, body: String, action: String, actionType: String) {
-        println("TEST_LOG createNotification called: ($title, $body, $action, $actionType)",)
+        println("TEST_LOG createNotification called: ($title, $body, $action, $actionType)")
         val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, Notification(
         ))
             .setContentTitle(title)
@@ -82,6 +84,17 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
 
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            /* Create or update. */
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "BWell Sample App Notification",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
 
         notificationManager.notify(0, notificationBuilder.build())
         println("TEST_LOG notificationManager.notify")
