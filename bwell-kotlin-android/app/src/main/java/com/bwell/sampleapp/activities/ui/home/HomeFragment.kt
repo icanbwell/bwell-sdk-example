@@ -73,8 +73,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
             R.string.fcm_device_token.toString(), null
         )
 
-        println("FCM_TOKEN onCreate: fcmToken: $fcmToken")
-        println("FCM_TOKEN onCreate: isRegistered: $isRegistered")
         if (fcmToken != null && !isRegistered) {
             val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
                 .deviceToken(fcmToken)
@@ -83,10 +81,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 .build()
 
             lifecycleScope.launch {
-                println("FCM_TOKEN onCreate lifecycleScope.launch")
                 val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
                 registerOutcome.collect { outcome ->
-                    println("FCM_TOKEN onCreate outcome: $outcome")
                     outcome?.let {
                         if (outcome.success()) {
                             println("FCM_TOKEN Registered Successfully")
