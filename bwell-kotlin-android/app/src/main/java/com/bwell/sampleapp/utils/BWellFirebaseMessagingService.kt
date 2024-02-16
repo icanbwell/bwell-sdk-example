@@ -1,21 +1,30 @@
 package com.bwell.sampleapp.utils
 
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
+import com.bwell.device.requests.deviceToken.DevicePlatform
+import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.activities.NavigationActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-const val CHANNEL_ID = "1"
+private const val CHANNEL_ID = "1"
 
 
 class BWellFirebaseMessagingService : FirebaseMessagingService() {
+    private val job = Job()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + job)
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (remoteMessage.data?.isNotEmpty() == true) {
             val data: Map<String, String> = remoteMessage.data
@@ -31,7 +40,29 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        println("FCM_TOKEN: $token")
+        registerDeviceToken(token)
+    }
+
+    private fun registerDeviceToken(token: String) {
+        val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
+            .deviceToken(token)
+            .applicationName("com.bwell.sampleapp")
+            .platform(DevicePlatform.ANDROID)
+            .build()
+
+        val repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
+        coroutineScope.launch {
+            val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
+            registerOutcome.collect { outcome ->
+                outcome?.let {
+                    if (outcome.success()) {
+                        println("FCM_TOKEN Registered Successfully")
+                    } else {
+                        println("FCM_TOKEN Failed to register")
+                    }
+                }
+            }
+        }
     }
 
     private fun createNotification(title: String, body: String, action: String, actionType: String) {
@@ -65,5 +96,10 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         notificationManager.notify(0, notificationBuilder.build())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }

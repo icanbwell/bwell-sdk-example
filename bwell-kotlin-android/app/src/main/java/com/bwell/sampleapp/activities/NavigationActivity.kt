@@ -24,9 +24,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.repository.Repository
-import com.bwell.device.requests.deviceToken.DevicePlatform
-import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
-import com.bwell.sampleapp.activities.ui.health_journey.HealthJourneyFragment
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -63,12 +60,6 @@ class NavigationActivity : AppCompatActivity() {
             tempDeviceId = "foo"
         }
         deviceId = tempDeviceId
-        val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
-            .deviceToken(deviceId)
-            .applicationName("com.sec.android.app.shealth")
-            .platform(DevicePlatform.ANDROID)
-            .build()
-        registerDeviceToken(registerDeviceTokenRequest)
         askNotificationPermission()
     }
 
@@ -85,21 +76,6 @@ class NavigationActivity : AppCompatActivity() {
                     putString("task_id", taskId)
                 }
                 navController.navigate(R.id.nav_health_journey, bundle)
-            }
-        }
-    }
-
-    private fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest) {
-        lifecycleScope.launch {
-            val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
-            registerOutcome.collect { outcome ->
-                outcome?.let {
-                    if (outcome.success()) {
-                        //device registered successfully
-                    } else {
-                        //device not registered
-                    }
-                }
             }
         }
     }
