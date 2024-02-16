@@ -15,14 +15,17 @@
 
     <TextView
         android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Task Detail"
+        android:layout_marginStart="30dp"
+        android:maxLines="2"
+        android:text=""
+        android:textAlignment="viewStart"
         android:textColor="#0076AB"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/leftArrowImageView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/leftArrowImageView" />
 
     <ImageView
@@ -47,6 +50,7 @@
 
     <Button
         android:id="@+id/task_button"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

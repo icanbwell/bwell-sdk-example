@@ -21,10 +21,12 @@ import android.provider.Settings.Secure.getString
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+import com.bwell.sampleapp.activities.ui.health_journey.HealthJourneyFragment
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -32,6 +34,7 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNavigationBinding
     private lateinit var deviceId:String
     private lateinit var repository:Repository
+    private lateinit var navController: NavController
 
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +48,7 @@ class NavigationActivity : AppCompatActivity() {
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_navigation)
+        navController = findNavController(R.id.nav_host_fragment_content_navigation)
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.nav_login, R.id.nav_home, R.id.nav_data_connections, R.id.nav_health_summary, R.id.nav_health_journey, R.id.nav_insurance, R.id.nav_profile, R.id.nav_labs, R.id.nav_medicines
             ), drawerLayout
@@ -67,6 +70,20 @@ class NavigationActivity : AppCompatActivity() {
             .build()
         registerDeviceToken(registerDeviceTokenRequest)
         askNotificationPermission()
+
+        handleDeepLink()
+    }
+
+    private fun handleDeepLink() {
+        intent.extras?.getString("notification_action")?.let { action ->
+            if (action.startsWith("ActivityDefinition/")) {
+                val bundle = Bundle().apply {
+                    val taskId = action.replace("ActivityDefinition/", "")
+                    putString("task_id", taskId)
+                }
+                navController.navigate(R.id.nav_health_journey, bundle)
+            }
+        }
     }
 
     private fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest) {
