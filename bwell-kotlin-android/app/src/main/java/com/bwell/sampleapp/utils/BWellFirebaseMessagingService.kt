@@ -11,17 +11,12 @@ import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.NavigationActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 
 
 private const val CHANNEL_ID = "1"
 
 
 class BWellFirebaseMessagingService : FirebaseMessagingService() {
-    private val job = Job()
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (remoteMessage.data?.isNotEmpty() == true) {
@@ -42,6 +37,7 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun storeDeviceToken(token: String) {
+        println("FCM_TOKEN storeDeviceToken: $token")
         // save the fcm token in encrypted shared preferences
         val encryptedPreferences = getEncryptedSharedPreferences(applicationContext)
         val encryptedEditor = encryptedPreferences.edit()
@@ -56,6 +52,7 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun createNotification(title: String, body: String, action: String, actionType: String) {
+        println("TEST_LOG createNotification called: ($title, $body, $action, $actionType)",)
         val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, Notification(
         ))
             .setContentTitle(title)
@@ -64,9 +61,9 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             .setChannelId(CHANNEL_ID)
             .setSilent(true)
             .setSmallIcon(coil.base.R.drawable.notification_icon_background)
-            .setSound(null)
 
         if (actionType == "deep_link") {
+            println("TEST_LOG actionType == deep_link")
             var resultIntent: Intent? = null
             if (action.startsWith("ActivityDefinition/")) {
                 resultIntent = Intent(this, NavigationActivity::class.java)
@@ -79,6 +76,7 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             if (resultIntent != null) {
                 val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
                 notificationBuilder.setContentIntent(pendingIntent)
+                println("TEST_LOG resultIntent != null")
             }
         }
 
@@ -86,10 +84,6 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         notificationManager.notify(0, notificationBuilder.build())
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
+        println("TEST_LOG notificationManager.notify")
     }
 }

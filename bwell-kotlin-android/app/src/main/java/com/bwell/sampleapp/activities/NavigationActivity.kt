@@ -65,8 +65,6 @@ class NavigationActivity : AppCompatActivity() {
         }
         deviceId = tempDeviceId
         askNotificationPermission()
-
-        registerDeviceToken()
     }
 
     override fun onResume() {
@@ -94,44 +92,6 @@ class NavigationActivity : AppCompatActivity() {
     override fun onDestroy() {
         //unregisterDeviceToken(deviceId)
         super.onDestroy()
-    }
-
-    private fun registerDeviceToken() {
-        val sharedPreferences = com.bwell.sampleapp.utils.getSharedPreferences(applicationContext)
-        val isRegistered = sharedPreferences.getBoolean(
-            R.string.fcm_device_token_registered.toString(),
-            false
-        )
-
-        val encryptedPreferences = getEncryptedSharedPreferences(applicationContext)
-        val fcmToken = encryptedPreferences.getString(
-            R.string.fcm_device_token.toString(), null
-        )
-
-        if (fcmToken != null && !isRegistered) {
-            val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
-                .deviceToken(fcmToken)
-                .applicationName("com.bwell.sampleapp")
-                .platform(DevicePlatform.ANDROID)
-                .build()
-
-            val repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
-            lifecycleScope.launch {
-                val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
-                registerOutcome.collect { outcome ->
-                    outcome?.let {
-                        if (outcome.success()) {
-                            println("FCM_TOKEN Registered Successfully")
-                            val editor = sharedPreferences.edit()
-                            editor.putBoolean(R.string.fcm_device_token_registered.toString(), true)
-                            editor.apply()
-                        } else {
-                            println("FCM_TOKEN Failed to register")
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun unregisterDeviceToken(deviceToken: String) {
