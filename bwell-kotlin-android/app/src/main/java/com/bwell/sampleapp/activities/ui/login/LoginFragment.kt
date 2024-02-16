@@ -116,11 +116,6 @@ class LoginFragment : Fragment() {
             clientKey,
             oAuthCredentials
         )
-
-        // Example: Show a toast message
-//        Toast.makeText(context, "Button pressed!", Toast.LENGTH_SHORT).show()
-
-        findNavController().navigate(R.id.nav_home)
     }
 
     companion object {
@@ -176,6 +171,8 @@ class LoginFragment : Fragment() {
             //deregisterDeviceToken(deviceKey)
 
             Log.i(TAG, "Finished initializing SDK")
+
+            findNavController().navigate(R.id.nav_home)
         }
     }
 
