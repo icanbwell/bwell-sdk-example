@@ -5,25 +5,29 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
+import android.provider.Settings.Secure
+import android.provider.Settings.Secure.getString
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
+import com.bwell.device.requests.deviceToken.DevicePlatform
+import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ActivityNavigationBinding
-import kotlinx.coroutines.launch
-import android.provider.Settings.Secure
-import android.provider.Settings.Secure.getString
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.repository.Repository
+import com.bwell.sampleapp.utils.getEncryptedSharedPreferences
+import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.launch
+
 
 class NavigationActivity : AppCompatActivity() {
 
@@ -61,6 +65,8 @@ class NavigationActivity : AppCompatActivity() {
         }
         deviceId = tempDeviceId
         askNotificationPermission()
+
+        registerDeviceToken()
     }
 
     override fun onResume() {
@@ -88,6 +94,44 @@ class NavigationActivity : AppCompatActivity() {
     override fun onDestroy() {
         //unregisterDeviceToken(deviceId)
         super.onDestroy()
+    }
+
+    private fun registerDeviceToken() {
+        val sharedPreferences = com.bwell.sampleapp.utils.getSharedPreferences(applicationContext)
+        val isRegistered = sharedPreferences.getBoolean(
+            R.string.fcm_device_token_registered.toString(),
+            false
+        )
+
+        val encryptedPreferences = getEncryptedSharedPreferences(applicationContext)
+        val fcmToken = encryptedPreferences.getString(
+            R.string.fcm_device_token.toString(), null
+        )
+
+        if (fcmToken != null && !isRegistered) {
+            val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
+                .deviceToken(fcmToken)
+                .applicationName("com.bwell.sampleapp")
+                .platform(DevicePlatform.ANDROID)
+                .build()
+
+            val repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
+            lifecycleScope.launch {
+                val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
+                registerOutcome.collect { outcome ->
+                    outcome?.let {
+                        if (outcome.success()) {
+                            println("FCM_TOKEN Registered Successfully")
+                            val editor = sharedPreferences.edit()
+                            editor.putBoolean(R.string.fcm_device_token_registered.toString(), true)
+                            editor.apply()
+                        } else {
+                            println("FCM_TOKEN Failed to register")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun unregisterDeviceToken(deviceToken: String) {

@@ -7,16 +7,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
-import com.bwell.device.requests.deviceToken.DevicePlatform
-import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
-import com.bwell.sampleapp.BWellSampleApplication
+import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.NavigationActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+
 
 private const val CHANNEL_ID = "1"
 
@@ -40,29 +38,21 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        registerDeviceToken(token)
+        storeDeviceToken(token)
     }
 
-    private fun registerDeviceToken(token: String) {
-        val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
-            .deviceToken(token)
-            .applicationName("com.bwell.sampleapp")
-            .platform(DevicePlatform.ANDROID)
-            .build()
+    private fun storeDeviceToken(token: String) {
+        // save the fcm token in encrypted shared preferences
+        val encryptedPreferences = getEncryptedSharedPreferences(applicationContext)
+        val encryptedEditor = encryptedPreferences.edit()
+        encryptedEditor.putString(R.string.fcm_device_token.toString(), token)
+        encryptedEditor.apply()
 
-        val repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
-        coroutineScope.launch {
-            val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
-            registerOutcome.collect { outcome ->
-                outcome?.let {
-                    if (outcome.success()) {
-                        println("FCM_TOKEN Registered Successfully")
-                    } else {
-                        println("FCM_TOKEN Failed to register")
-                    }
-                }
-            }
-        }
+        // save a flag indicating that the new fcm token has not been registered
+        val sharedPreferences = getSharedPreferences(applicationContext)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(R.string.fcm_device_token_registered.toString(), false)
+        editor.apply()
     }
 
     private fun createNotification(title: String, body: String, action: String, actionType: String) {
