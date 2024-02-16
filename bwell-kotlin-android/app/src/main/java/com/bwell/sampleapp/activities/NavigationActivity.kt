@@ -39,7 +39,6 @@ class NavigationActivity : AppCompatActivity() {
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("TEST_LOG: onCreate called")
         repository = (this.application as? BWellSampleApplication)?.bWellRepository!!
 
         binding = ActivityNavigationBinding.inflate(layoutInflater)
@@ -75,7 +74,6 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        println("TEST_LOG: onResume called")
         handleDeeplink()
     }
 
