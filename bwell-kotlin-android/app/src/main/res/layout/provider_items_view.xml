@@ -54,6 +54,17 @@
         android:layout_marginLeft="5dp"
         android:textSize="18sp"/>
 
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/address"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Launch Site "
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"/>
+
     <!-- Connection status Button -->
     <FrameLayout
         android:id="@+id/frameLayoutConnectionStatus"
