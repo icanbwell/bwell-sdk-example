@@ -135,6 +135,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
             .location(latitude, longitude, distance)
+            .includePopulatedPROAonly()
             .sortBy(SortField.DISTANCE, SortOrder.ASC)
             .page(page)
             .pageSize(pageSize)

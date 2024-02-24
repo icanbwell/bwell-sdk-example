@@ -11,6 +11,9 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
+import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
+import com.bwell.common.models.domain.consent.enums.ConsentStatus
 import com.bwell.core.config.BWellConfig
 import com.bwell.core.config.KeyStoreConfig
 import com.bwell.core.config.LogLevel
@@ -18,9 +21,11 @@ import com.bwell.core.config.RetryPolicy
 import com.bwell.core.network.auth.Credentials
 import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+import com.bwell.generated.consents.CreateConsentMutation
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.singletons.BWellSdk
+import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.InputStream
@@ -168,6 +173,15 @@ class LoginFragment : Fragment() {
                     .build()
             registerDeviceToken(registerDeviceTokenRequest)
 
+            val createConsentRequest: ConsentCreateRequest = ConsentCreateRequest.Builder()
+                .category(ConsentCategoryCode.TOS)
+                .status(ConsentStatus.ACTIVE)
+                .provision(ConsentProvisionType.PERMIT)
+                .build()
+            createConsent(createConsentRequest)
+
+
+
             //deregisterDeviceToken(deviceKey)
 
             Log.i(TAG, "Finished initializing SDK")
@@ -196,6 +210,22 @@ class LoginFragment : Fragment() {
         lifecycleScope.launch {
             val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
             val registerOutcome = repository?.unregisterDeviceToken(deviceToken)
+            registerOutcome?.collect { outcome ->
+                outcome?.let {
+                    if (outcome.success()) {
+                        //device registered successfully
+                    } else {
+                        //device not registered
+                    }
+                }
+            }
+        }
+    }
+
+    private fun createConsent(consentCreateRequest: ConsentCreateRequest) {
+        lifecycleScope.launch {
+            val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+            val registerOutcome = repository?.createConsent(consentCreateRequest)
             registerOutcome?.collect { outcome ->
                 outcome?.let {
                     if (outcome.success()) {
