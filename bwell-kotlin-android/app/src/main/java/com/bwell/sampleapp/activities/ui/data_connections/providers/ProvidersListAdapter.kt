@@ -10,6 +10,7 @@ import com.bwell.common.models.domain.common.location.Location
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ProviderItemsViewBinding
+import kotlin.math.round
 
 /*
 *Display the Providers List in RecyclerView
@@ -44,9 +45,11 @@ class ProvidersListAdapter(private var launches: List<Provider>?) :
             val city: String? = location?.address?.city
             val state: String? = location?.address?.state
             holder.binding.address.text = city+", "+state
-        }else{
+            holder.binding.distance.text = round(location?.distanceInMiles!!).toString() + " in miles"
+        }else {
             holder.binding.address.text = "Null Data"
         }
+
         var specialtiesNames: String = "Null Data";
         if(launch.specialty!!.size > 0)
         {
