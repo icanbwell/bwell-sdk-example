@@ -73,6 +73,7 @@ class ProfileFragment : Fragment() {
                 .build()
 
             profileViewModel.updatePersonData(updatedPerson)
+            profileViewModel.createConsent()
         }
 
 
