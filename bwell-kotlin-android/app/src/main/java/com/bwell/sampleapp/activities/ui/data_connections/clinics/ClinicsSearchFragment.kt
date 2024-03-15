@@ -72,7 +72,7 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
             val request = ProviderSearchRequest.Builder()
                 .searchTerm(searchTerm)
                 .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
-                .sortBy(SortField.CONTENT, SortOrder.ASC)
+                //.sortBy(SortField.CONTENT, SortOrder.ASC)
                 .page(0)
                 .pageSize(100)
                 .build()
