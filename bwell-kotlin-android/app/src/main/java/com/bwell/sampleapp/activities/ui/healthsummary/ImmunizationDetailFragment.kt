@@ -83,7 +83,7 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
         binding.overviewTextView.setOnClickListener(null)
 
         val lastUpdateSearchDate = SearchDate.Builder()
-            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2024-01-01"))
+            .greaterThanOrEqualTo(SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2020-01-12 22:00:00"))
             .build()
 
         val request = ImmunizationRequest.Builder()

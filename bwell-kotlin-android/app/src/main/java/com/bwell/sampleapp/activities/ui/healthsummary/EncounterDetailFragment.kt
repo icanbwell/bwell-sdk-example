@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.healthsummary.encounter.Encounter
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
+import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
 import com.bwell.sampleapp.BWellSampleApplication
@@ -21,6 +22,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 class EncounterDetailFragment : Fragment(), View.OnClickListener {
@@ -80,8 +82,13 @@ class EncounterDetailFragment : Fragment(), View.OnClickListener {
         binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setOnClickListener(null)
 
+        val lastUpdatedSearchDate = SearchDate.Builder()
+            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-01-12"))
+            .build()
+
         val request = EncounterRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
+            .lastUpdated(lastUpdatedSearchDate)
             .build()
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.ENCOUNTER)
