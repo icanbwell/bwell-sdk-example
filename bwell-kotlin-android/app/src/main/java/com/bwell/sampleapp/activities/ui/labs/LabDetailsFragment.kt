@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.common.Coding
-import com.bwell.common.models.domain.healthdata.observation.Observation
+import com.bwell.common.models.domain.healthdata.common.observation.Observation
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
 import com.bwell.healthdata.lab.requests.LabsRequest
@@ -102,7 +102,7 @@ class LabDetailsFragment : Fragment(), View.OnClickListener {
                         Locale.ROOT)
                     binding.labOverviewView.effectiveStartDateValueTextView.text = formatDate(lab?.effectivePeriod?.start.toString())
                     binding.labOverviewView.effectiveEndDateValueTextView.text = formatDate(lab?.effectivePeriod?.end.toString())
-                    binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.firstOrNull()?.location?.name
+                    binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.name
                     //binding.labOverviewView.organizationName.text = "from " + lab?.?.toString()
                 }
             }

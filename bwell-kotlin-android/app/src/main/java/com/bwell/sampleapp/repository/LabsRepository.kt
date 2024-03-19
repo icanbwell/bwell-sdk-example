@@ -1,10 +1,10 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import com.bwell.common.models.domain.healthdata.common.observation.Observation
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
 import com.bwell.common.models.domain.healthdata.lab.LabKnowledge
-import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.lab.requests.LabGroupsRequest
 import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
