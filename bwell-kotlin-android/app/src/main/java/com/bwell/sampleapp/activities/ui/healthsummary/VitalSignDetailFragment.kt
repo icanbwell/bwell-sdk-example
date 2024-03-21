@@ -9,8 +9,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.common.Coding
-import com.bwell.common.models.domain.healthdata.observation.Observation
+import com.bwell.common.models.domain.healthdata.common.observation.Observation
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
+import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
 import com.bwell.sampleapp.BWellSampleApplication
@@ -21,6 +22,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 class VitalSignDetailFragment : Fragment(), View.OnClickListener {
@@ -78,8 +80,13 @@ class VitalSignDetailFragment : Fragment(), View.OnClickListener {
         binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setOnClickListener(null)
 
+        val lastUpdatedSearchDate = SearchDate.Builder()
+            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-01-12"))
+            .build()
+
         val request = VitalSignsRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
+            .lastUpdated(lastUpdatedSearchDate)
             .build()
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.VITAL_SIGNS)
@@ -92,8 +99,7 @@ class VitalSignDetailFragment : Fragment(), View.OnClickListener {
                         Locale.ROOT)
                     binding.vitalSignOverviewView.effectiveStartDateValueTextView.text = formatDate(vitalSign?.effectivePeriod?.start?.toString())
                     binding.vitalSignOverviewView.effectiveEndDateValueTextView.text = formatDate(vitalSign?.effectivePeriod?.end?.toString())
-                    binding.vitalSignOverviewView.encounterValueTextView.text = vitalSign?.encounter?.location?.firstOrNull()?.location?.name
-                }
+                    binding.vitalSignOverviewView.encounterValueTextView.text = vitalSign?.encounter?.location?.name                }
             }
         }
     }

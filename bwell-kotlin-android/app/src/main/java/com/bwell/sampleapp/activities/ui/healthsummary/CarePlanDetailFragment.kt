@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlan
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
+import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.sampleapp.BWellSampleApplication
@@ -21,6 +22,7 @@ import com.bwell.sampleapp.viewmodel.HealthSummaryViewModel
 import com.bwell.sampleapp.viewmodel.HealthSummaryViewModelFactory
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 class CarePlanDetailFragment : Fragment(), View.OnClickListener {
 
@@ -79,8 +81,13 @@ class CarePlanDetailFragment : Fragment(), View.OnClickListener {
         binding.overviewunderline.setBackgroundColor(resources.getColor(R.color.medicine_tabs_selected_color))
         binding.overviewTextView.setOnClickListener(null)
 
+        val lastUpdatedSearchDate = SearchDate.Builder()
+            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-01-12"))
+            .build()
+
         val request = CarePlanRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
+            .lastUpdated(lastUpdatedSearchDate)
             .build()
 
         healthSummaryViewModel.getHealthSummaryData(request, category = HealthSummaryCategory.CARE_PLAN)

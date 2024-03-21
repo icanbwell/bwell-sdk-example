@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
+import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
@@ -23,6 +24,7 @@ import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MedicineDetailFragment : Fragment(),View.OnClickListener {
@@ -91,8 +93,13 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         binding.whatIsItTextView.setOnClickListener(this)
         binding.medicineKnowledgeView.containerLayout.removeAllViews()
 
+        val lastUpdatedSearchDate = SearchDate.Builder()
+            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-02-12"))
+            .build()
+
         val medicationStatementsRequest = MedicationStatementsRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
+            .lastUpdated(lastUpdatedSearchDate)
             .build()
 
         medicinesViewModel.getMedicationStatements(medicationStatementsRequest)

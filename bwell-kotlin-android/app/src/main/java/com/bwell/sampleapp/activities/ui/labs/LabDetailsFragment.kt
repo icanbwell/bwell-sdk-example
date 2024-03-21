@@ -11,7 +11,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.common.Coding
-import com.bwell.common.models.domain.healthdata.observation.Observation
+import com.bwell.common.models.domain.healthdata.common.observation.Observation
+import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
 import com.bwell.healthdata.lab.requests.LabsRequest
@@ -23,6 +24,7 @@ import com.bwell.sampleapp.viewmodel.LabsViewModelFactory
 import com.bwell.sampleapp.viewmodel.LabsViewModel
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 class LabDetailsFragment : Fragment(), View.OnClickListener {
@@ -88,8 +90,13 @@ class LabDetailsFragment : Fragment(), View.OnClickListener {
         binding.whatIsItTextView.setOnClickListener(this)
         binding.labKnowledgeView.containerLayout.removeAllViews()
 
+        val lastUpdatedSearchDate = SearchDate.Builder()
+            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-01-20"))
+            .build()
+
         val labsRequest = LabsRequest.Builder()
             .groupCode(listOf(Coding(code = groupCode, system = groupSystem)))
+            .lastUpdated(lastUpdatedSearchDate)
             .build()
 
         labsViewModel.getLabs(labsRequest)
@@ -102,7 +109,7 @@ class LabDetailsFragment : Fragment(), View.OnClickListener {
                         Locale.ROOT)
                     binding.labOverviewView.effectiveStartDateValueTextView.text = formatDate(lab?.effectivePeriod?.start.toString())
                     binding.labOverviewView.effectiveEndDateValueTextView.text = formatDate(lab?.effectivePeriod?.end.toString())
-                    binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.firstOrNull()?.location?.name
+                    binding.labOverviewView.encounterValueTextView.text = lab?.encounter?.location?.name
                     //binding.labOverviewView.organizationName.text = "from " + lab?.?.toString()
                 }
             }

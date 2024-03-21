@@ -2,11 +2,11 @@ package com.bwell.sampleapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bwell.common.models.domain.healthdata.common.observation.Observation
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
 import com.bwell.common.models.domain.healthdata.lab.LabKnowledge
-import com.bwell.common.models.domain.healthdata.observation.Observation
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.healthsummary.requests.procedure.LabGroupsRequest
+import com.bwell.healthdata.lab.requests.LabGroupsRequest
 import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
 import com.bwell.healthdata.lab.requests.LabsRequest
 import com.bwell.sampleapp.repository.LabsRepository
