@@ -39,6 +39,11 @@ class HealthJourneyFragment : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        getTasks()
+    }
+
     private fun setAdapter(taskResult: BWellResult<Task>) {
         when (taskResult) {
             is BWellResult.ResourceCollection -> {
