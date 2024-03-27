@@ -1,5 +1,7 @@
 package com.bwell.sampleapp.activities.ui.health_journey
 
+import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.activity.requests.TasksRequest
+import com.bwell.activity.requests.UpdateTaskRequest
+import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -95,6 +99,25 @@ class TaskDetailFragment : Fragment(), View.OnClickListener {
                                 binding.taskButton.text = buttonText
                                 if (buttonText != null) {
                                     binding.taskButton.visibility = View.VISIBLE
+                                }
+
+                                binding.taskButton.setOnClickListener {
+                                    binding.taskStatusTitleTextView.visibility = View.VISIBLE
+
+                                    val taskUpdateRequest = UpdateTaskRequest.Builder()
+                                        .taskId(taskId)
+                                        .newStatus(TaskStatus.COMPLETED)
+                                        .build()
+
+                                    healthJourneyViewModel.updateTask(taskUpdateRequest) {
+                                        if (it?.success() == true) {
+                                            binding.taskStatusTitleTextView.setTextColor(Color.GREEN)
+                                            binding.taskStatusTitleTextView.text = "Success!"
+                                        } else {
+                                            binding.taskStatusTitleTextView.setTextColor(Color.RED)
+                                            binding.taskStatusTitleTextView.text = "Error"
+                                        }
+                                    }
                                 }
 
                                 // set references
