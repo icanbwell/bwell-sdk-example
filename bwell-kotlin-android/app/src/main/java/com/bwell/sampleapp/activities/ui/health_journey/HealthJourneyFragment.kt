@@ -39,11 +39,6 @@ class HealthJourneyFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        getTasks()
-    }
-
     private fun setAdapter(taskResult: BWellResult<Task>) {
         when (taskResult) {
             is BWellResult.ResourceCollection -> {
@@ -106,5 +101,6 @@ class HealthJourneyFragment : Fragment() {
         binding.titleTextView.visibility = View.VISIBLE
         binding.descriptionTextView.visibility = View.VISIBLE
         binding.rvHealthJourney.visibility = View.VISIBLE
+        getTasks()
     }
 }
