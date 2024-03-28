@@ -290,19 +290,4 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
 
         binding.clinicDescriptionTxt.text = "OAuth Login Successful!!!!!! You're the best!"
     }
-
-    private fun<T> getName(entity: T?): String {
-        when (val nonNullEntity =
-            requireNotNull(entity) { "Entity cannot be null in OrganizationInfoFragment" }) {
-            is Organization -> {
-                return nonNullEntity.name.toString()
-            }
-
-            is Provider -> {
-                return nonNullEntity.content.toString()
-            }
-        }
-
-        throw IllegalStateException("Could not get entity name. Must be either Provider or Organization.")
-    }
 }
