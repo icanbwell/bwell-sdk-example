@@ -75,6 +75,10 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
 
         // create the fragment
         val organizationFragment = EntityInfoFragment()
+        val bundle = Bundle()
+        bundle.putString("id", organizationInfoViewModel.getId(organization))
+        bundle.putString("name", organizationInfoViewModel.getName(organization))
+        organizationFragment.arguments = bundle
         val transaction = parentFragmentManager.beginTransaction()
         transaction.hide(this@ProviderSearchFragment)
         transaction.add(R.id.container_layout, organizationFragment)
