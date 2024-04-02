@@ -17,9 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import com.bwell.sampleapp.ui.theme.MyTestAppTheme
 // BWell SDK Usage
 import com.bwell.core.network.auth.Credentials
-import com.bwell.core.config.BWellConfig
-import com.bwell.core.config.LogLevel
-import com.bwell.core.config.RetryPolicy
+import com.bwell.core.config.types.BWellConfig
+import com.bwell.core.config.types.LogLevel
+import com.bwell.core.config.types.RetryPolicy
 import com.bwell.sampleapp.singletons.BWellSdk
 import kotlinx.coroutines.launch
 

@@ -14,10 +14,10 @@ import androidx.navigation.fragment.findNavController
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
 import com.bwell.common.models.domain.consent.enums.ConsentStatus
-import com.bwell.core.config.BWellConfig
-import com.bwell.core.config.KeyStoreConfig
-import com.bwell.core.config.LogLevel
-import com.bwell.core.config.RetryPolicy
+import com.bwell.core.config.types.BWellConfig
+import com.bwell.core.config.types.KeyStoreConfig
+import com.bwell.core.config.types.LogLevel
+import com.bwell.core.config.types.RetryPolicy
 import com.bwell.core.network.auth.Credentials
 import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
