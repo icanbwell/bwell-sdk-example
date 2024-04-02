@@ -101,5 +101,6 @@ class HealthJourneyFragment : Fragment() {
         binding.titleTextView.visibility = View.VISIBLE
         binding.descriptionTextView.visibility = View.VISIBLE
         binding.rvHealthJourney.visibility = View.VISIBLE
+        getTasks()
     }
 }
