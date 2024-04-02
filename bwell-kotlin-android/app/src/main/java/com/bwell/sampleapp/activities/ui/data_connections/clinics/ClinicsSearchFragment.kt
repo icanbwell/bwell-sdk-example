@@ -135,6 +135,10 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
 
                 // Create the fragment
                 val organizationFragment = EntityInfoFragment()
+                val bundle = Bundle()
+                bundle.putString("id", entityInfoViewModel.getId(selectedList))
+                bundle.putString("name", entityInfoViewModel.getName(selectedList))
+                organizationFragment.arguments = bundle
                 val transaction = parentFragmentManager.beginTransaction()
                 transaction.hide(this@ClinicsSearchFragment)
                 transaction.add(R.id.container_layout, organizationFragment)
