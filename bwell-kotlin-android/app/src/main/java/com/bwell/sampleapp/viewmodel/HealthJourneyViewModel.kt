@@ -3,6 +3,7 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.activity.requests.TasksRequest
+import com.bwell.activity.requests.UpdateTaskRequest
 import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.HealthJourneyRepository
@@ -24,6 +25,12 @@ class HealthJourneyViewModel (private val repository: HealthJourneyRepository?) 
             } catch (e: Exception) {
                 // Handle exceptions, if any
             }
+        }
+    }
+    fun updateTask(updateTaskRequest: UpdateTaskRequest, callback: (BWellResult<Task>?) -> Unit) {
+        viewModelScope.launch {
+            val result = repository?.updateTask(updateTaskRequest)
+            callback(result)
         }
     }
 

@@ -53,8 +53,21 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:text="Action Button"
+        app:layout_constraintBottom_toTopOf="@id/taskStatusTitleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/taskStatusTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:textAlignment="center"
+        android:visibility="invisible"
+        android:textColor="#0076AB"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/taskReferencesTitleTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
