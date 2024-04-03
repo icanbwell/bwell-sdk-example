@@ -8,20 +8,42 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.NavigationActivity
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 private const val CHANNEL_ID = "1"
 
 
 class BWellFirebaseMessagingService : FirebaseMessagingService() {
+    private val TAG = "BWellFirebaseMessagingService"
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (remoteMessage.data?.isNotEmpty() == true) {
+            // Use a coroutine to fire and forget `handleNotification`
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    Log.i(TAG, "Capturing notification and passing it to SDK for processing.")
+                    val response = BWellSdk.event.handleNotification(remoteMessage.data)
+                    if (response.success()) {
+                        Log.i(TAG, "BwellSdk.events.handleNotification successful.")
+                    } else {
+                        throw Exception(response.message())
+                    }
+                } catch(error: Exception) {
+                    // Swallow the error but log it out so it's captured somewhere
+                    Log.e(TAG, "There was an error when attempting to handle incoming notification.", error)
+                }
+            }
+
             val data: Map<String, String> = remoteMessage.data
             val notificationId = data["notification_id"]
             val title = data["title"] ?: ""
