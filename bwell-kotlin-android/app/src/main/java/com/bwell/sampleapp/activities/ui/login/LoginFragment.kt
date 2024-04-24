@@ -154,7 +154,12 @@ class LoginFragment : Fragment() {
                 .clientKey(clientKey)
                 .logLevel(LogLevel.DEBUG)
                 .timeout(20000)
-                .retryPolicy(RetryPolicy(maxRetries = 5, retryInterval = 500))
+                .retryPolicy(
+                    RetryPolicy.Builder()
+                        .maxRetries(5)
+                        .retryInterval(500)
+                        .build()
+                )
                 .keystore(keystore)
                 .build()
 
