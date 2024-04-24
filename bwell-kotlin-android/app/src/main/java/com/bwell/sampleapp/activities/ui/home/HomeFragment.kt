@@ -2,6 +2,7 @@ package com.bwell.sampleapp.activities.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +21,17 @@ import com.bwell.sampleapp.repository.Repository
 import com.bwell.sampleapp.utils.getEncryptedSharedPreferences
 import com.bwell.sampleapp.viewmodel.SharedViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 class HomeFragment : Fragment(), View.OnClickListener {
-
+    private val TAG = "HomeFragment"
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
@@ -62,36 +69,28 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun registerDeviceToken() {
-        val sharedPreferences = com.bwell.sampleapp.utils.getSharedPreferences(requireContext().applicationContext)
-        val isRegistered = sharedPreferences.getBoolean(
-            R.string.fcm_device_token_registered.toString(),
-            false
-        )
-
-        val encryptedPreferences = getEncryptedSharedPreferences(requireContext().applicationContext)
-        val fcmToken = encryptedPreferences.getString(
-            R.string.fcm_device_token.toString(), null
-        )
-
-        if (fcmToken != null && !isRegistered) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val deferred = CompletableDeferred<String>()
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+                deferred.complete(task.result)
+            })
+            val deviceToken = deferred.await()
             val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
-                .deviceToken(fcmToken)
+                .deviceToken(deviceToken)
                 .applicationName("com.bwell.sampleapp")
                 .platform(DevicePlatform.ANDROID)
                 .build()
-
-            lifecycleScope.launch {
-                val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
-                registerOutcome.collect { outcome ->
-                    outcome?.let {
-                        if (outcome.success()) {
-                            println("FCM_TOKEN Registered Successfully")
-                            val editor = sharedPreferences.edit()
-                            editor.putBoolean(R.string.fcm_device_token_registered.toString(), true)
-                            editor.apply()
-                        } else {
-                            println("FCM_TOKEN Failed to register")
-                        }
+            val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
+            registerOutcome.collect { outcome ->
+                outcome?.let {
+                    if (outcome.success()) {
+                        println("FCM_TOKEN Registered Successfully")
+                    } else {
+                        println("FCM_TOKEN Failed to register")
                     }
                 }
             }

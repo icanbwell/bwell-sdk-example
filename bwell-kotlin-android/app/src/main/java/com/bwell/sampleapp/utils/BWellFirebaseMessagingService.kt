@@ -18,6 +18,7 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 private const val CHANNEL_ID = "1"
@@ -32,7 +33,7 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     Log.i(TAG, "Capturing notification and passing it to SDK for processing.")
-                    val response = BWellSdk.event.handleNotification(remoteMessage.data)
+                    val response = BWellSdk.event.handleNotification(JSONObject(remoteMessage.data as Map<String, String>).toString())
                     if (response.success()) {
                         Log.i(TAG, "BwellSdk.events.handleNotification successful.")
                     } else {
