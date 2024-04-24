@@ -198,8 +198,8 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                 }
             }
 
-            R.id.frameLayoutDisconnect -> {
-                binding.includeDataConnections.frameLayoutDisconnect.visibility = View.GONE
+            R.id.disconnect -> {
+                binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.GONE
                 lifecycleScope.launch {
                     try {
                         val connectionId = connection.id
@@ -237,8 +237,8 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                 }
             }
 
-            R.id.frameLayoutDelete -> {
-                binding.includeDataConnections.frameLayoutDelete.visibility = View.GONE
+            R.id.delete -> {
+                binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.GONE
                 lifecycleScope.launch {
                     try {
                         val connectionId = connection.id
@@ -295,14 +295,11 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         frameLayoutConnectionStatus: FrameLayout
     ) {
         Log.d("onChangeStatusClicked", "onChangeStatusClicked")
-        binding.includeDataConnections.frameLayoutDisconnect.visibility = View.VISIBLE
-        binding.includeDataConnections.frameLayoutDisconnect.y =
-            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y + status_change_view.height.toFloat()
-        binding.includeDataConnections.frameLayoutDisconnect.setOnClickListener(this)
-        binding.includeDataConnections.frameLayoutDelete.visibility = View.VISIBLE
-        binding.includeDataConnections.frameLayoutDelete.y =
-            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y + status_change_view.height.toFloat()*2
-        binding.includeDataConnections.frameLayoutDelete.setOnClickListener(this)
+        binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.VISIBLE
+        binding.includeDataConnections.frameLayoutUpdateStatus.y =
+            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y
+        binding.includeDataConnections.disconnect.setOnClickListener(this)
+        binding.includeDataConnections.delete.setOnClickListener(this)
         this.connection = connection
         this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
     }
