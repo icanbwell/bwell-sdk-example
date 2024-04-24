@@ -80,4 +80,24 @@
             android:layout_margin="5dp"
             android:textSize="12sp"/>
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frameLayoutDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:visibility="gone"
+        android:paddingRight="20dp"
+        android:background="@drawable/rounded_rectangle_white_shadow"
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:layout_gravity="left"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:textSize="12sp"/>
+    </FrameLayout>
 </FrameLayout>

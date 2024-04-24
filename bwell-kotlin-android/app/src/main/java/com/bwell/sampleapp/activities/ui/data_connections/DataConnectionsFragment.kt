@@ -236,6 +236,45 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                     }
                 }
             }
+
+            R.id.frameLayoutDelete -> {
+                binding.includeDataConnections.frameLayoutDelete.visibility = View.GONE
+                lifecycleScope.launch {
+                    try {
+                        val connectionId = connection.id
+                        dataConnectionsViewModel.deleteConnection(connectionId)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    dataConnectionsViewModel.deleteConnectionData.collect { deleteOutcome ->
+                        deleteOutcome?.let {
+                            if (deleteOutcome.success()) {
+                                val drawable = ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.rounded_rectangle_grey
+                                )
+                                frameLayoutConnectionStatus.background = drawable
+                                if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(
+                                        0
+                                    ) is TextView
+                                ) {
+                                    val textView =
+                                        frameLayoutConnectionStatus.getChildAt(0) as TextView
+                                    textView.text = resources.getString(R.string.deleted)
+                                    textView.setTextColor(
+                                        resources.getColor(
+                                            R.color.black,
+                                            context?.theme
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -260,6 +299,10 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         binding.includeDataConnections.frameLayoutDisconnect.y =
             binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y + status_change_view.height.toFloat()
         binding.includeDataConnections.frameLayoutDisconnect.setOnClickListener(this)
+        binding.includeDataConnections.frameLayoutDelete.visibility = View.VISIBLE
+        binding.includeDataConnections.frameLayoutDelete.y =
+            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y + status_change_view.height.toFloat()*2
+        binding.includeDataConnections.frameLayoutDelete.setOnClickListener(this)
         this.connection = connection
         this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
     }
