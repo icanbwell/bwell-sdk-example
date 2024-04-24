@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.activity.requests.TasksRequest
 import com.bwell.common.models.domain.task.Task
+import com.bwell.common.models.domain.task.enums.TaskStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -80,6 +81,10 @@ class HealthJourneyFragment : Fragment() {
 
     private fun getTasks() {
         val taskRequest = TasksRequest.Builder()
+            .smartSort(true)
+            .status(listOf(TaskStatus.READY))
+            .page(0)
+            .pageSize(100)
             .build()
         healthJourneyViewModel.getTasks(taskRequest)
         viewLifecycleOwner.lifecycleScope.launch {
