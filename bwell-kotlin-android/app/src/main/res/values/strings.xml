@@ -7,6 +7,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="disconnect">Disconnect</string>
+    <string name="delete">Delete</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -187,7 +188,8 @@
     <string name="open">Open</string>
     <string name="hapi">hapi</string>
     <string name="clinic_info_hapi">By providing my %s credentials, I consent for b.well to retrieve my health data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.</string>
-    <string name="disconnected">Disconneted</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="deleted">Deleted</string>
     <string name="procedures">Procedures</string>
     <string name="vitals">Vitals</string>
     <string name="visit_history">Visit History</string>

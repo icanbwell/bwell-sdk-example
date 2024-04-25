@@ -117,6 +117,22 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         }
     }
 
+    private val _deleteConnectionData = MutableStateFlow<OperationOutcome?>(null)
+    val deleteConnectionData: StateFlow<OperationOutcome?> = _deleteConnectionData
+
+    fun deleteConnection(connectionId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.deleteConnection(connectionId)?.collect { deleteOutcome ->
+                    _deleteConnectionData.emit(deleteOutcome)
+                }
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
+            }
+        }
+    }
+
+
     // LiveData for the list of Connection objects
     private val _connectionsList = MutableLiveData<List<Connection>>()
     val connectionsList: LiveData<List<Connection>> get() = _connectionsList
