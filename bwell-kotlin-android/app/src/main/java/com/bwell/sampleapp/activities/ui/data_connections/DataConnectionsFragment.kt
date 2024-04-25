@@ -198,8 +198,8 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                 }
             }
 
-            R.id.frameLayoutDisconnect -> {
-                binding.includeDataConnections.frameLayoutDisconnect.visibility = View.GONE
+            R.id.disconnect -> {
+                binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.GONE
                 lifecycleScope.launch {
                     try {
                         val connectionId = connection.id
@@ -236,6 +236,45 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                     }
                 }
             }
+
+            R.id.delete -> {
+                binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.GONE
+                lifecycleScope.launch {
+                    try {
+                        val connectionId = connection.id
+                        dataConnectionsViewModel.deleteConnection(connectionId)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    dataConnectionsViewModel.deleteConnectionData.collect { deleteOutcome ->
+                        deleteOutcome?.let {
+                            if (deleteOutcome.success()) {
+                                val drawable = ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.rounded_rectangle_grey
+                                )
+                                frameLayoutConnectionStatus.background = drawable
+                                if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(
+                                        0
+                                    ) is TextView
+                                ) {
+                                    val textView =
+                                        frameLayoutConnectionStatus.getChildAt(0) as TextView
+                                    textView.text = resources.getString(R.string.deleted)
+                                    textView.setTextColor(
+                                        resources.getColor(
+                                            R.color.black,
+                                            context?.theme
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -256,10 +295,11 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         frameLayoutConnectionStatus: FrameLayout
     ) {
         Log.d("onChangeStatusClicked", "onChangeStatusClicked")
-        binding.includeDataConnections.frameLayoutDisconnect.visibility = View.VISIBLE
-        binding.includeDataConnections.frameLayoutDisconnect.y =
-            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y + status_change_view.height.toFloat()
-        binding.includeDataConnections.frameLayoutDisconnect.setOnClickListener(this)
+        binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.VISIBLE
+        binding.includeDataConnections.frameLayoutUpdateStatus.y =
+            binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y
+        binding.includeDataConnections.disconnect.setOnClickListener(this)
+        binding.includeDataConnections.delete.setOnClickListener(this)
         this.connection = connection
         this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
     }
