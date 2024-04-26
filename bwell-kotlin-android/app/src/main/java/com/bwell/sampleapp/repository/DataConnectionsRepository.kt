@@ -63,6 +63,16 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         }
     }
 
+    suspend fun deleteConnection(connectionId: String): Flow<OperationOutcome?> = flow {
+        try {
+            val deleteOutcome = BWellSdk.connections.deleteConnection(connectionId)
+            emit(deleteOutcome)
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
     suspend fun createConnection(connectionRequest: ConnectionCreateRequest): Flow<BWellResult<Connection>?> =
         flow {
             try {
