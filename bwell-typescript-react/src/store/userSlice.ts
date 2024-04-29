@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+import { bWellSdk } from "@/sdk/bWellSdk";
+
 export class User {
   id: string;
   name: string;
@@ -25,6 +27,7 @@ export const loginUser = createAsyncThunk<
   { rejectValue: string }
 >("user/login", async ({ oauthCreds }, { rejectWithValue }) => {
   try {
+    bWellSdk.hello();
     console.log(`Logging in user with OAuth credentials: ${oauthCreds}...`);
 
     //TODO: Replace with call to b.well SDK

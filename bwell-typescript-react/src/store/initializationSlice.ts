@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+import { bWellSdk } from "@/sdk/bWellSdk";
+
 interface InitializationState {
   clientKey: string | null;
   isInitialized: boolean;
@@ -22,7 +24,8 @@ export const initialize = createAsyncThunk<
   "initialization/initialize",
   async ({ clientKey }, { rejectWithValue }) => {
     try {
-      console.log('test test');
+      bWellSdk.hello();
+      console.log(`initializing with client key ${clientKey}...`);
       return clientKey;
     } catch (error) {
       return rejectWithValue("error logging in user");
