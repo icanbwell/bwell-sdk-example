@@ -11,12 +11,12 @@ const Hello = () => {
 
   return (
     <Container>
+      <h1>Hello</h1>
+      <h2>A page for testing the SDK hello() function</h2>
       <Grid direction="column" container spacing={2}>
         <Grid item>
-          <Grid container direction="row" spacing={2}>
-            <button onClick={handleClick}>Hello</button>
-            <button onClick={() => setHelloResponse("")}>Clear</button>
-          </Grid>
+          <button onClick={handleClick}>Hello</button>
+          <button onClick={() => setHelloResponse("")}>Clear</button>
         </Grid>
         <Grid item>
           <Card variant="outlined">
