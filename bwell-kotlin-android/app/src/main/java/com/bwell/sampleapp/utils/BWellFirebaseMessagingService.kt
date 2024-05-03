@@ -8,51 +8,34 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.NavigationActivity
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.io.Serializable
 
 
 private const val CHANNEL_ID = "1"
 
 
 class BWellFirebaseMessagingService : FirebaseMessagingService() {
-
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        if (remoteMessage.data?.isNotEmpty() == true) {
-            val data: Map<String, String> = remoteMessage.data
-            val notificationId = data["notification_id"]
-            val title = data["title"] ?: ""
-            val body = data["body"] ?: ""
-            val actionType = data["action_type"] ?: ""
-            val action = data["action"] ?: ""
+        if (remoteMessage.data.isNotEmpty()) {
+            val title = remoteMessage.data["title"] ?: ""
+            val body = remoteMessage.data["body"] ?: ""
 
-            createNotification(title, body, action, actionType)
+            createNotification(title, body, remoteMessage.data)
         }
     }
 
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        storeDeviceToken(token)
-    }
-
-    private fun storeDeviceToken(token: String) {
-        // save the fcm token in encrypted shared preferences
-        val encryptedPreferences = getEncryptedSharedPreferences(applicationContext)
-        val encryptedEditor = encryptedPreferences.edit()
-        encryptedEditor.putString(R.string.fcm_device_token.toString(), token)
-        encryptedEditor.apply()
-
-        // save a flag indicating that the new fcm token has not been registered
-        val sharedPreferences = getSharedPreferences(applicationContext)
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(R.string.fcm_device_token_registered.toString(), false)
-        editor.apply()
-    }
-
-    private fun createNotification(title: String, body: String, action: String, actionType: String) {
+    private fun createNotification(title: String, body: String, remoteMessageData: Map<String, String>) {
         val notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(this, Notification(
         ))
             .setContentTitle(title)
@@ -62,14 +45,12 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             .setSilent(true)
             .setSmallIcon(coil.base.R.drawable.notification_icon_background)
 
-        if (actionType == "deep_link") {
+        if (remoteMessageData["action_type"] == "deep_link") {
             var resultIntent: Intent? = null
-            if (action.startsWith("ActivityDefinition/")) {
-                resultIntent = Intent(this, NavigationActivity::class.java)
-                val bundle = Bundle().apply {
-                    putString("action", action)
+            if (remoteMessageData["action"]?.startsWith("ActivityDefinition/") == true) {
+                resultIntent = Intent(this, NavigationActivity::class.java).apply {
+                    putExtra("remoteMessageDataStringified", JSONObject(remoteMessageData).toString())
                 }
-                resultIntent.putExtras(bundle)
             }
 
             if (resultIntent != null) {
