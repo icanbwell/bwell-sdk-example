@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -24,9 +25,13 @@ import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ActivityNavigationBinding
 import com.bwell.sampleapp.repository.Repository
+import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.sampleapp.utils.getEncryptedSharedPreferences
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 
 class NavigationActivity : AppCompatActivity() {
@@ -36,6 +41,7 @@ class NavigationActivity : AppCompatActivity() {
     private lateinit var deviceId:String
     private lateinit var repository:Repository
     private lateinit var navController: NavController
+    private val TAG = "NavigationActivity"
 
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,11 +79,24 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun handleDeeplink() {
-        intent.extras?.getString("action")?.let { action ->
+        val remoteMessageDataStringified = intent.getStringExtra("remoteMessageDataStringified")
+        if (!remoteMessageDataStringified.isNullOrBlank()) {
+            val remoteMessageData = JSONObject(remoteMessageDataStringified)
+            val action = remoteMessageData.getString("action")
             if (action.startsWith("ActivityDefinition/")) {
+                // NOTE: This current flow _only_ supports a task id being embedded in the `action` iterable
                 val bundle = Bundle().apply {
                     val taskId = action.replace("ActivityDefinition/", "")
                     putString("task_id", taskId)
+                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    // (fire and forget) Register that an Activity with intent data has been received
+                    val result = BWellSdk.event.handleNotification(remoteMessageDataStringified)
+                    if (result.success()) {
+                        Log.i(TAG, "Push notification registered.")
+                    } else {
+                        Log.e(TAG, "There was an error registering a push notification")
+                    }
                 }
                 navController.navigate(R.id.nav_health_journey, bundle)
             }

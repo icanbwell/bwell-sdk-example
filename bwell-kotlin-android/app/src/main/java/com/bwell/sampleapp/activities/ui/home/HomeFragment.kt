@@ -10,21 +10,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bwell.device.requests.deviceToken.DevicePlatform
-import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentHomeBinding
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.repository.Repository
-import com.bwell.sampleapp.utils.getEncryptedSharedPreferences
 import com.bwell.sampleapp.viewmodel.SharedViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(), View.OnClickListener {
-
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
@@ -55,47 +51,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 binding.userName.text = resources.getString(R.string.welcome_bwell)+" "+it?.firstName+"!"
             }
         }
-
-        registerDeviceToken()
-
         return root
-    }
-
-    private fun registerDeviceToken() {
-        val sharedPreferences = com.bwell.sampleapp.utils.getSharedPreferences(requireContext().applicationContext)
-        val isRegistered = sharedPreferences.getBoolean(
-            R.string.fcm_device_token_registered.toString(),
-            false
-        )
-
-        val encryptedPreferences = getEncryptedSharedPreferences(requireContext().applicationContext)
-        val fcmToken = encryptedPreferences.getString(
-            R.string.fcm_device_token.toString(), null
-        )
-
-        if (fcmToken != null && !isRegistered) {
-            val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
-                .deviceToken(fcmToken)
-                .applicationName("com.bwell.sampleapp")
-                .platform(DevicePlatform.ANDROID)
-                .build()
-
-            lifecycleScope.launch {
-                val registerOutcome = repository.registerDeviceToken(registerDeviceTokenRequest)
-                registerOutcome.collect { outcome ->
-                    outcome?.let {
-                        if (outcome.success()) {
-                            println("FCM_TOKEN Registered Successfully")
-                            val editor = sharedPreferences.edit()
-                            editor.putBoolean(R.string.fcm_device_token_registered.toString(), true)
-                            editor.apply()
-                        } else {
-                            println("FCM_TOKEN Failed to register")
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun setAdapter(suggestedActivitiesLIst: List<ActivityListItems>) {

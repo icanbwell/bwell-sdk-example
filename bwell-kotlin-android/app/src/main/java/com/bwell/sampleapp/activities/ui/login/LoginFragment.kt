@@ -21,11 +21,13 @@ import com.bwell.core.config.types.RetryPolicy
 import com.bwell.core.network.auth.Credentials
 import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
-import com.bwell.generated.consents.CreateConsentMutation
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.user.requests.consents.ConsentCreateRequest
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.InputStream
@@ -51,9 +53,6 @@ class LoginFragment : Fragment() {
         "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
 
     private var oAuthCredentials: String? = null
-
-    private val deviceKey = "34cb23e2f562dbb5"
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,12 +169,20 @@ class LoginFragment : Fragment() {
 
             BWellSdk.authenticate(credentials)
 
-            val registerDeviceTokenRequest: RegisterDeviceTokenRequest =
-                RegisterDeviceTokenRequest.Builder()
-                    .deviceToken(deviceKey)
-                    .applicationName("com.sec.android.app.shealth")
-                    .platform(DevicePlatform.ANDROID)
-                    .build()
+            val deferred = CompletableDeferred<String>()
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+                deferred.complete(task.result)
+            })
+            val deviceToken = deferred.await()
+            val registerDeviceTokenRequest: RegisterDeviceTokenRequest = RegisterDeviceTokenRequest.Builder()
+                .deviceToken(deviceToken)
+                .applicationName("com.bwell.sampleapp")
+                .platform(DevicePlatform.ANDROID)
+                .build()
             registerDeviceToken(registerDeviceTokenRequest)
 
             val createConsentRequest: ConsentCreateRequest = ConsentCreateRequest.Builder()
@@ -184,10 +191,6 @@ class LoginFragment : Fragment() {
                 .provision(ConsentProvisionType.PERMIT)
                 .build()
             createConsent(createConsentRequest)
-
-
-
-            //deregisterDeviceToken(deviceKey)
 
             Log.i(TAG, "Finished initializing SDK")
 
@@ -202,9 +205,9 @@ class LoginFragment : Fragment() {
             registerOutcome?.collect { outcome ->
                 outcome?.let {
                     if (outcome.success()) {
-                        //device registered successfully
+                        Log.i(TAG, "FCM_TOKEN Registered Successfully")
                     } else {
-                        //device not registered
+                        Log.e(TAG, "FCM_TOKEN Failed to register")
                     }
                 }
             }
