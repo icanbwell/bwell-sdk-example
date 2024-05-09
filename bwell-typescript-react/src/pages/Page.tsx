@@ -13,7 +13,7 @@ type PageProps = {
 const Page = ({ children }: PageProps) => {
   return (
     <Box>
-      <HamburgerMenu router={Router} />
+      <HamburgerMenu menuId="btnMainMenu" router={Router} />
       {children}
     </Box>
   );

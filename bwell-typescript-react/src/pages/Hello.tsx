@@ -15,12 +15,12 @@ const Hello = () => {
       <h2>A page for testing the SDK hello() function</h2>
       <Grid direction="column" container spacing={2}>
         <Grid item>
-          <button onClick={handleClick}>Hello</button>
-          <button onClick={() => setHelloResponse("")}>Clear</button>
+          <button id="btnHello" onClick={handleClick}>Hello</button>
+          <button id="btnClear" onClick={() => setHelloResponse("")}>Clear</button>
         </Grid>
         <Grid item>
           <Card variant="outlined">
-            <pre style={{ padding: "10px" }}>{helloResponse}</pre>
+            <pre id="preHelloResponse" style={{ padding: "10px" }}>{helloResponse}</pre>
           </Card>
         </Grid>
       </Grid>

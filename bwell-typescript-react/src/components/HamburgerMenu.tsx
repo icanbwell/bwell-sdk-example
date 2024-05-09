@@ -4,10 +4,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, RemixRouter, RouteObject } from "react-router-dom";
 
 type HamburgerMenuProps = {
+  menuId: string;
   router: RemixRouter;
 };
 
-const HamburgerMenu = ({ router }: HamburgerMenuProps) => {
+const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
   const [open, setOpen] = useState(false);
 
   const getRouteLabel = (path: string) => {
@@ -25,6 +26,7 @@ const HamburgerMenu = ({ router }: HamburgerMenuProps) => {
         edge="start"
         onClick={() => setOpen(true)}
         sx={{ mr: 2 }}
+        id={menuId}
       >
         <MenuIcon />
       </IconButton>
@@ -44,6 +46,7 @@ const HamburgerMenu = ({ router }: HamburgerMenuProps) => {
                   key={route.path}
                   to={route.path}
                   onClick={() => setOpen(false)}
+                  id={route.path.replace("/", "") + "MenuItem"}
                 >
                   {getRouteLabel(route.path)}
                 </Link>
