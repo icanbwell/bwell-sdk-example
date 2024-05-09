@@ -1,8 +1,10 @@
 import { PlaywrightTestConfig } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
-  testDir: "e2e", // Specify the directory where your tests are located
-  timeout: 5000, // Specify a timeout for your tests
+  // Configure Playwright the directory where tests are located
+  testDir: "e2e",
+  // Configure a timeout for the tests
+  timeout: 5000,
   use: {
     // Configure Playwright to record videos
     video: "on",
@@ -17,6 +19,14 @@ const config: PlaywrightTestConfig = {
       slowMo: 500,
     },
   },
+  webServer: {
+    // Configure Playwright to start a web server locall before running the tests
+    command: "npm run dev",
+    // Configure Playwright to use a specific port rather than the default 3000
+    port: 5173,
+    // Configure Playwright to wait for the server to be ready before running the tests
+    timeout: 120 * 1000
+  }
 };
 
 export default config;
