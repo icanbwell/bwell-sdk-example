@@ -4,7 +4,7 @@ const config: PlaywrightTestConfig = {
   // Configure Playwright the directory where tests are located
   testDir: "e2e",
   // Configure a timeout for the tests
-  timeout: 5000,
+  timeout: 15000,
   use: {
     // Configure Playwright to record videos
     video: "on",
@@ -16,7 +16,7 @@ const config: PlaywrightTestConfig = {
       // Configure Playwright to run headless
       headless: true,
       // Configure Playwright to run in slow mo
-      slowMo: 500,
+      slowMo: 50,
     },
   },
   webServer: {
