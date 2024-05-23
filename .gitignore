@@ -1,2 +1,8 @@
 **/.DS_Store
 .idea/**
+
+node_modules
+
+playwright-report
+
+test-results
