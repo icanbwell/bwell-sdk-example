@@ -6,11 +6,8 @@ import { initialize } from "@/store/initializationSlice";
 import { loginUser } from "@/store/userSlice";
 import { AppDispatch, RootState } from "@/store/store";
 
-const DEFAULT_KEY =
-  "eyJyIjoiMTVoaGcwOHpybjgyOW8zenV3ZHgiLCJlbnYiOiJkZXYiLCJraWQiOiJzYW1zdW5nLWRldiJ9";
-
-const DEFAULT_OAUTH_CREDS =
-  "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF9IM3FUSmNoeWJQUXlRT015M29qZS9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MDYxMTA3NzF9.3D-4HYfsZFYfyL_QsDEmjBgxyajg7XrIXda48xm_PbkmrbhURG7Pa_ijOGKHIfGSMJ7sWkZDkbx5nsLu-pKgjg";
+const DEFAULT_KEY = process.env.DEFAULT_KEY ?? "";
+const DEFAULT_OAUTH_CREDS = process.env.DEFAULT_OAUTH_CREDS ?? "";
 
 const Initialize = () => {
   const [key, setKey] = useState<string>(DEFAULT_KEY);
