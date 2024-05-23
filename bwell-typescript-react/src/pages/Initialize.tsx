@@ -6,8 +6,8 @@ import { initialize } from "@/store/initializationSlice";
 import { loginUser } from "@/store/userSlice";
 import { AppDispatch, RootState } from "@/store/store";
 
-const DEFAULT_KEY = process.env.DEFAULT_KEY ?? "";
-const DEFAULT_OAUTH_CREDS = process.env.DEFAULT_OAUTH_CREDS ?? "";
+const DEFAULT_KEY = import.meta.env.VITE_DEFAULT_KEY ?? "";
+const DEFAULT_OAUTH_CREDS = import.meta.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
 
 const Initialize = () => {
   const [key, setKey] = useState<string>(DEFAULT_KEY);
@@ -19,15 +19,9 @@ const Initialize = () => {
     (state: RootState) => state.initialization.isInitialized
   );
 
-  const initializeWithProvidedKey = () => {
-    console.log("dispatching initialize action...");
-    dispatch(initialize({ clientKey: key }));
-  };
+  const initializeWithProvidedKey = () => dispatch(initialize({ clientKey: key }));
 
-  const loginWithProvidedOAuthCreds = () => {
-    console.log("dispatching login action...");
-    dispatch(loginUser({ oauthCreds }));
-  }
+  const loginWithProvidedOAuthCreds = () => dispatch(loginUser({ oauthCreds }));
 
   return (
     <Grid
