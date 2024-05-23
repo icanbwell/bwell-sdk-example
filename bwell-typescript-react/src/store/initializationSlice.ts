@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { initializeSdk, bWellSdk } from "@/sdk/bWellSdk";
+import { OperationOutcome } from "@icanbwell/bwell-sdk-ts/dist/common/models/responses";
 
 interface InitializationState {
   clientKey: string | null;
@@ -25,8 +26,12 @@ export const initialize = createAsyncThunk<
   async ({ clientKey }, { rejectWithValue }) => {
     try {
       await initializeSdk(clientKey);
-      await bWellSdk.initialize();
-      
+      const initializeOutcome: OperationOutcome = await bWellSdk.initialize();
+      const success = initializeOutcome.success();
+
+      if (!success)
+        return rejectWithValue(initializeOutcome.message() ?? "Unknown error");
+
       return clientKey;
     } catch (error) {
       return rejectWithValue("Error initializing SDK");
@@ -49,7 +54,7 @@ export const initializationSlice = createSlice({
         state.loading = false;
       })
       .addCase(initialize.rejected, (state, action) => {
-        state.error = action.payload || "Unknown error";
+        state.error = action.payload ?? "Unknown error";
         state.loading = false;
       });
   },
