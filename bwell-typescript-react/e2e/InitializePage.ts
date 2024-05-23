@@ -4,12 +4,12 @@ import config from "./configTypes";
 class InitializePage {
     private readonly page: Page;
 
-    private readonly mainMenuLocator = "#btnMainMenu";
-    private readonly initializeMenuItemLocator = "#initializeMenuItem";
-    private readonly txtKeyLocator = "#txtKey";
-    private readonly btnInitializeLocator = "#btnInitialize";
-    private readonly txtOauthCredsLocator = "#txtOauthCreds";
-    private readonly btnLoginLocator = "#btnLogin";
+    public readonly mainMenuLocator = "#btnMainMenu";
+    public readonly initializeMenuItemLocator = "#initializeMenuItem";
+    public readonly txtKeyLocator = "#txtKey";
+    public readonly btnInitializeLocator = "#btnInitialize";
+    public readonly txtOauthCredsLocator = "#txtOauthCreds";
+    public readonly btnLoginLocator = "#btnLogin";
 
     constructor(page: Page) {
         this.page = page;
@@ -35,6 +35,14 @@ class InitializePage {
 
     async enterClientKey(key: string) {
         await this.page.fill(this.txtKeyLocator, key);
+    }
+
+    async enterOAuthCreds(creds: string) {
+        await this.page.fill(this.txtOauthCredsLocator, creds);
+    }
+
+    async clickLoginButton() {
+        await this.page.click(this.btnLoginLocator);
     }
 }
 

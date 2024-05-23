@@ -1,6 +1,9 @@
 import { BWellSDK } from '@icanbwell/bwell-sdk-ts';
 
-console.log('Instantiating SDK...');
+console.info('Instantiating SDK...');
 
-//export a singleton instance of the BWellSDK
-export const bWellSdk = new BWellSDK();
+export let bWellSdk: BWellSDK;
+
+export const initializeSdk = async (clientKey: string) => {
+    bWellSdk = new BWellSDK({ clientKey });
+}

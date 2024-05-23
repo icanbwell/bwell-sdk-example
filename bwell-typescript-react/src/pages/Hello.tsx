@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Card, Container, Grid } from "@mui/material";
-import { bWellSdk } from "@/sdk/bWellSdk";
 
 const Hello = () => {
   const [helloResponse, setHelloResponse] = useState<string>("");
 
   const handleClick = () => {
-    setHelloResponse(bWellSdk.hello());
+    setHelloResponse("World!");
   };
 
   return (

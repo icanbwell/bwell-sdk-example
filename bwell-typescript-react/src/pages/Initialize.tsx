@@ -39,10 +39,10 @@ const Initialize = () => {
       <Grid item>
         <Box textAlign={"center"}>
           <h2>Client Key</h2>
-          <TextareaAutosize
+          <input
+            type="password"
             aria-label="client key"
             id="txtKey"
-            minRows={5}
             onChange={(e) => setKey(e.target.value)}
             placeholder="Enter a valid b.well client key here"
             value={key}
@@ -53,7 +53,7 @@ const Initialize = () => {
       <Grid item>
         <Box textAlign={"center"}>
           <Button
-            id="btnSubmit"
+            id="btnInitialize"
             variant="contained"
             disabled={!(key && oauthCreds)}
             onClick={initializeWithProvidedKey}
@@ -67,10 +67,10 @@ const Initialize = () => {
           <Grid item>
             <Box textAlign={"center"}>
               <h2>OAuth Creds</h2>
-              <TextareaAutosize
+              <input
+                type="password"
                 aria-label="oauth creds"
                 id="txtOauthCreds"
-                minRows={5}
                 onChange={(e) => setOauthCreds(e.target.value)}
                 placeholder="Enter valid a b.well OAuth JWT here"
                 value={oauthCreds}
