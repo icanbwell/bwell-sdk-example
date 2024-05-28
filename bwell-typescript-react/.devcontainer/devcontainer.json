@@ -1,0 +1,14 @@
+{
+  "name": "e2e Test Container",
+  "dockerFile": "Dockerfile",
+  "forwardPorts": [3000],
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}
