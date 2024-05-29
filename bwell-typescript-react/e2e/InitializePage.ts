@@ -9,7 +9,9 @@ class InitializePage {
     public readonly txtKeyLocator = "#txtKey";
     public readonly btnInitializeLocator = "#btnInitialize";
     public readonly txtOauthCredsLocator = "#txtOauthCreds";
-    public readonly btnLoginLocator = "#btnLogin";
+    public readonly btnSubmitLocator = "#btnSubmit";
+    public readonly initializationErrorLocator = "#initializationError";
+    public readonly authenticationErrorLocator = "#authenticationError";
 
     constructor(page: Page) {
         this.page = page;
@@ -41,8 +43,8 @@ class InitializePage {
         await this.page.fill(this.txtOauthCredsLocator, creds);
     }
 
-    async clickLoginButton() {
-        await this.page.click(this.btnLoginLocator);
+    async clickSubmitButton() {
+        await this.page.click(this.btnSubmitLocator);
     }
 }
 
