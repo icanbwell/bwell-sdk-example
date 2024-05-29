@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import { Box } from "@mui/material";
+import { Container } from "@mui/material";
 
 import HamburgerMenu from "@/components/HamburgerMenu";
 
@@ -12,10 +12,10 @@ type PageProps = {
 
 const Page = ({ children }: PageProps) => {
   return (
-    <Box>
+    <Container>
       <HamburgerMenu menuId="btnMainMenu" router={Router} />
       {children}
-    </Box>
+    </Container>
   );
 };
 

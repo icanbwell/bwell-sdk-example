@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Button, Grid, TextareaAutosize } from "@mui/material";
+import { Alert, Box, Button, Grid, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import { initialize } from "@/store/initializationSlice";
@@ -18,6 +18,14 @@ const Initialize = () => {
   const isInitialized = useSelector(
     (state: RootState) => state.initialization.isInitialized
   );
+
+  const initializationError = useSelector(
+    (state: RootState) => state.initialization.error
+  );
+
+  const user = useSelector((state: RootState) => state.user)
+
+  const { error: authenticationError, isLoggedIn } = user;
 
   const initializeWithProvidedKey = () => dispatch(initialize({ clientKey: key }));
 
@@ -39,14 +47,14 @@ const Initialize = () => {
       <Grid item>
         <Box textAlign={"center"}>
           <h2>Client Key</h2>
-          <input
-            type="password"
+          <TextField
             aria-label="client key"
             id="txtKey"
             onChange={(e) => setKey(e.target.value)}
             placeholder="Enter a valid b.well client key here"
+            fullWidth
+            type="password"
             value={key}
-            style={{ minWidth: "80%", padding: "10px" }}
           />
         </Box>
       </Grid>
@@ -55,25 +63,33 @@ const Initialize = () => {
           <Button
             id="btnInitialize"
             variant="contained"
-            disabled={!(key && oauthCreds)}
+            disabled={!key}
             onClick={initializeWithProvidedKey}
           >
             Initialize
           </Button>
         </Box>
       </Grid>
+      {initializationError && (
+        <Grid item>
+          <Box textAlign={"center"}>
+            <Alert severity="error" id="initializationError">{initializationError.message}</Alert>
+          </Box>
+        </Grid>
+      )}
       {isInitialized && (
         <>
           <Grid item>
             <Box textAlign={"center"}>
               <h2>OAuth Creds</h2>
-              <input
+              <TextField
                 type="password"
                 aria-label="oauth creds"
                 id="txtOauthCreds"
                 onChange={(e) => setOauthCreds(e.target.value)}
                 placeholder="Enter valid a b.well OAuth JWT here"
                 value={oauthCreds}
+                fullWidth
                 style={{ minWidth: "80%", padding: "10px" }}
               />
             </Box>
@@ -90,6 +106,20 @@ const Initialize = () => {
               </Button>
             </Box>
           </Grid>
+          {authenticationError && (
+            <Grid item>
+              <Box textAlign={"center"}>
+                <Alert severity="error" id="authenticationError">{authenticationError}</Alert>
+              </Box>
+            </Grid>
+          )}
+          {isLoggedIn && (
+            <Grid item>
+              <Box textAlign={"center"}>
+                <Alert severity="info" id="authenticationInfo">User successfully logged in.</Alert>
+              </Box>
+            </Grid>
+          )}
         </>
       )}
     </Grid>
