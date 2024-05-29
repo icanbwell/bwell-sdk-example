@@ -34,7 +34,7 @@ export const initialize = createAsyncThunk<
 
       return clientKey;
     } catch (error) {
-      return rejectWithValue("Error initializing SDK");
+      return rejectWithValue(error as string);
     }
   }
 );
@@ -47,6 +47,8 @@ export const initializationSlice = createSlice({
     builder
       .addCase(initialize.pending, (state) => {
         state.loading = true;
+        state.error = null;
+        state.isInitialized = false;
       })
       .addCase(initialize.fulfilled, (state, action) => {
         state.clientKey = action.payload;
@@ -55,6 +57,7 @@ export const initializationSlice = createSlice({
       })
       .addCase(initialize.rejected, (state, action) => {
         state.error = action.payload ?? "Unknown error";
+        state.isInitialized = false;
         state.loading = false;
       });
   },

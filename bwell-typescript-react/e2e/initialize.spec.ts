@@ -2,11 +2,15 @@ import InitializePage from "./InitializePage";
 import { test, expect } from "@playwright/test";
 import { config } from 'dotenv';
 
-//initialize dotenv so we can access the environment variables
+//initialize dotenv, access environment variables
 config();
 
 const DEFAULT_KEY = process.env.VITE_DEFAULT_KEY ?? "";
 const DEFAULT_OAUTH_CREDS = process.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
+const BAD_KEY = process.env.VITE_BAD_KEY ?? "";
+const BAD_OAUTH_CREDS = process.env.VITE_BAD_OAUTH_CREDS ?? "";
+const WELL_FORMED_KEY_BAD_ENV = process.env.VITE_WELL_FORMED_KEY_BAD_ENV ?? "";
+const WELL_FORMED_KEY_GOOD_ENV = process.env.VITE_WELL_FORMED_KEY_GOOD_ENV ?? "";
 
 test("Navigating to the Initialize page works", async ({ page }) => {
     //arrange
@@ -30,7 +34,7 @@ test("Initialize page doesn't display OAuth Creds initially", async ({ page }) =
     expect(await page.isVisible(initializePage.txtOauthCredsLocator)).toBe(false);
 });
 
-test("Initialize page displays OAuth Creds after client key is entered", async ({ page }) => {
+test("Initialize page displays OAuth Creds after valid client key is entered", async ({ page }) => {
     //arrange
     const initializePage = new InitializePage(page);
 
@@ -46,7 +50,7 @@ test("Initialize page displays OAuth Creds after client key is entered", async (
     expect(oauthCredsVisible).toBe(true);
 });
 
-test("Entering a valid oauth credential results in success", async ({ page }) => {
+test("Entering a valid key and valid oauth credential results in success", async ({ page }) => {
     //arrange
     const initializePage = new InitializePage(page);
 
@@ -58,5 +62,71 @@ test("Entering a valid oauth credential results in success", async ({ page }) =>
     const oauthCredsLocator = await page.waitForSelector(initializePage.txtOauthCredsLocator);
     await oauthCredsLocator.fill(DEFAULT_OAUTH_CREDS);
 
-    await initializePage.clickLoginButton();
+    await initializePage.clickSubmitButton();
+
+    //assert: no error message should be displayed
+    expect(page.locator(initializePage.initializationErrorLocator)).toBe(null);
+});
+
+test("Entering an invalid client key results in an error", async ({ page }) => {
+    //arrange
+    const initializePage = new InitializePage(page);
+
+    //act
+    await initializePage.navigate();
+    await initializePage.enterClientKey(BAD_KEY);
+    await initializePage.clickInitializeButton();
+
+    //assert: error message should be displayed
+    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
+    const errorText = await errorLocator.innerText();
+
+    expect(errorText).toBe("It appears there is a problem with your Client Key. Contact b.well support for further assistance.");
+});
+
+test("Entering an invalid oauth credential results in an error", async ({ page }) => {
+    //arrange
+    const initializePage = new InitializePage(page);
+
+    //act
+    await initializePage.navigate();
+    await initializePage.enterClientKey(DEFAULT_KEY);
+    await initializePage.clickInitializeButton();
+
+    const oauthCredsLocator = await page.waitForSelector(initializePage.txtOauthCredsLocator);
+    await oauthCredsLocator.fill(BAD_OAUTH_CREDS);
+
+    await initializePage.clickSubmitButton();
+});
+
+test("Entering a well-formed key with a bad env results in an error", async ({ page }) => {
+    //arrange
+    const initializePage = new InitializePage(page);
+
+    //act
+    await initializePage.navigate();
+    await initializePage.enterClientKey(WELL_FORMED_KEY_BAD_ENV);
+    await initializePage.clickInitializeButton();
+
+    //assert: error message should be displayed
+    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
+    const errorText = await errorLocator.innerText();
+
+    expect(errorText).toBe("Network request failed");
+});
+
+test("Entering a well-formed key with a good env results in an error", async ({ page }) => {
+    //arrange
+    const initializePage = new InitializePage(page);
+
+    //act
+    await initializePage.navigate();
+    await initializePage.enterClientKey(WELL_FORMED_KEY_GOOD_ENV);
+    await initializePage.clickInitializeButton();
+
+    //assert: error message should be displayed
+    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
+    const errorText = await errorLocator.innerText();
+
+    expect(errorText).toContain("Internal Server Error");
 });

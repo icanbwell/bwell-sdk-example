@@ -29,12 +29,16 @@ export const loginUser = createAsyncThunk<
 >("user/login", async ({ oauthCreds }, { rejectWithValue }) => {
   try {
     const authenticationOutcome: OperationOutcome = await bWellSdk.authenticate({ token: oauthCreds });
-    console.log(authenticationOutcome);
+
+    const success = authenticationOutcome.success();
+
+    if (!success)      
+      return rejectWithValue(authenticationOutcome.message() ?? "Unknown error");
 
     //TODO: Replace with call to b.well SDK
     return { id: "1", name: "Kyle Wade", email: "kyle.wade@icanbwell.com" };
   } catch (error) {
-    return rejectWithValue("error logging in user");
+    return rejectWithValue("Unhandled error logging in user.");
   }
 });
 
@@ -53,11 +57,13 @@ export const userSlice = createSlice({
     builder
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.userInfo = action.payload;
         state.isLoggedIn = true;
         state.loading = false;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.error = action.payload || "Unknown error";
