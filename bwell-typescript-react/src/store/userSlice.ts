@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk<
 
     const success = authenticationOutcome.success();
 
-    if (!success)      
+    if (!success)
       return rejectWithValue(authenticationOutcome.message() ?? "Unknown error");
 
     //TODO: Replace with call to b.well SDK
