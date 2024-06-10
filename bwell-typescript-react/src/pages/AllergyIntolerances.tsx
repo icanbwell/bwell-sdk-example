@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllergyIntoleranceGroups } from "@/store/allergyIntoleranceSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useEffect } from "react";
-import { Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
+import { Alert, Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
 
 const AllergyIntolerances = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
+    const [showTable, setShowTable] = useState(true);
 
     const dispatch = useDispatch<AppDispatch>();
+
     const allergyIntoleranceGroups = useSelector((state: RootState) => state.allergyIntolerance.allergyIntoleranceGroups);
     const groupsLoading = useSelector((state: RootState) => state.allergyIntolerance.groupsLoading);
     const groupsError = useSelector((state: RootState) => state.allergyIntolerance.groupsError);
@@ -40,7 +42,7 @@ const AllergyIntolerances = () => {
         dispatch(getAllergyIntoleranceGroups({ page, pageSize }));
     };
 
-    const [showTable, setShowTable] = useState(true);
+
 
     const handleToggleView = () => {
         setShowTable(!showTable);
@@ -65,7 +67,7 @@ const AllergyIntolerances = () => {
                 />
             </Box>
             <Box sx={{ padding: '5px' }}>
-                <Button variant="contained" onClick={handleGetAllergyIntoleranceGroups}>
+                <Button variant="contained" onClick={(handleGetAllergyIntoleranceGroups)}>
                     Get Allergy Intolerance Groups
                 </Button>
                 <Button variant="contained" onClick={handleToggleView}>
@@ -73,36 +75,38 @@ const AllergyIntolerances = () => {
                 </Button>
             </Box>
             {groupsLoading && <p>Loading...</p>}
-            {groupsError && <p>Error: {groupsError}</p>}
-            {showTable ? (
-                allergyIntoleranceGroups && allergyIntoleranceGroups.data && (
-                    <Box>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>Name</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {allergyIntoleranceGroups.data.resources.map((group) => (
-                                    <TableRow key={group.id}>
-                                        <TableCell>{group.id}</TableCell>
-                                        <TableCell>{group.name}</TableCell>
+            {groupsError && <Alert severity="error" id="allergyIntoleranceGroupsError">{groupsError}</Alert>}
+            {
+                showTable ? (
+                    allergyIntoleranceGroups && allergyIntoleranceGroups.data && (
+                        <Box>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>Name</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Box>
+                                </TableHead>
+                                <TableBody>
+                                    {allergyIntoleranceGroups.data.resources.map((group) => (
+                                        <TableRow key={group.id}>
+                                            <TableCell>{group.id}</TableCell>
+                                            <TableCell>{group.name}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Box>
+                    )
+                ) : (
+                    allergyIntoleranceGroups && allergyIntoleranceGroups.data && (
+                        <Box>
+                            <pre>{JSON.stringify(allergyIntoleranceGroups.data, null, 2)}</pre>
+                        </Box>
+                    )
                 )
-            ) : (
-                allergyIntoleranceGroups && allergyIntoleranceGroups.data && (
-                    <Box>
-                        <pre>{JSON.stringify(allergyIntoleranceGroups.data, null, 2)}</pre>
-                    </Box>
-                )
-            )}
-        </Container>
+            }
+        </Container >
     );
 };
 

@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { bWellSdk } from "@/sdk/bWellSdk";
-import { AllergyIntolerancesGroupsResults, PagedRequest } from "@icanbwell/bwell-sdk-ts/dist/api";
+import { AllergyIntolerancesGroupsResults, } from "@icanbwell/bwell-sdk-ts/dist/api";
 import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
+import { AllergyIntoleranceGroupsRequest } from "@icanbwell/bwell-sdk-ts/dist/api/base/requests/health-data-request";
 
 export const getAllergyIntoleranceGroups = createAsyncThunk(
     "allergyIntolerance/getAllergyIntoleranceGroups",
     async ({ page, pageSize }: { page: number, pageSize: number }) => {
-        const request = new PagedRequest({ page, pageSize, });
+        const request = new AllergyIntoleranceGroupsRequest({ page, pageSize, });
         return bWellSdk.health.getAllergyIntoleranceGroups(request);
     }
 );
@@ -24,9 +25,14 @@ export const allergyIntoleranceGroupsSlice = createSlice({
             .addCase(getAllergyIntoleranceGroups.pending, (state) => {
                 state.groupsLoading = true;
                 state.groupsError = null;
+                state.allergyIntoleranceGroups = null;
             })
             .addCase(getAllergyIntoleranceGroups.fulfilled, (state, action: PayloadAction<BWellQueryResult<AllergyIntolerancesGroupsResults>>) => {
-                state.allergyIntoleranceGroups = action.payload || [];
+                if (action.payload.error) {
+                    state.groupsError = action.payload.error.message ?? "Unknown error";
+                } else {
+                    state.allergyIntoleranceGroups = action.payload || [];
+                }
                 state.groupsLoading = false;
             })
             .addCase(getAllergyIntoleranceGroups.rejected, (state, action) => {
