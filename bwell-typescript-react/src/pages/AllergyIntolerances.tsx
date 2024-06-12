@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllergyIntoleranceGroups } from "@/store/allergyIntoleranceSlice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -15,12 +15,9 @@ const AllergyIntolerances = () => {
         dispatch(getAllergyIntoleranceGroups({ page, pageSize }));
     };
 
-    const allergyIntoleranceGroups = useSelector((state: RootState) => state.allergyIntolerance.allergyIntoleranceGroups);
-    const groupsLoading = useSelector((state: RootState) => state.allergyIntolerance.groupsLoading);
-    const groupsError = useSelector((state: RootState) => state.allergyIntolerance.groupsError);
+    const allergyIntoleranceSlice = useSelector((state: RootState) => state.allergyIntolerance);
+    const { allergyIntoleranceGroups, groupsError, groupsLoading } = allergyIntoleranceSlice;
     const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-
-    useEffect(handleGetAllergyIntoleranceGroups, [dispatch]);
 
     if (!isLoggedIn) {
         return (
@@ -31,18 +28,6 @@ const AllergyIntolerances = () => {
         );
     }
 
-    const handlePageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPage(Number(event.target.value));
-    };
-
-    const handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPageSize(Number(event.target.value));
-    };
-
-    const handleToggleView = () => {
-        setShowTable(!showTable);
-    };
-
     return (
         <Container>
             <h1>Allergy Intolerances</h1>
@@ -52,20 +37,20 @@ const AllergyIntolerances = () => {
                     label="Page"
                     type="number"
                     value={page}
-                    onChange={handlePageChange}
+                    onChange={(e) => setPage(Number(e.target.value))}
                 />
                 <TextField
                     label="Page Size"
                     type="number"
                     value={pageSize}
-                    onChange={handlePageSizeChange}
+                    onChange={(e) => setPageSize(Number(e.target.value))}
                 />
             </Box>
             <Box sx={{ padding: '5px' }}>
                 <Button variant="contained" onClick={(handleGetAllergyIntoleranceGroups)}>
                     Get Allergy Intolerance Groups
                 </Button>
-                <Button variant="contained" onClick={handleToggleView}>
+                <Button variant="contained" onClick={() => setShowTable(!showTable)}>
                     Show {showTable ? "JSON" : "Table"}
                 </Button>
             </Box>
@@ -101,7 +86,7 @@ const AllergyIntolerances = () => {
                     )
                 )
             }
-        </Container >
+        </Container>
     );
 };
 
