@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllergyIntoleranceGroups } from "@/store/allergyIntoleranceSlice";
 import { AppDispatch, RootState } from "@/store/store";
-import { Alert, Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
+import { Alert, Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 const AllergyIntolerances = () => {
     const [page, setPage] = useState(0);
@@ -47,12 +47,19 @@ const AllergyIntolerances = () => {
                 />
             </Box>
             <Box sx={{ padding: '5px' }}>
-                <Button variant="contained" onClick={(handleGetAllergyIntoleranceGroups)}>
+                <Button variant="contained" onClick={handleGetAllergyIntoleranceGroups}>
                     Get Allergy Intolerance Groups
                 </Button>
-                <Button variant="contained" onClick={() => setShowTable(!showTable)}>
-                    Show {showTable ? "JSON" : "Table"}
-                </Button>
+            </Box>
+            <Box sx={{ padding: '5px' }}>
+                <ToggleButtonGroup
+                    value={showTable ? 'table' : 'json'}
+                    exclusive
+                    onChange={() => setShowTable(!showTable)}
+                >
+                    <ToggleButton value="table">Table</ToggleButton>
+                    <ToggleButton value="json">JSON</ToggleButton>
+                </ToggleButtonGroup>
             </Box>
             {groupsLoading && <p>Loading...</p>}
             {groupsError && <Alert severity="error" id="allergyIntoleranceGroupsError">{groupsError}</Alert>}
