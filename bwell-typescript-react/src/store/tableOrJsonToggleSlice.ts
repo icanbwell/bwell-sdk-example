@@ -5,7 +5,9 @@ interface TableOrJsonToggleState {
     [locator: string]: boolean;
 }
 
-const initialState: TableOrJsonToggleState = {};
+const initialState: TableOrJsonToggleState = {
+    allergyIntoleranceGroups: true,
+};
 
 export const tableOrJsonToggleSlice = createSlice({
     name: 'tableOrJsonToggle',

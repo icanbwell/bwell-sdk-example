@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { toggleView, selectShowTable } from '@/store/tableOrJsonToggleSlice';
@@ -15,11 +14,6 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ locator }) => {
     const handleToggleView = () => {
         dispatch(toggleView(locator));
     };
-
-    //initialize on mount
-    useEffect(() => {
-        dispatch(toggleView(locator));
-    }, []);
 
     return (
         <Box sx={{ padding: '5px' }}>
