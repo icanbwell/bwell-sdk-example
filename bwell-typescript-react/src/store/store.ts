@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { userSlice } from "./userSlice";
 import { initializationSlice } from "./initializationSlice";
 import { allergyIntoleranceGroupsSlice } from "./allergyIntoleranceSlice";
+import { tableOrJsonToggleSlice } from "./tableOrJsonToggleSlice";
 
 export const store = configureStore({
   reducer: {
     user: userSlice.reducer,
     initialization: initializationSlice.reducer,
     allergyIntolerance: allergyIntoleranceGroupsSlice.reducer,
+    tableOrJsonToggle: tableOrJsonToggleSlice.reducer,
   },
 });
 
