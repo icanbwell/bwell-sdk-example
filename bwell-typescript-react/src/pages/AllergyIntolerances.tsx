@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllergyIntoleranceGroups } from "@/store/allergyIntoleranceSlice";
 import { AppDispatch, RootState } from "@/store/store";
-import { Alert, Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Alert, Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import PaginationForm from "@/components/PaginationForm";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 
@@ -18,7 +18,9 @@ const AllergyIntolerances = () => {
 
     const allergyIntoleranceSlice = useSelector((state: RootState) => state.allergyIntolerance);
     const { allergyIntoleranceGroups, groupsError, groupsLoading } = allergyIntoleranceSlice;
+
     const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+
     const showAllergyIntoleranceGroupsTable = useSelector((state: RootState) => state.tableOrJsonToggle.allergyIntoleranceGroups);
 
     if (!isLoggedIn) {
@@ -40,7 +42,7 @@ const AllergyIntolerances = () => {
                     Get Allergy Intolerance Groups
                 </Button>
             </Box>
-            <TableOrJsonToggle locator="allergyIntoleranceGroups" />
+            {allergyIntoleranceGroups?.data && <TableOrJsonToggle locator="allergyIntoleranceGroups" />}
             {groupsLoading && <p>Loading...</p>}
             {groupsError && <Alert severity="error" id="allergyIntoleranceGroupsError">{groupsError}</Alert>}
             {
