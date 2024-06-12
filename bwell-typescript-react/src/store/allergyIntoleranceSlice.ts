@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { bWellSdk } from "@/sdk/bWellSdk";
-import { AllergyIntolerancesGroupsResults, } from "@icanbwell/bwell-sdk-ts/dist/api";
 import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
-import { AllergyIntoleranceGroupsRequest } from "@icanbwell/bwell-sdk-ts/dist/api/base/requests/health-data-request";
+import { AllergyIntoleranceGroupsRequest, AllergyIntolerancesGroupsResults } from "@icanbwell/bwell-sdk-ts";
 
 export const getAllergyIntoleranceGroups = createAsyncThunk(
     "allergyIntolerance/getAllergyIntoleranceGroups",

@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllergyIntoleranceGroups } from "@/store/allergyIntoleranceSlice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useEffect } from "react";
 import { Alert, Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
 
 const AllergyIntolerances = () => {
@@ -12,14 +11,16 @@ const AllergyIntolerances = () => {
 
     const dispatch = useDispatch<AppDispatch>();
 
+    const handleGetAllergyIntoleranceGroups = () => {
+        dispatch(getAllergyIntoleranceGroups({ page, pageSize }));
+    };
+
     const allergyIntoleranceGroups = useSelector((state: RootState) => state.allergyIntolerance.allergyIntoleranceGroups);
     const groupsLoading = useSelector((state: RootState) => state.allergyIntolerance.groupsLoading);
     const groupsError = useSelector((state: RootState) => state.allergyIntolerance.groupsError);
     const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
-    useEffect(() => {
-        dispatch(getAllergyIntoleranceGroups({ page, pageSize }));
-    }, [dispatch]);
+    useEffect(handleGetAllergyIntoleranceGroups, [dispatch]);
 
     if (!isLoggedIn) {
         return (
@@ -37,12 +38,6 @@ const AllergyIntolerances = () => {
     const handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPageSize(Number(event.target.value));
     };
-
-    const handleGetAllergyIntoleranceGroups = () => {
-        dispatch(getAllergyIntoleranceGroups({ page, pageSize }));
-    };
-
-
 
     const handleToggleView = () => {
         setShowTable(!showTable);
