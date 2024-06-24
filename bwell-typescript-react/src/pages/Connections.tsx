@@ -4,6 +4,7 @@ import { Alert, Box, Button, Container } from "@mui/material";
 import { getMemberConnections } from "@/store/connectionSlice";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 import { DataGrid } from "@mui/x-data-grid";
+import { CONNECTION_COLUMNS } from "@/column-defs";
 
 export const Connections = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,19 +19,6 @@ export const Connections = () => {
     const showMemberConnectionsTable = useSelector((state: RootState) => state.tableOrJsonToggle.memberConnections);
 
     const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-
-    const CONNECTION_COLUMNS = [
-        { field: 'id', headerName: 'ID' },
-        { field: 'name', headerName: 'Name' },
-        { field: 'category', headerName: 'Category' },
-        { field: 'type', headerName: 'Type' },
-        { field: 'status', headerName: 'Status' },
-        { field: 'syncStatus', headerName: 'SyncStatus' },
-        { field: 'statusUpdated', headerName: 'Status Updated', type: 'dateTime', valueGetter: (params) => new Date(params) },
-        { field: 'lastSynced', headerName: 'Last Synced', type: 'dateTime', valueGetter: (params) => new Date(params) },
-        { field: 'created', headerName: 'Created', type: 'dateTime', valueGetter: (params) => new Date(params) },
-        { field: 'isDirect', headerName: 'Is Direct', type: 'boolean' },
-    ];
 
     if (!isLoggedIn) {
         return (
