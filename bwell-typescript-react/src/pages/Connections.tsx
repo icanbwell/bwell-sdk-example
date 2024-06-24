@@ -26,9 +26,9 @@ export const Connections = () => {
         { field: 'type', headerName: 'Type' },
         { field: 'status', headerName: 'Status' },
         { field: 'syncStatus', headerName: 'SyncStatus' },
-        { field: 'statusUpdated', headerName: 'Status Updated', type: 'dateTime', valueGetter: (params) => new Date(params?.value) },
-        { field: 'lastSynced', headerName: 'Last Synced', type: 'dateTime', valueGetter: (params) => new Date(params?.value) },
-        { field: 'created', headerName: 'Created', type: 'dateTime', valueGetter: (params) => new Date(params?.value) },
+        { field: 'statusUpdated', headerName: 'Status Updated', type: 'dateTime', valueGetter: (params) => new Date(params) },
+        { field: 'lastSynced', headerName: 'Last Synced', type: 'dateTime', valueGetter: (params) => new Date(params) },
+        { field: 'created', headerName: 'Created', type: 'dateTime', valueGetter: (params) => new Date(params) },
         { field: 'isDirect', headerName: 'Is Direct', type: 'boolean' },
     ];
 
