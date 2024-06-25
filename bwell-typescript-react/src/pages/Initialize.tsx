@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Alert, Box, Button, Grid, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
-import { initialize } from "@/store/initializationSlice";
-import { loginUser } from "@/store/userSlice";
+import { authenticate, initialize, userSlice } from "@/store/userSlice";
 import { AppDispatch, RootState } from "@/store/store";
 
 const DEFAULT_KEY = import.meta.env.VITE_DEFAULT_KEY ?? "";
@@ -15,21 +14,23 @@ const Initialize = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const isInitialized = useSelector(
-    (state: RootState) => state.initialization.isInitialized
-  );
-
   const initializationError = useSelector(
-    (state: RootState) => state.initialization.error
+    (state: RootState) => state.user.error
   );
 
   const user = useSelector((state: RootState) => state.user)
 
-  const { error: authenticationError, isLoggedIn } = user;
+  const { error: authenticationError, isInitialized, isLoggedIn } = user;
 
   const initializeWithProvidedKey = () => dispatch(initialize({ clientKey: key }));
 
-  const loginWithProvidedOAuthCreds = () => dispatch(loginUser({ oauthCreds }));
+  const loginWithProvidedOAuthCreds = () => dispatch(authenticate({ oauthCreds }));
+
+  const CenteredGridItem = ({ children }) => (
+    <Grid item>
+      <Box textAlign={"center"}>{children}</Box>
+    </Grid>
+  );
 
   return (
     <Grid
@@ -39,25 +40,22 @@ const Initialize = () => {
       justifyContent="flex-start"
       spacing={2}
     >
-      <Grid item>
-        <Box textAlign={"center"}>
-          <h1>b.well Typescript SDK Example Web App</h1>
-        </Box>
-      </Grid>
-      <Grid item>
-        <Box textAlign={"center"}>
-          <h2>Client Key</h2>
-          <TextField
-            aria-label="client key"
-            id="txtKey"
-            onChange={(e) => setKey(e.target.value)}
-            placeholder="Enter a valid b.well client key here"
-            fullWidth
-            type="password"
-            value={key}
-          />
-        </Box>
-      </Grid>
+      <CenteredGridItem>
+        <h1>b.well Typescript SDK Example Web App</h1>
+      </CenteredGridItem>
+      <CenteredGridItem>
+        <h2>Client Key</h2>
+        <TextField
+          aria-label="client key"
+          id="txtKey"
+          onChange={(e) => setKey(e.target.value)}
+          placeholder="Enter a valid b.well client key here"
+          disabled={isInitialized}
+          fullWidth
+          type="password"
+          value={key}
+        />
+      </CenteredGridItem>
       <Grid item>
         <Box textAlign={"center"}>
           <Button
@@ -65,6 +63,7 @@ const Initialize = () => {
             variant="contained"
             disabled={!key}
             onClick={initializeWithProvidedKey}
+            disabled={isInitialized}
           >
             Initialize
           </Button>
@@ -91,6 +90,7 @@ const Initialize = () => {
                 value={oauthCreds}
                 fullWidth
                 style={{ minWidth: "80%", padding: "10px" }}
+                disabled={isLoggedIn}
               />
             </Box>
           </Grid>
@@ -99,7 +99,7 @@ const Initialize = () => {
               <Button
                 id="btnSubmit"
                 variant="contained"
-                disabled={!(key && oauthCreds)}
+                disabled={!(key && oauthCreds) || isLoggedIn}
                 onClick={loginWithProvidedOAuthCreds}
               >
                 Login
@@ -117,6 +117,14 @@ const Initialize = () => {
             <Grid item>
               <Box textAlign={"center"}>
                 <Alert severity="info" id="authenticationInfo">User successfully logged in.</Alert>
+              </Box>
+            </Grid>
+          )}
+
+          {isLoggedIn && (
+            <Grid item>
+              <Box textAlign={"center"}>
+                <Button variant="contained" onClick={() => dispatch(userSlice.actions.resetState())}>Log Out</Button>
               </Box>
             </Grid>
           )}

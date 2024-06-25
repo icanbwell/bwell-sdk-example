@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { bWellSdk } from "@/sdk/bWellSdk";
+import { getSdk } from "@/sdk/bWellSdk";
+
+const bWellSdk = getSdk();
 
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
