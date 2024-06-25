@@ -8,6 +8,12 @@ import { AppDispatch, RootState } from "@/store/store";
 const DEFAULT_KEY = import.meta.env.VITE_DEFAULT_KEY ?? "";
 const DEFAULT_OAUTH_CREDS = import.meta.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
 
+const CenteredGridItem = ({ children }: { children: React.ReactNode }) => (
+  <Grid item>
+    <Box textAlign={"center"}>{children}</Box>
+  </Grid>
+);
+
 const Initialize = () => {
   const [key, setKey] = useState<string>(DEFAULT_KEY);
   const [oauthCreds, setOauthCreds] = useState<string>(DEFAULT_OAUTH_CREDS);
@@ -25,12 +31,6 @@ const Initialize = () => {
   const initializeWithProvidedKey = () => dispatch(initialize({ clientKey: key }));
 
   const loginWithProvidedOAuthCreds = () => dispatch(authenticate({ oauthCreds }));
-
-  const CenteredGridItem = ({ children }) => (
-    <Grid item>
-      <Box textAlign={"center"}>{children}</Box>
-    </Grid>
-  );
 
   return (
     <Grid
@@ -56,30 +56,27 @@ const Initialize = () => {
           value={key}
         />
       </CenteredGridItem>
-      <Grid item>
-        <Box textAlign={"center"}>
-          <Button
-            id="btnInitialize"
-            variant="contained"
-            disabled={!key}
-            onClick={initializeWithProvidedKey}
-            disabled={isInitialized}
-          >
-            Initialize
-          </Button>
-        </Box>
-      </Grid>
-      {initializationError && (
-        <Grid item>
-          <Box textAlign={"center"}>
+      <CenteredGridItem>
+        <Button
+          id="btnInitialize"
+          variant="contained"
+          onClick={initializeWithProvidedKey}
+          disabled={isInitialized || !key}
+        >
+          Initialize
+        </Button>
+      </CenteredGridItem>
+      {
+        initializationError && (
+          <CenteredGridItem>
             <Alert severity="error" id="initializationError">{initializationError.message}</Alert>
-          </Box>
-        </Grid>
-      )}
-      {isInitialized && (
-        <>
-          <Grid item>
-            <Box textAlign={"center"}>
+          </CenteredGridItem >
+        )
+      }
+      {
+        isInitialized && (
+          <>
+            <CenteredGridItem>
               <h2>OAuth Creds</h2>
               <TextField
                 type="password"
@@ -92,10 +89,8 @@ const Initialize = () => {
                 style={{ minWidth: "80%", padding: "10px" }}
                 disabled={isLoggedIn}
               />
-            </Box>
-          </Grid>
-          <Grid item>
-            <Box textAlign={"center"}>
+            </CenteredGridItem>
+            <CenteredGridItem>
               <Button
                 id="btnSubmit"
                 variant="contained"
@@ -104,33 +99,33 @@ const Initialize = () => {
               >
                 Login
               </Button>
-            </Box>
-          </Grid>
-          {authenticationError && (
-            <Grid item>
-              <Box textAlign={"center"}>
-                <Alert severity="error" id="authenticationError">{authenticationError}</Alert>
-              </Box>
-            </Grid>
-          )}
-          {isLoggedIn && (
-            <Grid item>
-              <Box textAlign={"center"}>
-                <Alert severity="info" id="authenticationInfo">User successfully logged in.</Alert>
-              </Box>
-            </Grid>
-          )}
+            </CenteredGridItem>
+            {
+              authenticationError && (
+                <CenteredGridItem>
+                  <Alert severity="error" id="authenticationError">{authenticationError}</Alert>
+                </CenteredGridItem>
+              )
+            }
+            {
+              isLoggedIn && (
+                <CenteredGridItem>
+                  <Alert severity="info" id="authenticationInfo">User successfully logged in.</Alert>
+                </CenteredGridItem>
+              )
+            }
 
-          {isLoggedIn && (
-            <Grid item>
-              <Box textAlign={"center"}>
-                <Button variant="contained" onClick={() => dispatch(userSlice.actions.resetState())}>Log Out</Button>
-              </Box>
-            </Grid>
-          )}
-        </>
-      )}
-    </Grid>
+            {
+              isLoggedIn && (
+                <CenteredGridItem>
+                  <Button variant="contained" onClick={() => dispatch(userSlice.actions.resetState())}>Log Out</Button>
+                </CenteredGridItem>
+              )
+            }
+          </>
+        )
+      }
+    </Grid >
   );
 };
 

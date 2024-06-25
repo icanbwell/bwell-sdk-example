@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-
-const bWellSdk = getSdk();
+import { RootState } from "./store";
 
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
-    async () => {
+    async (_, { getState }) => {
+        const state = getState();
+        const bWellSdk = await getSdk(state as RootState);
         return bWellSdk.connection.getMemberConnections();
     }
 );
@@ -32,10 +33,14 @@ export const connectionSlice = createSlice({
                     state.memberConnections = action.payload || [];
                 }
                 state.connectionsLoading = false;
+                state.connectionsError = "";
             })
             .addCase(getMemberConnections.rejected, (state, action) => {
-                state.connectionsError = action.error.message ?? "Unknown error";
-                state.connectionsLoading = false;
+                if (action.error.message === "Uninitialized") {
+                    state.connectionsLoading = true;
+                } else {
+                    state.connectionsError = action.error.message ?? "Unknown error";
+                } 
             });
     },
 });
