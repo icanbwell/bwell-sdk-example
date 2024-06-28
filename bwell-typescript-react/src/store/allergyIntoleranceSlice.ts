@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
 import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
-import { AllergyIntoleranceGroupsRequest, AllergyIntolerancesGroupsResults, AllergyIntolerancesRequest, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
+import { AllergyIntoleranceGroupsRequest, AllergyIntolerancesGroupsResults, AllergyIntolerancesRequest, AllergyIntolerancesResults, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
 import { RootState } from "./store";
 
 
@@ -28,6 +28,9 @@ export const getAllergyIntolerances = createAsyncThunk(
 export const allergyIntoleranceGroupsSlice = createSlice({
     name: "allergyIntoleranceGroups",
     initialState: {
+        allergyIntolerances: null as BWellQueryResult<AllergyIntolerancesResults> | null,
+        intolerancesLoading: false,
+        intolerancesError: null as string | null,
         allergyIntoleranceGroups: null as BWellQueryResult<AllergyIntolerancesGroupsResults> | null,
         groupsLoading: false,
         groupsError: null as string | null,
@@ -56,6 +59,29 @@ export const allergyIntoleranceGroupsSlice = createSlice({
                 } else {
                     state.groupsError = action.error.message ?? "Unknown error";
                 }
+            })
+            .addCase(getAllergyIntolerances.pending, (state) => {
+                state.intolerancesLoading = true;
+                state.intolerancesError = null;
+                state.allergyIntolerances = null;
+            })
+            .addCase(getAllergyIntolerances.fulfilled, (state, action: PayloadAction<BWellQueryResult<AllergyIntolerancesGroupsResults>>) => {
+                if (action.payload.error) {
+                    state.intolerancesError = action.payload.error.message ?? "Unknown error";
+                } else {
+                    state.allergyIntolerances = action.payload || [];
+                }
+
+                state.intolerancesLoading = false;
+                state.intolerancesError = "";
+            })
+            .addCase(getAllergyIntolerances.rejected, (state, action) => {
+                if (action.error.message === "Uninitialized") {
+                    state.intolerancesLoading = true;
+                } else {
+                    state.intolerancesError = action.error.message ?? "Unknown error";
+                }
             });
+            
     },
 });

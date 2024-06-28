@@ -7,7 +7,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
-  element: <Page>{element}</Page>,
+  element: <Page style={{ marginBottom: '25px;' }}>{element}</Page>,
 });
 
 const Router = createBrowserRouter([

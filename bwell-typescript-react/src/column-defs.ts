@@ -17,3 +17,12 @@ export const ALLERGY_INTOLERANCE_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
 ];
+
+export const ALLERGY_INTOLERANCE_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'category', headerName: 'Category', valueGetter: category => category?.length ? category[0].display : '', width: 100 },
+    { field: 'criticality', headerName: 'Criticality', valueGetter: (criticality) => criticality.display },
+    { field: 'onsetPeriod', headerName: 'Onset', valueGetter: (onsetPeriod) => onsetPeriod ? new Date(onsetPeriod?.start) : '', type: 'dateTime', width: 200 },
+    { field: 'lastOccurrence', headerName: 'Last Occurence', valueGetter: (lastOccurrence) => lastOccurrence ? new Date(lastOccurrence) : '', type: 'dateTime', width: 200 },
+    { field: 'clinicalStatus', headerName: 'Clinical Status', valueGetter: (clinicalStatus) => clinicalStatus?.coding?.length ? clinicalStatus.coding[0].display : '', width: 125 },
+]

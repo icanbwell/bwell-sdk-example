@@ -7,6 +7,8 @@ import { connectionSlice } from "./connectionSlice";
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 
+import rehydrateSdk from "@/sdk/rehydrateSdk";
+
 // Setup the persist config
 const persistConfig = {
   key: 'root',
@@ -27,6 +29,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // Configure the store with the persistReducer
 export const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(rehydrateSdk),
 });
 
 // Export a persistor that we can use in the PersistGate

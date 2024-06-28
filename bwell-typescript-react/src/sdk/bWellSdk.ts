@@ -3,13 +3,13 @@ import { BWellSDK } from '@icanbwell/bwell-sdk-ts';
 
 let bWellSdk: BWellSDK;
 
-export const authenticateSdk = async (oauthCredentials: string) => {
-    return bWellSdk.authenticate({ token: oauthCredentials });
+export const authenticateSdk = async (oauthCreds: string) => {
+    return bWellSdk.authenticate({ token: oauthCreds });
 }
 
 export const initializeSdk = (clientKey: string) => {
     bWellSdk = new BWellSDK({ clientKey });
-};
+};    
 
 export const getSdk = async (state: RootState) => {
     if (bWellSdk) return bWellSdk;
