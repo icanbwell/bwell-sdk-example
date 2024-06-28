@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { userSlice } from "./userSlice";
-import { allergyIntoleranceGroupsSlice } from "./allergyIntoleranceSlice";
+import { allergyIntolerancesSlice } from "./allergyIntoleranceSlice";
 import { tableOrJsonToggleSlice } from "./tableOrJsonToggleSlice";
 import { connectionSlice } from "./connectionSlice";
 
@@ -8,6 +8,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 
 import rehydrateSdk from "@/sdk/rehydrateSdk";
+import { allergyIntoleranceGroupsSlice } from "./allergyIntoleranceGroupsSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -18,7 +19,8 @@ const persistConfig = {
 // Create a root reducer
 const rootReducer = combineReducers({
   user: userSlice.reducer,
-  allergyIntolerance: allergyIntoleranceGroupsSlice.reducer,
+  allergyIntolerances: allergyIntolerancesSlice.reducer,
+  allergyIntoleranceGroups: allergyIntoleranceGroupsSlice.reducer,
   tableOrJsonToggle: tableOrJsonToggleSlice.reducer,
   connection: connectionSlice.reducer,
 });
@@ -29,7 +31,9 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // Configure the store with the persistReducer
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(rehydrateSdk),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: false,
+  }).concat(rehydrateSdk),
 });
 
 // Export a persistor that we can use in the PersistGate
