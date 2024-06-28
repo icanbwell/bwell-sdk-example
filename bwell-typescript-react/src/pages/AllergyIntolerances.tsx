@@ -10,13 +10,13 @@ const AllergyIntolerances = () => {
             <h1>Allergy Intolerances</h1>
             <HealthDataGrid
                 title="Allergy Intolerance Groups"
-                selector={"allergyIntoleranceGroups"}
+                selector="allergyIntoleranceGroups"
                 columns={ALLERGY_INTOLERANCE_GROUP_COLUMNS}
                 getter={getAllergyIntoleranceGroups}
             />
             <HealthDataGrid
                 title="Allergy Intolerances"
-                selector={"allergyIntolerances"}
+                selector="allergyIntolerances"
                 columns={ALLERGY_INTOLERANCE_COLUMNS}
                 getter={getAllergyIntolerances}
             />

@@ -27,6 +27,7 @@ const HealthDataGrid = ({
 
     const slice = useSelector((state: RootState) => (state as any)[selector]);
     const { healthData, loading, error } = slice;
+
     const showTable = useSelector((state: RootState) => state.tableOrJsonToggle[selector]);
 
     useEffect(() => {
@@ -36,7 +37,7 @@ const HealthDataGrid = ({
     return (
         <Container>
             <h2>{title}</h2>
-            {healthData?.data && <TableOrJsonToggle locator={title} />}
+            {healthData?.data && <TableOrJsonToggle locator={selector} />}
             {loading && <p>Loading...</p>}
             {error && <Alert severity="error">{error}</Alert>}
             {showTable && healthData?.data &&
