@@ -1,16 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
 import { AllergyIntolerancesRequest, AllergyIntolerancesResults, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
-import { RootState } from "./store";
+import { BWellQueryResult } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/common/results";
 
 export const getAllergyIntolerances = createAsyncThunk(
     "allergyIntolerances/getAllergyIntolerances",
-    async (inputParams: HealthDataRequestInput, { getState }) => {
-        const state = getState();
-        const bWellSdk = await getSdk(state as RootState);
+    async (inputParams: HealthDataRequestInput) => {
+        const bWellSdk = await getSdk();
         const request = new AllergyIntolerancesRequest(inputParams);
-        return bWellSdk.health.getAllergyIntolerances(request);
+        return bWellSdk?.health.getAllergyIntolerances(request);
     }
 );
 

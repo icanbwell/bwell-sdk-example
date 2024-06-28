@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-import { RootState } from "./store";
 
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
-    async (_, { getState }) => {
-        const state = getState();
-        const bWellSdk = await getSdk(state as RootState);
-        return bWellSdk.connection.getMemberConnections();
+    async () => {
+        const bWellSdk = await getSdk();
+        return bWellSdk?.connection.getMemberConnections();
     }
 );
 

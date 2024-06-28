@@ -11,19 +11,6 @@ export const initializeSdk = (clientKey: string) => {
     bWellSdk = new BWellSDK({ clientKey });
 };    
 
-export const getSdk = async (state: RootState) => {
+export const getSdk = async () => {
     if (bWellSdk) return bWellSdk;
-
-    if (!state.user) throw new Error("SDK not initialized");
-
-    const { clientKey, oauthCreds } = state.user;
-
-    if (clientKey && oauthCreds) {
-        bWellSdk = new BWellSDK({ clientKey });
-        await bWellSdk.authenticate({ token: oauthCreds });
-
-        return bWellSdk;
-    }
-
-    throw new Error("SDK not initialized");
 }

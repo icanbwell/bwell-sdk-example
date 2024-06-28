@@ -2,16 +2,13 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
 import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
 import { AllergyIntoleranceGroupsRequest, AllergyIntolerancesGroupsResults } from "@icanbwell/bwell-sdk-ts";
-import { RootState } from "./store";
-
 
 export const getAllergyIntoleranceGroups = createAsyncThunk(
     "allergyIntoleranceGroups/getAllergyIntoleranceGroups",
-    async ({ page, pageSize }: { page: number, pageSize: number }, { getState }) => {
-        const state = getState();
-        const bWellSdk = await getSdk(state as RootState);
+    async ({ page, pageSize }: { page: number, pageSize: number }) => {
+        const bWellSdk = await getSdk();
         const request = new AllergyIntoleranceGroupsRequest({ page, pageSize, });
-        return bWellSdk.health.getAllergyIntoleranceGroups(request);
+        return bWellSdk?.health.getAllergyIntoleranceGroups(request);
     }
 );
 
@@ -31,8 +28,6 @@ export const allergyIntoleranceGroupsSlice = createSlice({
                 state.healthData = null;
             })
             .addCase(getAllergyIntoleranceGroups.fulfilled, (state, action: PayloadAction<BWellQueryResult<AllergyIntolerancesGroupsResults>>) => {
-                console.log('state', state);
-                console.log('action', action);
                 if (action.payload.error) {
                     state.error = action.payload.error.message ?? "Unknown error";
                 } else {
