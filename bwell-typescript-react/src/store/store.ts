@@ -18,6 +18,8 @@ import { carePlanGroupsSlice } from "./carePlanGroupsSlice";
 import { carePlansSlice } from "./carePlansSlice";
 import { encounterGroupsSlice } from "./encounterGroupsSlice";
 import { encountersSlice } from "./encountersSlice";
+import { immunizationsSlice } from "./immunizationsSlice";
+import { immunizationGroupsSlice } from "./immunizationGroupsSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -37,6 +39,8 @@ const rootReducer = combineReducers({
   conditionGroups: conditionGroupsSlice.reducer,
   encounters: encountersSlice.reducer,
   encounterGroups: encounterGroupsSlice.reducer,
+  immunizations: immunizationsSlice.reducer,
+  immunizationGroups: immunizationGroupsSlice.reducer,
   labs: labsSlice.reducer,
   labGroups: labGroupsSlice.reducer,
   tableOrJsonToggle: tableOrJsonToggleSlice.reducer,

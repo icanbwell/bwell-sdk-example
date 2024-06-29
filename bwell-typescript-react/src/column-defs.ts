@@ -114,3 +114,18 @@ export const ENCOUNTER_GROUP_COLUMNS: GridColDef[] = [
     { field: 'date', headerName: 'Date', type: 'dateTime', valueGetter: (date) => new Date(date) },
     { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];
+
+export const IMMUNIZATION_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'vaccineCode', headerName: 'Vaccine Code', width: 300, valueGetter: vaccineCode => vaccineCode?.text, width: 150 },
+    { field: 'site', headerName: 'Site', valueGetter: site => site?.coding?.length ? site.coding[0].display : '', width: 200 },
+    { field: 'route', headerName: 'Route', valueGetter: route => route?.coding?.length ? route.coding[0].display : '', width: 200 },
+    { field: 'occurrenceDateTime', headerName: 'Date', type: 'occurrenceDateTime', valueGetter: (occurrenceDateTime) => dayMonthYear(occurrenceDateTime), width: 125 },
+];
+
+export const IMMUNIZATION_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'occurrenceDateTime', headerName: 'Date', type: 'occurrenceDateTime', valueGetter: (occurrenceDateTime) => dayMonthYear(occurrenceDateTime), width: 250 },
+    { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
+];

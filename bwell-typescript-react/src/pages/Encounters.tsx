@@ -7,7 +7,7 @@ import { getEncounters } from "@/store/encountersSlice";
 const Encounters = () => {
     return (
         <>
-            <h1>Care Encounters</h1>
+            <h1>Encounters</h1>
             <HealthDataGrid
                 title="Encounter Groups"
                 selector="encounterGroups"
