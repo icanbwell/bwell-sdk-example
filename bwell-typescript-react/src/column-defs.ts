@@ -1,10 +1,10 @@
 import { GridColDef } from "@mui/x-data-grid";
 
-const dayMonthYear = (dateString: String) => {
+const monthDayYear = (dateString: String) => {
     const date = new Date(dateString);
 
     if (date && !isNaN(date.getDate()))
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     else
         return 'N/A';
 }
@@ -92,20 +92,20 @@ export const CARE_PLAN_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'category', headerName: 'Category', valueGetter: category => category?.length ? category[0].display : '', width: 100 },
     { field: 'activity', headerName: 'Activity', valueGetter: activity => joinActivity(activity), width: 200 },
-    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${dayMonthYear(period.start)} - ${dayMonthYear(period.end)}` : '', width: 150 },
+    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${monthDayYear(period.start)} - ${monthDayYear(period.end)}` : '', width: 150 },
 ];
 
 export const CARE_PLAN_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
-    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${dayMonthYear(period.start)} - ${dayMonthYear(period.end)}` : '', width: 150 },
+    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${monthDayYear(period.start)} - ${monthDayYear(period.end)}` : '', width: 150 },
     { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];
 
 export const ENCOUNTER_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'type', headerName: 'Type', width: 300, valueGetter: type => joinCoding(type) },
-    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${dayMonthYear(period.start)} - ${dayMonthYear(period.end)}` : '', width: 250 },
+    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${monthDayYear(period.start)} - ${monthDayYear(period.end)}` : '', width: 250 },
     { field: 'reasonCode', headerName: 'Reason', valueGetter: (reasonCode) => joinCoding(reasonCode), width: 250 },
 ];
 
@@ -122,13 +122,13 @@ export const IMMUNIZATION_COLUMNS: GridColDef[] = [
     { field: 'vaccineCode', headerName: 'Vaccine Code', width: 300, valueGetter: vaccineCode => vaccineCode?.text, width: 150 },
     { field: 'site', headerName: 'Site', valueGetter: site => site?.coding?.length ? site.coding[0].display : '', width: 200 },
     { field: 'route', headerName: 'Route', valueGetter: route => route?.coding?.length ? route.coding[0].display : '', width: 200 },
-    { field: 'occurrenceDateTime', headerName: 'Date', type: 'occurrenceDateTime', valueGetter: (occurrenceDateTime) => dayMonthYear(occurrenceDateTime), width: 125 },
+    { field: 'occurrenceDateTime', headerName: 'Date', type: 'occurrenceDateTime', valueGetter: (occurrenceDateTime) => monthDayYear(occurrenceDateTime), width: 125 },
 ];
 
 export const IMMUNIZATION_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'occurrenceDateTime', headerName: 'Date', type: 'occurrenceDateTime', valueGetter: (occurrenceDateTime) => dayMonthYear(occurrenceDateTime), width: 250 },
+    { field: 'occurrenceDateTime', headerName: 'Date', type: 'occurrenceDateTime', valueGetter: (occurrenceDateTime) => monthDayYear(occurrenceDateTime), width: 250 },
     { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];
 
@@ -154,12 +154,12 @@ export const VITAL_SIGN_COLUMNS: GridColDef[] = [
     { field: 'value', headerName: 'Value', valueGetter: value => formatValue(value), width: 100 },
     { field: 'interpretation', headerName: 'Interpretation', valueGetter: interpretation => interpretation?.length ? interpretation[0].text : '', width: 200 },
     { field: 'note', headerName: 'Note', valueGetter: note => note?.length ? note[0].text : '', width: 200 },
-    { field: 'effectiveDateTime', headerName: 'Date', type: 'effectiveDateTime', valueGetter: (effectiveDateTime) => dayMonthYear(effectiveDateTime), width: 150 },
+    { field: 'effectiveDateTime', headerName: 'Date', type: 'effectiveDateTime', valueGetter: (effectiveDateTime) => monthDayYear(effectiveDateTime), width: 150 },
 ];
 
 export const VITAL_SIGN_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'value', headerName: 'Value', valueGetter: value => formatValue(value), width: 200 },
-    { field: 'effectiveDateTime', headerName: 'Date', valueGetter: (effectiveDateTime) => dayMonthYear(effectiveDateTime), width: 150 }
+    { field: 'effectiveDateTime', headerName: 'Date', valueGetter: (effectiveDateTime) => monthDayYear(effectiveDateTime), width: 150 }
 ];
