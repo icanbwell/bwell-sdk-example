@@ -54,7 +54,8 @@ export const LAB_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'code', headerName: 'Code', valueGetter: code => code?.coding?.length ? code.coding[0].display : '', width: 300 },
     { field: 'value', headerName: 'Value', valueGetter: value => `${value?.valueQuantity?.value} ${value?.valueQuantity?.unit}`, width: 150 },
-    { field: 'note', headerName: 'Note', valueGetter: note => note?.length ? note[0].text : '', width: 300 },
+    { field: 'referenceRange', headerName: 'Reference Range', valueGetter: referenceRange => referenceRange?.length ? `${referenceRange[0].low.value} ${referenceRange[0].low.unit} - ${referenceRange[0].high.value} ${referenceRange[0].high.unit}` : '', width: 200 },
+    { field: 'note', headerName: 'Note', valueGetter: note => note?.length ? note[0].text : '', width: 400 },
 ];
 
 export const LAB_GROUP_COLUMNS: GridColDef[] = [
