@@ -14,6 +14,8 @@ import { conditionsSlice } from "./conditionsSlice";
 import { conditionGroupsSlice } from "./conditionGroupsSlice";
 import { labGroupsSlice } from "./labGroupsSlice";
 import { labsSlice } from "./labsSlice";
+import { carePlanGroupsSlice } from "./carePlanGroupsSlice";
+import { carePlansSlice } from "./carePlansSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -27,6 +29,8 @@ const rootReducer = combineReducers({
   healthSummary: healthSummarySlice.reducer,
   allergyIntolerances: allergyIntolerancesSlice.reducer,
   allergyIntoleranceGroups: allergyIntoleranceGroupsSlice.reducer,
+  carePlans: carePlansSlice.reducer,
+  carePlanGroups: carePlanGroupsSlice.reducer,
   conditions: conditionsSlice.reducer,
   conditionGroups: conditionGroupsSlice.reducer,
   labs: labsSlice.reducer,

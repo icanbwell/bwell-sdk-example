@@ -1,5 +1,20 @@
 import { GridColDef } from "@mui/x-data-grid";
 
+const dayMonthYear = (dateString: String) => {
+    const date = new Date(dateString);
+
+    if (date && !isNaN(date.getDate()))
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    else
+        return 'N/A';
+}
+
+const joinActivity = (activity) => {
+    if (!activity?.length) return '';
+
+    return activity.map(a => a.detail?.code?.text).join(', ');
+}
+
 export const CONNECTION_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID' },
     { field: 'name', headerName: 'Name' },
@@ -62,5 +77,19 @@ export const LAB_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 150 },
+    { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
+];
+
+export const CARE_PLAN_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'category', headerName: 'Category', valueGetter: category => category?.length ? category[0].display : '', width: 100 },
+    { field: 'activity', headerName: 'Activity', valueGetter: activity => joinActivity(activity), width: 200 },
+    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${dayMonthYear(period.start)} - ${dayMonthYear(period.end)}` : '', width: 150 },
+];
+
+export const CARE_PLAN_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'name', headerName: 'Name', width: 300 },
+    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${dayMonthYear(period.start)} - ${dayMonthYear(period.end)}` : '', width: 150 },
     { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];
