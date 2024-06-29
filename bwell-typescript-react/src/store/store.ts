@@ -20,6 +20,8 @@ import rehydrateSdk from "@/sdk/rehydrateSdk";
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 import { proceduresSlice } from "./proceduresSlice";
+import { vitalSignsSlice } from "./vitalSignsSlice";
+import { vitalSignGroupsSlice } from "./vitalSignGroupsSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -45,6 +47,8 @@ const rootReducer = combineReducers({
   labGroups: labGroupsSlice.reducer,
   procedures: proceduresSlice.reducer,
   procedureGroups: proceduresSlice.reducer,
+  vitalSigns: vitalSignsSlice.reducer,
+  vitalSignGroups: vitalSignGroupsSlice.reducer,
   tableOrJsonToggle: tableOrJsonToggleSlice.reducer,
   connection: connectionSlice.reducer,
 });

@@ -21,6 +21,8 @@ const joinCoding = coding => {
     return coding.map(c => c.coding[0].display).join(', ');
 }
 
+const formatValue = value => `${value?.valueQuantity?.value ?? ''} ${value?.valueQuantity?.unit ?? ''}`;
+
 export const CONNECTION_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID' },
     { field: 'name', headerName: 'Name' },
@@ -144,4 +146,20 @@ export const PROCEDURE_GROUP_COLUMNS: GridColDef[] = [
     { field: 'performer', headerName: 'Performer', valueGetter: performer => performer[0].actor.name[0].text, width: 200 },
     { field: 'outcome', headerName: 'Outcome', valueGetter: outcome => outcome?.text, width: 250 },
     { field: 'performedDateTime', headerName: 'Date', type:'date', valueGetter: (performedDateTime) => new Date(performedDateTime), width: 125 },
+];
+
+export const VITAL_SIGN_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'code', headerName: 'Code', valueGetter: code => code?.text, width: 100 },
+    { field: 'value', headerName: 'Value', valueGetter: value => formatValue(value), width: 100 },
+    { field: 'interpretation', headerName: 'Interpretation', valueGetter: interpretation => interpretation?.length ? interpretation[0].text : '', width: 200 },
+    { field: 'note', headerName: 'Note', valueGetter: note => note?.length ? note[0].text : '', width: 200 },
+    { field: 'effectiveDateTime', headerName: 'Date', type: 'effectiveDateTime', valueGetter: (effectiveDateTime) => dayMonthYear(effectiveDateTime), width: 150 },
+];
+
+export const VITAL_SIGN_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'value', headerName: 'Value', valueGetter: value => formatValue(value), width: 200 },
+    { field: 'effectiveDateTime', headerName: 'Date', valueGetter: (effectiveDateTime) => dayMonthYear(effectiveDateTime), width: 150 }
 ];

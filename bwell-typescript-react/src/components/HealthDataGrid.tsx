@@ -1,5 +1,5 @@
 // components/HealthDataGrid.tsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { Alert, Box, Container } from "@mui/material";
@@ -23,9 +23,19 @@ const HealthDataGrid = ({
 }: HealthDataGridProps) => {
     const dispatch = useDispatch();
 
-    const getData = ({ page, pageSize }: GridPaginationModel) => dispatch(getter({ page, pageSize }));
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+        page: 0,
+        pageSize: 10,
+    });
 
-    const handlePaginationChange = (paginationModel: GridPaginationModel) => getData(paginationModel);
+    const getData = (paginationModel: GridPaginationModel) => {
+        dispatch(getter(paginationModel));
+    }
+
+    const handlePaginationChange = (paginationModel: GridPaginationModel) => {
+        setPaginationModel(paginationModel);
+        getData(paginationModel);
+    }
 
     const slice = useSelector((state: RootState) => (state as any)[selector]);
     const { healthData, loading, error } = slice;
@@ -55,6 +65,7 @@ const HealthDataGrid = ({
                         }
                     }
                     paginationMode="server"
+                    paginationModel={paginationModel}
                     rowCount={healthData?.data?.paging_info?.total_items || 0}
                     onPaginationModelChange={handlePaginationChange}
                     getRowId={(row) => rowId ? row[rowId] : row.id}
