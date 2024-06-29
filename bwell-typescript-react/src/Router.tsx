@@ -4,6 +4,7 @@ import AllergyIntolerances from "@/pages/AllergyIntolerances";
 import Connections from "@/pages/Connections";
 import { createBrowserRouter } from "react-router-dom";
 import HealthSummary from "./pages/HealthSummary";
+import Conditions from "./pages/Conditions";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
@@ -15,6 +16,7 @@ const Router = createBrowserRouter([
   makePageRoute("/initialize", <Initialize />),
   makePageRoute("/healthSummary", <HealthSummary />),
   makePageRoute("/allergyIntolerances", <AllergyIntolerances />),
+  makePageRoute("/conditions", <Conditions />),
   makePageRoute("/connections", <Connections />),
 ]);
 

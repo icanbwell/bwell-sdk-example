@@ -10,6 +10,8 @@ import storage from "redux-persist/lib/storage";
 import rehydrateSdk from "@/sdk/rehydrateSdk";
 import { allergyIntoleranceGroupsSlice } from "./allergyIntoleranceGroupsSlice";
 import { healthSummarySlice } from "./healthSummarySlice";
+import { conditionsSlice } from "./conditionsSlice";
+import { conditionGroupsSlice } from "./conditionGroupsSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -23,6 +25,8 @@ const rootReducer = combineReducers({
   healthSummary: healthSummarySlice.reducer,
   allergyIntolerances: allergyIntolerancesSlice.reducer,
   allergyIntoleranceGroups: allergyIntoleranceGroupsSlice.reducer,
+  conditions: conditionsSlice.reducer,
+  conditionGroups: conditionGroupsSlice.reducer,
   tableOrJsonToggle: tableOrJsonToggleSlice.reducer,
   connection: connectionSlice.reducer,
 });

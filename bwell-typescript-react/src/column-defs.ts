@@ -30,3 +30,18 @@ export const HEALTH_SUMMARY_COLUMNS: GridColDef[] = [
     { field: 'category', headerName: 'Category', width: 300 },
     { field: 'total', headerName: 'Total', width: 300 },
 ]
+
+export const CONDITION_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'code', headerName: 'Code', valueGetter: (code) => code?.coding?.length ? code.coding[0].display : '' },
+    { field: 'subject', headerName: 'Subject Name', valueGetter: (subject) => subject?.name?.length ? subject.name[0].text : '', width: 200 },
+    { field: 'severity', headerName: 'Severity', valueGetter: (severity) => severity?.coding?.length ? severity.coding[0].display : '', width: 150 },
+    { field: 'bodySite', headerName: 'Body Site', valueGetter: (bodySite) => bodySite?.length && bodySite[0].coding?.length ? bodySite[0].coding[0].display : '', width: 150 },
+    { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 175 },
+];
+
+export const CONDITION_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'name', headerName: 'Name', width: 300 },
+    { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 150 },
+];
