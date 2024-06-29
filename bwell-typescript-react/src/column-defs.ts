@@ -15,6 +15,12 @@ const joinActivity = (activity) => {
     return activity.map(a => a.detail?.code?.text).join(', ');
 }
 
+const joinCoding = coding => {
+    if (!coding?.length) return '';
+
+    return coding.map(c => c.coding[0].display).join(', ');
+}
+
 export const CONNECTION_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID' },
     { field: 'name', headerName: 'Name' },
@@ -91,5 +97,20 @@ export const CARE_PLAN_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${dayMonthYear(period.start)} - ${dayMonthYear(period.end)}` : '', width: 150 },
+    { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
+];
+
+export const ENCOUNTER_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'type', headerName: 'Type', width: 300, valueGetter: type => joinCoding(type) },
+    { field: 'period', headerName: 'Period', valueGetter: (period) => period?.start && period?.end ? `${dayMonthYear(period.start)} - ${dayMonthYear(period.end)}` : '', width: 250 },
+    { field: 'reasonCode', headerName: 'Reason', valueGetter: (reasonCode) => joinCoding(reasonCode), width: 250 },
+];
+
+export const ENCOUNTER_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'name', headerName: 'Name', width: 300 },
+    { field: 'participant', headerName: 'Participant', width: 150 },
+    { field: 'date', headerName: 'Date', type: 'dateTime', valueGetter: (date) => new Date(date) },
     { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];

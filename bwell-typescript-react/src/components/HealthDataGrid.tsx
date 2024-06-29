@@ -6,7 +6,7 @@ import { Alert, Box, Container } from "@mui/material";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 import { RootState } from "@/store/store";
 
-interface HealthDataGridProps {
+type HealthDataGridProps = {
     title: string;
     selector: string;
     columns: any[];
