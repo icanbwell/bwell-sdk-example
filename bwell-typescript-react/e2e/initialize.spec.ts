@@ -12,6 +12,9 @@ const BAD_OAUTH_CREDS = process.env.VITE_BAD_OAUTH_CREDS ?? "";
 const WELL_FORMED_KEY_BAD_ENV = process.env.VITE_WELL_FORMED_KEY_BAD_ENV ?? "";
 const WELL_FORMED_KEY_GOOD_ENV = process.env.VITE_WELL_FORMED_KEY_GOOD_ENV ?? "";
 
+const GENERIC_ERROR = "Error while authenticating";
+const INVALID_KEY_ERROR = "It appears there is a problem with your Client Key. Contact b.well support for further assistance.";
+
 test("Navigating to the Initialize page works", async ({ page }) => {
     //arrange
     const initializePage = new InitializePage(page);
@@ -84,7 +87,7 @@ test("Entering an invalid client key results in an error", async ({ page }) => {
     //assert: error message should be displayed
     const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
     const errorText = await errorElement.textContent();
-    expect(errorText).toBe("It appears there is a problem with your Client Key. Contact b.well support for further assistance.");
+    expect(errorText).toBe(INVALID_KEY_ERROR);
 });
 
 test("Entering an invalid oauth credential results in an error", async ({ page }) => {
@@ -100,4 +103,39 @@ test("Entering an invalid oauth credential results in an error", async ({ page }
     await oauthCredsLocator.fill(BAD_OAUTH_CREDS);
 
     await initializePage.clickSubmitButton();
+});
+
+test("Entering a well-formed valid client key and invalid credential results in an error", async ({ page }) => {
+    //arrange
+    const initializePage = new InitializePage(page);
+
+    //act
+    await initializePage.navigate();
+    await initializePage.enterClientKey(WELL_FORMED_KEY_BAD_ENV);
+    await initializePage.clickInitializeButton();
+
+    const oauthCredsLocator = await page.waitForSelector(initializePage.txtOauthCredsLocator);
+    await oauthCredsLocator.fill(DEFAULT_OAUTH_CREDS);
+
+    await initializePage.clickSubmitButton();
+
+    //assert
+    const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
+    const errorText = await errorElement.textContent();
+    expect(errorText).toBe(GENERIC_ERROR);
+});
+
+test("Entering a bad client key and valid oauth credential results in an error", async ({ page }) => {
+    //arrange
+    const initializePage = new InitializePage(page);
+
+    //act
+    await initializePage.navigate();
+    await initializePage.enterClientKey(BAD_KEY);
+    await initializePage.clickInitializeButton();
+
+    //assert
+    const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
+    const errorText = await errorElement.textContent();
+    expect(errorText).toBe(INVALID_KEY_ERROR);
 });
