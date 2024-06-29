@@ -25,7 +25,7 @@ export const DisplayKnowledge: React.FC<DisplayKnowledgeProps> = ({ name, health
 
     const dispatch = useDispatch();
 
-    const handleToggleView = () => {
+    const handleToggle = () => {
         dispatch(toggleValue(TOGGLE_LOCATOR));
     };
 
@@ -35,7 +35,7 @@ export const DisplayKnowledge: React.FC<DisplayKnowledgeProps> = ({ name, health
             <ToggleButtonGroup
                 value={showHtml ? 'html' : 'json'}
                 exclusive
-                onChange={handleToggleView}
+                onChange={handleToggle}
             >
                 <ToggleButton value="html">HTML</ToggleButton>
                 <ToggleButton value="json">JSON</ToggleButton>

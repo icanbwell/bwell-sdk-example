@@ -11,7 +11,7 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ locator }) => {
     const dispatch = useDispatch<AppDispatch>();
     const showTable = useSelector((state: RootState) => selectToggle(state, locator));
 
-    const handleToggleView = () => {
+    const handleToggle = () => {
         dispatch(toggleValue(locator));
     };
 
@@ -20,7 +20,7 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ locator }) => {
             <ToggleButtonGroup
                 value={showTable ? 'table' : 'json'}
                 exclusive
-                onChange={handleToggleView}
+                onChange={handleToggle}
             >
                 <ToggleButton value="table">Table</ToggleButton>
                 <ToggleButton value="json">JSON</ToggleButton>

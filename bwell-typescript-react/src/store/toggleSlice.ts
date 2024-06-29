@@ -5,9 +5,7 @@ interface ToggleState {
     [locator: string]: boolean;
 }
 
-const initialState: ToggleState = {
-    allergyIntoleranceGroups: true,
-};
+const initialState: ToggleState = {};
 
 export const toggleSlice = createSlice({
     name: 'toggle',
@@ -15,8 +13,6 @@ export const toggleSlice = createSlice({
     reducers: {
         toggleValue: (state, action: PayloadAction<string>) => {
             const locator = action.payload;
-
-            console.log(action.payload);
 
             if (state[locator] === undefined) {
                 state[locator] = true;
