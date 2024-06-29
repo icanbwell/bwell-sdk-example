@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { toggleView, selectShowTable } from '@/store/tableOrJsonToggleSlice';
+import { toggleValue, selectToggle } from '@/store/toggleSlice';
 import { AppDispatch, RootState } from '@/store/store';
 
 interface ViewToggleProps {
@@ -9,10 +9,10 @@ interface ViewToggleProps {
 
 const ViewToggle: React.FC<ViewToggleProps> = ({ locator }) => {
     const dispatch = useDispatch<AppDispatch>();
-    const showTable = useSelector((state: RootState) => selectShowTable(state, locator));
+    const showTable = useSelector((state: RootState) => selectToggle(state, locator));
 
     const handleToggleView = () => {
-        dispatch(toggleView(locator));
+        dispatch(toggleValue(locator));
     };
 
     return (

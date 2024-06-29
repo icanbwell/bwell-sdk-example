@@ -1,5 +1,5 @@
 import { userSlice } from "./userSlice";
-import { tableOrJsonToggleSlice } from "./tableOrJsonToggleSlice";
+import { toggleSlice } from "./toggleSlice";
 import { connectionSlice } from "./connectionSlice";
 import { allergyIntolerancesSlice } from "./healthData/allergyIntoleranceSlice";
 import { allergyIntoleranceGroupsSlice } from "./healthData/allergyIntoleranceGroupsSlice";
@@ -57,7 +57,7 @@ const rootReducer = combineReducers({
   procedureGroups: proceduresSlice.reducer,
   vitalSigns: vitalSignsSlice.reducer,
   vitalSignGroups: vitalSignGroupsSlice.reducer,
-  tableOrJsonToggle: tableOrJsonToggleSlice.reducer,
+  toggle: toggleSlice.reducer,
   connection: connectionSlice.reducer,
 });
 
