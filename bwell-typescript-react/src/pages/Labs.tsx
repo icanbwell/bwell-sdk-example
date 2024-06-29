@@ -1,11 +1,11 @@
 import { LAB_COLUMNS, LAB_GROUP_COLUMNS } from "@/column-defs";
+import { DisplayKnowledge } from "@/components/DisplayKnowledge";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
 import { getLabGroups } from "@/store/healthData/labGroupsSlice";
 import { getLabKnowledge } from "@/store/healthData/labKnowledgeSlice";
 import { getLabs } from "@/store/healthData/labsSlice";
 import { RootState } from "@/store/store";
-import { Box, Container } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 const Labs = () => {
@@ -34,12 +34,7 @@ const Labs = () => {
                 onRowClick={handleRowClick}
             />
             {healthData?.data &&
-                <Container>
-                    <h2>Lab Knowledge</h2>
-                    <Box>
-                        <pre style={{ textWrap: 'wrap' }}>{JSON.stringify(healthData, null, 2)}</pre>
-                    </Box>
-                </Container>
+                <DisplayKnowledge name="Lab" healthData={healthData} />
             }
         </>
     );

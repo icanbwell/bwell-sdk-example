@@ -6,7 +6,7 @@ import { getMedicationStatements } from "@/store/healthData/medicationStatements
 import { getMedicationKnowledge } from "@/store/healthData/medicationKnowledgeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { Box, Container } from "@mui/material";
+import { DisplayKnowledge } from "@/components/DisplayKnowledge";
 
 const Medications = () => {
     const dispatch = useDispatch();
@@ -34,12 +34,7 @@ const Medications = () => {
                 onRowClick={handleRowClick}
             />
             {healthData?.data &&
-                <Container>
-                    <h2>Medication Knowledge</h2>
-                    <Box>
-                        <pre style={{ textWrap: 'wrap' }}>{JSON.stringify(healthData, null, 2)}</pre>
-                    </Box>
-                </Container>
+                <DisplayKnowledge name="Medication" healthData={healthData} />
             }
         </>
     );
