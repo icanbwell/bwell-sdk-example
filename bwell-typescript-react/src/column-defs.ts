@@ -52,6 +52,7 @@ export const ALLERGY_INTOLERANCE_COLUMNS: GridColDef[] = [
     { field: 'lastOccurrence', headerName: 'Last Occurence', valueGetter: (lastOccurrence) => lastOccurrence ? new Date(lastOccurrence) : '', type: 'dateTime', width: 200 },
     { field: 'clinicalStatus', headerName: 'Clinical Status', valueGetter: (clinicalStatus) => clinicalStatus?.coding?.length ? clinicalStatus.coding[0].display : '', width: 125 },
 ]
+
 export const HEALTH_SUMMARY_COLUMNS: GridColDef[] = [
     { field: 'category', headerName: 'Category', width: 300 },
     { field: 'total', headerName: 'Total', width: 300 },
@@ -163,3 +164,16 @@ export const VITAL_SIGN_GROUP_COLUMNS: GridColDef[] = [
     { field: 'value', headerName: 'Value', valueGetter: value => formatValue(value), width: 200 },
     { field: 'effectiveDateTime', headerName: 'Date', valueGetter: (effectiveDateTime) => monthDayYear(effectiveDateTime), width: 150 }
 ];
+
+export const MEDICATION_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'name', headerName: 'Name', width: 300 },
+    { field: 'authoredOn', headerName: 'Date', valueGetter: (authoredOn) => authoredOn ? new Date(authoredOn) : '', type: 'dateTime', width: 175 },
+    { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
+];
+
+export const MEDICATION_STATEMENT_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'medication', headerName: 'Name', valueGetter: medication => medication?.text ?? '', width: 300 },
+    { field: 'dosageInstruction', headerName: 'Instruction', valueGetter: di => di?.length ? di[0].text : '', width: 300 },
+]

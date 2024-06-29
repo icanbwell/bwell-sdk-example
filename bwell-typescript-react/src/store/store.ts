@@ -14,6 +14,8 @@ import { encounterGroupsSlice } from "./healthData/encounterGroupsSlice";
 import { encountersSlice } from "./healthData/encountersSlice";
 import { immunizationsSlice } from "./healthData/immunizationsSlice";
 import { immunizationGroupsSlice } from "./healthData/immunizationGroupsSlice";
+import { medicationStatementsSlice } from "./healthData/medicationStatementsSlice";
+import { medicationGroupsSlice } from "./healthData/medicationGroupsSlice";
 import { proceduresSlice } from "./healthData/proceduresSlice";
 import { vitalSignsSlice } from "./healthData/vitalSignsSlice";
 import { vitalSignGroupsSlice } from "./healthData/vitalSignGroupsSlice";
@@ -45,6 +47,8 @@ const rootReducer = combineReducers({
   immunizationGroups: immunizationGroupsSlice.reducer,
   labs: labsSlice.reducer,
   labGroups: labGroupsSlice.reducer,
+  medicationStatements: medicationStatementsSlice.reducer,
+  medicationGroups: medicationGroupsSlice.reducer,
   procedures: proceduresSlice.reducer,
   procedureGroups: proceduresSlice.reducer,
   vitalSigns: vitalSignsSlice.reducer,

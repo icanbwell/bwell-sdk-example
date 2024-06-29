@@ -9,6 +9,7 @@ import Labs from "./pages/Labs";
 import CarePlans from "./pages/CarePlans";
 import Encounters from "./pages/Encounters";
 import Immunizations from "./pages/Immunizations";
+import Medications from "./pages/Medications";
 import Procedures from "./pages/Procedures";
 import VitalSigns from "./pages/VitalSigns";
 
@@ -27,6 +28,7 @@ const Router = createBrowserRouter([
   makePageRoute("/encounters", <Encounters />),
   makePageRoute("/immunizations", <Immunizations />),
   makePageRoute("/labs", <Labs />),
+  makePageRoute("/medications", <Medications />),
   makePageRoute("/procedures", <Procedures />),
   makePageRoute("/vitalSigns", <VitalSigns />),
   makePageRoute("/connections", <Connections />),
