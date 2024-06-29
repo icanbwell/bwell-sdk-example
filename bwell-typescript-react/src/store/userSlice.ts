@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { authenticateSdk, initializeSdk } from "@/sdk/bWellSdk";
 import { OperationOutcome } from "@icanbwell/bwell-sdk-ts/dist/common/models/responses";
+import { BWellError } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/common/models/responses";
 
 interface UserState {
   clientKey?: string;
@@ -41,7 +42,9 @@ export const initialize = createAsyncThunk<
     initializeSdk(clientKey);
     return clientKey;
   } catch (error) {
-    return rejectWithValue(error as string);
+    if (typeof error === "string") return rejectWithValue(error);
+
+    return rejectWithValue(error?.message);
   }
 });
 
@@ -92,10 +95,12 @@ export const userSlice = createSlice({
         state.error = "";
       })
       .addCase(initialize.rejected, (state, action) => {
-        state.error = `Unable to initialize: ${action.payload}`;
+        state.error = action.payload ?? "Error while initializing";
         state.loading = false;
         state.isInitialized = false;
         state.isLoggedIn = false;
+        state.clientKey = undefined;
+        state.oauthCreds = undefined;
       });
   },
 });

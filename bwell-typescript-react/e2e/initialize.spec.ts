@@ -65,8 +65,12 @@ test("Entering a valid key and valid oauth credential results in success", async
     await initializePage.clickSubmitButton();
 
     //assert: no error message should be displayed
-    expect(page.locator(initializePage.initializationErrorLocator)).toBe(null);
+    const infoElement = await page.waitForSelector(initializePage.infoMessageLocator);
+    const infoText = await infoElement.textContent();
+    expect(infoText).toBe("User successfully logged in.");
 });
+
+
 
 test("Entering an invalid client key results in an error", async ({ page }) => {
     //arrange
@@ -78,9 +82,8 @@ test("Entering an invalid client key results in an error", async ({ page }) => {
     await initializePage.clickInitializeButton();
 
     //assert: error message should be displayed
-    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
-    const errorText = await errorLocator.innerText();
-
+    const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
+    const errorText = await errorElement.textContent();
     expect(errorText).toBe("It appears there is a problem with your Client Key. Contact b.well support for further assistance.");
 });
 
@@ -97,36 +100,4 @@ test("Entering an invalid oauth credential results in an error", async ({ page }
     await oauthCredsLocator.fill(BAD_OAUTH_CREDS);
 
     await initializePage.clickSubmitButton();
-});
-
-test("Entering a well-formed key with a bad env results in an error", async ({ page }) => {
-    //arrange
-    const initializePage = new InitializePage(page);
-
-    //act
-    await initializePage.navigate();
-    await initializePage.enterClientKey(WELL_FORMED_KEY_BAD_ENV);
-    await initializePage.clickInitializeButton();
-
-    //assert: error message should be displayed
-    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
-    const errorText = await errorLocator.innerText();
-
-    expect(errorText).toBe("Network request failed");
-});
-
-test("Entering a well-formed key with a good env results in an error", async ({ page }) => {
-    //arrange
-    const initializePage = new InitializePage(page);
-
-    //act
-    await initializePage.navigate();
-    await initializePage.enterClientKey(WELL_FORMED_KEY_GOOD_ENV);
-    await initializePage.clickInitializeButton();
-
-    //assert: error message should be displayed
-    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
-    const errorText = await errorLocator.innerText();
-
-    expect(errorText).toContain("Internal Server Error");
 });

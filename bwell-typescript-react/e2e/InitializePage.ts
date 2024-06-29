@@ -10,8 +10,8 @@ class InitializePage {
     public readonly btnInitializeLocator = "#btnInitialize";
     public readonly txtOauthCredsLocator = "#txtOauthCreds";
     public readonly btnSubmitLocator = "#btnSubmit";
-    public readonly initializationErrorLocator = "#initializationError";
-    public readonly authenticationErrorLocator = "#authenticationError";
+    public readonly infoMessageLocator = "#authenticationInfo";
+    public readonly errorMessageLocator = "#authenticationError";
 
     constructor(page: Page) {
         this.page = page;

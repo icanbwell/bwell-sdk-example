@@ -20,13 +20,9 @@ const Initialize = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const initializationError = useSelector(
-    (state: RootState) => state.user.error
-  );
-
   const user = useSelector((state: RootState) => state.user)
 
-  const { error: authenticationError, isInitialized, isLoggedIn } = user;
+  const { error, isInitialized, isLoggedIn } = user;
 
   const initializeWithProvidedKey = () => dispatch(initialize({ clientKey: key }));
 
@@ -67,13 +63,6 @@ const Initialize = () => {
         </Button>
       </CenteredGridItem>
       {
-        initializationError && (
-          <CenteredGridItem>
-            <Alert severity="error" id="initializationError">{initializationError.message}</Alert>
-          </CenteredGridItem >
-        )
-      }
-      {
         isInitialized && (
           <>
             <CenteredGridItem>
@@ -101,13 +90,6 @@ const Initialize = () => {
               </Button>
             </CenteredGridItem>
             {
-              authenticationError && (
-                <CenteredGridItem>
-                  <Alert severity="error" id="authenticationError">{authenticationError}</Alert>
-                </CenteredGridItem>
-              )
-            }
-            {
               isLoggedIn && (
                 <CenteredGridItem>
                   <Alert severity="info" id="authenticationInfo">User successfully logged in.</Alert>
@@ -123,6 +105,13 @@ const Initialize = () => {
               )
             }
           </>
+        )
+      }
+      {
+        error && (
+          <CenteredGridItem>
+            <Alert severity="error" id="authenticationError">{error}</Alert>
+          </CenteredGridItem>
         )
       }
     </Grid >
