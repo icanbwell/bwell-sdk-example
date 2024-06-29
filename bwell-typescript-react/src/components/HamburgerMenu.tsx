@@ -8,6 +8,10 @@ type HamburgerMenuProps = {
   router: RemixRouter;
 };
 
+function addSpaceBeforeUppercase(pascalCaseString: string) {
+  return pascalCaseString.replace(/([A-Z])/g, ' $1').trim();
+}
+
 const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
   const [open, setOpen] = useState(false);
 
@@ -15,7 +19,7 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
     const escapedPath = path.replace("/", "");
 
     if (escapedPath === "") return "Home";
-    else return escapedPath.charAt(0).toUpperCase() + escapedPath.slice(1);
+    else return addSpaceBeforeUppercase(escapedPath.charAt(0).toUpperCase() + escapedPath.slice(1));
   };
 
   return (
@@ -34,7 +38,7 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
         anchor="left"
         open={open}
         onClose={() => setOpen(false)}
-        PaperProps={{ sx: { minWidth: "10%", padding:"15px" }}}
+        PaperProps={{ sx: { minWidth: "10%", padding: "15px" } }}
       >
         <h2>Menu</h2>
         {router.routes
