@@ -79,6 +79,7 @@ const HealthDataGrid = ({
                     getRowId={(row) => rowId ? row[rowId] : row.id}
                     onRowClick={onRowClick}
                     getRowClassName={getRowClassName}
+                    rowSelection={false}
                 />
             }
             {!showTable && healthData?.data &&
