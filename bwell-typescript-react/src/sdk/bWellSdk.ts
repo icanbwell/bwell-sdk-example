@@ -1,4 +1,3 @@
-import { RootState } from '@/store/store';
 import { BWellSDK } from '@icanbwell/bwell-sdk-ts';
 
 let bWellSdk: BWellSDK;
@@ -11,6 +10,6 @@ export const initializeSdk = (clientKey: string) => {
     bWellSdk = new BWellSDK({ clientKey });
 };    
 
-export const getSdk = async () => {
+export const getSdk = () => {
     if (bWellSdk) return bWellSdk;
 }

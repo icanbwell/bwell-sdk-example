@@ -20,6 +20,8 @@ const sdkMiddleware = (store) => (next) => async (action) => {
         } catch (error) {
             console.error('Error rehydrating SDK:', error);
         }
+
+        action.payload.user.isRehydrated = true;
     }
 
     return next(action);

@@ -2,12 +2,13 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
 import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
 import { AllergyIntoleranceGroupsRequest, AllergyIntolerancesGroupsResults } from "@icanbwell/bwell-sdk-ts";
+import { PagedRequestInput } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/api/base/requests/paged-request";
 
 export const getAllergyIntoleranceGroups = createAsyncThunk(
     "allergyIntoleranceGroups/getAllergyIntoleranceGroups",
-    async ({ page, pageSize }: { page: number, pageSize: number }) => {
-        const bWellSdk = await getSdk();
-        const request = new AllergyIntoleranceGroupsRequest({ page, pageSize, });
+    async (inputParams: PagedRequestInput) => {
+        const bWellSdk = getSdk();
+        const request = new AllergyIntoleranceGroupsRequest(inputParams);
         return bWellSdk?.health.getAllergyIntoleranceGroups(request);
     }
 );

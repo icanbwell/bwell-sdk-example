@@ -6,6 +6,7 @@ import { OperationOutcome } from "@icanbwell/bwell-sdk-ts/dist/common/models/res
 interface UserState {
   clientKey?: string;
   oauthCreds?: string;
+  isRehydrated: boolean;
   isInitialized: boolean;
   isLoggedIn: boolean;
   loading: boolean;
@@ -46,6 +47,7 @@ export const initialize = createAsyncThunk<
 
 const initialState: UserState = {
   isLoggedIn: false,
+  isRehydrated: false,
   isInitialized: false,
   loading: false,
   error: null,

@@ -4,7 +4,7 @@ import { getSdk } from "@/sdk/bWellSdk";
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
     async () => {
-        const bWellSdk = await getSdk();
+        const bWellSdk = getSdk();
         return bWellSdk?.connection.getMemberConnections();
     }
 );

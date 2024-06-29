@@ -6,7 +6,7 @@ import { BWellQueryResult } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/commo
 export const getAllergyIntolerances = createAsyncThunk(
     "allergyIntolerances/getAllergyIntolerances",
     async (inputParams: HealthDataRequestInput) => {
-        const bWellSdk = await getSdk();
+        const bWellSdk = getSdk();
         const request = new AllergyIntolerancesRequest(inputParams);
         return bWellSdk?.health.getAllergyIntolerances(request);
     }
