@@ -26,3 +26,7 @@ export const ALLERGY_INTOLERANCE_COLUMNS: GridColDef[] = [
     { field: 'lastOccurrence', headerName: 'Last Occurence', valueGetter: (lastOccurrence) => lastOccurrence ? new Date(lastOccurrence) : '', type: 'dateTime', width: 200 },
     { field: 'clinicalStatus', headerName: 'Clinical Status', valueGetter: (clinicalStatus) => clinicalStatus?.coding?.length ? clinicalStatus.coding[0].display : '', width: 125 },
 ]
+export const HEALTH_SUMMARY_COLUMNS: GridColDef[] = [
+    { field: 'category', headerName: 'Category', width: 300 },
+    { field: 'total', headerName: 'Total', width: 300 },
+]

@@ -11,13 +11,15 @@ interface HealthDataGridProps {
     selector: string;
     columns: any[];
     getter: Function;
+    rowId?: string
 }
 
 const HealthDataGrid = ({
     title,
     selector,
     columns,
-    getter
+    getter,
+    rowId,
 }: HealthDataGridProps) => {
     const dispatch = useDispatch();
 
@@ -55,6 +57,7 @@ const HealthDataGrid = ({
                     paginationMode="server"
                     rowCount={healthData?.data?.paging_info?.total_items || 0}
                     onPaginationModelChange={handlePaginationChange}
+                    getRowId={(row) => rowId ? row[rowId] : row.id}
                 />
             }
             {!showTable && healthData?.data &&
