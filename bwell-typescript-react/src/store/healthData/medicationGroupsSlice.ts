@@ -8,7 +8,7 @@ import makeHealthDataSlice from "./makeHealthDataSlice";
 const SLICE_NAME = "medicationGroups";
 
 export const getMedicationGroups = createAsyncThunk(
-    `${SLICE_NAME}/getAllergyIntolerances`,
+    `${SLICE_NAME}/getMedicationGroups`,
     async (inputParams: PagedRequestInput) => {
         const bWellSdk = getSdk();
         return bWellSdk?.health.getMedicationGroups(new MedicationGroupsRequest(inputParams));

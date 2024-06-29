@@ -1,10 +1,12 @@
 // components/HealthDataGrid.tsx
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
+import { DataGrid, GridEventListener, GridEventLookup, GridPaginationModel } from "@mui/x-data-grid";
 import { Alert, Box, Container } from "@mui/material";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 import { RootState } from "@/store/store";
+
+import './HealthDataGrid.css';
 
 type HealthDataGridProps = {
     title: string;
@@ -12,6 +14,7 @@ type HealthDataGridProps = {
     columns: any[];
     getter: Function;
     rowId?: string
+    onRowClick?: GridEventListener<keyof GridEventLookup>;
 }
 
 const HealthDataGrid = ({
@@ -20,6 +23,7 @@ const HealthDataGrid = ({
     columns,
     getter,
     rowId,
+    onRowClick,
 }: HealthDataGridProps) => {
     const dispatch = useDispatch();
 
@@ -46,6 +50,10 @@ const HealthDataGrid = ({
         getData({ page: 0, pageSize: 10 });
     }, []);
 
+    const getRowClassName = () => {
+        return onRowClick ? 'cursor-pointer' : '';
+    };
+
     return (
         <Container>
             <h2>{title}</h2>
@@ -69,6 +77,8 @@ const HealthDataGrid = ({
                     rowCount={healthData?.data?.paging_info?.total_items || 0}
                     onPaginationModelChange={handlePaginationChange}
                     getRowId={(row) => rowId ? row[rowId] : row.id}
+                    onRowClick={onRowClick}
+                    getRowClassName={getRowClassName}
                 />
             }
             {!showTable && healthData?.data &&
