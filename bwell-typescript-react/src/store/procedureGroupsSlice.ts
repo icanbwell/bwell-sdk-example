@@ -1,34 +1,34 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
 import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
-import { ImmunizationGroupsResults, ImmunizationGroupsRequest } from "@icanbwell/bwell-sdk-ts";
+import { ProcedureGroupsResults, ProcedureGroupsRequest } from "@icanbwell/bwell-sdk-ts";
 import { PagedRequestInput } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/api/base/requests/paged-request";
 
-export const getImmunizationGroups = createAsyncThunk(
-    "labGroups/getImmunizationGroups",
+export const getProcedureGroups = createAsyncThunk(
+    "labGroups/getProcedureGroups",
     async (inputParams: PagedRequestInput) => {
         const bWellSdk = getSdk();
-        const request = new ImmunizationGroupsRequest(inputParams);
-        return bWellSdk?.health.getImmunizationGroups(request);
+        const request = new ProcedureGroupsRequest(inputParams);
+        return bWellSdk?.health.getProcedureGroups(request);
     }
 );
 
 export const immunizationGroupsSlice = createSlice({
-    name: "immunizationGroups",
+    name: "procedureGroups",
     initialState: {
-        healthData: null as BWellQueryResult<ImmunizationGroupsResults> | null,
+        healthData: null as BWellQueryResult<ProcedureGroupsResults> | null,
         loading: false,
         error: null as string | null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getImmunizationGroups.pending, (state) => {
+            .addCase(getProcedureGroups.pending, (state) => {
                 state.loading = true;
                 state.error = null;
                 state.healthData = null;
             })
-            .addCase(getImmunizationGroups.fulfilled, (state, action: PayloadAction<BWellQueryResult<ImmunizationGroupsResults>>) => {
+            .addCase(getProcedureGroups.fulfilled, (state, action: PayloadAction<BWellQueryResult<ProcedureGroupsResults>>) => {
                 if (action.payload.error) {
                     state.error = action.payload.error.message ?? "Unknown error";
                 } else {
@@ -38,7 +38,7 @@ export const immunizationGroupsSlice = createSlice({
                 state.loading = false;
                 state.error = "";
             })
-            .addCase(getImmunizationGroups.rejected, (state, action) => {
+            .addCase(getProcedureGroups.rejected, (state, action) => {
                 if (action.error.message === "Uninitialized") {
                     state.healthData = true;
                 } else {

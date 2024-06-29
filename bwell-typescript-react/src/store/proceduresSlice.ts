@@ -1,32 +1,32 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-import { ImmunizationsRequest, ImmunizationsResults, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
+import { ProceduresRequest, ProceduresResults, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
 import { BWellQueryResult } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/common/results";
 
-export const getImmunizations = createAsyncThunk(
-    "labs/getImmunizations",
+export const getProcedures = createAsyncThunk(
+    "labs/getProcedures",
     async (inputParams: HealthDataRequestInput) => {
         const bWellSdk = getSdk();
-        return bWellSdk?.health.getImmunizations(new ImmunizationsRequest(inputParams));
+        return bWellSdk?.health.getProcedures(new ProceduresRequest(inputParams));
     }
 );
 
-export const immunizationsSlice = createSlice({
-    name: "immunizations",
+export const proceduresSlice = createSlice({
+    name: "procedures",
     initialState: {
-        healthData: null as BWellQueryResult<ImmunizationsResults> | null,
+        healthData: null as BWellQueryResult<ProceduresResults> | null,
         loading: false,
         error: null as string | null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getImmunizations.pending, (state) => {
+            .addCase(getProcedures.pending, (state) => {
                 state.loading = true;
                 state.error = null;
                 state.healthData = null;
             })
-            .addCase(getImmunizations.fulfilled, (state, action: PayloadAction<BWellQueryResult<ImmunizationsResults>>) => {
+            .addCase(getProcedures.fulfilled, (state, action: PayloadAction<BWellQueryResult<ProceduresResults>>) => {
                 if (action.payload.error) {
                     state.error = action.payload.error.message ?? "Unknown error";
                 } else {
@@ -36,7 +36,7 @@ export const immunizationsSlice = createSlice({
                 state.loading = false;
                 state.error = "";
             })
-            .addCase(getImmunizations.rejected, (state, action) => {
+            .addCase(getProcedures.rejected, (state, action) => {
                 if (action.error.message === "Uninitialized") {
                     state.loading = true;
                 } else {

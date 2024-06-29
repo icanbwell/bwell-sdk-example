@@ -9,6 +9,7 @@ import Labs from "./pages/Labs";
 import CarePlans from "./pages/CarePlans";
 import Encounters from "./pages/Encounters";
 import Immunizations from "./pages/Immunizations";
+import Procedures from "./pages/Procedures";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
@@ -25,6 +26,7 @@ const Router = createBrowserRouter([
   makePageRoute("/encounters", <Encounters />),
   makePageRoute("/immunizations", <Immunizations />),
   makePageRoute("/labs", <Labs />),
+  makePageRoute("/procedures", <Procedures />),
   makePageRoute("/connections", <Connections />),  
 ])
 

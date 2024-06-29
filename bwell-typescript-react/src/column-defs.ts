@@ -129,3 +129,19 @@ export const IMMUNIZATION_GROUP_COLUMNS: GridColDef[] = [
     { field: 'occurrenceDateTime', headerName: 'Date', type: 'occurrenceDateTime', valueGetter: (occurrenceDateTime) => dayMonthYear(occurrenceDateTime), width: 250 },
     { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];
+
+export const PROCEDURE_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'code', headerName: 'Code', valueGetter: code => code?.text, width: 200 },
+    { field: 'performer', headerName: 'Performer', valueGetter: performer => performer[0].actor.name[0].text, width: 200 },
+    { field: 'outcome', headerName: 'Outcome', valueGetter: outcome => outcome?.text, width: 250 },
+    { field: 'performedDateTime', headerName: 'Date', type:'date', valueGetter: (performedDateTime) => new Date(performedDateTime), width: 125 },
+];
+
+export const PROCEDURE_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'code', headerName: 'Code', valueGetter: code => code?.text, width: 200 },
+    { field: 'performer', headerName: 'Performer', valueGetter: performer => performer[0].actor.name[0].text, width: 200 },
+    { field: 'outcome', headerName: 'Outcome', valueGetter: outcome => outcome?.text, width: 250 },
+    { field: 'performedDateTime', headerName: 'Date', type:'date', valueGetter: (performedDateTime) => new Date(performedDateTime), width: 125 },
+];

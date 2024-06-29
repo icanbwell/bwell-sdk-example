@@ -1,13 +1,7 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { userSlice } from "./userSlice";
 import { allergyIntolerancesSlice } from "./allergyIntoleranceSlice";
 import { tableOrJsonToggleSlice } from "./tableOrJsonToggleSlice";
 import { connectionSlice } from "./connectionSlice";
-
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from "redux-persist/lib/storage";
-
-import rehydrateSdk from "@/sdk/rehydrateSdk";
 import { allergyIntoleranceGroupsSlice } from "./allergyIntoleranceGroupsSlice";
 import { healthSummarySlice } from "./healthSummarySlice";
 import { conditionsSlice } from "./conditionsSlice";
@@ -20,6 +14,12 @@ import { encounterGroupsSlice } from "./encounterGroupsSlice";
 import { encountersSlice } from "./encountersSlice";
 import { immunizationsSlice } from "./immunizationsSlice";
 import { immunizationGroupsSlice } from "./immunizationGroupsSlice";
+
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import rehydrateSdk from "@/sdk/rehydrateSdk";
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from "redux-persist/lib/storage";
+import { proceduresSlice } from "./proceduresSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -43,6 +43,8 @@ const rootReducer = combineReducers({
   immunizationGroups: immunizationGroupsSlice.reducer,
   labs: labsSlice.reducer,
   labGroups: labGroupsSlice.reducer,
+  procedures: proceduresSlice.reducer,
+  procedureGroups: proceduresSlice.reducer,
   tableOrJsonToggle: tableOrJsonToggleSlice.reducer,
   connection: connectionSlice.reducer,
 });
