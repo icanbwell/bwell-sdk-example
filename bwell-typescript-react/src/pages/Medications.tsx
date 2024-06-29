@@ -3,10 +3,11 @@ import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
 import { getMedicationGroups } from "@/store/healthData/medicationGroupsSlice";
 import { getMedicationStatements } from "@/store/healthData/medicationStatementsSlice";
-import { getMedicationKnowledge } from "@/store/healthData/medicationKnowledgeSlice";
+import { getMedicationKnowledge, medicationKnowledgeSlice } from "@/store/healthData/medicationKnowledgeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { DisplayKnowledge } from "@/components/DisplayKnowledge";
+import { useEffect } from "react";
 
 const Medications = () => {
     const dispatch = useDispatch();
@@ -16,6 +17,10 @@ const Medications = () => {
     }
 
     const { healthData } = useSelector((state: RootState) => state.medicationKnowledge);
+
+    useEffect(() => {
+        dispatch(medicationKnowledgeSlice.actions.resetState());
+    }, []);
 
     return (
         <>

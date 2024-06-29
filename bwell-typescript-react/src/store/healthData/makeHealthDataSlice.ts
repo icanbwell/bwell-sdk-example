@@ -1,14 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+const INITIAL_STATE = {
+    healthData: null,
+    loading: false,
+    error: null,
+};
+
 const makeHealthDataSlice = <T>(name: string, getter: Function) => {
     return createSlice({
         name,
-        initialState: {
-            healthData: null as T | null,
-            loading: false,
-            error: null as string | null,
+        initialState: INITIAL_STATE,
+        reducers: {
+            resetState: (state) => {
+                Object.assign(state, INITIAL_STATE);
+            }
         },
-        reducers: {},
         extraReducers: (builder) => {
             builder
                 .addCase(getter.pending, (state) => {

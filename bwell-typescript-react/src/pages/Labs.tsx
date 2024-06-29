@@ -3,9 +3,10 @@ import { DisplayKnowledge } from "@/components/DisplayKnowledge";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
 import { getLabGroups } from "@/store/healthData/labGroupsSlice";
-import { getLabKnowledge } from "@/store/healthData/labKnowledgeSlice";
+import { getLabKnowledge, labKnowledgeSlice } from "@/store/healthData/labKnowledgeSlice";
 import { getLabs } from "@/store/healthData/labsSlice";
 import { RootState } from "@/store/store";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Labs = () => {
@@ -15,7 +16,13 @@ const Labs = () => {
         dispatch(getLabKnowledge({ labId: id, page: 1, pageSize: 1 }));
     }
 
-    const { healthData } = useSelector((state: RootState) => state.labKnowledge);
+    const healthDataSlice = useSelector((state: RootState) => state.labKnowledge);
+
+    const { healthData } = healthDataSlice;
+
+    useEffect(() => {
+        dispatch(labKnowledgeSlice.actions.resetState());
+    }, []);
 
     return (
         <>
