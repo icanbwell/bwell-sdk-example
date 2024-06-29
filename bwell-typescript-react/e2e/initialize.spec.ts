@@ -10,7 +10,6 @@ const DEFAULT_OAUTH_CREDS = process.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
 const BAD_KEY = process.env.VITE_BAD_KEY ?? "";
 const BAD_OAUTH_CREDS = process.env.VITE_BAD_OAUTH_CREDS ?? "";
 const WELL_FORMED_KEY_BAD_ENV = process.env.VITE_WELL_FORMED_KEY_BAD_ENV ?? "";
-const WELL_FORMED_KEY_GOOD_ENV = process.env.VITE_WELL_FORMED_KEY_GOOD_ENV ?? "";
 
 const GENERIC_ERROR = "Error while authenticating";
 const INVALID_KEY_ERROR = "It appears there is a problem with your Client Key. Contact b.well support for further assistance.";
