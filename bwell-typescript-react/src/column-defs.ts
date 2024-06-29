@@ -49,3 +49,17 @@ export const CONDITION_GROUP_COLUMNS: GridColDef[] = [
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 150 },
     { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];
+
+export const LAB_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'code', headerName: 'Code', valueGetter: code => code?.coding?.length ? code.coding[0].display : '', width: 300 },
+    { field: 'value', headerName: 'Value', valueGetter: value => `${value?.valueQuantity?.value} ${value?.valueQuantity?.unit}`, width: 150 },
+    { field: 'note', headerName: 'Note', valueGetter: note => note?.length ? note[0].text : '', width: 300 },
+];
+
+export const LAB_GROUP_COLUMNS: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 300 },
+    { field: 'name', headerName: 'Name', width: 300 },
+    { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 150 },
+    { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
+];

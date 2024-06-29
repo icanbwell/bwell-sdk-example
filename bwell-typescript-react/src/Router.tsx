@@ -5,6 +5,7 @@ import Connections from "@/pages/Connections";
 import { createBrowserRouter } from "react-router-dom";
 import HealthSummary from "./pages/HealthSummary";
 import Conditions from "./pages/Conditions";
+import Labs from "./pages/Labs";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
@@ -17,6 +18,7 @@ const Router = createBrowserRouter([
   makePageRoute("/healthSummary", <HealthSummary />),
   makePageRoute("/allergyIntolerances", <AllergyIntolerances />),
   makePageRoute("/conditions", <Conditions />),
+  makePageRoute("/labs", <Labs />),
   makePageRoute("/connections", <Connections />),
 ]);
 
