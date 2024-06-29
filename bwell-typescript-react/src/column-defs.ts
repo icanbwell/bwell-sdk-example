@@ -16,6 +16,9 @@ export const CONNECTION_COLUMNS: GridColDef[] = [
 export const ALLERGY_INTOLERANCE_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
+    { field: 'criticality', headerName: 'Criticality', valueGetter: (criticality) => criticality.display },
+    { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 175 },
+    { field: 'source', headerName: 'Source', valueGetter: (source) => source?.length ? source.map(s => s).join(', ') : '', width: 200 },
 ];
 
 export const ALLERGY_INTOLERANCE_COLUMNS: GridColDef[] = [
