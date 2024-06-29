@@ -1,8 +1,8 @@
 import { ENCOUNTER_COLUMNS, ENCOUNTER_GROUP_COLUMNS } from "@/column-defs";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
-import { getEncounterGroups } from "@/store/encounterGroupsSlice";
-import { getEncounters } from "@/store/encountersSlice";
+import { getEncounterGroups } from "@/store/healthData/encounterGroupsSlice";
+import { getEncounters } from "@/store/healthData/encountersSlice";
 
 const Encounters = () => {
     return (

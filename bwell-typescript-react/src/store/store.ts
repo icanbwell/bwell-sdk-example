@@ -1,27 +1,27 @@
 import { userSlice } from "./userSlice";
-import { allergyIntolerancesSlice } from "./allergyIntoleranceSlice";
 import { tableOrJsonToggleSlice } from "./tableOrJsonToggleSlice";
 import { connectionSlice } from "./connectionSlice";
-import { allergyIntoleranceGroupsSlice } from "./allergyIntoleranceGroupsSlice";
-import { healthSummarySlice } from "./healthSummarySlice";
-import { conditionsSlice } from "./conditionsSlice";
-import { conditionGroupsSlice } from "./conditionGroupsSlice";
-import { labGroupsSlice } from "./labGroupsSlice";
-import { labsSlice } from "./labsSlice";
-import { carePlanGroupsSlice } from "./carePlanGroupsSlice";
-import { carePlansSlice } from "./carePlansSlice";
-import { encounterGroupsSlice } from "./encounterGroupsSlice";
-import { encountersSlice } from "./encountersSlice";
-import { immunizationsSlice } from "./immunizationsSlice";
-import { immunizationGroupsSlice } from "./immunizationGroupsSlice";
+import { allergyIntolerancesSlice } from "./healthData/allergyIntoleranceSlice";
+import { allergyIntoleranceGroupsSlice } from "./healthData/allergyIntoleranceGroupsSlice";
+import { healthSummarySlice } from "./healthData/healthSummarySlice";
+import { conditionsSlice } from "./healthData/conditionsSlice";
+import { conditionGroupsSlice } from "./healthData/conditionGroupsSlice";
+import { labGroupsSlice } from "./healthData/labGroupsSlice";
+import { labsSlice } from "./healthData/labsSlice";
+import { carePlanGroupsSlice } from "./healthData/carePlanGroupsSlice";
+import { carePlansSlice } from "./healthData/carePlansSlice";
+import { encounterGroupsSlice } from "./healthData/encounterGroupsSlice";
+import { encountersSlice } from "./healthData/encountersSlice";
+import { immunizationsSlice } from "./healthData/immunizationsSlice";
+import { immunizationGroupsSlice } from "./healthData/immunizationGroupsSlice";
+import { proceduresSlice } from "./healthData/proceduresSlice";
+import { vitalSignsSlice } from "./healthData/vitalSignsSlice";
+import { vitalSignGroupsSlice } from "./healthData/vitalSignGroupsSlice";
 
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import rehydrateSdk from "@/sdk/rehydrateSdk";
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
-import { proceduresSlice } from "./proceduresSlice";
-import { vitalSignsSlice } from "./vitalSignsSlice";
-import { vitalSignGroupsSlice } from "./vitalSignGroupsSlice";
 
 // Setup the persist config
 const persistConfig = {

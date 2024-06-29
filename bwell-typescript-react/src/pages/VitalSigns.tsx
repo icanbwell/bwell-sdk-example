@@ -1,8 +1,8 @@
 import { VITAL_SIGN_COLUMNS, VITAL_SIGN_GROUP_COLUMNS } from "@/column-defs";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
-import { getVitalSignGroups } from "@/store/vitalSignGroupsSlice";
-import { getVitalSigns } from "@/store/vitalSignsSlice";
+import { getVitalSignGroups } from "@/store/healthData/vitalSignGroupsSlice";
+import { getVitalSigns } from "@/store/healthData/vitalSignsSlice";
 
 const VitalSigns = () => {
     return (

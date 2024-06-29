@@ -1,8 +1,8 @@
 import { IMMUNIZATION_COLUMNS, IMMUNIZATION_GROUP_COLUMNS } from "@/column-defs";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
-import { getImmunizationGroups } from "@/store/immunizationGroupsSlice";
-import { getImmunizations } from "@/store/immunizationsSlice";
+import { getImmunizationGroups } from "@/store/healthData/immunizationGroupsSlice";
+import { getImmunizations } from "@/store/healthData/immunizationsSlice";
 
 const Immunizations = () => {
     return (

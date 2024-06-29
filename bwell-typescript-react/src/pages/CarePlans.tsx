@@ -1,8 +1,8 @@
 import { CARE_PLAN_COLUMNS, CARE_PLAN_GROUP_COLUMNS } from "@/column-defs";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
-import { getCarePlanGroups } from "@/store/carePlanGroupsSlice";
-import { getCarePlans } from "@/store/carePlansSlice";
+import { getCarePlanGroups } from "@/store/healthData/carePlanGroupsSlice";
+import { getCarePlans } from "@/store/healthData/carePlansSlice";
 
 const CarePlans = () => {
     return (

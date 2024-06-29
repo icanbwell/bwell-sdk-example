@@ -3,7 +3,7 @@ import { getSdk } from "@/sdk/bWellSdk";
 import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
 import { ConditionGroupsResults, ConditionGroupsRequest } from "@icanbwell/bwell-sdk-ts";
 import { PagedRequestInput } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/api/base/requests/paged-request";
-import makeHealthDataSlice from "./healthData/makeHealthDataSlice";
+import makeHealthDataSlice from "./makeHealthDataSlice";
 
 const SLICE_NAME = "conditionGroups";
 

@@ -1,6 +1,6 @@
 import { ALLERGY_INTOLERANCE_COLUMNS, ALLERGY_INTOLERANCE_GROUP_COLUMNS } from "@/column-defs";
-import { getAllergyIntolerances } from "@/store/allergyIntoleranceSlice";
-import { getAllergyIntoleranceGroups } from "@/store/allergyIntoleranceGroupsSlice";
+import { getAllergyIntolerances } from "@/store/healthData/allergyIntoleranceSlice";
+import { getAllergyIntoleranceGroups } from "@/store/healthData/allergyIntoleranceGroupsSlice";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
 

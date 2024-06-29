@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
 import { EncountersRequest, EncountersResults, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
 import { BWellQueryResult } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/common/results";
-import makeHealthDataSlice from "./healthData/makeHealthDataSlice";
+import makeHealthDataSlice from "./makeHealthDataSlice";
 
 const SLICE_NAME = "encounters";
 

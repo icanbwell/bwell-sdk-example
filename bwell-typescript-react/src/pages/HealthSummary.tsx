@@ -1,7 +1,7 @@
 import { HEALTH_SUMMARY_COLUMNS } from "@/column-defs";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
-import { getHealthSummary } from "@/store/healthSummarySlice";
+import { getHealthSummary } from "@/store/healthData/healthSummarySlice";
 
 const HealthSummary = () => {
     return (

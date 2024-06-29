@@ -1,8 +1,8 @@
 import { CONDITION_COLUMNS, CONDITION_GROUP_COLUMNS } from "@/column-defs";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
-import { getConditionGroups } from "@/store/conditionGroupsSlice";
-import { getConditions } from "@/store/conditionsSlice";
+import { getConditionGroups } from "@/store/healthData/conditionGroupsSlice";
+import { getConditions } from "@/store/healthData/conditionsSlice";
 
 const Conditions = () => {
     return (
