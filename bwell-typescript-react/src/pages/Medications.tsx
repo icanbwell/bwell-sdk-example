@@ -37,7 +37,7 @@ const Medications = () => {
                 <Container>
                     <h2>Medication Knowledge</h2>
                     <Box>
-                        <pre>{JSON.stringify(healthData, null, 2)}</pre>
+                        <pre style={{ textWrap: 'wrap' }}>{JSON.stringify(healthData, null, 2)}</pre>
                     </Box>
                 </Container>
             }

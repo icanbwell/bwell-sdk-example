@@ -25,6 +25,7 @@ import rehydrateSdk from "@/sdk/rehydrateSdk";
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 import { medicationKnowledgeSlice } from "./healthData/medicationKnowledgeSlice";
+import { labKnowledgeSlice } from "./healthData/labKnowledgeSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -48,9 +49,10 @@ const rootReducer = combineReducers({
   immunizationGroups: immunizationGroupsSlice.reducer,
   labs: labsSlice.reducer,
   labGroups: labGroupsSlice.reducer,
+  labKnowledge: labKnowledgeSlice.reducer,
   medicationGroups: medicationGroupsSlice.reducer,
   medicationKnowledge: medicationKnowledgeSlice.reducer,
-  medicationStatements: medicationStatementsSlice.reducer,  
+  medicationStatements: medicationStatementsSlice.reducer,
   procedures: proceduresSlice.reducer,
   procedureGroups: proceduresSlice.reducer,
   vitalSigns: vitalSignsSlice.reducer,
