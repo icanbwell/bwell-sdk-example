@@ -44,7 +44,7 @@ const HealthDataGrid = ({
     const slice = useSelector((state: RootState) => (state as any)[selector]);
     const { healthData, loading, error } = slice;
 
-    const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true);
+    const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true) && healthData?.data?.resources;
 
     useEffect(() => {
         getData({ page: 0, pageSize: 10 });
@@ -60,7 +60,7 @@ const HealthDataGrid = ({
             {healthData?.data && <TableOrJsonToggle locator={selector} />}
             {loading && <p>Loading...</p>}
             {error && <Alert severity="error">{error}</Alert>}
-            {showTable && healthData?.data &&
+            {showTable &&
                 <DataGrid
                     rows={healthData?.data?.resources}
                     columns={columns}

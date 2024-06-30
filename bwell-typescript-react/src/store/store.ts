@@ -58,7 +58,7 @@ const rootReducer = combineReducers({
   vitalSigns: vitalSignsSlice.reducer,
   vitalSignGroups: vitalSignGroupsSlice.reducer,
   toggle: toggleSlice.reducer,
-  connection: connectionSlice.reducer,
+  connections: connectionSlice.reducer,
 });
 
 // Wrap the rootReducer with persistReducer so that state will automatically sync with local storage
