@@ -1,20 +1,22 @@
 // components/HealthDataGrid.tsx
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridEventListener, GridEventLookup, GridPaginationModel } from "@mui/x-data-grid";
 import { Alert, Box, Container } from "@mui/material";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 
 import './HealthDataGrid.css';
+import { requestInfoSlice, INITIAL_REQUEST } from "@/store/requestInfoSlice";
 
 type HealthDataGridProps = {
     title: string;
     selector: string;
     columns: any[];
     getter: Function;
-    rowId?: string
+    rowId?: string;
     onRowClick?: GridEventListener<keyof GridEventLookup>;
+    groups?: boolean;
 }
 
 const HealthDataGrid = ({
@@ -25,20 +27,21 @@ const HealthDataGrid = ({
     rowId,
     onRowClick,
 }: HealthDataGridProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-        page: 0,
-        pageSize: 10,
-    });
+    const requestInfo = useSelector((state: RootState) => state.requests[selector]) ?? INITIAL_REQUEST;
+    const paginationModel = { page: requestInfo?.page ?? 0, pageSize: requestInfo?.pageSize ?? 0 };
+    const { setPage, setPageSize } = requestInfoSlice.actions;
 
-    const getData = (paginationModel: GridPaginationModel) => {
-        dispatch(getter(paginationModel));
+    const getData = () => {
+        dispatch(getter(requestInfo));
     }
 
-    const handlePaginationChange = (paginationModel: GridPaginationModel) => {
-        setPaginationModel(paginationModel);
-        getData(paginationModel);
+    const handlePaginationChange = async (paginationModel: GridPaginationModel) => {
+        const { page, pageSize } = paginationModel;
+
+        dispatch(setPage({ selector, page }));
+        dispatch(setPageSize({ selector, pageSize }));
     }
 
     const slice = useSelector((state: RootState) => (state as any)[selector]);
@@ -46,9 +49,7 @@ const HealthDataGrid = ({
 
     const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true) && healthData?.data?.resources;
 
-    useEffect(() => {
-        getData({ page: 0, pageSize: 10 });
-    }, []);
+    useEffect(getData, [requestInfo]);
 
     const getRowClassName = () => {
         return onRowClick ? 'cursor-pointer' : '';

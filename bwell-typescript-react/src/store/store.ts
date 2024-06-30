@@ -26,6 +26,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 import { medicationKnowledgeSlice } from "./healthData/medicationKnowledgeSlice";
 import { labKnowledgeSlice } from "./healthData/labKnowledgeSlice";
+import { requestInfoSlice } from "./requestInfoSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -59,6 +60,7 @@ const rootReducer = combineReducers({
   vitalSignGroups: vitalSignGroupsSlice.reducer,
   toggle: toggleSlice.reducer,
   connections: connectionSlice.reducer,
+  requests: requestInfoSlice.reducer, 
 });
 
 // Wrap the rootReducer with persistReducer so that state will automatically sync with local storage
