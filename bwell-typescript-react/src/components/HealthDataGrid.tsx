@@ -16,7 +16,6 @@ type HealthDataGridProps = {
     getter: Function;
     rowId?: string;
     onRowClick?: GridEventListener<keyof GridEventLookup>;
-    groups?: boolean;
 }
 
 const HealthDataGrid = ({
