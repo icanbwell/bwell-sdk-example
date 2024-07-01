@@ -1,4 +1,4 @@
-import { SearchToken } from "@icanbwell/bwell-sdk-ts";
+import { SearchToken, SearchTokenValue } from "@icanbwell/bwell-sdk-ts";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface HealthDataRequestInfo {
@@ -50,10 +50,11 @@ export const requestInfoSlice = createSlice({
             requestInfo.pageSize = INITIAL_REQUEST.pageSize;
             requestInfo.groupCode = undefined;
         }),
-        setGroupCode: createRequestInfoReducer<{ selector: string, groupCode: string }>((requestInfo, action) => {
+        setGroupCode: createRequestInfoReducer<{ selector: string, groupCode: SearchTokenValue }>((requestInfo, action) => {
             requestInfo.groupCode = {
                 value: {
-                    code: action.payload.groupCode,
+                    code: action.payload.groupCode.code,
+                    value: action.payload.groupCode.value,
                 }
             }
         }),

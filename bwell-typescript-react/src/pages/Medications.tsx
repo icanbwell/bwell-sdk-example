@@ -8,19 +8,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { DisplayKnowledge } from "@/components/DisplayKnowledge";
 import { useEffect } from "react";
+import { requestInfoSlice } from "@/store/requestInfoSlice";
 
 const Medications = () => {
     const dispatch = useDispatch();
 
     const handleRowClick = ({ id }: any) => {
-        dispatch(getMedicationKnowledge({ medicationStatementId: id, page: 1, pageSize: 1 }));
+        dispatch(getMedicationKnowledge({ labId: id, page: 1, pageSize: 1 }));
     }
 
-    const { healthData } = useSelector((state: RootState) => state.medicationKnowledge);
+    const healthDataSlice = useSelector((state: RootState) => state.labKnowledge);
+
+    const { healthData } = healthDataSlice;
 
     useEffect(() => {
         dispatch(medicationKnowledgeSlice.actions.resetState());
     }, []);
+
+    const { setGroupCode, clearGroupCode } = requestInfoSlice.actions;
+
+    const onRowSelect = (selection: any[]) => {
+        if (!selection.length) dispatch(clearGroupCode('medicationStatements'));
+        else {
+            dispatch(setGroupCode({ selector: 'medicationStatements', groupCode: selection[0].coding }));
+            dispatch(medicationKnowledgeSlice.actions.resetState());
+        } 
+    }
 
     return (
         <>
@@ -30,6 +43,7 @@ const Medications = () => {
                 selector="medicationGroups"
                 columns={MEDICATION_GROUP_COLUMNS}
                 getter={getMedicationGroups}
+                onRowSelect={onRowSelect}
             />
             <HealthDataGrid
                 title="Medication Statements"

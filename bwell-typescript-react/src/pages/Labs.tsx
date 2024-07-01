@@ -4,6 +4,7 @@ import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
 import { getLabGroups } from "@/store/healthData/labGroupsSlice";
 import { getLabKnowledge, labKnowledgeSlice } from "@/store/healthData/labKnowledgeSlice";
+import { requestInfoSlice } from "@/store/requestInfoSlice";
 import { getLabs } from "@/store/healthData/labsSlice";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
@@ -24,6 +25,16 @@ const Labs = () => {
         dispatch(labKnowledgeSlice.actions.resetState());
     }, []);
 
+    const { setGroupCode, clearGroupCode } = requestInfoSlice.actions;
+
+    const onRowSelect = (selection: any[]) => {
+        if (!selection.length) dispatch(clearGroupCode('labs'));
+        else {
+            dispatch(setGroupCode({ selector: 'labs', groupCode: selection[0].coding }));
+            dispatch(labKnowledgeSlice.actions.resetState());
+        } 
+    }
+
     return (
         <>
             <h1>Labs</h1>
@@ -32,6 +43,7 @@ const Labs = () => {
                 selector="labGroups"
                 columns={LAB_GROUP_COLUMNS}
                 getter={getLabGroups}
+                onRowSelect={onRowSelect}
             />
             <HealthDataGrid
                 title="Labs"

@@ -27,6 +27,7 @@ import storage from "redux-persist/lib/storage";
 import { medicationKnowledgeSlice } from "./healthData/medicationKnowledgeSlice";
 import { labKnowledgeSlice } from "./healthData/labKnowledgeSlice";
 import { requestInfoSlice } from "./requestInfoSlice";
+import { procedureGroupsSlice } from "./healthData/procedureGroupsSlice";
 
 // Setup the persist config
 const persistConfig = {
@@ -55,7 +56,7 @@ const rootReducer = combineReducers({
   medicationKnowledge: medicationKnowledgeSlice.reducer,
   medicationStatements: medicationStatementsSlice.reducer,
   procedures: proceduresSlice.reducer,
-  procedureGroups: proceduresSlice.reducer,
+  procedureGroups: procedureGroupsSlice.reducer,
   vitalSigns: vitalSignsSlice.reducer,
   vitalSignGroups: vitalSignGroupsSlice.reducer,
   toggle: toggleSlice.reducer,

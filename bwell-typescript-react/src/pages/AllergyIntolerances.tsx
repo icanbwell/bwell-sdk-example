@@ -3,8 +3,19 @@ import { getAllergyIntolerances } from "@/store/healthData/allergyIntoleranceSli
 import { getAllergyIntoleranceGroups } from "@/store/healthData/allergyIntoleranceGroupsSlice";
 import HealthDataGrid from "@/components/HealthDataGrid";
 import withAuthCheck from "@/components/withAuthCheck";
+import { useDispatch } from "react-redux";
+import { requestInfoSlice } from "@/store/requestInfoSlice";
 
 const AllergyIntolerances = () => {
+    const dispatch = useDispatch();
+    
+    const { setGroupCode, clearGroupCode } = requestInfoSlice.actions;
+
+    const onRowSelect = (selection: any[]) => {
+        if (!selection.length) dispatch(clearGroupCode('allergyIntolerances'));
+        else dispatch(setGroupCode({ selector: 'allergyIntolerances', groupCode: selection[0].coding }));
+    }
+
     return (
         <>
             <h1>Allergy Intolerances</h1>
@@ -13,6 +24,7 @@ const AllergyIntolerances = () => {
                 selector="allergyIntoleranceGroups"
                 columns={ALLERGY_INTOLERANCE_GROUP_COLUMNS}
                 getter={getAllergyIntoleranceGroups}
+                onRowSelect={onRowSelect}
             />
             <HealthDataGrid
                 title="Allergy Intolerances"

@@ -1,7 +1,7 @@
 // components/HealthDataGrid.tsx
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DataGrid, GridEventListener, GridEventLookup, GridPaginationModel, GridRowSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridEventListener, GridEventLookup, GridPaginationModel } from "@mui/x-data-grid";
 import { Alert, Box, Container } from "@mui/material";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 import { AppDispatch, RootState } from "@/store/store";
@@ -30,17 +30,25 @@ const HealthDataGrid = ({
 }: HealthDataGridProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
+    //get the request info for this grid; separate out pagination model
     const requestInfo = useSelector((state: RootState) => state.requests[selector]) ?? INITIAL_REQUEST;
     const paginationModel = { page: requestInfo?.page ?? 0, pageSize: requestInfo?.pageSize ?? 0 };
+
+    //get setters for page and pageSize from requestInfo actions
     const { setPage, setPageSize } = requestInfoSlice.actions;
 
+    //cheesy hack to figure out if we're a grid of groups or not
     const isGroups = selector.includes('Groups');
 
+    //dispatch the getData action
+    //if we are fetching groups, we need to take off the HealthDataRequest stuff,
+    //else the API errors due to being given unexpected params
     const getData = () => {
         if (isGroups) dispatch(getter({ page: requestInfo.page, pageSize: requestInfo.pageSize }));
         else dispatch(getter(requestInfo));
     }
 
+    //update the underlying request when pagination model changes
     const handlePaginationChange = async (paginationModel: GridPaginationModel) => {
         const { page, pageSize } = paginationModel;
 
@@ -48,14 +56,33 @@ const HealthDataGrid = ({
         dispatch(setPageSize({ selector, pageSize }));
     }
 
+    //get the slice of state that corresponds to the provided selector
     const slice = useSelector((state: RootState) => (state as any)[selector]);
     const { healthData, loading, error } = slice;
 
+    //check toggle state to see if we should display a table or json
     const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true) && healthData?.data?.resources;
 
+    //re-fetch data when the request changes
     useEffect(getData, [requestInfo]);
 
-    const getRowClassName = () => onRowClick ? 'cursor-pointer' : '';
+    //only show a pointer cursor on the rows when clicking a row does something:
+    //either when a group is selected, or when a row click handler has been provided
+    const getRowClassName = () => onRowClick || isGroups ? 'cursor-pointer' : '';
+
+    //on row select, use the id to get the whole row, 
+    //then call the onRowSelect callback with the row
+    const handleRowSelection = (selection: any[]) => {
+        if (selection?.length === 0) {
+            onRowSelect?.([]);
+            return;
+        }
+
+        const id = selection[0];
+        const row = healthData?.data?.resources.find((row: any) => row.id === id);
+
+        onRowSelect?.([row]);
+    }
 
     return (
         <Container>
@@ -79,12 +106,12 @@ const HealthDataGrid = ({
                     paginationModel={paginationModel}
                     rowCount={healthData?.data?.paging_info?.total_items || 0}
                     onPaginationModelChange={handlePaginationChange}
-                    onRowSelectionModelChange={onRowSelect}
+                    onRowSelectionModelChange={handleRowSelection}
                     getRowId={(row) => rowId ? row[rowId] : row.id}
                     onRowClick={onRowClick}
                     getRowClassName={getRowClassName}
-                    rowSelection={false}
-                    disableRowSelectionOnClick={false}
+                    rowSelection={isGroups}
+                    disableRowSelectionOnClick={!isGroups}
                 />
             }
             {!showTable && healthData?.data &&
