@@ -22,11 +22,14 @@ const Initialize = () => {
 
   const user = useSelector((state: RootState) => state.user)
 
-  const { error, isInitialized, isLoggedIn } = user;
+  const { error, isInitialized, isLoggedIn, isRehydrated } = user;
 
   const initializeWithProvidedKey = () => dispatch(initialize({ clientKey: key }));
 
   const loginWithProvidedOAuthCreds = () => dispatch(authenticate({ oauthCreds }));
+
+  if (!isRehydrated)
+    return <Box>Rehydrating...</Box>
 
   return (
     <Grid
