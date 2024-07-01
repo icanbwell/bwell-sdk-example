@@ -55,7 +55,7 @@ const HealthDataGrid = ({
 
     useEffect(getData, [requestInfo]);
 
-    const getRowClassName = () => onRowClick || isGroups ? 'cursor-pointer' : '';
+    const getRowClassName = () => onRowClick ? 'cursor-pointer' : '';
 
     return (
         <Container>
@@ -83,8 +83,8 @@ const HealthDataGrid = ({
                     getRowId={(row) => rowId ? row[rowId] : row.id}
                     onRowClick={onRowClick}
                     getRowClassName={getRowClassName}
-                    rowSelection={isGroups}
-                    disableRowSelectionOnClick={!isGroups}
+                    rowSelection={false}
+                    disableRowSelectionOnClick={false}
                 />
             }
             {!showTable && healthData?.data &&
