@@ -1,8 +1,10 @@
+import { SearchToken } from "@icanbwell/bwell-sdk-ts";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface HealthDataRequestInfo {
     page: number;
     pageSize: number;
+    groupCode?: SearchToken;
 }
 
 interface HealthDataRequestInfoCollection {
@@ -46,6 +48,17 @@ export const requestInfoSlice = createSlice({
         clearRequestInfo: createRequestInfoReducer<string>((requestInfo) => {
             requestInfo.page = INITIAL_REQUEST.page;
             requestInfo.pageSize = INITIAL_REQUEST.pageSize;
+            requestInfo.groupCode = undefined;
+        }),
+        setGroupCode: createRequestInfoReducer<{ selector: string, groupCode: string }>((requestInfo, action) => {
+            requestInfo.groupCode = {
+                value: {
+                    code: action.payload.groupCode,
+                }
+            }
+        }),
+        clearGroupCode: createRequestInfoReducer<string>((requestInfo) => {
+            requestInfo.groupCode = undefined;
         }),
     },
 });

@@ -1,7 +1,7 @@
 // components/HealthDataGrid.tsx
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DataGrid, GridEventListener, GridEventLookup, GridPaginationModel } from "@mui/x-data-grid";
+import { DataGrid, GridEventListener, GridEventLookup, GridPaginationModel, GridRowSelectionModel } from "@mui/x-data-grid";
 import { Alert, Box, Container } from "@mui/material";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 import { AppDispatch, RootState } from "@/store/store";
@@ -16,6 +16,7 @@ type HealthDataGridProps = {
     getter: Function;
     rowId?: string;
     onRowClick?: GridEventListener<keyof GridEventLookup>;
+    onRowSelect?: Function;
 }
 
 const HealthDataGrid = ({
@@ -25,6 +26,7 @@ const HealthDataGrid = ({
     getter,
     rowId,
     onRowClick,
+    onRowSelect,
 }: HealthDataGridProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
@@ -32,8 +34,11 @@ const HealthDataGrid = ({
     const paginationModel = { page: requestInfo?.page ?? 0, pageSize: requestInfo?.pageSize ?? 0 };
     const { setPage, setPageSize } = requestInfoSlice.actions;
 
+    const isGroups = selector.includes('Groups');
+
     const getData = () => {
-        dispatch(getter(requestInfo));
+        if (isGroups) dispatch(getter({ page: requestInfo.page, pageSize: requestInfo.pageSize }));
+        else dispatch(getter(requestInfo));
     }
 
     const handlePaginationChange = async (paginationModel: GridPaginationModel) => {
@@ -50,9 +55,7 @@ const HealthDataGrid = ({
 
     useEffect(getData, [requestInfo]);
 
-    const getRowClassName = () => {
-        return onRowClick ? 'cursor-pointer' : '';
-    };
+    const getRowClassName = () => onRowClick || isGroups ? 'cursor-pointer' : '';
 
     return (
         <Container>
@@ -76,10 +79,12 @@ const HealthDataGrid = ({
                     paginationModel={paginationModel}
                     rowCount={healthData?.data?.paging_info?.total_items || 0}
                     onPaginationModelChange={handlePaginationChange}
+                    onRowSelectionModelChange={onRowSelect}
                     getRowId={(row) => rowId ? row[rowId] : row.id}
                     onRowClick={onRowClick}
                     getRowClassName={getRowClassName}
-                    rowSelection={false}
+                    rowSelection={isGroups}
+                    disableRowSelectionOnClick={!isGroups}
                 />
             }
             {!showTable && healthData?.data &&
