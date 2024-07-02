@@ -6,14 +6,14 @@ import { Container } from '@mui/material';
 // Higher-order component to do an auth check before rendering a component
 function withAuthCheck(title: string, WrappedComponent: React.ComponentType) {
     return function ProtectedComponent(props: any) {
-        const { isLoggedIn, oauthCreds, isRehydrated } = useSelector((state: RootState) => state.user);
+        const { isInitialized, isLoggedIn, oauthCreds, isRehydrated } = useSelector((state: RootState) => state.user);
         const [errorMessage, setErrorMessage] = useState("Initializing...");
 
         useEffect(() => {
             if (!isRehydrated)
                 setErrorMessage("Rehydrating state...");
-            if (oauthCreds && !isLoggedIn)
-                setErrorMessage("Please log in to view this page.");
+            else if (!isInitialized || !isLoggedIn)
+                setErrorMessage("Please log in via the Initialize screen to view this page.");
         }, [oauthCreds, isLoggedIn]);
 
         if (!isLoggedIn) {

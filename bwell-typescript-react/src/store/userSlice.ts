@@ -60,7 +60,11 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     resetState: (state) => {
-      Object.assign(state, initialState);
+      state.isInitialized = false;
+      state.isLoggedIn = false;
+      state.isRehydrated = true;
+      state.clientKey = undefined;
+      state.oauthCreds = undefined;
     },
   },
   extraReducers: (builder) => {
