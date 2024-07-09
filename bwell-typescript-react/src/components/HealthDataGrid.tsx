@@ -1,24 +1,24 @@
 // components/HealthDataGrid.tsx
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DataGrid, GridEventListener, GridEventLookup, GridPaginationModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridEventListener, GridEventLookup, GridPaginationModel } from "@mui/x-data-grid";
 import { Alert, Box, Container } from "@mui/material";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 import { AppDispatch, RootState } from "@/store/store";
 
 import './HealthDataGrid.css';
 import { requestInfoSlice, INITIAL_REQUEST } from "@/store/requestInfoSlice";
-import { get } from "http";
 
 type HealthDataGridProps = {
     title: string;
     selector: string;
-    columns: any[];
+    columns: GridColDef[];
     getter: Function;
     rowId?: string;
     onRowClick?: GridEventListener<keyof GridEventLookup>;
     onRowSelect?: Function;
     getRows?: Function;
+    serverPagination?: boolean;
 }
 
 const HealthDataGrid = ({
@@ -30,12 +30,14 @@ const HealthDataGrid = ({
     onRowClick,
     onRowSelect,
     getRows,
+    serverPagination = true
 }: HealthDataGridProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
     //get the request info for this grid; separate out pagination model
     const requestInfo = useSelector((state: RootState) => state.requests[selector]) ?? INITIAL_REQUEST;
-    const paginationModel = { page: requestInfo?.page ?? 0, pageSize: requestInfo?.pageSize ?? 0 };
+
+    let paginationModel = { page: requestInfo?.page ?? 0, pageSize: requestInfo?.pageSize ?? 0 };
 
     //get setters for page and pageSize from requestInfo actions
     const { setPage, setPageSize } = requestInfoSlice.actions;
@@ -71,8 +73,8 @@ const HealthDataGrid = ({
     //check toggle state to see if we should display a table or json
     const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true) && rows?.length > 0;
 
-    //re-fetch data when the request changes
-    useEffect(getData, [requestInfo]);
+    //re-fetch data when the request changes, but only if we're doing server-side pagination
+    useEffect(getData, serverPagination ? [requestInfo] : []);
 
     //only show a pointer cursor on the rows when clicking a row does something:
     //either when a group is selected, or when a row click handler has been provided
@@ -110,9 +112,9 @@ const HealthDataGrid = ({
                             }
                         }
                     }
-                    paginationMode="server"
+                    paginationMode={serverPagination ? "server" : "client"}
                     paginationModel={paginationModel}
-                    rowCount={healthData?.data?.paging_info?.total_items || 0}
+                    rowCount={serverPagination ? healthData?.data?.paging_info?.total_items || 0 : rows.length}
                     onPaginationModelChange={handlePaginationChange}
                     onRowSelectionModelChange={handleRowSelection}
                     getRowId={(row) => rowId ? row[rowId] : row.id}

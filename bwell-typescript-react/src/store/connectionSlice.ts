@@ -1,8 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-import makeHealthDataSlice from "./healthData/makeHealthDataSlice";
-import { BWellQueryResult } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/common/results";
-import { MemberConnectionResults } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/api/base/connection-manager";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
@@ -12,5 +10,44 @@ export const getMemberConnections = createAsyncThunk(
     }
 );
 
-//TODO: Create makeConnectionDataSlice
-export const connectionSlice = makeHealthDataSlice<BWellQueryResult<MemberConnectionResults>>("connections", getMemberConnections);
+const INITIAL_STATE = {
+    memberConnections: null,
+    dataSource: null,
+    loading: false,
+    error: null,
+};
+
+export const connectionSlice = createSlice({
+    name: "connections",
+    initialState: INITIAL_STATE,
+    reducers: {
+        resetState: (state) => {
+            Object.assign(state, INITIAL_STATE);
+        }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getMemberConnections.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.memberConnections = null;
+            })
+            .addCase(getMemberConnections.fulfilled, (state, action: PayloadAction<T>) => {
+                if (action.payload.error) {
+                    state.error = action.payload.error.message ?? "Unknown error";
+                } else {
+                    state.memberConnections = action.payload || [];
+                }
+
+                state.loading = false;
+                state.error = "";
+            })
+            .addCase(getMemberConnections.rejected, (state, action) => {
+                if (action.error.message === "Uninitialized") {
+                    state.loading = true;
+                } else {
+                    state.error = action.error.message ?? "Unknown error";
+                }
+            });
+    }
+});

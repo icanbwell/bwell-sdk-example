@@ -30,9 +30,8 @@ export const CONNECTION_COLUMNS: GridColDef[] = [
     { field: 'type', headerName: 'Type' },
     { field: 'status', headerName: 'Status' },
     { field: 'syncStatus', headerName: 'SyncStatus' },
-    { field: 'statusUpdated', headerName: 'Status Updated', type: 'dateTime', valueGetter: (params) => new Date(params) },
-    { field: 'lastSynced', headerName: 'Last Synced', type: 'dateTime', valueGetter: (params) => new Date(params) },
-    { field: 'created', headerName: 'Created', type: 'dateTime', valueGetter: (params) => new Date(params) },
+    { field: 'statusUpdated', headerName: 'Status Updated', valueGetter: (params) => monthDayYear(params) },
+    { field: 'created', headerName: 'Created', valueGetter: (params) => monthDayYear(params) },
     { field: 'isDirect', headerName: 'Is Direct', type: 'boolean' },
 ];
 

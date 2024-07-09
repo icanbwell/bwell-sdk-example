@@ -13,7 +13,8 @@ const Connections = () => {
                 selector="connections"
                 columns={CONNECTION_COLUMNS}
                 getter={getMemberConnections}
-                getRows={(healthData: { data: any; }) => healthData?.data}
+                getRows={(memberConnections: { data: any; }) => memberConnections?.data}
+                serverPagination={false}
             />
         </Container>
     );
