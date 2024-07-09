@@ -8,6 +8,7 @@ import { AppDispatch, RootState } from "@/store/store";
 
 import './HealthDataGrid.css';
 import { requestInfoSlice, INITIAL_REQUEST } from "@/store/requestInfoSlice";
+import { get } from "http";
 
 type HealthDataGridProps = {
     title: string;
@@ -17,6 +18,7 @@ type HealthDataGridProps = {
     rowId?: string;
     onRowClick?: GridEventListener<keyof GridEventLookup>;
     onRowSelect?: Function;
+    getRows?: Function;
 }
 
 const HealthDataGrid = ({
@@ -27,6 +29,7 @@ const HealthDataGrid = ({
     rowId,
     onRowClick,
     onRowSelect,
+    getRows,
 }: HealthDataGridProps) => {
     const dispatch = useDispatch<AppDispatch>();
 
@@ -60,8 +63,13 @@ const HealthDataGrid = ({
     const slice = useSelector((state: RootState) => (state as any)[selector]);
     const { healthData, loading, error } = slice;
 
+    //get the rows; use a custom getter if provided
+    let rows = healthData?.data?.resources || [];
+
+    if (getRows) rows = getRows(healthData);
+
     //check toggle state to see if we should display a table or json
-    const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true) && healthData?.data?.resources;
+    const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true) && rows?.length > 0;
 
     //re-fetch data when the request changes
     useEffect(getData, [requestInfo]);
@@ -92,7 +100,7 @@ const HealthDataGrid = ({
             {error && <Alert severity="error">{error}</Alert>}
             {showTable &&
                 <DataGrid
-                    rows={healthData?.data?.resources}
+                    rows={rows}
                     columns={columns}
                     pageSizeOptions={[10, 25, 50, 100]}
                     initialState={
