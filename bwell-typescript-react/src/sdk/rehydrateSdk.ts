@@ -4,6 +4,17 @@ import { authenticateSdk, initializeSdk } from '@/sdk/bWellSdk';
 
 const sdkMiddleware = (store) => (next) => async (action) => {
     if (action.type === REHYDRATE) {
+        //if it's a brand-new session, just set the user state to the default 
+        if (!action.payload?.user) {
+            action.payload = {
+                user: {
+                    isRehydrated: true,
+                }
+            }
+
+            return next(action);
+        }
+
         const { clientKey, oauthCreds } = action.payload.user;
 
         action.payload.user.isInitialized = false;
