@@ -9,7 +9,6 @@ export const authenticateSdk = async (oauthCreds: string) => {
 export const initializeSdk = async (clientKey: string) => {
     bWellSdk = new BWellSDK({ clientKey });
     const initializationResult = await bWellSdk.initialize();
-    console.log(initializationResult);
     return initializationResult;
 };    
 
