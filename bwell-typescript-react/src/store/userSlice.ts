@@ -38,7 +38,7 @@ export const initialize = createAsyncThunk<
   { rejectValue: string }
 >("user/initialize", async ({ clientKey }, { rejectWithValue }) => {
   try {
-    initializeSdk(clientKey);
+    await initializeSdk(clientKey);
     return clientKey;
   } catch (error) {
     if (typeof error === "string") return rejectWithValue(error);

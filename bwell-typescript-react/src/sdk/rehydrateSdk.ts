@@ -22,7 +22,7 @@ const sdkMiddleware = (store) => (next) => async (action) => {
 
         try {
             if (clientKey && oauthCreds) {
-                initializeSdk(clientKey);
+                await initializeSdk(clientKey);
                 await authenticateSdk(oauthCreds);
 
                 action.payload.user.isInitialized = true;
