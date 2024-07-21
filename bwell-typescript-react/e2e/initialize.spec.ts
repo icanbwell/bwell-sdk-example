@@ -104,7 +104,7 @@ test("Entering an invalid oauth credential results in an error", async ({ page }
     await initializePage.clickSubmitButton();
 });
 
-test("Entering a well-formed valid client key and invalid credential results in an error", async ({ page }) => {
+test("Entering a well-formed valid client key with a bad environment results in the correct error", async ({ page }) => {
     //arrange
     const initializePage = new InitializePage(page);
 
@@ -112,11 +112,6 @@ test("Entering a well-formed valid client key and invalid credential results in 
     await initializePage.navigate();
     await initializePage.enterClientKey(WELL_FORMED_KEY_BAD_ENV);
     await initializePage.clickInitializeButton();
-
-    const oauthCredsLocator = await page.waitForSelector(initializePage.txtOauthCredsLocator);
-    await oauthCredsLocator.fill(DEFAULT_OAUTH_CREDS);
-
-    await initializePage.clickSubmitButton();
 
     //assert
     const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);

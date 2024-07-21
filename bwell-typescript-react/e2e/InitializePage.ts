@@ -1,11 +1,6 @@
-import { Page } from "@playwright/test";
-import config from "./configTypes";
+import { BasePage } from "./BasePage";
 
-class InitializePage {
-    private readonly page: Page;
-
-    public readonly mainMenuLocator = "#btnMainMenu";
-    public readonly initializeMenuItemLocator = "#initializeMenuItem";
+export class InitializePage extends BasePage {
     public readonly txtKeyLocator = "#txtKey";
     public readonly btnInitializeLocator = "#btnInitialize";
     public readonly txtOauthCredsLocator = "#txtOauthCreds";
@@ -13,22 +8,10 @@ class InitializePage {
     public readonly infoMessageLocator = "#authenticationInfo";
     public readonly errorMessageLocator = "#authenticationError";
 
-    constructor(page: Page) {
-        this.page = page;
-    }
-
     async navigate() {
-        await this.page.goto(config.TEST_APP_URL);
+        await super.navigate();
         await this.clickMainMenu();
-        await this.clickInitializeMenuItem();
-    }
-
-    async clickMainMenu() {
-        await this.page.click(this.mainMenuLocator);
-    }
-
-    async clickInitializeMenuItem() {
-        await this.page.locator(this.initializeMenuItemLocator).click();
+        await this.clickMenuItem(`#initialize${this.menuItemSuffix}`);
     }
 
     async clickInitializeButton() {

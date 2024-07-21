@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Drawer, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link, RemixRouter, RouteObject } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { userSlice } from "@/store/userSlice";
 
 type HamburgerMenuProps = {
   menuId: string;
@@ -21,6 +24,12 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
     if (escapedPath === "") return "Home";
     else return addSpaceBeforeUppercase(escapedPath.charAt(0).toUpperCase() + escapedPath.slice(1));
   };
+
+  const user = useSelector((state: RootState) => state.user)
+
+  const { isLoggedIn } = user;
+
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <div style={{ padding: "10px" }}>
@@ -45,7 +54,7 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
           .filter((r: RouteObject) => r.path !== "/")
           .map((route: RouteObject, i: number) => {
             return route.path ? (
-              <div style={{ padding: "5px" }} key={i}>
+              <div key={i}>
                 <Link
                   key={route.path}
                   to={route.path}
@@ -56,7 +65,17 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
                 </Link>
               </div>
             ) : null;
-          })}
+          })
+        }
+        <hr />
+        {
+          isLoggedIn && (
+            <Link id="logoutMenuItem" onClick={() => {
+              dispatch(userSlice.actions.resetState());
+              setOpen(false);
+            }} to={"/initialize"}>Log Out</Link>
+          )
+        }
       </Drawer>
     </div>
   );
