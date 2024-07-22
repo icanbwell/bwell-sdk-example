@@ -15,10 +15,10 @@ const Medications = () => {
 
     const handleRowClick = ({ id }: any) => {
         // @ts-ignore no need to strong type the dispatcher here
-        dispatch(getMedicationKnowledge({ labId: id, page: 1, pageSize: 1 }));
+        dispatch(getMedicationKnowledge({ medicationStatementId: id, page: 1, pageSize: 1 }));
     }
 
-    const healthDataSlice = useSelector((state: RootState) => state.labKnowledge);
+    const healthDataSlice = useSelector((state: RootState) => state.health.medicationKnowledge);
 
     const { healthData } = healthDataSlice;
 

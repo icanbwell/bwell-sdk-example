@@ -18,7 +18,7 @@ const Labs = () => {
         dispatch(getLabKnowledge({ labId: id, page: 1, pageSize: 1 }));
     }
 
-    const healthDataSlice = useSelector((state: RootState) => state.labKnowledge);
+    const healthDataSlice = useSelector((state: RootState) => state.health.labKnowledge);
 
     const { healthData } = healthDataSlice;
 

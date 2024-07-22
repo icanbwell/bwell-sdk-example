@@ -1,33 +1,12 @@
 import { userSlice } from "./userSlice";
 import { toggleSlice } from "./toggleSlice";
 import { connectionSlice } from "./connectionSlice";
-import { allergyIntolerancesSlice } from "./healthData/allergyIntoleranceSlice";
-import { allergyIntoleranceGroupsSlice } from "./healthData/allergyIntoleranceGroupsSlice";
-import { healthSummarySlice } from "./healthData/healthSummarySlice";
-import { conditionsSlice } from "./healthData/conditionsSlice";
-import { conditionGroupsSlice } from "./healthData/conditionGroupsSlice";
-import { labGroupsSlice } from "./healthData/labGroupsSlice";
-import { labsSlice } from "./healthData/labsSlice";
-import { carePlanGroupsSlice } from "./healthData/carePlanGroupsSlice";
-import { carePlansSlice } from "./healthData/carePlansSlice";
-import { encounterGroupsSlice } from "./healthData/encounterGroupsSlice";
-import { encountersSlice } from "./healthData/encountersSlice";
-import { immunizationsSlice } from "./healthData/immunizationsSlice";
-import { immunizationGroupsSlice } from "./healthData/immunizationGroupsSlice";
-import { medicationStatementsSlice } from "./healthData/medicationStatementsSlice";
-import { medicationGroupsSlice } from "./healthData/medicationGroupsSlice";
-import { proceduresSlice } from "./healthData/proceduresSlice";
-import { vitalSignsSlice } from "./healthData/vitalSignsSlice";
-import { vitalSignGroupsSlice } from "./healthData/vitalSignGroupsSlice";
-
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import rehydrateSdk from "@/sdk/rehydrateSdk";
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
-import { medicationKnowledgeSlice } from "./healthData/medicationKnowledgeSlice";
-import { labKnowledgeSlice } from "./healthData/labKnowledgeSlice";
 import { requestInfoSlice } from "./requestInfoSlice";
-import { procedureGroupsSlice } from "./healthData/procedureGroupsSlice";
+import { healthReducer } from "./healthData/healthReducer";
 
 // Setup the persist config
 const persistConfig = {
@@ -37,28 +16,8 @@ const persistConfig = {
 
 // Create a root reducer
 const rootReducer = combineReducers({
+  health: healthReducer,
   user: userSlice.reducer,
-  healthSummary: healthSummarySlice.reducer,
-  allergyIntolerances: allergyIntolerancesSlice.reducer,
-  allergyIntoleranceGroups: allergyIntoleranceGroupsSlice.reducer,
-  carePlans: carePlansSlice.reducer,
-  carePlanGroups: carePlanGroupsSlice.reducer,
-  conditions: conditionsSlice.reducer,
-  conditionGroups: conditionGroupsSlice.reducer,
-  encounters: encountersSlice.reducer,
-  encounterGroups: encounterGroupsSlice.reducer,
-  immunizations: immunizationsSlice.reducer,
-  immunizationGroups: immunizationGroupsSlice.reducer,
-  labs: labsSlice.reducer,
-  labGroups: labGroupsSlice.reducer,
-  labKnowledge: labKnowledgeSlice.reducer,
-  medicationGroups: medicationGroupsSlice.reducer,
-  medicationKnowledge: medicationKnowledgeSlice.reducer,
-  medicationStatements: medicationStatementsSlice.reducer,
-  procedures: proceduresSlice.reducer,
-  procedureGroups: procedureGroupsSlice.reducer,
-  vitalSigns: vitalSignsSlice.reducer,
-  vitalSignGroups: vitalSignGroupsSlice.reducer,
   toggle: toggleSlice.reducer,
   connections: connectionSlice.reducer,
   requests: requestInfoSlice.reducer, 

@@ -1,21 +1,20 @@
 import { Container } from "@mui/material";
 import { CONNECTION_COLUMNS } from "@/column-defs";
 import withAuthCheck from "@/components/withAuthCheck";
-import HealthDataGrid from "@/components/HealthDataGrid";
-import { getMemberConnections } from "@/store/connectionSlice";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import { DataGrid } from "@mui/x-data-grid";
 
 const Connections = () => {
+    const slice = useSelector((state: RootState) => state.connections);
+
     return (
         <Container>
             <h1>Connections</h1>
-            <HealthDataGrid
-                title="getConnections()"
-                selector="connections"
-                columns={CONNECTION_COLUMNS}
-                getter={getMemberConnections}
-                getRows={(memberConnections: { data: any; }) => memberConnections?.data}
-                serverPagination={false}
-            />
+            {
+                // @ts-ignore TODO: strong-typing here
+                slice.memberConnections && <DataGrid rows={slice.memberConnections.data} columns={CONNECTION_COLUMNS} />
+            }
         </Container>
     );
 }

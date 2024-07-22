@@ -62,7 +62,8 @@ const HealthDataGrid = ({
     }
 
     //get the slice of state that corresponds to the provided selector
-    const slice = useSelector((state: RootState) => (state as any)[selector]);
+    // @ts-ignore - we're using a dynamic selector here
+    const slice = useSelector((state: RootState) => state["health"][selector]);
     const { healthData, loading, error } = slice;
 
     //get the rows; use a custom getter if provided
