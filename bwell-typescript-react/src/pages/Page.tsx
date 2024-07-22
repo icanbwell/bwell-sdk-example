@@ -12,7 +12,7 @@ type PageProps = {
 
 const Page = ({ children }: PageProps) => {
   return (
-    <Container>
+    <Container sx={{ marginBottom: '35px;' }}>
       <HamburgerMenu menuId="btnMainMenu" router={Router} />
       {children}
     </Container>

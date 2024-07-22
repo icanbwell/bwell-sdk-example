@@ -10,7 +10,10 @@ const DEFAULT_OAUTH_CREDS = process.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
 const BAD_KEY = process.env.VITE_BAD_KEY ?? "";
 const BAD_OAUTH_CREDS = process.env.VITE_BAD_OAUTH_CREDS ?? "";
 const WELL_FORMED_KEY_BAD_ENV = process.env.VITE_WELL_FORMED_KEY_BAD_ENV ?? "";
-const WELL_FORMED_KEY_GOOD_ENV = process.env.VITE_WELL_FORMED_KEY_GOOD_ENV ?? "";
+
+const GENERIC_ERROR = "Error while authenticating";
+const INVALID_KEY_ERROR = "It appears there is a problem with your Client Key. Contact b.well support for further assistance.";
+const NETWORK_ERROR = "Network request failed";
 
 test("Navigating to the Initialize page works", async ({ page }) => {
     //arrange
@@ -65,8 +68,12 @@ test("Entering a valid key and valid oauth credential results in success", async
     await initializePage.clickSubmitButton();
 
     //assert: no error message should be displayed
-    expect(page.locator(initializePage.initializationErrorLocator)).toBe(null);
+    const infoElement = await page.waitForSelector(initializePage.infoMessageLocator);
+    const infoText = await infoElement.textContent();
+    expect(infoText).toBe("User successfully logged in.");
 });
+
+
 
 test("Entering an invalid client key results in an error", async ({ page }) => {
     //arrange
@@ -78,10 +85,9 @@ test("Entering an invalid client key results in an error", async ({ page }) => {
     await initializePage.clickInitializeButton();
 
     //assert: error message should be displayed
-    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
-    const errorText = await errorLocator.innerText();
-
-    expect(errorText).toBe("It appears there is a problem with your Client Key. Contact b.well support for further assistance.");
+    const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
+    const errorText = await errorElement.textContent();
+    expect(errorText).toBe(INVALID_KEY_ERROR);
 });
 
 test("Entering an invalid oauth credential results in an error", async ({ page }) => {
@@ -99,7 +105,7 @@ test("Entering an invalid oauth credential results in an error", async ({ page }
     await initializePage.clickSubmitButton();
 });
 
-test("Entering a well-formed key with a bad env results in an error", async ({ page }) => {
+test("Entering a well-formed valid client key with a bad environment results in the correct error", async ({ page }) => {
     //arrange
     const initializePage = new InitializePage(page);
 
@@ -108,25 +114,23 @@ test("Entering a well-formed key with a bad env results in an error", async ({ p
     await initializePage.enterClientKey(WELL_FORMED_KEY_BAD_ENV);
     await initializePage.clickInitializeButton();
 
-    //assert: error message should be displayed
-    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
-    const errorText = await errorLocator.innerText();
-
-    expect(errorText).toBe("Network request failed");
+    //assert
+    const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
+    const errorText = await errorElement.textContent();
+    expect(errorText).toBe(NETWORK_ERROR);
 });
 
-test("Entering a well-formed key with a good env results in an error", async ({ page }) => {
+test("Entering a bad client key and valid oauth credential results in an error", async ({ page }) => {
     //arrange
     const initializePage = new InitializePage(page);
 
     //act
     await initializePage.navigate();
-    await initializePage.enterClientKey(WELL_FORMED_KEY_GOOD_ENV);
+    await initializePage.enterClientKey(BAD_KEY);
     await initializePage.clickInitializeButton();
 
-    //assert: error message should be displayed
-    const errorLocator = await page.waitForSelector(initializePage.initializationErrorLocator);
-    const errorText = await errorLocator.innerText();
-
-    expect(errorText).toContain("Internal Server Error");
+    //assert
+    const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
+    const errorText = await errorElement.textContent();
+    expect(errorText).toBe(INVALID_KEY_ERROR);
 });

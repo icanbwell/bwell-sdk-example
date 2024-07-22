@@ -1,9 +1,17 @@
 import Initialize from "@/pages/Initialize";
-import Hello from "@/pages/Hello";
 import Page from "@/pages/Page";
-import Shadow from "@/pages/Shadow";
-
+import AllergyIntolerances from "@/pages/AllergyIntolerances";
+import Connections from "@/pages/Connections";
 import { createBrowserRouter } from "react-router-dom";
+import HealthSummary from "./pages/HealthSummary";
+import Conditions from "./pages/Conditions";
+import Labs from "./pages/Labs";
+import CarePlans from "./pages/CarePlans";
+import Encounters from "./pages/Encounters";
+import Immunizations from "./pages/Immunizations";
+import Medications from "./pages/Medications";
+import Procedures from "./pages/Procedures";
+import VitalSigns from "./pages/VitalSigns";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
@@ -13,8 +21,18 @@ const makePageRoute = (path: string, element: JSX.Element) => ({
 const Router = createBrowserRouter([
   makePageRoute("/", <Initialize />),
   makePageRoute("/initialize", <Initialize />),
-  makePageRoute("/hello", <Hello />),
-  makePageRoute("/shadow", <Shadow />),
-]);
+  makePageRoute("/healthSummary", <HealthSummary />),
+  makePageRoute("/allergyIntolerances", <AllergyIntolerances />),
+  makePageRoute("/carePlans", <CarePlans />),
+  makePageRoute("/conditions", <Conditions />),
+  makePageRoute("/encounters", <Encounters />),
+  makePageRoute("/immunizations", <Immunizations />),
+  makePageRoute("/labs", <Labs />),
+  makePageRoute("/medications", <Medications />),
+  makePageRoute("/procedures", <Procedures />),
+  makePageRoute("/vitalSigns", <VitalSigns />),
+  makePageRoute("/connections", <Connections />),
+])
+
 
 export default Router;
