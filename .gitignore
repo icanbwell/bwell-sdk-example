@@ -10,3 +10,9 @@ test-results
 .env
 
 .yalc
+
+yalc.lock
+
+dist
+
+dist/*

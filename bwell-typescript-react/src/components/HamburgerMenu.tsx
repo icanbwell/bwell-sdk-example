@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { Drawer, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link, RemixRouter, RouteObject } from "react-router-dom";
+import { Link, RouteObject } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { userSlice } from "@/store/userSlice";
 
 type HamburgerMenuProps = {
   menuId: string;
-  router: RemixRouter;
+  router: {
+    routes: RouteObject[];
+
+  };
 };
+
+function addSpaceBeforeUppercase(pascalCaseString: string) {
+  return pascalCaseString.replace(/([A-Z])/g, ' $1').trim();
+}
 
 const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
   const [open, setOpen] = useState(false);
@@ -15,8 +25,14 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
     const escapedPath = path.replace("/", "");
 
     if (escapedPath === "") return "Home";
-    else return escapedPath.charAt(0).toUpperCase() + escapedPath.slice(1);
+    else return addSpaceBeforeUppercase(escapedPath.charAt(0).toUpperCase() + escapedPath.slice(1));
   };
+
+  const user = useSelector((state: RootState) => state.user)
+
+  const { isLoggedIn } = user;
+
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <div style={{ padding: "10px" }}>
@@ -34,14 +50,14 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
         anchor="left"
         open={open}
         onClose={() => setOpen(false)}
-        PaperProps={{ sx: { minWidth: "10%", padding:"15px" }}}
+        PaperProps={{ sx: { minWidth: "10%", padding: "15px" } }}
       >
         <h2>Menu</h2>
         {router.routes
           .filter((r: RouteObject) => r.path !== "/")
           .map((route: RouteObject, i: number) => {
             return route.path ? (
-              <div style={{ padding: "5px" }} key={i}>
+              <div key={i}>
                 <Link
                   key={route.path}
                   to={route.path}
@@ -52,7 +68,17 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
                 </Link>
               </div>
             ) : null;
-          })}
+          })
+        }
+        <hr />
+        {
+          isLoggedIn && (
+            <Link id="logoutMenuItem" onClick={() => {
+              dispatch(userSlice.actions.resetState());
+              setOpen(false);
+            }} to={"/initialize"}>Log Out</Link>
+          )
+        }
       </Drawer>
     </div>
   );
