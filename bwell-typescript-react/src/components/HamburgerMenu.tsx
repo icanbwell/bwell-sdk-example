@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Drawer, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link, RemixRouter, RouteObject } from "react-router-dom";
+import { Link, RouteObject } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { userSlice } from "@/store/userSlice";
 
 type HamburgerMenuProps = {
   menuId: string;
-  router: RemixRouter;
+  router: {
+    routes: RouteObject[];
+
+  };
 };
 
 function addSpaceBeforeUppercase(pascalCaseString: string) {

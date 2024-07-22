@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
@@ -11,10 +11,10 @@ export const getMemberConnections = createAsyncThunk(
 );
 
 const INITIAL_STATE = {
-    memberConnections: null,
+    memberConnections: null as null,
     dataSource: null,
     loading: false,
-    error: null,
+    error: null as string | null,
 };
 
 export const connectionSlice = createSlice({
@@ -32,10 +32,11 @@ export const connectionSlice = createSlice({
                 state.error = null;
                 state.memberConnections = null;
             })
-            .addCase(getMemberConnections.fulfilled, (state, action: PayloadAction<T>) => {
-                if (action.payload.error) {
+            .addCase(getMemberConnections.fulfilled, (state, action) => {
+                if (action?.payload?.error) {
                     state.error = action.payload.error.message ?? "Unknown error";
                 } else {
+                    // @ts-ignore TODO: strong-type this
                     state.memberConnections = action.payload || [];
                 }
 

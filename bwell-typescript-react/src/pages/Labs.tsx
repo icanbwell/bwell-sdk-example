@@ -14,6 +14,7 @@ const Labs = () => {
     const dispatch = useDispatch();
 
     const handleRowClick = ({ id }: any) => {
+        // @ts-ignore no need to strong type the dispatcher here
         dispatch(getLabKnowledge({ labId: id, page: 1, pageSize: 1 }));
     }
 
@@ -32,7 +33,7 @@ const Labs = () => {
         else {
             dispatch(setGroupCode({ selector: 'labs', groupCode: selection[0].coding }));
             dispatch(labKnowledgeSlice.actions.resetState());
-        } 
+        }
     }
 
     return (
@@ -52,7 +53,8 @@ const Labs = () => {
                 getter={getLabs}
                 onRowClick={handleRowClick}
             />
-            {healthData?.data &&
+            {// @ts-ignore TODO: export types from SDK so we can strong-type in places like this
+                healthData?.data &&
                 <DisplayKnowledge name="Lab" healthData={healthData} />
             }
         </>

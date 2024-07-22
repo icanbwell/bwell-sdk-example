@@ -41,7 +41,9 @@ export const DisplayKnowledge: React.FC<DisplayKnowledgeProps> = ({ name, health
                 <ToggleButton value="json">JSON</ToggleButton>
             </ToggleButtonGroup>
         </Box>
-        {showHtml && <div dangerouslySetInnerHTML={{ __html: healthData.data.resources?.map(r => r.content).join('') }} />}
+        {showHtml && healthData.data.resources && (
+          <div dangerouslySetInnerHTML={{ __html: healthData.data.resources.map(r => r.content).join('') }} />
+        )}
         {!showHtml && <pre style={{ textWrap: 'wrap' }}>{JSON.stringify(healthData, null, 2)}</pre>}
     </Container>
 }

@@ -1,18 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-import { BWellQueryResult } from "@icanbwell/bwell-sdk-ts/dist/common/results";
-import { ImmunizationGroupsResults, ImmunizationGroupsRequest } from "@icanbwell/bwell-sdk-ts";
-import { PagedRequestInput } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/api/base/requests/paged-request";
-import makeHealthDataSlice from "./makeHealthDataSlice";
+import { ImmunizationGroupsRequest } from "@icanbwell/bwell-sdk-ts";
+import { makeHealthDataSlice, PagedRequest } from "./makeHealthDataSlice";
 
 const SLICE_NAME = "immunizationGroups";
 
 export const getImmunizationGroups = createAsyncThunk(
     "labGroups/getImmunizationGroups",
-    async (inputParams: PagedRequestInput) => {
+    async (inputParams: PagedRequest) => {
         const bWellSdk = getSdk();
         return bWellSdk?.health.getImmunizationGroups(new ImmunizationGroupsRequest(inputParams));
     }
 );
 
-export const immunizationGroupsSlice = makeHealthDataSlice<BWellQueryResult<ImmunizationGroupsResults>>(SLICE_NAME, getImmunizationGroups);
+export const immunizationGroupsSlice = makeHealthDataSlice(SLICE_NAME, getImmunizationGroups);

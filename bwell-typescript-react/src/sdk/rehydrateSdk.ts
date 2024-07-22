@@ -2,7 +2,8 @@
 import { REHYDRATE } from 'redux-persist';
 import { authenticateSdk, initializeSdk } from '@/sdk/bWellSdk';
 
-const sdkMiddleware = (store) => (next) => async (action) => {
+// @ts-ignore TODO: strong-type these functions
+const sdkMiddleware = () => (next) => async (action) => {
     if (action.type === REHYDRATE) {
         //if it's a brand-new session, just set the user state to the default 
         if (!action.payload?.user) {

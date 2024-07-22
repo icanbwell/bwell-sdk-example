@@ -14,7 +14,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@icanbwell/bwell-sdk-ts": "file:.yalc/@icanbwell/bwell-sdk-ts",
+    "@icanbwell/bwell-sdk-ts": "next",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/x-data-grid": "^7.7.1",

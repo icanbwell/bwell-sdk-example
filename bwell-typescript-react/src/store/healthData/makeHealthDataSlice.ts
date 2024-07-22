@@ -1,12 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+
+export type PagedRequest = { page: number, pageSize: number };
 
 const INITIAL_STATE = {
     healthData: null,
     loading: false,
-    error: null,
+    error: null as string | null,
 };
 
-const makeHealthDataSlice = <T>(name: string, getter: Function) => {
+export const makeHealthDataSlice = (name: string, getter: { pending: any, fulfilled: any, rejected: any }) => {
     return createSlice({
         name,
         initialState: INITIAL_STATE,
@@ -22,7 +24,7 @@ const makeHealthDataSlice = <T>(name: string, getter: Function) => {
                     state.error = null;
                     state.healthData = null;
                 })
-                .addCase(getter.fulfilled, (state, action: PayloadAction<T>) => {
+                .addCase(getter.fulfilled, (state, action) => {
                     if (action.payload.error) {
                         state.error = action.payload.error.message ?? "Unknown error";
                     } else {
@@ -41,6 +43,4 @@ const makeHealthDataSlice = <T>(name: string, getter: Function) => {
                 });
         }
     });
-}
-
-export default makeHealthDataSlice;
+};

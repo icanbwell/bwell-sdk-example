@@ -25,22 +25,3 @@ It is also recommended that you run tests in a container to ensure consistent ex
 4. You are now running in a Docker container. `npm run e2e` should run the tests, and a report will open in your web browser once the tests finish running.
 
 See also: https://playwright.dev/docs/docker
-
-## How to test SDK code under development
-
-Once code in `bwell-sdk` has been merged to main, it should be testable from the published NPM package. In the event that you want to test code that has not yet merged, you'll need to publish the SDK to a local NPM registry and make sure this application uses it from there.
-
-1. Clone the `bwell-sdk` repo, checkout the branch you want to test, and make sure you can build.
-1. `npm i - g yalc`
-2. In the the `bwell-sdk` repo's root folder, run `yalc publish --push`
-4. In the root of the folder this README is in, run `yalc add @icanbwell/bwell-sdk-ts`, then `npm i`
-5. `npm run dev` 
-
-Note that this will change the `package.json` entry for `@icanbwell/bwell-sdk-ts` to something like this:
-
-`"@icanbwell/bwell-sdk-ts": "file:.yalc/@icanbwell/bwell-sdk-ts"`
-
-In order to change it back, you can run:
-
-`yalc remove @icanbwell/bwell-sdk-ts`
-`npm i`

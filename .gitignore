@@ -12,3 +12,7 @@ test-results
 .yalc
 
 yalc.lock
+
+dist
+
+dist/*

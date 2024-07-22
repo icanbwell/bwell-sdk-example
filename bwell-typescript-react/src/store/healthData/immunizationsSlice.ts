@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
-import { ImmunizationsRequest, ImmunizationsResults, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
-import { BWellQueryResult } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/common/results";
-import makeHealthDataSlice from "./makeHealthDataSlice";
+import { ImmunizationsRequest, HealthDataRequestInput } from "@icanbwell/bwell-sdk-ts";
+import { makeHealthDataSlice } from "./makeHealthDataSlice";
 
 const SLICE_NAME = "immunizations";
 
@@ -14,4 +13,4 @@ export const getImmunizations = createAsyncThunk(
     }
 );
 
-export const immunizationsSlice = makeHealthDataSlice<BWellQueryResult<ImmunizationsResults>>(SLICE_NAME, getImmunizations);
+export const immunizationsSlice = makeHealthDataSlice(SLICE_NAME, getImmunizations);

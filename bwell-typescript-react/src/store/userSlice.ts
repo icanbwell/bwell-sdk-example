@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
 import { authenticateSdk, initializeSdk } from "@/sdk/bWellSdk";
-import { OperationOutcome } from "../../.yalc/@icanbwell/bwell-sdk-ts/dist/models/operation-outcome";
 
 interface UserState {
   clientKey?: string;
@@ -19,12 +17,12 @@ export const authenticate = createAsyncThunk<
   { rejectValue: string }
 >("user/authenticate", async ({ oauthCreds }, { rejectWithValue }) => {
   try {
-    const authenticationOutcome: OperationOutcome = await authenticateSdk(oauthCreds);
+    const authenticationOutcome = await authenticateSdk(oauthCreds);
 
     const success = authenticationOutcome.success();
 
     if (!success)
-      return rejectWithValue(authenticationOutcome.message() ?? "Unknown error");
+      return rejectWithValue(authenticationOutcome.error().message ?? "Unknown error");
 
     return oauthCreds;
   } catch (error) {
@@ -43,7 +41,7 @@ export const initialize = createAsyncThunk<
   } catch (error) {
     if (typeof error === "string") return rejectWithValue(error);
 
-    return rejectWithValue(error?.message);
+    return rejectWithValue("Unable to initialize SDK");
   }
 });
 
