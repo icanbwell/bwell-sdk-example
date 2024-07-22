@@ -13,6 +13,7 @@ const WELL_FORMED_KEY_BAD_ENV = process.env.VITE_WELL_FORMED_KEY_BAD_ENV ?? "";
 
 const GENERIC_ERROR = "Error while authenticating";
 const INVALID_KEY_ERROR = "It appears there is a problem with your Client Key. Contact b.well support for further assistance.";
+const NETWORK_ERROR = "Network request failed";
 
 test("Navigating to the Initialize page works", async ({ page }) => {
     //arrange
@@ -116,7 +117,7 @@ test("Entering a well-formed valid client key with a bad environment results in 
     //assert
     const errorElement = await page.waitForSelector(initializePage.errorMessageLocator);
     const errorText = await errorElement.textContent();
-    expect(errorText).toBe(GENERIC_ERROR);
+    expect(errorText).toBe(NETWORK_ERROR);
 });
 
 test("Entering a bad client key and valid oauth credential results in an error", async ({ page }) => {

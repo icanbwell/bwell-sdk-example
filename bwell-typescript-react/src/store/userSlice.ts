@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticateSdk, initializeSdk } from "@/sdk/bWellSdk";
+import { BWellSDK } from "@icanbwell/bwell-sdk-ts";
 
 interface UserState {
   clientKey?: string;
@@ -41,7 +42,8 @@ export const initialize = createAsyncThunk<
   } catch (error) {
     if (typeof error === "string") return rejectWithValue(error);
 
-    return rejectWithValue("Unable to initialize SDK");
+    // @ts-ignore TODO: add strong typing in this block
+    return rejectWithValue(error?.message ? error.message : "Unable to initialize SDK");
   }
 });
 
