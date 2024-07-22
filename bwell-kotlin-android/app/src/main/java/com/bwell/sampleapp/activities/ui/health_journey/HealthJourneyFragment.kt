@@ -83,6 +83,7 @@ class HealthJourneyFragment : Fragment() {
         val taskRequest = TasksRequest.Builder()
             .smartSort(true)
             .status(listOf(TaskStatus.READY))
+            .activityType(listOf("care-need"))
             .page(0)
             .pageSize(100)
             .build()
