@@ -54,6 +54,7 @@ const Medications = () => {
                 onRowClick={handleRowClick}
             />
             {// @ts-ignore TODO: export types from SDK so we can strong-type in places like this
+                healthData?.data &&
                 <DisplayKnowledge name="Medication" healthData={healthData} />
             }
         </>
