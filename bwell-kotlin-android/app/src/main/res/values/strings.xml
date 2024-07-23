@@ -49,7 +49,6 @@
     <string name="shared_preferences">SHARED_PREFERENCES</string>
     <string name="fcm_device_token">FCM_DEVICE_TOKEN</string>
     <string name="fcm_device_token_registered">FCM_DEVICE_TOKEN_REGISTERED</string>
-    <string name="lee_health">LEE HEALTH</string>
     <string name="menu_login">Login</string>
     <string name="menu_home">Home</string>
     <string name="menu_data_connections">Data Connections</string>
@@ -143,10 +142,10 @@
     <string name="request_connection_for">Request a connection for </string>
     <string name="no_data_labs">We likely cannot connect to your lab at this time. Please contact support if you have any questions.</string>
     <string name="clinic_description"> <![CDATA[
-     %s will ask for your credentials and consent for b.well to retrieve your data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.
+     %s will ask for your credentials and consent for b.well to retrieve your data.
      \n   \n NOTE: Please turn off your browser\'s popup blocker in order to proceed and complete the data sync. ]]></string>
     <string name="before_search_clinics_body_txt">Search by clinic, hospital, or health system name where your healthcare provider works, not by your provider’s name.</string>
-    <string name="clinic_checkbox_txt">I attest that these are my credentials and i authorize b.well to retrive my health data for my use in Lee Health Connect</string>
+    <string name="clinic_checkbox_txt">I attest that these are my credentials and I authorize b.well to retrieve my health data.</string>
     <string name="after_search_clinics_no_data_body_txt">We didn’t find any matches for this search. Please try another clinic, hospital or health system name, and city/state.</string>
     <string name="after_search_clinics_data_body_txt">Search by clinic/medical office name, hospital name, health system name, or city/state.</string>
     <string name="connect_health_records_sub_txt">See your health records in one place by securely connecting your health information held by your insurance and providers.</string>
@@ -178,7 +177,7 @@
     <string name="overview">Overview</string>
     <string name="what_is_it">What is it ?</string>
     <string name="pricing">About Pricing ?</string>
-    <string name="note_info">NOTE: Your data will be connected into your Lee Health app for your personal use to help you manage your healthcare. Lee Health will not review your health data from these connections and will only have access to it if you have consented to share this data with Lee Health.</string>
+    <string name="note_info">NOTE: Your data will be connected into your Sandbox Health app for your personal use to help you manage your healthcare. Sandbox Health will not review your health data from these connections and will only have access to it if you have consented to share this data with Sandbox Health.</string>
     <string name="data_connection_category_insurance">Insurance</string>
     <string name="data_connection_category_providers">Providers</string>
     <string name="data_connection_category_clinics">Clinics, Hospitals and Health Systems</string>
@@ -187,7 +186,7 @@
     <string name="request_connection">Request Connection</string>
     <string name="open">Open</string>
     <string name="hapi">hapi</string>
-    <string name="clinic_info_hapi">By providing my %s credentials, I consent for b.well to retrieve my health data. b.well follows the Lee Health Connect Privacy Policy and Terms of Service.</string>
+    <string name="clinic_info_hapi">By providing my %s credentials, I consent for b.well to retrieve my health data.</string>
     <string name="disconnected">Disconnected</string>
     <string name="deleted">Deleted</string>
     <string name="procedures">Procedures</string>
