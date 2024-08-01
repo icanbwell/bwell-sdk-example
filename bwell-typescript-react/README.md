@@ -11,7 +11,9 @@ It is built with react, redux + redux toolkit, vite, and material-ui.
 
 ## How to run the tests
 
-1. `npm run e2e`
+`npm run e2e` - will use the `concurrently` npm package to run Vitest API tests and Playwright UI tests side by side.
+`npm run api-test` - will run just the Vitest API tests.
+`npm run ui-test` - will run just the Playwright UI tests.
 
 A .env file will need to be present in this directory. See .env.example for the keys that will need to be supported.
 
