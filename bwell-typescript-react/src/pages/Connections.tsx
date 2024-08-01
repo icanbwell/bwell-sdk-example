@@ -9,7 +9,7 @@ import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 const Connections = () => {
     const slice = useSelector((state: RootState) => state.connections);
 
-    const memberConnections = slice.memberConnections;
+    const { memberConnections } = slice;
 
     // @ts-ignore TODO: strong-type memberConnections
     const showTable = useSelector((state: RootState) => state.toggle["memberConnections"] ?? true) && memberConnections.data.length > 0;
@@ -22,7 +22,7 @@ const Connections = () => {
             }
             {showTable && memberConnections &&
                 // @ts-ignore TODO: strong-typing here
-                slice.memberConnections && <DataGrid rows={slice.memberConnections.data} columns={CONNECTION_COLUMNS} />
+                memberConnections.data.length && <DataGrid rows={memberConnections.data} columns={CONNECTION_COLUMNS} />
             }
             {!showTable && memberConnections &&
                 <Box>

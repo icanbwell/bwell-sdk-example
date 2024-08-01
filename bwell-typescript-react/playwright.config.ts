@@ -2,7 +2,7 @@ import { PlaywrightTestConfig } from "@playwright/test";
 
 const config: PlaywrightTestConfig = {
   // Configure Playwright the directory where tests are located
-  testDir: "e2e",
+  testDir: "e2e/ui",
   // Configure a timeout for the tests
   timeout: 15000,
   use: {
