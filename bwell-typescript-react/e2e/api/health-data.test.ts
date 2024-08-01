@@ -5,7 +5,7 @@ const DEFAULT_KEY = process.env.VITE_DEFAULT_KEY ?? "";
 const DEFAULT_OAUTH_CREDS = process.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
 
 describe("SDK Health Data", () => {
-    it("should fetch allergy intolerances with an empty code", async () => {
+    it("should fail validation if given an empty code", async () => {
         const sdk = new BWellSDK({
             clientKey: DEFAULT_KEY,
         });
