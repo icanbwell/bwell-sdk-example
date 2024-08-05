@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
 import com.bwell.common.models.domain.consent.enums.ConsentStatus
+import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.core.config.types.BWellConfig
 import com.bwell.core.config.types.KeyStoreConfig
 import com.bwell.core.config.types.LogLevel
@@ -21,6 +22,10 @@ import com.bwell.core.config.types.RetryPolicy
 import com.bwell.core.network.auth.Credentials
 import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+import com.bwell.healthdata.requests.fhir.FhirRequest
+import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
+import com.bwell.healthdata.requests.fhir.GetFhirSearchDateValue
+import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.singletons.BWellSdk
@@ -31,6 +36,8 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Properties
 
 
@@ -191,6 +198,26 @@ class LoginFragment : Fragment() {
                 .provision(ConsentProvisionType.PERMIT)
                 .build()
             createConsent(createConsentRequest)
+
+            val dateFormat = SimpleDateFormat("yyyy")
+            val request = FhirRequest.Builder()
+                .resourceType(ResourceType.OBSERVATION)
+                .lastUpdated(
+                    GetFhirSearchDate.Builder()
+                        .greaterThan(dateFormat.parse("2024"))
+                        .build()
+                )
+                .ids(listOf(
+                    "0140f1fc-8238-4484-bb47-ce25576ceaf6",
+                    "0a5c8f76-34ee-43b9-b287-613d85aca46f",
+                    "10007066-ea16-4aca-8f5f-947024127bf4",
+                    "11d17c4a-fa6c-4bf4-83a6-877d647f440c"
+                ))
+                .page(1)
+                .pageSize(2)
+                .build()
+            val result = BWellSdk.health.getFhir(request)
+            println(result.toString())
 
             Log.i(TAG, "Finished initializing SDK")
 
