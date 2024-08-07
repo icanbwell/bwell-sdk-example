@@ -24,7 +24,6 @@ import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.healthdata.requests.fhir.FhirRequest
 import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
-import com.bwell.healthdata.requests.fhir.GetFhirSearchDateValue
 import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -208,13 +207,15 @@ class LoginFragment : Fragment() {
                         .build()
                 )
                 .ids(listOf(
-                    "0140f1fc-8238-4484-bb47-ce25576ceaf6",
-                    "0a5c8f76-34ee-43b9-b287-613d85aca46f",
-                    "10007066-ea16-4aca-8f5f-947024127bf4",
-                    "11d17c4a-fa6c-4bf4-83a6-877d647f440c"
+                    "5884a0f8-3d08-4077-a7fc-1817e5b8ce35",
+                    "aab81d50-e53d-45e8-a881-fc22eb2f253f",
+                    "3310e4f4-4a97-47fe-b0ed-7805421aa322",
+                    "fd3fb48c-3565-40fb-be32-9ae014ad2860",
+                    "875ff908-2ebe-46bf-8fe4-72644d7d039f",
+                    "dfd1d287-2b84-45e0-bd5f-39c8c5efca2a"
                 ))
-                .page(1)
-                .pageSize(2)
+                .page(0)
+                .pageSize(20)
                 .build()
             val result = BWellSdk.health.getFhir(request)
             println(result.toString())
