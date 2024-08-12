@@ -8,18 +8,25 @@
 import SwiftUI
 import bwell_sdk_swift
 
-struct ContentView: View {
+struct HelloWorldView: View {
     var body: some View {
         VStack {
+            Spacer()
+            
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
+            
             Text(BWellSdk().hello())
+            
+            Spacer()
+            
+            LogoutButton()
         }
         .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    HelloWorldView()
 }

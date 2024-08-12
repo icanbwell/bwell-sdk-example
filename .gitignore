@@ -11,4 +11,12 @@ test-results
 
 .yalc
 
+# Swift
+
 *.xcworkspace/
+*.xcodeproj/
+*.xcuserdata/
+
+bwell-swift-iOS/project.xcworkspace
+
+dist/
