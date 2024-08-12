@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct bwell_swift_iOSApp: App {
+    @StateObject private var router = Router()
+    @StateObject private var userManager = UserManager()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RouterView()
+                .environmentObject(router)
+                .environmentObject(userManager)
         }
     }
 }
