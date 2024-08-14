@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import bwell_sdk_swift
 
 struct HelloWorldView: View {
     var body: some View {
@@ -17,7 +16,7 @@ struct HelloWorldView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             
-            Text(BWellSdk().hello())
+            Text("Hello World")
             
             Spacer()
             

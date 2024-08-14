@@ -13,7 +13,7 @@ struct ClientKeyEntryView: View {
     @EnvironmentObject var userManager: UserManager
     
     @State private var clientKey: String = ""
-
+    
     var body: some View {
         VStack {
             Text("Welcome to b.well");
@@ -31,8 +31,10 @@ struct ClientKeyEntryView: View {
             }
             
             Button("Next") {
-                userManager.initialize(clientKey: clientKey);
-                router.navigate(to: .oauthLogin) // Default to OAuth login
+                Task {
+                    try await userManager.initialize(clientKey: clientKey);
+                    router.navigate(to: .oauthLogin) // Default to OAuth login
+                }
             }
             .padding()
             .disabled(clientKey.isEmpty) // Disable the button if clientKey is empty

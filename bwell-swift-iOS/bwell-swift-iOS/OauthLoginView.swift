@@ -23,11 +23,13 @@ struct OauthLoginView: View {
                 .keyboardType(.asciiCapable)
 
             Button("Login") {
-                do {
-                    try userManager.login(oauthToken: oauthToken)
-                    router.navigate(to: .helloWorld)
-                } catch {
-                    print("Login failed: \(error)")
+                Task {
+                    do {
+                        try await userManager.login(oauthToken: oauthToken)
+                        router.navigate(to: .helloWorld)
+                    } catch {
+                        print("Login failed: \(error)")
+                    }
                 }
             }
             .padding()
@@ -44,7 +46,6 @@ struct OauthLoginView: View {
 struct OauthLoginView_Previews: PreviewProvider {
     static var previews: some View {
         OauthLoginView()
-            .environmentObject(UserManager())
             .environmentObject(Router())
     }
 }

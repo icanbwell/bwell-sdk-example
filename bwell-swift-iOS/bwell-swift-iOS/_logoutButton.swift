@@ -29,7 +29,7 @@ struct LogoutButton: View {
 struct LogoutButton_Previews: PreviewProvider {
     static var previews: some View {
         LogoutButton()
-            .environmentObject(UserManager())
+            .environmentObject(UserManager(sdkSingleton: SdkSingleton()))
             .environmentObject(Router())
     }
 }

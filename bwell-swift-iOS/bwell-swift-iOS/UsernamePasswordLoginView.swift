@@ -28,11 +28,13 @@ struct UsernamePasswordLoginView: View {
                 .padding()
             
             Button("Login") {
-                do {
-                    try userManager.login(email: email, password: password)
-                    router.navigate(to: .helloWorld)
-                } catch {
-                    print("Login failed: \(error)")
+                Task {
+                    do {
+                        try await userManager.login(email: email, password: password)
+                        router.navigate(to: .helloWorld)
+                    } catch {
+                        print("Login failed: \(error)")
+                    }
                 }
             }
             .padding()
@@ -49,7 +51,6 @@ struct UsernamePasswordLoginView: View {
 struct UsernamePasswordLoginView_Previews: PreviewProvider {
     static var previews: some View {
         UsernamePasswordLoginView()
-            .environmentObject(UserManager())
             .environmentObject(Router())
     }
 }
