@@ -18,6 +18,7 @@
 		A67648A72C6A92ED004463E0 /* OauthLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67648A62C6A92ED004463E0 /* OauthLoginView.swift */; };
 		A67648A92C6A96D7004463E0 /* _clientKeySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67648A82C6A96D7004463E0 /* _clientKeySection.swift */; };
 		A67648AB2C6A9F3A004463E0 /* _logoutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67648AA2C6A9F3A004463E0 /* _logoutButton.swift */; };
+		A6A51B9C2C6BC0F400EB4675 /* SdkSingleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A51B9B2C6BC0F400EB4675 /* SdkSingleton.swift */; };
 		A6EC5A102C6A49AC00C52E11 /* bwell_sdk_swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6EC5A0F2C6A49AC00C52E11 /* bwell_sdk_swift.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,7 @@
 		A67648A62C6A92ED004463E0 /* OauthLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OauthLoginView.swift; sourceTree = "<group>"; };
 		A67648A82C6A96D7004463E0 /* _clientKeySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _clientKeySection.swift; sourceTree = "<group>"; };
 		A67648AA2C6A9F3A004463E0 /* _logoutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _logoutButton.swift; sourceTree = "<group>"; };
+		A6A51B9B2C6BC0F400EB4675 /* SdkSingleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SdkSingleton.swift; sourceTree = "<group>"; };
 		A6EC5A0F2C6A49AC00C52E11 /* bwell_sdk_swift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = bwell_sdk_swift.framework; path = "../../../Library/Developer/Xcode/DerivedData/bwell-sdk-swift-bbtvzdjchktoflddvasktmsnuvtx/Build/Products/Debug/bwell_sdk_swift.framework"; sourceTree = "<group>"; };
 		A6ED5B552C6A4A6F002F2678 /* bwell_sdk_swift */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = bwell_sdk_swift; path = "../../../Library/Developer/Xcode/DerivedData/bwell-sdk-swift-bbtvzdjchktoflddvasktmsnuvtx/Build/Products/Debug/bwell_sdk_swift.framework/Versions/A/bwell_sdk_swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,6 +98,7 @@
 				A67648A62C6A92ED004463E0 /* OauthLoginView.swift */,
 				A67648A82C6A96D7004463E0 /* _clientKeySection.swift */,
 				A67648AA2C6A9F3A004463E0 /* _logoutButton.swift */,
+				A6A51B9B2C6BC0F400EB4675 /* SdkSingleton.swift */,
 			);
 			path = "bwell-swift-iOS";
 			sourceTree = "<group>";
@@ -190,6 +193,7 @@
 			files = (
 				A676489F2C6A8EC3004463E0 /* UserStateManager.swift in Sources */,
 				A67648A72C6A92ED004463E0 /* OauthLoginView.swift in Sources */,
+				A6A51B9C2C6BC0F400EB4675 /* SdkSingleton.swift in Sources */,
 				7B4C72C02C3DA8E1008B1381 /* HelloWorldView.swift in Sources */,
 				A67648A32C6A91E4004463E0 /* Router.swift in Sources */,
 				A67648A12C6A90EC004463E0 /* UsernamePasswordLoginView.swift in Sources */,

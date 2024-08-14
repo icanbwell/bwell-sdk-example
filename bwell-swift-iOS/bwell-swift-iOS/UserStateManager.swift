@@ -13,28 +13,39 @@ enum LoginError: Error {
 
 class UserManager: ObservableObject {
     @Published var isLoggedIn: Bool = false
-    var clientKey: String = ""
+    public var clientKey: String = "";
     
     var email: String?
     var password: String?
     var oauthToken: String?
     
-    func initialize(clientKey: String) {
-        self.clientKey = clientKey;
+    private var sdkSingleton: SdkSingleton
+    
+    init(sdkSingleton: SdkSingleton) {
+        self.sdkSingleton = sdkSingleton
     }
-
-    func login(oauthToken: String? = nil, email: String? = nil, password: String? = nil) throws {
+    
+    func initialize(clientKey: String) async {
+        do {
+            try await sdkSingleton.configure(clientKey: clientKey)
+            self.clientKey = clientKey;
+        } catch {
+            print("Error configuring SDK: \(error)")
+        }
+    }
+    
+    func login(oauthToken: String? = nil, email: String? = nil, password: String? = nil) async throws {
         guard (oauthToken != nil || (email != nil && password != nil)) else {
             throw LoginError.missingCredentials
         }
         
+        //try await sdkSingleton.getInstance().authenticate(oauthCredentials: oauthToken, email: email, password: password)
         self.isLoggedIn = true
     }
-
+    
     func logout() {
         self.email = ""
         self.password = ""
-        self.clientKey = ""
         self.oauthToken = ""
         self.isLoggedIn = false
     }

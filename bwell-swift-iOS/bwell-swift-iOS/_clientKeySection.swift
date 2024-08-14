@@ -31,7 +31,7 @@ struct ClientKeySection: View {
 struct ClientKeySection_Previews: PreviewProvider {
     static var previews: some View {
         ClientKeySection()
-            .environmentObject(UserManager())
+            .environmentObject(UserManager(sdkSingleton: SdkSingleton()))
             .environmentObject(Router())
     }
 }
