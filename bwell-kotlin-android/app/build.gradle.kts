@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.bwell.sampleapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -67,7 +67,7 @@ android {
 dependencies {
 
     // BWell SDK Usage
-    implementation("com.bwell:bwell-sdk-kotlin:1.1.1")
+    implementation("com.bwell:bwell-sdk-kotlin:1.3.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
