@@ -1,50 +1,56 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-import { bWellSdk } from "@/sdk/bWellSdk";
-import { OperationOutcome } from "@icanbwell/bwell-sdk-ts/dist/common/models/responses";
-
-export class User {
-  id: string;
-  name: string;
-  email: string;
-
-  constructor(id: string, name: string, email: string) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-  }
-}
+import { authenticateSdk, initializeSdk } from "@/sdk/bWellSdk";
+import { BWellSDK } from "@icanbwell/bwell-sdk-ts";
 
 interface UserState {
-  userInfo: User | null;
+  clientKey?: string;
+  oauthCreds?: string;
+  isRehydrated: boolean;
+  isInitialized: boolean;
   isLoggedIn: boolean;
   loading: boolean;
   error: string | null;
 }
 
-export const loginUser = createAsyncThunk<
-  User,
+export const authenticate = createAsyncThunk<
+  string,
   { oauthCreds: string },
   { rejectValue: string }
->("user/login", async ({ oauthCreds }, { rejectWithValue }) => {
+>("user/authenticate", async ({ oauthCreds }, { rejectWithValue }) => {
   try {
-    const authenticationOutcome: OperationOutcome = await bWellSdk.authenticate({ token: oauthCreds });
+    const authenticationOutcome = await authenticateSdk(oauthCreds);
 
     const success = authenticationOutcome.success();
 
-    if (!success)      
-      return rejectWithValue(authenticationOutcome.message() ?? "Unknown error");
+    if (!success)
+      return rejectWithValue(authenticationOutcome.error().message ?? "Unknown error");
 
-    //TODO: Replace with call to b.well SDK
-    return { id: "1", name: "Kyle Wade", email: "kyle.wade@icanbwell.com" };
+    return oauthCreds;
   } catch (error) {
     return rejectWithValue("Unhandled error logging in user.");
   }
 });
 
+export const initialize = createAsyncThunk<
+  string,
+  { clientKey: string },
+  { rejectValue: string }
+>("user/initialize", async ({ clientKey }, { rejectWithValue }) => {
+  try {
+    await initializeSdk(clientKey);
+    return clientKey;
+  } catch (error) {
+    if (typeof error === "string") return rejectWithValue(error);
+
+    // @ts-ignore TODO: add strong typing in this block
+    return rejectWithValue(error?.message ? error.message : "Unable to initialize SDK");
+  }
+});
+
 const initialState: UserState = {
-  userInfo: null,
   isLoggedIn: false,
+  isRehydrated: false,
+  isInitialized: false,
   loading: false,
   error: null,
 };
@@ -52,22 +58,52 @@ const initialState: UserState = {
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    resetState: (state) => {
+      state.isInitialized = false;
+      state.isLoggedIn = false;
+      state.isRehydrated = true;
+      state.clientKey = undefined;
+      state.oauthCreds = undefined;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {
+      .addCase(authenticate.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.error = "";
+        state.isLoggedIn = false;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
+      .addCase(authenticate.fulfilled, (state, action) => {
+        state.oauthCreds = action.payload;
         state.isLoggedIn = true;
         state.loading = false;
-        state.error = null;
+        state.error = "";
       })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.error = action.payload || "Unknown error";
+      .addCase(authenticate.rejected, (state) => {
+        state.error = "Error while authenticating";
         state.loading = false;
+        state.isLoggedIn = false;
+      })
+      .addCase(initialize.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+        state.isLoggedIn = false;
+        state.isInitialized = false;
+      })
+      .addCase(initialize.fulfilled, (state, action) => {
+        state.clientKey = action.payload;
+        state.isInitialized = true;
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(initialize.rejected, (state, action) => {
+        state.error = action.payload ?? "Error while initializing";
+        state.loading = false;
+        state.isInitialized = false;
+        state.isLoggedIn = false;
+        state.clientKey = undefined;
+        state.oauthCreds = undefined;
       });
   },
 });

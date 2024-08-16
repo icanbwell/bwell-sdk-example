@@ -11,6 +11,12 @@ test-results
 
 .yalc
 
+yalc.lock
+
+dist
+dist/
+dist/*
+
 # Swift
 
 *.xcworkspace/
@@ -18,5 +24,3 @@ test-results
 *.xcuserdata/
 
 bwell-swift-iOS/project.xcworkspace
-
-dist/

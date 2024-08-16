@@ -26,7 +26,7 @@ const config: PlaywrightTestConfig = {
     port: 5173,
     // Configure Playwright to wait for the server to be ready before running the tests
     timeout: 120 * 1000
-  }
+  },
 };
 
 export default config;
