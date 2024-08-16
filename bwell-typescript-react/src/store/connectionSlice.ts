@@ -11,7 +11,7 @@ export const getMemberConnections = createAsyncThunk(
 );
 
 const INITIAL_STATE = {
-    memberConnections: null as null,
+    memberConnections: null,
     dataSource: null,
     loading: false,
     error: null as string | null,
