@@ -27,7 +27,7 @@ class UserManager: ObservableObject {
     
     func initialize(clientKey: String) async {
         do {
-            try await sdkSingleton.configure(clientKey: clientKey)
+            try await sdkSingleton.configure(clientKey: clientKey.trimmingCharacters(in: .whitespacesAndNewlines))
             self.clientKey = clientKey;
         } catch {
             print("Error configuring SDK: \(error)")

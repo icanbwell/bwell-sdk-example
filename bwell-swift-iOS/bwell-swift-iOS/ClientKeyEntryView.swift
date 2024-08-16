@@ -32,7 +32,7 @@ struct ClientKeyEntryView: View {
             
             Button("Next") {
                 Task {
-                    try await userManager.initialize(clientKey: clientKey);
+                    await userManager.initialize(clientKey: clientKey);
                     router.navigate(to: .oauthLogin) // Default to OAuth login
                 }
             }
