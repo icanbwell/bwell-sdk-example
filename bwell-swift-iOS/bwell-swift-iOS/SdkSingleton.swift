@@ -22,9 +22,13 @@ class SdkSingleton: ObservableObject {
     
     public func configure(clientKey: String) async throws {
         // TODO: make these things configurable
-        let config = BWellConfig(clientKey: clientKey, logLevel: .debug, timeout: 30, retryPolicy: nil, telemetryEnabled: false);
-        self.sdkInstance = try BWellSdk(config: config);
-        try await self.sdkInstance!.initialize();
+        do {
+            let config = BWellConfig(clientKey: clientKey, logLevel: .debug, timeout: 30, retryPolicy: nil, telemetryEnabled: false);
+            self.sdkInstance = try BWellSdk(config: config);
+            try await self.sdkInstance!.initialize();
+        } catch {
+            throw error;
+        }
     }
     
     public func getInstance() throws -> BWellSdk {

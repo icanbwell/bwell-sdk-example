@@ -47,5 +47,6 @@ struct OauthLoginView_Previews: PreviewProvider {
     static var previews: some View {
         OauthLoginView()
             .environmentObject(Router())
+            .environmentObject(UserManager(sdkSingleton: SdkSingleton()))
     }
 }
