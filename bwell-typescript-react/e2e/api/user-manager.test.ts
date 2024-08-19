@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { AuthType, BWellSDK, UpdateProfileRequest } from '@icanbwell/bwell-sdk-ts';
+import { BWellSDK, UpdateProfileRequest } from '@icanbwell/bwell-sdk-ts';
 
 const DEFAULT_KEY = process.env.VITE_DEFAULT_KEY ?? "";
 const DEFAULT_OAUTH_CREDS = process.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
@@ -51,7 +51,6 @@ describe("Username/Password Authentication", () => {
     it("Should work with valid username/password", async () => {
         sdk = new BWellSDK({
             clientKey: USERNAME_PASSWORD_KEY,
-            authType: AuthType.UsernamePassword,
         });
 
         await sdk.initialize();
@@ -68,7 +67,6 @@ describe("Username/Password Authentication", () => {
     it("Should fail with invalid username/password", async () => {
         sdk = new BWellSDK({
             clientKey: USERNAME_PASSWORD_KEY,
-            authType: AuthType.UsernamePassword,
         });
 
         await sdk.initialize();
