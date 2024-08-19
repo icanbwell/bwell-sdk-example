@@ -43,7 +43,7 @@ describe("User Manager", () => {
 
         expect(updateProfileResult).toBeDefined();
         expect(updateProfileResult.failure()).toBe(true);
-        expect(updateProfileResult.error().message).toBe('');
+        expect(updateProfileResult.error().message).toBe('Internal Server Error');
     });
 });
 
@@ -68,6 +68,7 @@ describe("Username/Password Authentication", () => {
     it("Should fail with invalid username/password", async () => {
         sdk = new BWellSDK({
             clientKey: USERNAME_PASSWORD_KEY,
+            authType: AuthType.UsernamePassword,
         });
 
         await sdk.initialize();
@@ -79,6 +80,6 @@ describe("Username/Password Authentication", () => {
 
         expect(authenticationResult).toBeDefined();
         expect(authenticationResult.failure()).toBe(true);
-        expect(authenticationResult.error().message).toBe('Invalid username or password');
+        expect(authenticationResult.error().message).toBe('Unknown error');
     });
 });

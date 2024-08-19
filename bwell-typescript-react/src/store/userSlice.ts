@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticateSdk, initializeSdk } from "@/sdk/bWellSdk";
-import { BWellSDK } from "@icanbwell/bwell-sdk-ts";
 
 interface UserState {
   clientKey?: string;
