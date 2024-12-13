@@ -1,7 +1,6 @@
 package com.bwell.sampleapp.activities.ui.medicines
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,18 +86,15 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
               showOverView()
             }
             R.id.whatIsItTextView -> {
-                Log.i("console", "Knowledge getting clicked")
                showKnowledgeView()
             }
             R.id.pricingTextView -> {
-                Log.i("console", "Pricing getting clicked")
                 showPricingView()
             }
         }
     }
 
     private fun showOverView() {
-        Log.i("console",medicationId)
         binding.medicineOverviewView.medicineOverviewView.visibility = View.VISIBLE
         binding.medicineKnowledgeView.medicineKnowledgeView.visibility = View.GONE
         binding.medicinePricingView.rvPricingView.visibility = View.GONE
