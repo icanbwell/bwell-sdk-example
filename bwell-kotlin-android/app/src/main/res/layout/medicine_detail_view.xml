@@ -30,59 +30,90 @@
         app:layout_constraintTop_toTopOf="@+id/leftArrowImageView"/>
 
     <LinearLayout
+        android:id="@+id/tabs_view_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:id="@+id/tabs_view_ll"
-        android:orientation="horizontal"
         android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="3"
         app:layout_constraintStart_toStartOf="parent"
-        android:weightSum="2"
         app:layout_constraintTop_toBottomOf="@+id/leftArrowImageView">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:gravity="bottom"
-            android:layout_weight="1">
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/overviewTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/overview"
-                android:textSize="18sp"
                 android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="#0076AB"/>
+                android:text="@string/overview"
+                android:textColor="#0076AB"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
             <View
                 android:id="@+id/overviewunderline"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:background="#0076AB"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDate"/>
+                app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:gravity="bottom"
-            android:layout_weight="1">
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/whatIsItTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="@string/what_is_it"
                 android:textSize="18sp"
-                android:gravity="center"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <View
                 android:id="@+id/whatIsItunderline"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
                 android:background="#30333333"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDate"/>
+                app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/pricingTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/pricingTab"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/pricingUnderline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#30333333"
+                tools:layout_height="3dp" />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -100,6 +131,15 @@
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabs_view_ll" />
+
+    <include
+        android:id="@+id/medicine_pricing_view"
+        layout="@layout/medicine_pricing_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabs_view_ll" />
 
