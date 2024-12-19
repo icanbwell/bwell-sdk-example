@@ -227,4 +227,5 @@
     <string name="submit">Submit</string>
     <string name="request_connection_institution_required">Please enter an institution to make a connection request.</string>
     <string name="password">Password *</string>
+    <string name="pricingTab">Pricing</string>
 </resources>
