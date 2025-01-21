@@ -14,6 +14,7 @@ import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsReques
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
+import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
@@ -64,6 +65,9 @@ class HealthSummaryRepository(private val applicationContext: Context) {
                 }
                 HealthSummaryCategory.CONDITION -> {
                     BWellSdk.health.getConditionGroups(request as ConditionGroupsRequest)
+                }
+                HealthSummaryCategory.DOCUMENT_REFERENCE -> {
+                    BWellSdk.health.getDocumentReferences(request as DocumentReferencesRequest)
                 }
                 else -> {
                     null
@@ -147,6 +151,18 @@ class HealthSummaryRepository(private val applicationContext: Context) {
 
                 Log.d(TAG, "Added Health Summary Category: " + healthSummary.category.toString())
             }
+            
+            // Currently we do not have support for document reference 
+            healthSummaryCategoryList.add(
+                HealthSummaryListItems(
+                    R.drawable.baseline_person_24,
+                    R.drawable.baseline_keyboard_arrow_right_24,
+                    HealthSummaryCategory.DOCUMENT_REFERENCE,
+                    getCategoryFriendlyName(category = HealthSummaryCategory.DOCUMENT_REFERENCE),
+                    10 // Not yet Integrated
+                )
+            )
+
 
             Log.d(TAG, "Posting HealthSummary live data")
             // Post live data
@@ -180,6 +196,9 @@ class HealthSummaryRepository(private val applicationContext: Context) {
             }
             HealthSummaryCategory.VITAL_SIGNS -> {
                 return applicationContext.getString(R.string.vitals)
+            }
+            HealthSummaryCategory.DOCUMENT_REFERENCE -> {
+                return applicationContext.getString(R.string.document_references)
             }
             else -> {
                 throw IllegalStateException("Invalid category row")
