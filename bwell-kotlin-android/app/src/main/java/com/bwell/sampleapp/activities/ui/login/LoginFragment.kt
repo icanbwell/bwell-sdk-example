@@ -58,7 +58,7 @@ class LoginFragment : Fragment() {
     private val clientKey =
         "***REMOVED***"
 
-    private var oAuthCredentials: String? = null
+    private var oAuthCredentials = "***REMOVED***"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

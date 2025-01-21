@@ -23,6 +23,7 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
@@ -86,6 +87,9 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                 }
                 HealthSummaryCategory.CONDITION -> {
                     ConditionGroupsRequest.Builder().build()
+                }
+                HealthSummaryCategory.DOCUMENT_REFERENCE -> {
+                    DocumentReferencesRequest.Builder().build()
                 }
                 else -> {
                     null
