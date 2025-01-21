@@ -192,6 +192,7 @@
     <string name="procedures">Procedures</string>
     <string name="vitals">Vitals</string>
     <string name="visit_history">Visit History</string>
+    <string name="document_references">Document References</string>
     <string name="allergies">Allergies</string>
     <string name="conditions">Conditions</string>
     <string name="bodysite">Body Site</string>
