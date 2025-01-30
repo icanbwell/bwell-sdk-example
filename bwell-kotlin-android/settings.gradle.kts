@@ -11,10 +11,10 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         // BWell SDK Usage
-         mavenLocal() //uncomment after running `./gradlew publishToMavenLocal` in the SDK for testing
-//       maven {
-//           url = uri("https://artifacts.icanbwell.com/repository/bwell-sdk-snapshot/")
-//       }
+//         mavenLocal() //uncomment after running `./gradlew publishToMavenLocal` in the SDK for testing
+       maven {
+           url = uri("https://artifacts.icanbwell.com/repository/bwell-sdk-snapshot/")
+       }
     }
 }
 
