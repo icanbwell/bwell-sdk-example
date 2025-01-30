@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.activities.ui.medicines
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Coding
+import com.bwell.common.models.domain.healthdata.medication.MedicationDispense
 import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.medication.requests.MedicationDispenseQueryRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationRequestRequest
 import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -25,9 +29,11 @@ import com.bwell.sampleapp.databinding.MedicineDetailViewBinding
 import com.bwell.sampleapp.utils.formatDate
 import com.bwell.sampleapp.viewmodel.MedicineViewModelFactory
 import com.bwell.sampleapp.viewmodel.MedicinesViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.log
 
 class MedicineDetailFragment : Fragment(),View.OnClickListener {
 
@@ -64,6 +70,47 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         from = arguments?.getString("from")
 
 
+        /**
+         * Calling the medication pricing and medication dispense
+         */
+        val medicationDispenseRequest = MedicationDispenseQueryRequest.Builder()
+            .build()
+        val medicationRequestRequest = MedicationRequestRequest.Builder()
+            .build()
+        medicinesViewModel.getMedicationDispense(medicationDispenseRequest)
+        medicinesViewModel.getMedicationRequest(medicationRequestRequest)
+
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                medicinesViewModel.medicationRequestResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("MedicationRequest", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("Medication", "MedicationRequest didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+                }
+            }
+
+            launch {
+                medicinesViewModel.medicationDispenseResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("Medication", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("Medication", "MedicationDispense didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+                }
+            }
+        }
 
         showOverView()
 
