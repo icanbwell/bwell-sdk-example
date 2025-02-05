@@ -56,9 +56,9 @@ class LoginFragment : Fragment() {
     private val TAG = "LoginFragment"
 
     private val clientKey =
-        "eyJyIjoiaGNxNTloejgyNDB2MjZyMTkzIiwiZW52Ijoic3RhZ2luZyIsImtpZCI6InNhbXN1bmctc3RhZ2luZyJ9"
+        "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
 
-    private var oAuthCredentials = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF9id1Z5cUVReWloWmhNdlJrNlRWUy9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MjY3NTk2MjR9.3uxDjlozYbQg_VUEfhTBbNCAmMst-JRNvsk-h5pH7YTxoExSj9yy8jFI4wqFPGpg8rUqplPxxqMWUdDTVONQBQ"
+    private var oAuthCredentials: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
