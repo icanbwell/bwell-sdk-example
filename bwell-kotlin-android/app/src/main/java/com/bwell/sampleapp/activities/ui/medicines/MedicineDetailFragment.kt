@@ -18,7 +18,7 @@ import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.medication.requests.MedicationDispenseQueryRequest
+import com.bwell.healthdata.medication.requests.MedicationDispenseRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationPricingRequest
 import com.bwell.healthdata.medication.requests.MedicationRequestRequest
@@ -73,7 +73,7 @@ class MedicineDetailFragment : Fragment(),View.OnClickListener {
         /**
          * Calling the medication pricing and medication dispense
          */
-        val medicationDispenseRequest = MedicationDispenseQueryRequest.Builder()
+        val medicationDispenseRequest = MedicationDispenseRequest.Builder()
             .build()
         val medicationRequestRequest = MedicationRequestRequest.Builder()
             .build()

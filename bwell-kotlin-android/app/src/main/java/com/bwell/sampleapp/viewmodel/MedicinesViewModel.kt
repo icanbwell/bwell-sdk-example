@@ -9,7 +9,7 @@ import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
 import com.bwell.common.models.domain.healthdata.medication.MedicationRequest
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.medication.requests.MedicationDispenseQueryRequest
+import com.bwell.healthdata.medication.requests.MedicationDispenseRequest
 import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationPricingRequest
@@ -100,7 +100,7 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
     private val _medicationDispenseResults = MutableStateFlow<BWellResult<MedicationDispense>?>(null)
     val medicationDispenseResults: StateFlow<BWellResult<MedicationDispense>?> = _medicationDispenseResults
 
-    fun getMedicationDispense(medicationDispenseRequest: MedicationDispenseQueryRequest) {
+    fun getMedicationDispense(medicationDispenseRequest: MedicationDispenseRequest) {
         viewModelScope.launch {
             try {
                 repository?.getMedicationDispense(medicationDispenseRequest)?.collect { result ->
