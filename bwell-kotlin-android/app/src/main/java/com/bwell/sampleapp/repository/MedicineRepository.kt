@@ -9,7 +9,7 @@ import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
 import com.bwell.common.models.domain.healthdata.medication.MedicationRequest
 import com.bwell.common.models.responses.BWellResult
-import com.bwell.healthdata.medication.requests.MedicationDispenseQueryRequest
+import com.bwell.healthdata.medication.requests.MedicationDispenseRequest
 import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
 import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
@@ -57,7 +57,7 @@ class MedicineRepository(private val applicationContext: Context) {
     }
 
 
-    suspend fun getMedicationDispense(medicationDispenseRequest: MedicationDispenseQueryRequest): Flow<BWellResult<MedicationDispense>?> = flow {
+    suspend fun getMedicationDispense(medicationDispenseRequest: MedicationDispenseRequest): Flow<BWellResult<MedicationDispense>?> = flow {
         try {
             val medicationDispenseResult = BWellSdk.health.getMedicationDispense(medicationDispenseRequest)
             emit(medicationDispenseResult)
