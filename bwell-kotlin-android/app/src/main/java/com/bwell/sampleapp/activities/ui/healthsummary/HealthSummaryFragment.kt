@@ -66,8 +66,9 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
          */
         val documentReferenceRequest = DocumentReferencesRequest.Builder()
             .build()
+        // Replace the id from what is received from the document reference
         val binaryRequest = BinaryRequest.Builder()
-            .ids(listOf("Binary/4QPCDMNPf6PMktViyhqiCQ==|lhZknievmAGndyGp7qBG37PYq6Y9xWh9m2+dkYG3fYnApTzBouvTJp+lkovgfdrAvoyCUKvhLbnfGA=="))
+            .ids(listOf("4QPCDMNPf6PMktViyhqiCQ==|lhZknievmAGndyGp7qBG37PYq6Y9xWh9m2+dkYG3fYnApTzBouvTJp+lkovgfdrAvoyCUKvhLbnfGA=="))
             .build()
         healthSummaryViewModel.getDocumentReferences(documentReferenceRequest)
         healthSummaryViewModel.getBinary(binaryRequest)
@@ -142,9 +143,6 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                 HealthSummaryCategory.CONDITION -> {
                     ConditionGroupsRequest.Builder().build()
                 }
-//                HealthSummaryCategory.DOCUMENT_REFERENCE -> {
-//                    DocumentRefkerencesRequest.Builder().build()
-//                }
                 else -> {
                     null
                 }
