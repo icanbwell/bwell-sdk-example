@@ -2,12 +2,18 @@ package com.bwell.sampleapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bwell.common.models.domain.healthdata.medication.MedicationDispense
 import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.domain.healthdata.medication.MedicationKnowledge
+import com.bwell.common.models.domain.healthdata.medication.MedicationPricing
+import com.bwell.common.models.domain.healthdata.medication.MedicationRequest
 import com.bwell.common.models.domain.healthdata.medication.MedicationStatement
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.medication.requests.MedicationDispenseRequest
 import com.bwell.healthdata.medication.requests.MedicationGroupsRequest
 import com.bwell.healthdata.medication.requests.MedicationKnowledgeRequest
+import com.bwell.healthdata.medication.requests.MedicationPricingRequest
+import com.bwell.healthdata.medication.requests.MedicationRequestRequest
 import com.bwell.healthdata.medication.requests.MedicationStatementsRequest
 import com.bwell.sampleapp.repository.MedicineRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,6 +74,53 @@ class MedicinesViewModel(private val repository: MedicineRepository?) : ViewMode
             try {
                 repository?.getMedicationKnowledge(medicationKnowledgeRequest)?.collect { result ->
                     _medicationKnowledgeResults.emit(result)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
+
+
+    private val _medicationPricingResults = MutableStateFlow<BWellResult<MedicationPricing>?>(null)
+    val medicationPricingResults: StateFlow<BWellResult<MedicationPricing>?> = _medicationPricingResults
+
+    fun getMedicationPricing(medicationPricingRequest: MedicationPricingRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getMedicationPricing(medicationPricingRequest)?.collect { result ->
+                    _medicationPricingResults.emit(result)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
+
+    private val _medicationDispenseResults = MutableStateFlow<BWellResult<MedicationDispense>?>(null)
+    val medicationDispenseResults: StateFlow<BWellResult<MedicationDispense>?> = _medicationDispenseResults
+
+    fun getMedicationDispense(medicationDispenseRequest: MedicationDispenseRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getMedicationDispense(medicationDispenseRequest)?.collect { result ->
+                    _medicationDispenseResults.emit(result)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
+
+
+    private val _medicationRequestResults = MutableStateFlow<BWellResult<MedicationRequest>?>(null)
+    val medicationRequestResults: StateFlow<BWellResult<MedicationRequest>?> = _medicationRequestResults
+
+    fun getMedicationRequest(medicationRequestRequest: MedicationRequestRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getMedicationRequest(medicationRequestRequest)?.collect { result ->
+                    _medicationRequestResults.emit(result)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any

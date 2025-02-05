@@ -3,8 +3,12 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bwell.common.models.domain.healthdata.common.Binary
+import com.bwell.common.models.domain.healthdata.healthsummary.documentreference.DocumentReference
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
+import com.bwell.healthdata.requests.binary.BinaryRequest
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.repository.HealthSummaryRepository
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +56,39 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
             }
         }
     }
+
+    private val _documentReferencesResults = MutableStateFlow<BWellResult<DocumentReference>?>(null)
+    val documentReferenceRequestResults: StateFlow<BWellResult<DocumentReference>?> = _documentReferencesResults
+    fun getDocumentReferences(documentReferenceRequest: DocumentReferencesRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getDocumentReference(documentReferenceRequest)?.collect { result ->
+                    _documentReferencesResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
+
+
+    private val _binaryResults = MutableStateFlow<BWellResult<Binary>?>(null)
+    val binaryResults: StateFlow<BWellResult<Binary>?> = _binaryResults
+    fun getBinary(binaryRequest: BinaryRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getBinary(binaryRequest)?.collect { result ->
+                    _binaryResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
+
+
+
+
 
     override fun onCleared() {
         super.onCleared()

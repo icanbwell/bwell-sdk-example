@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bwell.common.models.domain.healthdata.common.Binary
+import com.bwell.common.models.domain.healthdata.healthsummary.documentreference.DocumentReference
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.HealthSummary
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
@@ -14,6 +16,7 @@ import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsReques
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
+import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
@@ -22,6 +25,7 @@ import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequ
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
+import com.bwell.healthdata.requests.binary.BinaryRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.model.HealthSummaryListItems
@@ -39,6 +43,26 @@ class HealthSummaryRepository(private val applicationContext: Context) {
 
     fun cancelScope(){
         repositoryScope.cancel()
+    }
+
+
+    suspend fun getDocumentReference(documentReferencesRequest: DocumentReferencesRequest): Flow<BWellResult<DocumentReference>?> = flow {
+        try {
+            val documentReferenceResult = BWellSdk.health.getDocumentReferences(documentReferencesRequest)
+            emit(documentReferenceResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+
+    suspend fun getBinary(binaryRequest: BinaryRequest): Flow<BWellResult<Binary>?> = flow {
+        try {
+            val binaryResult = BWellSdk.health.getBinary(binaryRequest)
+            emit(binaryResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
     }
 
     suspend fun <T : Any> getHealthSummaryGroupData(request: T?, category: HealthSummaryCategory?): Flow<BWellResult<Any>?> = flow {
@@ -147,7 +171,7 @@ class HealthSummaryRepository(private val applicationContext: Context) {
 
                 Log.d(TAG, "Added Health Summary Category: " + healthSummary.category.toString())
             }
-
+            
             Log.d(TAG, "Posting HealthSummary live data")
             // Post live data
             healthSummaryLiveData.postValue(HealthSummaryList(healthSummaryCategoryList))
