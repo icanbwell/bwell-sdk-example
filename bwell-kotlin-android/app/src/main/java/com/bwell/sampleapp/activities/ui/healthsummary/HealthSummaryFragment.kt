@@ -2,6 +2,7 @@ package com.bwell.sampleapp.activities.ui.healthsummary
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,10 +24,12 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
+import com.bwell.healthdata.requests.binary.BinaryRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.medicines.MedicineDetailFragment
@@ -56,6 +59,59 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             setHealthSummaryAdapter(it.healthSummaryList)
         }
         binding.healthSummaryCategoriesDataView.leftArrowImageView.setOnClickListener(this)
+
+
+        /**
+         * Calling the getDocumentReference and getBinary
+         */
+        val documentReferenceRequest = DocumentReferencesRequest.Builder()
+            .build()
+        // Replace the id from what is received from the document reference
+        val binaryRequest = BinaryRequest.Builder()
+            .ids(listOf("4QPCDMNPf6PMktViyhqiCQ==|lhZknievmAGndyGp7qBG37PYq6Y9xWh9m2+dkYG3fYnApTzBouvTJp+lkovgfdrAvoyCUKvhLbnfGA=="))
+            .build()
+        healthSummaryViewModel.getDocumentReferences(documentReferenceRequest)
+        healthSummaryViewModel.getBinary(binaryRequest)
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.documentReferenceRequestResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("DocumentReference", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("DocumentReference", "DocumentReference didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.binaryResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("getBinary", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("getBinary", "getBinary didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+
         return root
     }
 
