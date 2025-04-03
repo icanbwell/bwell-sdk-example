@@ -1,20 +1,26 @@
 package com.bwell.sampleapp.activities.ui.login
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
 import com.bwell.common.models.domain.consent.enums.ConsentStatus
-import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.core.config.types.BWellConfig
 import com.bwell.core.config.types.KeyStoreConfig
 import com.bwell.core.config.types.LogLevel
@@ -36,7 +42,6 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.InputStream
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Properties
 
 
@@ -55,9 +60,12 @@ class LoginFragment : Fragment() {
 
     private val TAG = "LoginFragment"
 
-    private val clientKey =
-        "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
+    private lateinit var webView: WebView
+    private lateinit var buttonLaunchEmbeddable: Button
 
+    // UPDATE THESE VALUES
+    private val embeddableVersion = null // eg "1.576.1"
+    private val clientKey = null
     private var oAuthCredentials: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +109,168 @@ class LoginFragment : Fragment() {
 
 //            progressBar.visibility =View.GONE
         }
+
+        // Initialize WebView
+        webView = view.findViewById(R.id.embeddableWebView)
+        setupWebView()
+
+        // Initialize Launch Embeddable Button
+        buttonLaunchEmbeddable = view.findViewById(R.id.buttonLaunchEmbeddable)
+        buttonLaunchEmbeddable.setOnClickListener {
+            launchEmbeddableWebView(
+                clientKey = editTextClientKey.text.toString().trim(),
+                oAuthCredentials = editTextOAuthCredentials.text.toString().trim()
+            )
+        }
+    }
+
+    private fun setupWebView() {
+        webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            loadWithOverviewMode = true
+            useWideViewPort = true
+            builtInZoomControls = true
+            displayZoomControls = false
+        }
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                Log.d(TAG, "Page started loading: $url")
+                // Show loading indicator if needed
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                Log.d(TAG, "Page finished loading: $url")
+                // Hide loading indicator if needed
+            }
+        }
+
+        // Optional: Add error handling
+        webView.webChromeClient = object : WebChromeClient() {
+            fun onReceivedError(
+                view: WebView?,
+                errorCode: Int,
+                description: String?,
+                failingUrl: String?
+            ) {
+                Log.e(TAG, "WebView error: $description")
+                // Handle error (e.g., show error message)
+            }
+        }
+    }
+
+    private fun launchEmbeddableWebView(clientKey: String, oAuthCredentials: String) {
+        // Check if we have valid credentials before launching
+
+
+        // Validate credentials
+        if (clientKey.isEmpty() || oAuthCredentials.isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "Please enter valid Client Key and OAuth Credentials",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        // Make WebView visible
+        webView.visibility = View.VISIBLE
+
+        // Prepare the HTML with embedded BWell SDK script
+        val embeddableHtml = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>BWell Embeddable</title>
+            <script src="https://embeddables.prod.icanbwell.com/composite/${embeddableVersion}/loader/index.js"></script>
+        </head>
+        <body>
+            <div id="bwell-container"></div>
+            <script>
+                // Initialize BWell SDK
+                async function initBWell() {
+                    try {
+                        // Initialize the app experience
+                        await bwell.init('$clientKey');
+                        
+                        // Set user token
+                        await bwell.setUserToken('$oAuthCredentials');
+                        
+                    } catch (error) {
+                        // Handle initialization errors
+                        window.Android.onError(error.toString());
+                    }
+                }
+
+                // Call initialization when page loads
+                window.addEventListener('load', initBWell);
+            </script>
+            <bwell-composite />
+        </body>
+        </html>
+    """.trimIndent()
+
+        // Configure WebView settings
+        webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            loadWithOverviewMode = true
+            useWideViewPort = true
+        }
+
+        // Set up WebView client
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                Log.d(TAG, "Embeddable page loaded")
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                Log.e(TAG, "WebView error: ${error.toString()}")
+            }
+        }
+
+        // Load the HTML content
+        webView.loadDataWithBaseURL(
+            "https://mobile.prod.icanbwell.com", // Mock URL for a valid baseUrl
+            embeddableHtml,
+            "text/html",
+            "UTF-8",
+            null
+        )
+    }
+
+    // Optional: Handle back navigation
+    fun onBackPressed(): Boolean {
+        return if (webView.visibility == View.VISIBLE && webView.canGoBack()) {
+            webView.goBack()
+            true
+        } else {
+            false
+        }
+    }
+
+    // Lifecycle management
+    override fun onPause() {
+        super.onPause()
+        webView.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webView.onResume()
+    }
+
+    // Clean up WebView to prevent memory leaks
+    override fun onDestroyView() {
+        webView.destroy()
+        super.onDestroyView()
     }
 
     private fun getOAuthToken() {

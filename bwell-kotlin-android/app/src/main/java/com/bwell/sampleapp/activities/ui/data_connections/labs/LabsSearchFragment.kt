@@ -57,7 +57,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
         val searchTerm = ""
         val request = ProviderSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .organizationTypeFilters(listOf(OrganizationType.LABORATORY))
+            .organizationTypeFilters(listOf(OrganizationType.PHARMACY))
             .build()
 
         dataConnectionLabsViewModel.searchConnections(request)
