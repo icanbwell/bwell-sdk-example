@@ -38,7 +38,12 @@ import com.bwell.user.requests.consents.ConsentCreateRequest
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 import java.text.SimpleDateFormat
@@ -63,8 +68,8 @@ class LoginFragment : Fragment() {
     private lateinit var webView: WebView
     private lateinit var buttonLaunchEmbeddable: Button
 
-    // UPDATE THESE VALUES
-    private val embeddableVersion = null // eg "1.576.1"
+    private val embeddableVersion = "latest" // NOTE: Set to `latest` which can be breaking. Please pin to an exact version in production use.
+    private val bootstrapApiURL = "https://api-gateway.client-sandbox.icanbwell.com/identity" // NOTE: Defaults to bwell `client-sandbox` environment
     private val clientKey = null
     private var oAuthCredentials: String? = null
 
@@ -97,17 +102,11 @@ class LoginFragment : Fragment() {
         // Initialize the button
         val button: Button = view.findViewById(R.id.buttonLogin)
         button.setOnClickListener {
-            Log.i(TAG, "Login Button Clicked")
-            val progressBar = view.findViewById<ProgressBar>(R.id.progressBarLogin)
-            progressBar.visibility = View.VISIBLE // To show the progress bar
-
             // Call the function when the button is pressed
             onButtonPressed(
                 clientKey = editTextClientKey.text.toString().trim(),
                 oAuthCredentials = editTextOAuthCredentials.text.toString().trim()
             )
-
-//            progressBar.visibility =View.GONE
         }
 
         // Initialize WebView
@@ -137,12 +136,12 @@ class LoginFragment : Fragment() {
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 Log.d(TAG, "Page started loading: $url")
-                // Show loading indicator if needed
+                // TODO: Show loading indicator if needed
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 Log.d(TAG, "Page finished loading: $url")
-                // Hide loading indicator if needed
+                // TODO: Hide loading indicator if needed
             }
         }
 
@@ -158,92 +157,123 @@ class LoginFragment : Fragment() {
                 // Handle error (e.g., show error message)
             }
         }
+        // Optional: Enable Webview Debugging
+        WebView.setWebContentsDebuggingEnabled(true)
     }
 
     private fun launchEmbeddableWebView(clientKey: String, oAuthCredentials: String) {
-        // Check if we have valid credentials before launching
+        lifecycleScope.launch {
+            // Validate credentials
+            if (clientKey.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please enter valid Client Key",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
 
+            // Determine the auth strategy
+            var authStrategy: String? = "credential"
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                .url("$bootstrapApiURL/admin/bootstrap")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("ClientKey", clientKey)
+                .build()
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    client.newCall(request).execute()
+                }
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    if (!responseBody.isNullOrBlank()) {
+                        val jsonObject = JSONObject(responseBody)
+                        authStrategy = jsonObject.getJSONObject("embeddableConfiguration").getString("authStrategy")
 
-        // Validate credentials
-        if (clientKey.isEmpty() || oAuthCredentials.isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                "Please enter valid Client Key and OAuth Credentials",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
-
-        // Make WebView visible
-        webView.visibility = View.VISIBLE
-
-        // Prepare the HTML with embedded BWell SDK script
-        val embeddableHtml = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>BWell Embeddable</title>
-            <script src="https://embeddables.prod.icanbwell.com/composite/${embeddableVersion}/loader/index.js"></script>
-        </head>
-        <body>
-            <div id="bwell-container"></div>
-            <script>
-                // Initialize BWell SDK
-                async function initBWell() {
-                    try {
-                        // Initialize the app experience
-                        await bwell.init('$clientKey');
-                        
-                        // Set user token
-                        await bwell.setUserToken('$oAuthCredentials');
-                        
-                    } catch (error) {
-                        // Handle initialization errors
-                        window.Android.onError(error.toString());
+                        if (authStrategy == "jwe" && oAuthCredentials.isBlank()) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please enter valid OAuth Credentials",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@launch
+                        }
                     }
+                    // Handle the successful response
+                    println(responseBody)
+                } else {
+                    throw IOException("HTTP error: ${response.code}")
+                }
+            } catch (e: IOException) {
+                Log.e(TAG, "Error querying for client configuration.")
+                Toast.makeText(
+                    requireContext(),
+                    "Error querying for client configuration. Make sure Client Key is valid.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+
+            // Make WebView visible
+            webView.visibility = View.VISIBLE
+
+            // Prepare the HTML with embedded BWell SDK script
+            val embeddableHtml = """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <title>BWell Embeddable</title>
+                    <script src="https://embeddables.prod.icanbwell.com/composite/${embeddableVersion}/loader/index.js"></script>
+                </head>
+                <body style="margin: 0;">
+                    <script>
+                        // Initialize BWell SDK
+                        async function initBWell() {
+                            try {
+                                // Initialize the app experience
+                                await bwell.init('$clientKey');
+                                ${if (authStrategy == "jwe") "await bwell.setUserToken('$oAuthCredentials');" else ""}
+                            } catch (error) {
+                                // Handle initialization errors
+                                window.Android.onError(error.toString());
+                            }
+                        }
+        
+                        // Call initialization when page loads
+                        window.addEventListener('load', initBWell);
+                    </script>
+                    <bwell-composite />
+                </body>
+                </html>
+            """.trimIndent()
+
+            // Set up WebView client
+            webView.webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    Log.d(TAG, "Embeddable page loaded")
                 }
 
-                // Call initialization when page loads
-                window.addEventListener('load', initBWell);
-            </script>
-            <bwell-composite />
-        </body>
-        </html>
-    """.trimIndent()
-
-        // Configure WebView settings
-        webView.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            loadWithOverviewMode = true
-            useWideViewPort = true
-        }
-
-        // Set up WebView client
-        webView.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) {
-                Log.d(TAG, "Embeddable page loaded")
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
+                    Log.e(TAG, "WebView error: ${error.toString()}")
+                }
             }
 
-            override fun onReceivedError(
-                view: WebView?,
-                request: WebResourceRequest?,
-                error: WebResourceError?
-            ) {
-                Log.e(TAG, "WebView error: ${error.toString()}")
-            }
+            // Load the HTML content
+            webView.loadDataWithBaseURL(
+                "https://mobile.prod.icanbwell.com", // Mock URL for a valid baseUrl
+                embeddableHtml,
+                "text/html",
+                "UTF-8",
+                null
+            )
         }
-
-        // Load the HTML content
-        webView.loadDataWithBaseURL(
-            "https://mobile.prod.icanbwell.com", // Mock URL for a valid baseUrl
-            embeddableHtml,
-            "text/html",
-            "UTF-8",
-            null
-        )
     }
 
     // Optional: Handle back navigation
@@ -290,8 +320,20 @@ class LoginFragment : Fragment() {
         clientKey: String,
         oAuthCredentials: String
     ) {
+        Log.i(TAG, "Login Button Clicked")
 
-        // Add your function logic here
+        if (clientKey.isEmpty() || oAuthCredentials.isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "Please enter valid Client Key and OAuth Credentials",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val progressBar = view?.findViewById<ProgressBar>(R.id.progressBarLogin)
+        progressBar?.visibility = View.VISIBLE // To show the progress bar
+
         initializeBWellSDK(
             clientKey,
             oAuthCredentials
