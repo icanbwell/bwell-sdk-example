@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.activities.ui.profile
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
@@ -9,6 +10,7 @@ import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.user.requests.consents.ConsentCreateRequest
+import com.bwell.user.requests.createVerificationUrl.CreateVerificationUrlRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -31,6 +33,19 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     }
 
     fun fetchData() {
+        viewModelScope.launch {
+            try {
+                val request = CreateVerificationUrlRequest.Builder().callbackUrl("https://app.staging.icanbwell.com/bwell_demo/#/create-account/ial2-callback").build()
+                repository?.createVerificationUrl(request)?.collect({
+                    if(it is BWellResult.SingleResource<String>) {
+                        Log.i("result", it.data.toString())
+                    }
+                })
+            }catch (e: Exception) {
+                // Handle errors
+            }
+        }
+
         viewModelScope.launch {
             try {
                 repository?.fetchUserProfile()?.collect{
