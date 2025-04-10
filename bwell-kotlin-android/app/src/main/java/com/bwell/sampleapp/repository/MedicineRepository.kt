@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MedicineRepository(private val applicationContext: Context) {
-
     suspend fun getMedicationGroups(medicationRequest: MedicationGroupsRequest?): Flow<BWellResult<MedicationGroup>?> = flow {
         try {
             val medicationGroupsResult = BWellSdk.health?.getMedicationGroups(medicationRequest)

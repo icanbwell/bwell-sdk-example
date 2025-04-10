@@ -19,6 +19,7 @@ import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.user.requests.consents.ConsentCreateRequest
+import com.bwell.user.requests.createVerificationUrl.CreateVerificationUrlRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -61,6 +62,11 @@ class Repository(private val applicationContext: Context) {
     suspend fun createConsent(consent: ConsentCreateRequest): Flow<BWellResult<Consent>?> = flow {
         var operationOutcome: BWellResult<Consent>? = BWellSdk.user?.createConsent(consent)
         emit(operationOutcome)
+    }
+
+    suspend fun createVerificationUrl(request: CreateVerificationUrlRequest): Flow<BWellResult<String>?> = flow {
+        val verificationUrl = BWellSdk.user.createVerificationUrl(request)
+        emit(verificationUrl)
     }
 
     suspend fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest): Flow<OperationOutcome?> = flow {
