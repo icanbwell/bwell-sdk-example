@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.user.Person
+import com.bwell.common.models.domain.user.VerificationStatus.VerificationStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.user.requests.consents.ConsentCreateRequest
@@ -42,6 +43,18 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
                     }
                 })
             }catch (e: Exception) {
+                // Handle errors
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                repository?.getVerificationStatus()?.collect({
+                    if(it is BWellResult.SingleResource<VerificationStatus>) {
+                        Log.i("result", it.data.toString())
+                    }
+                })
+            } catch (e: Exception) {
                 // Handle errors
             }
         }
