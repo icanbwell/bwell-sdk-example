@@ -24,12 +24,16 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     private val _userData = MutableSharedFlow<Person?>()
     private val _consentData = MutableSharedFlow<Consent?>()
     private val _verificationStatus = MutableSharedFlow<VerificationStatus?>()
+    private val _verificationUrl = MutableSharedFlow<String?>()
 
     val userData: MutableSharedFlow<Person?>
         get() = _userData
 
     val verificationStatus: MutableSharedFlow<VerificationStatus?>
         get() = _verificationStatus
+
+    val verificationUrl: MutableSharedFlow<String?>
+        get() = _verificationUrl
 
     val consentData: MutableSharedFlow<Consent?>
         get() = _consentData
@@ -41,17 +45,19 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     fun fetchData() {
         viewModelScope.launch {
             try {
-                val request = CreateVerificationUrlRequest.Builder().callbackUrl("https://app.staging.icanbwell.com/bwell_demo/#/create-account/ial2-callback").build()
-                repository?.createVerificationUrl(request)?.collect({
-                    if(it is BWellResult.SingleResource<String>) {
-                        Log.i("result", it.data.toString())
+                repository?.fetchUserProfile()?.collect{
+                    if (it is BWellResult.SingleResource<Person>){
+                        val person = it.data
+                        _userData.emit(person)
                     }
-                })
-            }catch (e: Exception) {
+                }
+            } catch (e: Exception) {
                 // Handle errors
             }
         }
+    }
 
+    fun fetchVerificationStatus() {
         viewModelScope.launch {
             try {
                 repository?.getVerificationStatus()?.collect({
@@ -64,16 +70,19 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
                 // Handle errors
             }
         }
+    }
 
+    fun createVerificationUrl() {
         viewModelScope.launch {
             try {
-                repository?.fetchUserProfile()?.collect{
-                    if (it is BWellResult.SingleResource<Person>){
-                        val person = it.data
-                        _userData.emit(person)
+                val request = CreateVerificationUrlRequest.Builder().callbackUrl("https://app.staging.icanbwell.com/bwell_demo/#/create-account/ial2-callback").build()
+                repository?.createVerificationUrl(request)?.collect({
+                    if(it is BWellResult.SingleResource<String>) {
+                        Log.i("result", it.data.toString())
+                        _verificationUrl.emit(it.data.toString())
                     }
-                }
-            } catch (e: Exception) {
+                })
+            }catch (e: Exception) {
                 // Handle errors
             }
         }
