@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.activities.ui.profile
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -192,16 +193,21 @@ class ProfileFragment : Fragment() {
             binding.includeViewProfile.textViewVerificationStatusData.visibility = View.GONE
         } else {
             binding.includeViewProfile.textViewVerificationStatusData.text =
-                verificationStatus.status.toString() // Replace `status` with the correct property name
+                verificationStatus.status.toString()
         }
     }
 
     private fun onGetIAL2VerifiedClick(view: View) {
-
         viewLifecycleOwner.lifecycleScope.launch {
-            profileViewModel.verificationUrl.collect{
-                verificationUrl = it!!
-                Log.i("NJ-DEBUG we are getting url as ", it.toString())
+            profileViewModel.verificationUrl.collect { url ->
+                if (!url.isNullOrEmpty()) {
+                    verificationUrl = url
+                    Log.i("Opening URL: ", url)
+
+                    // Open the URL in the default browser
+                    val browserIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                    startActivity(browserIntent)
+                }
             }
         }
         profileViewModel.createVerificationUrl()

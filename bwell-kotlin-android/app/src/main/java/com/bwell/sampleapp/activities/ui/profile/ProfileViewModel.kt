@@ -75,7 +75,7 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     fun createVerificationUrl() {
         viewModelScope.launch {
             try {
-                val request = CreateVerificationUrlRequest.Builder().callbackUrl("https://app.staging.icanbwell.com/bwell_demo/#/create-account/ial2-callback").build()
+                val request = CreateVerificationUrlRequest.Builder().callbackUrl("bwell://ial2-callback").build()
                 repository?.createVerificationUrl(request)?.collect({
                     if(it is BWellResult.SingleResource<String>) {
                         Log.i("result", it.data.toString())
