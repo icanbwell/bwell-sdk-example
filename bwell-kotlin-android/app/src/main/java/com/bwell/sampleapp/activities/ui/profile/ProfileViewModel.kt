@@ -62,8 +62,10 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
             try {
                 repository?.getVerificationStatus()?.collect({
                     if(it is BWellResult.SingleResource<VerificationStatus>) {
-                        _verificationStatus.emit(it.data)
                         Log.i("result", it.data.toString())
+                        if(it.data != null) {
+                            _verificationStatus.emit(it.data)
+                        }
                     }
                 })
             } catch (e: Exception) {
