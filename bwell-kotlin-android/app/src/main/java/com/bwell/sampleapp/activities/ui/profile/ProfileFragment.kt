@@ -2,6 +2,7 @@ package com.bwell.sampleapp.activities.ui.profile
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var userData: Person
     private lateinit var verificationStaus: VerificationStatus
+    private lateinit var verificationUrl: String;
     private lateinit var selectedSex:String;
     private lateinit var selectedState:String;
 
@@ -60,6 +62,7 @@ class ProfileFragment : Fragment() {
         }
 
         profileViewModel.fetchData()
+        profileViewModel.fetchVerificationStatus()
         val leftArrowImageView: ImageView = binding.root.findViewById(R.id.leftArrowImageView)
         leftArrowImageView.setOnClickListener {
             binding.includeViewProfile.viewProfileParent.visibility= View.VISIBLE;
@@ -83,6 +86,11 @@ class ProfileFragment : Fragment() {
 
             profileViewModel.updatePersonData(updatedPerson)
             profileViewModel.createConsent()
+        }
+
+        val  getIAL2VerifiedButton : FrameLayout = binding.root.findViewById(R.id.frameLayoutIAL2Button)
+        getIAL2VerifiedButton.setOnClickListener {
+            onGetIAL2VerifiedClick(it)
         }
 
 
@@ -180,11 +188,22 @@ class ProfileFragment : Fragment() {
 
     private fun updateIAL2UI(verificationStatus: VerificationStatus?) {
         if (verificationStatus == null) {
-            binding.includeViewProfile.textViewVerificationStatusData.text =
-                resources.getString(R.string.ial2_never_verified)
+            binding.includeViewProfile.textViewIAL2Heading.visibility = View.GONE
+            binding.includeViewProfile.textViewVerificationStatusData.visibility = View.GONE
         } else {
             binding.includeViewProfile.textViewVerificationStatusData.text =
                 verificationStatus.status.toString() // Replace `status` with the correct property name
         }
+    }
+
+    private fun onGetIAL2VerifiedClick(view: View) {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.verificationUrl.collect{
+                verificationUrl = it!!
+                Log.i("NJ-DEBUG we are getting url as ", it.toString())
+            }
+        }
+        profileViewModel.createVerificationUrl()
     }
 }
