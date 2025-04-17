@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.user.Person
-import com.bwell.common.models.domain.user.VerificationStatus.VerificationStatus
+import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.user.requests.consents.ConsentCreateRequest
@@ -23,8 +23,13 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
 
     private val _userData = MutableSharedFlow<Person?>()
     private val _consentData = MutableSharedFlow<Consent?>()
+    private val _verificationStatus = MutableSharedFlow<VerificationStatus?>()
+
     val userData: MutableSharedFlow<Person?>
         get() = _userData
+
+    val verificationStatus: MutableSharedFlow<VerificationStatus?>
+        get() = _verificationStatus
 
     val consentData: MutableSharedFlow<Consent?>
         get() = _consentData
@@ -51,6 +56,7 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
             try {
                 repository?.getVerificationStatus()?.collect({
                     if(it is BWellResult.SingleResource<VerificationStatus>) {
+                        _verificationStatus.emit(it.data)
                         Log.i("result", it.data.toString())
                     }
                 })

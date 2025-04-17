@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.user.Person
+import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentProfileBinding
@@ -26,6 +27,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var userData: Person
+    private lateinit var verificationStaus: VerificationStatus
     private lateinit var selectedSex:String;
     private lateinit var selectedState:String;
 
@@ -47,6 +49,13 @@ class ProfileFragment : Fragment() {
             profileViewModel.userData.collect{
                 userData = it!!
                  updateUI(userData)
+            }
+
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.verificationStatus.collect{
+                verificationStaus = it!!
+                updateIAL2UI(verificationStaus)
             }
         }
 
@@ -169,4 +178,13 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun updateIAL2UI(verificationStatus: VerificationStatus?) {
+        if (verificationStatus == null) {
+            binding.includeViewProfile.textViewVerificationStatusData.text =
+                resources.getString(R.string.ial2_never_verified)
+        } else {
+            binding.includeViewProfile.textViewVerificationStatusData.text =
+                verificationStatus.status.toString() // Replace `status` with the correct property name
+        }
+    }
 }
