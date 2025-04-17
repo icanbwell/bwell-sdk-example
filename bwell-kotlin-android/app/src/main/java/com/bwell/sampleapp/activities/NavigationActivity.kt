@@ -2,7 +2,6 @@ package com.bwell.sampleapp.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -155,23 +154,6 @@ class NavigationActivity : AppCompatActivity() {
             } else {
                 // Directly ask for the permission
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.data?.let { uri ->
-            if (uri.host == "ial2-callback") {
-                // Handle the deep link
-                Log.i("DeepLink", "Redirected back to app with URI: $uri")
-
-                // Example: Extract query parameters if needed
-                val param = uri.getQueryParameter("paramName")
-                Log.i("DeepLink", "Query Parameter: $param")
-
-                // Perform any required action, such as navigating to a specific fragment
-               // We are not currently performing any action based on the deep link query param
             }
         }
     }
