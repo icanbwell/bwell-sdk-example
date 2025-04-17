@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.user.Person
-import com.bwell.common.models.domain.user.VerificationStatus.VerificationStatus
+import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.user.requests.consents.ConsentCreateRequest
