@@ -69,7 +69,7 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
                     }
                 })
             } catch (e: Exception) {
-                Log.e("Error", "Failed to fetch verification status: ${e.message}")
+                // Handle errors
             }
         }
     }
@@ -85,7 +85,7 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
                     }
                 })
             }catch (e: Exception) {
-                Log.e("Error", "Failed to create verification URL: ${e.message}")
+                // Handle errors
             }
         }
     }
