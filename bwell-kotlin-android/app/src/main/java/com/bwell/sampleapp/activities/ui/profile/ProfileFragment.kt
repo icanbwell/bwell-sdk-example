@@ -194,6 +194,7 @@ class ProfileFragment : Fragment() {
         } else {
             binding.includeViewProfile.textViewVerificationStatusData.text =
                 verificationStatus.status.toString()
+            binding.includeViewProfile.textViewIAL2Button.text = resources.getString(R.string.update_ial2_verified)
         }
     }
 
