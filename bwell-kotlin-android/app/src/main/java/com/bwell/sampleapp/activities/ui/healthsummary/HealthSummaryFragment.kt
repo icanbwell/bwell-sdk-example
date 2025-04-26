@@ -23,6 +23,7 @@ import com.bwell.common.models.domain.healthdata.medication.MedicationGroup
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
@@ -72,6 +73,28 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             .build()
         healthSummaryViewModel.getDocumentReferences(documentReferenceRequest)
         healthSummaryViewModel.getBinary(binaryRequest)
+
+
+        /**
+         * Calling the getCareTeams
+         */
+        val careTeamsRequest = CareTeamsRequest.Builder().page(0).pageSize(10).build()
+        healthSummaryViewModel.getCareTeams(careTeamsRequest)
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.careTeamResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("CareTeam", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("CareTeam", "CareTeam didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+                }
+            }
+        }
 
 
         viewLifecycleOwner.lifecycleScope.launch {

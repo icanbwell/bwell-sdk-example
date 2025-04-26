@@ -1,12 +1,15 @@
 package com.bwell.sampleapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.common.Binary
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
 import com.bwell.common.models.domain.healthdata.healthsummary.documentreference.DocumentReference
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
 import com.bwell.sampleapp.model.HealthSummaryList
@@ -81,13 +84,25 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
                     _binaryResults.emit(result)
                 }
             } catch (e: Exception){
-                // Handle Exceptions, if any
+                Log.e("HealthSummaryViewModel", "Error fetching binary data: ${e.message}")
             }
         }
     }
 
 
-
+    private val _careTeamResults = MutableStateFlow<BWellResult<CareTeam?>?>(null)
+    val careTeamResults: StateFlow<BWellResult<CareTeam?>?> = _careTeamResults
+    fun getCareTeams(careTeamsRequest: CareTeamsRequest?) {
+        viewModelScope.launch {
+            try {
+                repository?.getCareTeam(careTeamsRequest)?.collect { result ->
+                    _careTeamResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
 
 
     override fun onCleared() {
