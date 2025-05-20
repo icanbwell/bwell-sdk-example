@@ -138,6 +138,7 @@ class HealthSummaryRepository(private val applicationContext: Context) {
                     null
                 }
             }
+            Log.i("HealthSummaryRepository $category", "getHealthSummaryData: $healthSummaryResult")
             emit(healthSummaryResult)
         } catch (e: Exception) {
             emit(null)
