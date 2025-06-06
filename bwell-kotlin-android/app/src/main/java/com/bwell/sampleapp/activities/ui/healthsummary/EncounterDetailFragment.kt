@@ -83,7 +83,7 @@ class EncounterDetailFragment : Fragment(), View.OnClickListener {
         binding.overviewTextView.setOnClickListener(null)
 
         val lastUpdatedSearchDate = SearchDate.Builder()
-            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-01-12"))
+            .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("1900-01-12"))
             .build()
 
         val request = EncounterRequest.Builder()
@@ -100,6 +100,7 @@ class EncounterDetailFragment : Fragment(), View.OnClickListener {
                     binding.encounterOverviewView.typeValueTextView.text = encounter?.type?.firstOrNull()?.coding?.firstOrNull()?.display ?: encounter?.type?.firstOrNull()?.coding?.firstOrNull()?.code?.capitalize(
                         Locale.ROOT)
                     binding.encounterOverviewView.statusValueTextView.text = encounter?.status?.display
+                    binding.encounterOverviewView.locationsValueTextView.text = encounter?.locations?.joinToString { it?.location?.name ?: "Unknown location" } ?: "NA"
                     binding.encounterOverviewView.classValueTextView.text = encounter?.`class`?.display
                     binding.encounterOverviewView.participantValueTextView.text = encounter?.participant?.firstOrNull()?.individual?.name?.firstOrNull()?.text
                     if (!from.isNullOrBlank()) {
