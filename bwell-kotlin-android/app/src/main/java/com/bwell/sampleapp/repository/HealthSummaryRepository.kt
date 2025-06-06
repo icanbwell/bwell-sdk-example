@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.common.models.domain.healthdata.common.Binary
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
+import com.bwell.common.models.domain.healthdata.healthsummary.diagnosticreportlab.DiagnosticReportLabGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.documentreference.DocumentReference
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.HealthSummary
@@ -18,6 +19,7 @@ import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanRequest
 import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
+import com.bwell.healthdata.healthsummary.requests.diagnosticreportlab.DiagnosticReportLabGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
@@ -71,6 +73,15 @@ class HealthSummaryRepository(private val applicationContext: Context) {
         try {
             val careTeamResult = BWellSdk.health.getCareTeams(careTeamRequest)
             emit(careTeamResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+    suspend fun getDiagnosticReportLabGroup(request: DiagnosticReportLabGroupsRequest?): Flow<BWellResult<DiagnosticReportLabGroup>?> = flow {
+        try {
+            val diagnosticReportLabGroupResult = BWellSdk.health.getDiagnosticReportLabGroups(request)
+            emit(diagnosticReportLabGroupResult)
         } catch (e: Exception) {
             emit(null)
         }

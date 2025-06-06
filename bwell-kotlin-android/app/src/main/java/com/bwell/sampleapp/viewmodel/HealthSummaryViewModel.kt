@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.common.Binary
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
+import com.bwell.common.models.domain.healthdata.healthsummary.diagnosticreportlab.DiagnosticReportLabGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.documentreference.DocumentReference
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
+import com.bwell.healthdata.healthsummary.requests.diagnosticreportlab.DiagnosticReportLabGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
 import com.bwell.sampleapp.model.HealthSummaryList
@@ -52,6 +54,7 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
         viewModelScope.launch {
             try {
                 repository?.getHealthSummaryData(request, category)?.collect { result ->
+                    Log.i("Encounter", "Encounter: $result")
                     _healthSummaryResults.emit(result)
                 }
             } catch (e: Exception) {
@@ -97,6 +100,20 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
             try {
                 repository?.getCareTeam(careTeamsRequest)?.collect { result ->
                     _careTeamResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
+
+    private val _diagnosticReportLabGroupResults = MutableStateFlow<BWellResult<DiagnosticReportLabGroup?>?>(null)
+    val diagnosticReportLabGroupResults: StateFlow<BWellResult<DiagnosticReportLabGroup?>?> = _diagnosticReportLabGroupResults
+    fun getDiagnosticReportLabGroup(diagnosticReportLabGroupRequest: DiagnosticReportLabGroupsRequest?) {
+        viewModelScope.launch {
+            try {
+                repository?.getDiagnosticReportLabGroup(diagnosticReportLabGroupRequest)?.collect { result ->
+                    _diagnosticReportLabGroupResults.emit(result)
                 }
             } catch (e: Exception){
                 // Handle Exceptions, if any

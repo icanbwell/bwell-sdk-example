@@ -25,6 +25,7 @@ import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyInt
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.diagnosticreportlab.DiagnosticReportLabGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
@@ -96,6 +97,26 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             }
         }
 
+        val diagnosticReportRequest = DiagnosticReportLabGroupsRequest.Builder()
+            .page(0)
+            .pageSize(10)
+            .build()
+        healthSummaryViewModel.getDiagnosticReportLabGroup(diagnosticReportRequest)
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.diagnosticReportLabGroupResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("DiagnosticReportLab", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("DiagnosticReportLab", "DiagnosticReportLab didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
