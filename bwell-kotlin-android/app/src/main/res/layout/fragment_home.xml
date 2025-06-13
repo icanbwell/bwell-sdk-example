@@ -27,17 +27,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_name"
         />
+
+    <include
+        android:id="@+id/home_health_match_intro_view"
+        layout="@layout/health_match_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_view" />
+
+    <include
+        android:id="@+id/home_health_match_consent_view"
+        layout="@layout/health_match_consent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/home"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:layout_marginTop="10dp"
         android:text="@string/suggested_activities"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/home_view"
-         />
+        app:layout_constraintTop_toBottomOf="@id/home_health_match_intro_view" />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="0dp"
         android:layout_height="300dp"
