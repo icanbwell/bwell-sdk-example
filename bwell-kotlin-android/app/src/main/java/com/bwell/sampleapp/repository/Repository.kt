@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.user.Person
+import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
@@ -19,6 +20,7 @@ import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.user.requests.consents.ConsentCreateRequest
+import com.bwell.user.requests.createVerificationUrl.CreateVerificationUrlRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -61,6 +63,16 @@ class Repository(private val applicationContext: Context) {
     suspend fun createConsent(consent: ConsentCreateRequest): Flow<BWellResult<Consent>?> = flow {
         var operationOutcome: BWellResult<Consent>? = BWellSdk.user?.createConsent(consent)
         emit(operationOutcome)
+    }
+
+    suspend fun createVerificationUrl(request: CreateVerificationUrlRequest): Flow<BWellResult<String>?> = flow {
+        val verificationUrl = BWellSdk.user.createVerificationUrl(request)
+        emit(verificationUrl)
+    }
+
+    suspend fun getVerificationStatus(): Flow<BWellResult<VerificationStatus>> = flow {
+        val verificationStatus = BWellSdk.user.getVerificationStatus()
+        emit(verificationStatus)
     }
 
     suspend fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest): Flow<OperationOutcome?> = flow {

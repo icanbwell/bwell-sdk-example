@@ -101,6 +101,10 @@ class NavigationActivity : AppCompatActivity() {
                 navController.navigate(R.id.nav_health_journey, bundle)
             }
         }
+        val intentData = intent?.data
+        if (intentData != null && intentData.scheme == "bwell" && intentData.host == "ial2-callback") {
+            navController.navigate(R.id.nav_profile)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

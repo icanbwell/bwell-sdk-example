@@ -1,7 +1,9 @@
 package com.bwell.sampleapp.activities.ui.profile
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bwell.common.models.domain.user.Person
+import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.FragmentProfileBinding
@@ -26,6 +29,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var userData: Person
+    private lateinit var verificationStaus: VerificationStatus
+    private lateinit var verificationUrl: String;
     private lateinit var selectedSex:String;
     private lateinit var selectedState:String;
 
@@ -48,9 +53,17 @@ class ProfileFragment : Fragment() {
                 userData = it!!
                  updateUI(userData)
             }
+
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.verificationStatus.collect{
+                verificationStaus = it!!
+                updateIAL2UI(verificationStaus)
+            }
         }
 
         profileViewModel.fetchData()
+        profileViewModel.fetchVerificationStatus()
         val leftArrowImageView: ImageView = binding.root.findViewById(R.id.leftArrowImageView)
         leftArrowImageView.setOnClickListener {
             binding.includeViewProfile.viewProfileParent.visibility= View.VISIBLE;
@@ -74,6 +87,11 @@ class ProfileFragment : Fragment() {
 
             profileViewModel.updatePersonData(updatedPerson)
             profileViewModel.createConsent()
+        }
+
+        val  getIAL2VerifiedButton : FrameLayout = binding.root.findViewById(R.id.frameLayoutIAL2Button)
+        getIAL2VerifiedButton.setOnClickListener {
+            onGetIAL2VerifiedClick(it)
         }
 
 
@@ -169,4 +187,30 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun updateIAL2UI(verificationStatus: VerificationStatus?) {
+        if (verificationStatus == null) {
+            binding.includeViewProfile.textViewIAL2Heading.visibility = View.GONE
+            binding.includeViewProfile.textViewVerificationStatusData.visibility = View.GONE
+        } else {
+            binding.includeViewProfile.textViewVerificationStatusData.text =
+                verificationStatus.status.toString()
+            binding.includeViewProfile.textViewIAL2Button.text = resources.getString(R.string.update_ial2_verified)
+        }
+    }
+
+    private fun onGetIAL2VerifiedClick(view: View) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.verificationUrl.collect { url ->
+                if (!url.isNullOrEmpty()) {
+                    verificationUrl = url
+                    Log.i("Opening URL: ", url)
+
+                    // Open the URL in the default browser
+                    val browserIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                    startActivity(browserIntent)
+                }
+            }
+        }
+        profileViewModel.createVerificationUrl()
+    }
 }
