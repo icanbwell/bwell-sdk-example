@@ -77,6 +77,10 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="create_profile">Create Profile</string>
     <string name="logout">Log out</string>
+    <string name="ial2_status_heading">IAL2 Status</string>
+    <string name="ial2_never_verified">Never Verified</string>
+    <string name="get_ial2_verified">Get IAL2 Verified</string>
+    <string name="update_ial2_verified">Update IAL2 Verified</string>
     <string name="proceed">Proceed</string>
     <string name="apply_filters">Apply Filters</string>
     <string name="connect_insurance">Connect Insurance</string>
