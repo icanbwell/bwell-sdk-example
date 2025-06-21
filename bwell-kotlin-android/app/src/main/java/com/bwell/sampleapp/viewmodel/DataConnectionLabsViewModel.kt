@@ -2,9 +2,11 @@ package com.bwell.sampleapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.DataConnectionLabsRepository
+import com.bwell.search.requests.healthresource.HealthResourceSearchRequest
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +23,21 @@ class DataConnectionLabsViewModel(private val repository: DataConnectionLabsRepo
             try {
                 repository?.searchConnections(providerSearchRequest)?.collect { searchResult ->
                     _searchResults.emit(searchResult)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
+
+    private val _healthResourceSearchResults = MutableStateFlow<BWellResult<HealthResource>?>(null)
+    val healthResourceSearchResults: StateFlow<BWellResult<HealthResource>?> = _healthResourceSearchResults
+
+    fun searchHealthResources(healthResourceSearchRequest: HealthResourceSearchRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.searchHealthResources(healthResourceSearchRequest)?.collect { healthResourceSearchResult ->
+                    _healthResourceSearchResults.emit(healthResourceSearchResult)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
