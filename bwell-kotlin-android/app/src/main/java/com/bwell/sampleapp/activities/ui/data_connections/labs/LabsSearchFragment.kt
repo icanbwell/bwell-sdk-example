@@ -13,7 +13,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.common.models.domain.common.enums.Gender
+import com.bwell.common.models.domain.common.enums.SortOrder
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.common.models.domain.search.enums.HealthResourceSortField
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -25,7 +28,9 @@ import com.bwell.sampleapp.viewmodel.DataConnectionLabsViewModel
 import com.bwell.sampleapp.viewmodel.DataConnectionsLabsViewModelFactory
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.OrganizationType
+import com.bwell.common.models.domain.search.enums.SearchResultType
 import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
+import com.bwell.search.requests.healthresource.HealthResourceSearchRequest
 import kotlinx.coroutines.launch
 
 class LabsSearchFragment : Fragment(),View.OnClickListener {
@@ -54,13 +59,15 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
     }
 
     private fun getConnections() {
-        val searchTerm = ""
-        val request = ProviderSearchRequest.Builder()
+        val searchTerm = "mayo"
+        val request = HealthResourceSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .organizationTypeFilters(listOf(OrganizationType.LABORATORY))
+            .gender(Gender.UNKNOWN)
+            .location(30.2501597,-97.5410845, "78653")
+            .sortBy(HealthResourceSortField.DATA_SOURCE_RANK, SortOrder.ASC)
             .build()
 
-        dataConnectionLabsViewModel.searchConnections(request)
+        dataConnectionLabsViewModel.searchHealthResources(request)
 
         viewLifecycleOwner.lifecycleScope.launch {
             dataConnectionLabsViewModel.searchResults.collect { searchResult ->
