@@ -2,32 +2,24 @@ package com.bwell.sampleapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.bwell.common.models.domain.common.Organization
+import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.domain.search.Provider
 
 class EntityInfoViewModel : ViewModel() {
-    var provider: Provider? = null
-    var organization: Organization? = null
+    var provider: HealthResource? = null
+    var organization: HealthResource? = null
 
     fun<T> getId(entity:T?): String {
 
         when (val nonNullEntity = requireNotNull(entity) { "Entity cannot be null in OrganizationInfoFragment" }) {
-            is Organization -> {
+            is HealthResource -> {
                 val endpoint = nonNullEntity.endpoint?.filter {
                         ep -> ep?.identifier?.any {
                         id -> id?.system?.contains("connectionhub/clientconnections") ?: false }
                     ?: return "" }
                     ?.first() ?: throw Exception("No clientConnections endpoint present on Organization entity.")
 
-                return endpoint.name ?: throw Exception("No name present on Organization endpoint")
-            }
-            is Provider -> {
-                val endpoint = nonNullEntity.endpoint?.filter {
-                        ep -> ep?.identifier?.any {
-                        id -> id?.system?.contains("connectionhub/clientconnections") ?: false }
-                    ?: return "" }
-                    ?.first() ?: throw Exception("No clientConnections endpoint present on Provider entity.")
-
-                return endpoint.name ?: throw Exception("No name present on Provider endpoint")
+                return endpoint.name ?: throw Exception("No name present on Health Resource endpoint")
             }
         }
 
@@ -38,11 +30,7 @@ class EntityInfoViewModel : ViewModel() {
     fun<T> getName(entity: T?): String {
         when (val nonNullEntity =
             requireNotNull(entity) { "Entity cannot be null in OrganizationInfoFragment" }) {
-            is Organization -> {
-                return nonNullEntity.name.toString()
-            }
-
-            is Provider -> {
+            is HealthResource -> {
                 return nonNullEntity.content.toString()
             }
         }

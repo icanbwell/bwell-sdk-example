@@ -30,8 +30,11 @@ import com.bwell.sampleapp.viewmodel.ProviderViewModelFactory
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import com.bwell.common.models.domain.search.enums.SortField
 import com.bwell.common.models.domain.common.enums.SortOrder
+import com.bwell.common.models.domain.search.HealthResource
+import com.bwell.common.models.domain.search.enums.HealthResourceSortField
 import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 import com.bwell.search.requests.connection.RequestConnectionRequest
+import com.bwell.search.requests.healthresource.HealthResourceSearchRequest
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
@@ -69,7 +72,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
     }
 
 
-    override fun onOrganizationClick(organization: Organization?) {
+    override fun onOrganizationClick(organization: HealthResource?) {
         // Set the entity on the viewModel
         organizationInfoViewModel.organization = organization;
 
@@ -128,24 +131,24 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
 
 
     private fun showProvidersData(enteredText: String) {
-        val searchTerm = enteredText
-        val latitude = 39.2848102
-        val longitude = -76.702898
-        val distance = 200.0
+        val searchTerm = "gooch"
+        val latitude = 30.2501597
+        val longitude = -97.5410845
+        val distance = 1000.0
         //val gender = Gender.MALE
         val page = 0
-        val pageSize = 100
+        val pageSize = 20
 
-        val request = ProviderSearchRequest.Builder()
+        val request = HealthResourceSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .location(latitude, longitude, distance)
+            .location(latitude, longitude)
             .includePopulatedPROAonly()
-            .sortBy(SortField.DISTANCE, SortOrder.ASC)
+            .sortBy(HealthResourceSortField.DISTANCE, SortOrder.ASC)
             .page(page)
             .pageSize(pageSize)
             .build()
 
-        providerViewModel.searchProviders(request)
+        providerViewModel.searchHealthResources(request)
 
         viewLifecycleOwner.lifecycleScope.launch {
             providerViewModel.searchResults.collect { searchResult ->
@@ -158,7 +161,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
         addSearchTextListeners()
     }
 
-    private fun setProviderAdapter(searchResult: BWellResult<Provider>) {
+    private fun setProviderAdapter(searchResult: BWellResult<HealthResource>) {
         when (searchResult) {
             is BWellResult.SearchResults -> {
                 val providersList = searchResult.data
@@ -188,9 +191,9 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
                     val content = SpannableString(resources.getString(R.string.request_add_new_connection))
                     content.setSpan(UnderlineSpan(), 0, content.length, 0)
                     binding.organizationsLocationsDataView.requestConnection.text = content
-                    if(selectedList.name?.size!! > 0)
+                    if(selectedList.content?.length!! > 0)
                     {
-                        binding.organizationsLocationsDataView.headerText.text = titleText+" "+selectedList.name?.get(0)?.text.toString()+" below:"
+                        binding.organizationsLocationsDataView.headerText.text = titleText+" "+selectedList.content.toString()+" below:"
                     }
                     binding.organizationsLocationsDataView.requestConnection.setOnClickListener(this)
                 }

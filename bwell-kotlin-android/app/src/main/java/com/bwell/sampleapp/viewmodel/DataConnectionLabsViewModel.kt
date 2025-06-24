@@ -15,10 +15,10 @@ import kotlinx.coroutines.launch
 
 class DataConnectionLabsViewModel(private val repository: DataConnectionLabsRepository?) : ViewModel() {
 
-    private val _searchResults = MutableStateFlow<BWellResult<Provider>?>(null)
-    val searchResults: StateFlow<BWellResult<Provider>?> = _searchResults
+    private val _searchResults = MutableStateFlow<BWellResult<HealthResource>?>(null)
+    val searchResults: StateFlow<BWellResult<HealthResource>?> = _searchResults
 
-    fun searchConnections(providerSearchRequest: ProviderSearchRequest) {
+    /*fun searchConnections(providerSearchRequest: ProviderSearchRequest) {
         viewModelScope.launch {
             try {
                 repository?.searchConnections(providerSearchRequest)?.collect { searchResult ->
@@ -28,16 +28,13 @@ class DataConnectionLabsViewModel(private val repository: DataConnectionLabsRepo
                 // Handle exceptions, if any
             }
         }
-    }
-
-    private val _healthResourceSearchResults = MutableStateFlow<BWellResult<HealthResource>?>(null)
-    val healthResourceSearchResults: StateFlow<BWellResult<HealthResource>?> = _healthResourceSearchResults
+    }*/
 
     fun searchHealthResources(healthResourceSearchRequest: HealthResourceSearchRequest) {
         viewModelScope.launch {
             try {
                 repository?.searchHealthResources(healthResourceSearchRequest)?.collect { healthResourceSearchResult ->
-                    _healthResourceSearchResults.emit(healthResourceSearchResult)
+                    _searchResults.emit(healthResourceSearchResult)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
@@ -45,8 +42,8 @@ class DataConnectionLabsViewModel(private val repository: DataConnectionLabsRepo
         }
     }
 
-    private val _filteredResults = MutableStateFlow<List<Provider>?>(null)
-    val filteredResults: StateFlow<List<Provider>?> = _filteredResults
+    private val _filteredResults = MutableStateFlow<List<HealthResource>?>(null)
+    val filteredResults: StateFlow<List<HealthResource>?> = _filteredResults
 
     fun filterDataConnectionsLabs(query: String) {
         viewModelScope.launch {

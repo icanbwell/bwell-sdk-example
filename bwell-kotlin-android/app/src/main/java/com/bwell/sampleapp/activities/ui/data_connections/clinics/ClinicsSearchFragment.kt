@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.enums.SortOrder
+import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.domain.search.enums.OrganizationType
 import com.bwell.common.models.domain.search.enums.SortField
@@ -27,6 +28,7 @@ import com.bwell.sampleapp.utils.hideKeyboard
 import com.bwell.sampleapp.viewmodel.ClinicsViewModel
 import com.bwell.sampleapp.viewmodel.ClinicsViewModelFactory
 import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
+import com.bwell.search.requests.healthresource.HealthResourceSearchRequest
 import com.bwell.search.requests.provider.ProviderSearchRequest
 import kotlinx.coroutines.launch
 
@@ -69,14 +71,14 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
         lifecycleScope.launch {
 //            Thread.sleep(5000)
             Log.i(TAG, "Loading connections")
-            val request = ProviderSearchRequest.Builder()
+            val request = HealthResourceSearchRequest.Builder()
                 .searchTerm(searchTerm)
-                .organizationTypeFilters(listOf(OrganizationType.PROVIDER))
                 //.sortBy(SortField.CONTENT, SortOrder.ASC)
+                .includePopulatedPROAonly()
                 .page(0)
                 .pageSize(100)
                 .build()
-            clinicsViewModel.searchConnections(request)
+            clinicsViewModel.searchHealthResources(request)
             Log.i(TAG, "Finished loading connections")
             binding.progressBar.visibility = View.GONE
 
@@ -117,7 +119,7 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setDataConnectionClinicsAdapter(searchResult: BWellResult<Provider>) {
+    private fun setDataConnectionClinicsAdapter(searchResult: BWellResult<HealthResource>) {
         when (searchResult) {
             is BWellResult.SearchResults -> {
                 val connectionsList = searchResult.data
