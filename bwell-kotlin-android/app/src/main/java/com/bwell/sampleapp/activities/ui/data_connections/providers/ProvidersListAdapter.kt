@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.common.location.Location
+import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ProviderItemsViewBinding
@@ -15,7 +16,7 @@ import kotlin.math.round
 /*
 *Display the Providers List in RecyclerView
 * */
-class ProvidersListAdapter(private var launches: List<Provider>?) :
+class ProvidersListAdapter(private var launches: List<HealthResource>?) :
     RecyclerView.Adapter<ProvidersListAdapter.ViewHolder>() {
 
 
@@ -31,12 +32,12 @@ class ProvidersListAdapter(private var launches: List<Provider>?) :
     }
 
     var onEndOfListReached: (() -> Unit)? = null
-    var onItemClicked: ((Provider) -> Unit)? = null
+    var onItemClicked: ((HealthResource) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val launch = launches!![position]
-        if(launch.name?.size!! > 0)
-            holder.binding.name.text = launch.name?.get(0)?.text.toString()
+        if(launch.content?.length!! > 0)
+            holder.binding.name.text = launch.content.toString()
         else
             holder.binding.name.text = "Null Data"
         if(launch.location?.size!! > 0)
@@ -82,7 +83,7 @@ class ProvidersListAdapter(private var launches: List<Provider>?) :
     }
 
     // Add a function to update the list
-    fun updateList(newList:List<Provider>?) {
+    fun updateList(newList:List<HealthResource>?) {
         launches = newList
         notifyDataSetChanged()
     }

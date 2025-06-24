@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.enums.Gender
 import com.bwell.common.models.domain.common.enums.SortOrder
+import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.common.models.domain.search.enums.HealthResourceSortField
 import com.bwell.common.models.responses.BWellResult
@@ -59,12 +60,16 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
     }
 
     private fun getConnections() {
-        val searchTerm = "mayo"
+        val searchTerm = ""
         val request = HealthResourceSearchRequest.Builder()
             .searchTerm(searchTerm)
-            .gender(Gender.UNKNOWN)
-            .location(30.2501597,-97.5410845, "78653")
-            .sortBy(HealthResourceSortField.DATA_SOURCE_RANK, SortOrder.ASC)
+            .location(30.2501597,-97.5410845)
+            //.searchResultType(listOf(SearchResultType.PRACTITIONER))
+            .sortBy(HealthResourceSortField.RELEVANCE, SortOrder.DESC)
+            .includePopulatedPROAonly()
+
+            //.page(1)
+            //.pageSize(25)
             .build()
 
         dataConnectionLabsViewModel.searchHealthResources(request)
@@ -112,7 +117,7 @@ class LabsSearchFragment : Fragment(),View.OnClickListener {
 
 
     @SuppressLint("SetTextI18n")
-    private fun setDataConnectionLabsAdapter(searchResult: BWellResult<Provider>) {
+    private fun setDataConnectionLabsAdapter(searchResult: BWellResult<HealthResource>) {
         when (searchResult) {
             is BWellResult.SearchResults -> {
                 val connectionsList = searchResult.data
