@@ -2,7 +2,9 @@ package com.bwell.sampleapp.activities.ui.consent
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.navigation.fragment.findNavController
 import android.view.View
+import com.bwell.sampleapp.R
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.bwell.sampleapp.BWellSampleApplication
@@ -55,8 +57,11 @@ class HealthMatchConsentFragment : BottomSheetDialogFragment() {
                     // Handle success (e.g., navigate away or show success message)
                     binding.progressBar.visibility = View.GONE
                     dismiss()
-                    (parentFragment as? ConsentCallback)?.onConsentSubmitted(binding.radioPermit.isChecked)
-//                    findNavController().navigate(R.id.nav_home)
+                    // Show feedback bottom sheet
+                    if (binding.radioPermit.isChecked)
+                        showFeedbackBottomSheet(binding.radioPermit.isChecked)
+                    else
+                        findNavController().navigate(R.id.nav_home)
                 }
                 is HealthMatchConsentViewModel.ConsentState.Error -> {
                     binding.progressBar.visibility = View.GONE
@@ -99,12 +104,13 @@ class HealthMatchConsentFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun showFeedbackBottomSheet(consentGranted: Boolean) {
+        HealthMatchFeedbackFragment.newInstance(consentGranted)
+            .show(parentFragmentManager, HealthMatchFeedbackFragment.TAG)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    interface ConsentCallback {
-        fun onConsentSubmitted(granted: Boolean)
     }
 }

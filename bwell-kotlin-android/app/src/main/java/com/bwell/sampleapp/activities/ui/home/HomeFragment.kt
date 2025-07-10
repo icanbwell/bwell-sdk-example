@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.consent.HealthMatchConsentFragment
+import com.bwell.sampleapp.activities.ui.consent.HealthMatchFeedbackFragment
 import com.bwell.sampleapp.databinding.FragmentHomeBinding
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.sampleapp.viewmodel.SharedViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment(), View.OnClickListener, HealthMatchConsentFragment.ConsentCallback {
+class HomeFragment : Fragment(), View.OnClickListener, HealthMatchFeedbackFragment.ConsentCallback {
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
@@ -93,13 +93,6 @@ class HomeFragment : Fragment(), View.OnClickListener, HealthMatchConsentFragmen
 
     override fun onConsentSubmitted(granted: Boolean) {
         binding.homeHealthMatchIntroView.healthMatchView.visibility = View.GONE
-        // Handle the consent result
-        val message = if (granted) {
-            "Consent granted! You will be matched with studies."
-        } else {
-            "Consent denied. You won't be matched with studies."
-        }
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
 
 }
