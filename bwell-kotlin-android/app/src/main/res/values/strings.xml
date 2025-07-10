@@ -123,6 +123,27 @@
     <string name="get_started">Get Started</string>
     <string name="health_journey">Elevate your health journey</string>
     <string name="sub_header_home">Combine all your health records to unlock more data</string>
+    <string name="health_match">Introducing Health Match</string>
+    <string name="health_match_description">Discover clinical studies tailored to your health needs</string>
+    <string name="health_match_learn_more">Learn More</string>
+    <string name="health_match_how_it_works">How it works:</string>
+    <string name="health_match_how_it_works_desc">• It looks at your health information\n• Checks if you match any study requirements\n• Suggests studies, clinical trials or programs that might help you</string>
+    <string name="health_match_things_to_know">Important things to know:</string>
+    <string name="health_match_things_to_know_desc">Health Match will look at things like:\n\n• Your age and gender\n• Health conditions\n• Medications\n• Lab and test results\n• Device, wearable and other lifestyle details associated with your account</string>
+    <string name="health_match_participation">By joining Health Match, you\'re gaining access to personalized health insights and study recommendations based on your medical records. You have complete control to learn more about the study or program and decide which ones you want to join.</string>
+    <string name="health_match_yes">Yes, match me studies or programs</string>
+    <string name="health_match_no">No, do not match me studies or programs</string>
+    <string name="health_match_continue">Continue</string>
+    <string name="health_match_what_is">What is Health Match?</string>
+    <string name="health_match_what_is_desc">Health Match is a powerful feature in your Personal Health Record that allows you to have access to the latest clinical research and personalized health recommendations by using your consented health data to match you with relevant studies and programs.</string>
+    <string name="health_match_title">Health Match Consent</string>
+    <string name="health_match_feedback">Your privacy and data security are our top priority. You can update your preferences or opt-out at any time through your account settings.</string>
+    <string name="health_match_feedback_2">We will notify you about updates to the latest research in your areas of interest</string>
+    <string name="health_match_feedback_3">You\'ll receive notifications about matching opportunities via text, email or notifications.</string>
+    <string name="health_match_feedback_5">Your profile is securely stored</string>
+    <string name="health_match_feedback_6">What happens next:</string>
+    <string name="health_match_feedback_8">You\'re now part of a community dedicated to advancing healthcare research and improving patient outcomes. Your participation helps connect you with potentially beneficial studies, clinical trials and programs based on your personal health information.</string>
+    <string name="health_match_feedback_9">Thank you for taking this important step in your healthcare journey</string>
     <string name="search_connection_by">Search connection by</string>
     <string name="data_connections">Data Connections</string>
     <string name="health_summary">Health Summary</string>
@@ -233,4 +254,5 @@
     <string name="request_connection_institution_required">Please enter an institution to make a connection request.</string>
     <string name="password">Password *</string>
     <string name="pricingTab">Pricing</string>
+    <string name="go_to_home">Go to Home</string>
 </resources>

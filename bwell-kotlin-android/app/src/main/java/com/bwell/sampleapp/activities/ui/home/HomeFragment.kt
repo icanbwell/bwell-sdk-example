@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.activities.ui.consent.HealthMatchConsentFragment
+import com.bwell.sampleapp.activities.ui.consent.HealthMatchFeedbackFragment
 import com.bwell.sampleapp.databinding.FragmentHomeBinding
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.repository.Repository
@@ -20,7 +22,7 @@ import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
 import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : Fragment(), View.OnClickListener, HealthMatchFeedbackFragment.ConsentCallback {
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
@@ -44,11 +46,12 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         binding.seeMore.setOnClickListener(this)
         binding.homeView.btnGetStarted.setOnClickListener(this)
+        binding.homeHealthMatchIntroView.btnLearnMore.setOnClickListener(this)
 
         mainViewModel.fetchUserProfile()
         viewLifecycleOwner.lifecycleScope.launch {
             mainViewModel.userData.collect{
-                binding.userName.text = resources.getString(R.string.welcome_bwell)+" "+it?.firstName+"!"
+                binding.userName.text = resources.getString(R.string.welcome_bwell)+" "+(it?.firstName ?: "test" )+"!"
             }
         }
         return root
@@ -78,7 +81,18 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 findNavController().popBackStack(R.id.nav_home, true)
                 findNavController().navigate(R.id.nav_data_connections)
             }
+            R.id.btn_learn_more ->
+            {
+                showConsentModal()
+            }
         }
+    }
+    private fun showConsentModal() {
+        HealthMatchConsentFragment.newInstance().show(childFragmentManager, HealthMatchConsentFragment.TAG)
+    }
+
+    override fun onConsentSubmitted(granted: Boolean) {
+        binding.homeHealthMatchIntroView.healthMatchView.visibility = View.GONE
     }
 
 }
