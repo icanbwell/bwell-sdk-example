@@ -2,6 +2,14 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+This Example Application shows how the BWell SDK can be used in a React Native application by:
+
+* Initializing with a user provided client key
+* Showing SDK initialization flow
+* Showing SDK User/Password authentication flow
+* Loading a user's health summary
+* Allowing user to inspect allery intolerances
+
 ## Get started
 
 1. Install dependencies
