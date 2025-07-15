@@ -8,10 +8,12 @@ type ClientKeyState = {
   key: string,
   hasKey: boolean,
   loading: boolean,
+  error: string | null,
 }
 
 type ClientKeyValue = ClientKeyState & {
   setKey: (key: string) => Promise<void>
+  setError: (err: string | null) => void
 }
 
 export function ClientKeyProvider({ children }: PropsWithChildren) {
@@ -19,6 +21,7 @@ export function ClientKeyProvider({ children }: PropsWithChildren) {
     key: '',
     hasKey: false,
     loading: false,
+    error: null,
   });
 
   useEffect(() => {
@@ -44,6 +47,7 @@ export function ClientKeyProvider({ children }: PropsWithChildren) {
       }
 
       setKeyState({
+        error: null,
         key: stateKey,
         hasKey,
         loading: false,
@@ -51,11 +55,23 @@ export function ClientKeyProvider({ children }: PropsWithChildren) {
     })
   }, [])
 
+  const setError = (err: string | null) => {
+    setKeyState((state) => {
+      return {
+        ...state,
+        error: err,
+      }
+    })
+  }
+
   const setKey = async (key: string) => {
     try {
       console.log('setting key')
+
       await AsyncStorage.setItem(CLIENT_KEY_STORAGE_KEY, key)
-      setKeyState(() => ({
+
+      setKeyState((state) => ({
+        ...state,
         key,
         hasKey: key.length > 0,
         loading: false,
@@ -66,7 +82,7 @@ export function ClientKeyProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <ClientKeyContext.Provider value={{ ...keyState, setKey }}>
+    <ClientKeyContext.Provider value={{ ...keyState, setKey, setError }}>
       {children}
     </ClientKeyContext.Provider>
   )

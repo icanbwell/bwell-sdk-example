@@ -97,12 +97,30 @@ export function useInitSDK(): BWellSDKContextValue {
       return
     }
 
-    const sdk = new BWellSDK({
-      clientKey: clientKey.key,
-      tokenStorage: storage,
-    });
+    let sdk: BWellSDK;
 
-    sdkRef.current = sdk;
+    try {
+      sdk = new BWellSDK({
+        clientKey: clientKey.key,
+        tokenStorage: storage,
+      });
+
+      sdkRef.current = sdk;
+    } catch (e) {
+      const err = e as Error;
+      console.log(err);
+
+      clientKey.setError(err.message);
+      clientKey.setKey("");
+
+      setInitState({
+        loading: false,
+        state: false,
+        error: err,
+      });
+
+      return;
+    }
 
     const init = async () => {
       console.debug('initializing sdk')

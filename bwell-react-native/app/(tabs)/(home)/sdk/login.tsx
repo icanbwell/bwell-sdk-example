@@ -1,6 +1,15 @@
 import { useBWellSDK } from '@/components/sdk'
 import { useState } from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
+
+const styles = StyleSheet.create({
+  input: {
+    padding: 4,
+    borderWidth: 1,
+    margin: 12,
+    width: '100%',
+  }
+})
 
 export default function LoginScreen() {
   const { auth } = useBWellSDK()
@@ -9,8 +18,16 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false)
 
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 8,
+      }}
+    >
       <TextInput
+        style={styles.input}
         placeholder='email'
         textContentType='emailAddress'
         value={email}
@@ -20,6 +37,7 @@ export default function LoginScreen() {
       />
 
       <TextInput
+        style={styles.input}
         textContentType='password'
         placeholder='password'
         value={password}
