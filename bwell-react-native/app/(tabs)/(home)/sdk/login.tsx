@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 })
 
 export default function LoginScreen() {
-  const { auth } = useBWellSDK()
+  const { auth, authState } = useBWellSDK()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -50,6 +50,12 @@ export default function LoginScreen() {
         setLoading(true)
         auth(email, password)
       }} />
+
+      {authState.error !== null && (
+        <Text style={{ color: 'red' }}>
+          {authState.error.message}
+        </Text>
+      )}
 
       {loading && (
         <Text>Logging In</Text>

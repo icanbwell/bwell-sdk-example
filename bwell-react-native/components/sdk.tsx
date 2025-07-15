@@ -72,7 +72,7 @@ export type BWellSDKContextValue = {
   authState: AsyncBoolState,
   // initialize: BWellSDK['initialize']
   // isAuthed: boolean,
-  auth: (email: string, password: string) => ReturnType<BWellSDK['authenticate']>,
+  auth: (email: string, password: string) => void
   sdk: BWellSDK,
 }
 
@@ -176,11 +176,10 @@ export function useInitSDK(): BWellSDKContextValue {
 
     if (result.failure()) {
       setAuthState({ state: false, loading: false, error: result.error() })
+      return;
     }
 
     setAuthState({ state: true, loading: false, error: null })
-
-    return result
   }
 
   return {
