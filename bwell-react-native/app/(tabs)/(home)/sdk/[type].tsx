@@ -1,5 +1,5 @@
 import { useBWellSDK } from '@/components/sdk'
-import { AllergyIntolerancesGroupsResults, AllergyIntolerancesResults } from '@icanbwell/bwell-sdk-ts'
+import { AllergyIntolerancesGroupsResults } from '@icanbwell/bwell-sdk-ts'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect } from 'react'
@@ -23,7 +23,14 @@ export default function Category() {
   }
 
   return (
-    <View><Text>WUT YOU DOIN, {type}?</Text></View>
+    <View style={{
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 8,
+    }}>
+      <Text>{(type as string).toLowerCase()} not implemented. Sorry.</Text>
+    </View>
   )
 }
 

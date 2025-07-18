@@ -73,6 +73,7 @@ export type BWellSDKContextValue = {
   // initialize: BWellSDK['initialize']
   // isAuthed: boolean,
   auth: (email: string, password: string) => void
+  jwtAuth: (jwt: string) => void
   sdk: BWellSDK,
 }
 
@@ -163,7 +164,6 @@ export function useInitSDK(): BWellSDKContextValue {
     const sdk = sdkRef.current;
 
     if (sdk === undefined) {
-      console.error('SDK === undefined')
       throw new Error('SDK Uninitialized')
     }
 
@@ -182,10 +182,32 @@ export function useInitSDK(): BWellSDKContextValue {
     setAuthState({ state: true, loading: false, error: null })
   }
 
+  const jwtAuth = async (jwt: string) => {
+    const sdk = sdkRef.current;
+
+    if (sdk === undefined) {
+      throw new Error('SDK Uninitialized')
+    }
+
+    setAuthState({ loading: true, state: false, error: null })
+
+    const result = await sdk.authenticate({
+      token: jwt,
+    });
+
+    if (result.failure()) {
+      setAuthState({ state: false, loading: false, error: result.error() })
+      return;
+    }
+
+    setAuthState({ state: true, loading: false, error: null })
+  }
+
   return {
     initState,
     authState,
     auth,
+    jwtAuth,
     sdk: sdkRef.current!,
   }
 }

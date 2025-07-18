@@ -28,6 +28,7 @@ function HomeStack() {
       </View>
     )
   }
+  // <Stack.Screen name="login" options={{ title: "Log In" }} />
 
   return (
     <Stack>
@@ -36,7 +37,7 @@ function HomeStack() {
       </Stack.Protected>
 
       <Stack.Protected guard={!authState.state}>
-        <Stack.Screen name="login" options={{ title: "Log In" }} />
+        <Stack.Screen name="jwtLogin" options={{ title: "Log In" }} />
       </Stack.Protected>
     </Stack>
   )
