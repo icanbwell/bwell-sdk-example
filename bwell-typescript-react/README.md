@@ -4,6 +4,10 @@ This is a sample TypeScript Web application meant to be used in testing the b.we
 
 It is built with react, redux + redux toolkit, vite, and material-ui.
 
+## System Requirements
+- Node 22 (or higher)
+  - Install via [nvm](https://github.com/nvm-sh/nvm) or direct from [node's site](https://nodejs.org/).
+ 
 ## How to run it
 
 1. `npm i` (if you haven't run it before)
