@@ -12,7 +12,7 @@ repositories {
 
     // BWell's SDK Maven Repository
     maven {
-        url = uri("https://bwell-maven-repo.s3.amazonaws.com/")
+        url = uri("https://artifacts.icanbwell.com/repository/bwell-public/")
     }
 }
 ```
