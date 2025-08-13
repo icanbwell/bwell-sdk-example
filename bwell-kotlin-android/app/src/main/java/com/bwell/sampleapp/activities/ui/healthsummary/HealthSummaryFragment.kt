@@ -75,28 +75,6 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
         healthSummaryViewModel.getDocumentReferences(documentReferenceRequest)
         healthSummaryViewModel.getBinary(binaryRequest)
 
-
-        /**
-         * Calling the getCareTeams
-         */
-        val careTeamsRequest = CareTeamsRequest.Builder().page(0).pageSize(10).build()
-        healthSummaryViewModel.getCareTeams(careTeamsRequest)
-        viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                healthSummaryViewModel.careTeamResults.collect { result ->
-                    when(result) {
-                        is BWellResult.ResourceCollection -> {
-                            Log.i("CareTeam", result.toString())
-                        }
-
-                        else -> {
-                            Log.i("CareTeam", "CareTeam didn't return BwellResult.ResourceCollection")
-                        }
-                    }
-                }
-            }
-        }
-
         val diagnosticReportRequest = DiagnosticReportLabGroupsRequest.Builder()
             .page(0)
             .pageSize(10)

@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.data.DataSource
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.sampleapp.model.DataConnectionsClinicsList
 import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
@@ -138,7 +140,7 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
     val connectionsList: LiveData<List<Connection>> get() = _connectionsList
 
     //  process the BWellResult and update the LiveData
-    private fun processConnectionsResult(connectionsResult: BWellResult<Connection>?) {
+    private fun processMemberConnectionsResult(connectionsResult: BWellResult<Connection>?) {
         val connectionList = when (connectionsResult) {
             is BWellResult.ResourceCollection -> {
                 connectionsResult.data ?: emptyList()
@@ -153,11 +155,25 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
     fun getConnectionsAndObserve() {
         viewModelScope.launch {
             try {
-                repository?.getConnections()?.collect { connectionsResult ->
-                    processConnectionsResult(connectionsResult)
+                repository?.getMemberConnections()?.collect { connectionsResult ->
+                    processMemberConnectionsResult(connectionsResult)
                 }
             } catch (ex: Exception) {
                 Log.i(TAG, ex.toString())
+            }
+        }
+    }
+
+    private val _careTeamResults = MutableStateFlow<BWellResult<CareTeam?>?>(null)
+    val careTeamResults: StateFlow<BWellResult<CareTeam?>?> = _careTeamResults
+    fun getCareTeams(careTeamsRequest: CareTeamsRequest?) {
+        viewModelScope.launch {
+            try {
+                repository?.getCareTeams(careTeamsRequest)?.collect { result ->
+                    _careTeamResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
             }
         }
     }

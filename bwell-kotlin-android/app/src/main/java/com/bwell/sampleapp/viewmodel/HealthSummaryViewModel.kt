@@ -92,21 +92,6 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
         }
     }
 
-
-    private val _careTeamResults = MutableStateFlow<BWellResult<CareTeam?>?>(null)
-    val careTeamResults: StateFlow<BWellResult<CareTeam?>?> = _careTeamResults
-    fun getCareTeams(careTeamsRequest: CareTeamsRequest?) {
-        viewModelScope.launch {
-            try {
-                repository?.getCareTeam(careTeamsRequest)?.collect { result ->
-                    _careTeamResults.emit(result)
-                }
-            } catch (e: Exception){
-                // Handle Exceptions, if any
-            }
-        }
-    }
-
     private val _diagnosticReportLabGroupResults = MutableStateFlow<BWellResult<DiagnosticReportLabGroup?>?>(null)
     val diagnosticReportLabGroupResults: StateFlow<BWellResult<DiagnosticReportLabGroup?>?> = _diagnosticReportLabGroupResults
     fun getDiagnosticReportLabGroup(diagnosticReportLabGroupRequest: DiagnosticReportLabGroupsRequest?) {

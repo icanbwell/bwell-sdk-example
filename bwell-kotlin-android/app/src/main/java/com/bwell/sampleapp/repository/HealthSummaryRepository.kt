@@ -69,15 +69,6 @@ class HealthSummaryRepository(private val applicationContext: Context) {
         }
     }
 
-    suspend fun getCareTeam(careTeamRequest : CareTeamsRequest?): Flow<BWellResult<CareTeam>?> = flow {
-        try {
-            val careTeamResult = BWellSdk.health.getCareTeams(careTeamRequest)
-            emit(careTeamResult)
-        } catch (e: Exception) {
-            emit(null)
-        }
-    }
-
     suspend fun getDiagnosticReportLabGroup(request: DiagnosticReportLabGroupsRequest?): Flow<BWellResult<DiagnosticReportLabGroup>?> = flow {
         try {
             val diagnosticReportLabGroupResult = BWellSdk.health.getDiagnosticReportLabGroups(request)
