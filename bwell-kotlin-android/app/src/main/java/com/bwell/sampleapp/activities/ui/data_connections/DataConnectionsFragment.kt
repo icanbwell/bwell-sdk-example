@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.domain.search.Provider
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 
 
@@ -71,6 +72,27 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
 
         checkIfAnyExistingConnections()
+
+        /**
+         * Calling the getCareTeams
+         */
+        val careTeamsRequest = CareTeamsRequest.Builder().page(0).pageSize(10).build()
+        dataConnectionsViewModel.getCareTeams(careTeamsRequest)
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                dataConnectionsViewModel.careTeamResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("CareTeam", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("CareTeam", "CareTeam didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+                }
+            }
+        }
 
         return root
     }
