@@ -22,6 +22,7 @@ import com.bwell.user.requests.consents.ConsentRequest
 import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -151,12 +152,35 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         _connectionsList.value = connectionList
     }
 
+    // LiveData for the list of Connection objects
+    private val _careTeamsList = MutableLiveData<List<CareTeam>>()
+    val careTeamsList: LiveData<List<CareTeam>> get() = _careTeamsList
+
+    //  process the BWellResult and update the LiveData
+    private fun processCareTeamsResult(careTeamsResult: BWellResult<CareTeam>?) {
+        val careTeamList = when (careTeamsResult) {
+            is BWellResult.ResourceCollection -> {
+                careTeamsResult.data ?: emptyList()
+            }
+
+            else -> emptyList()
+        }
+        _careTeamsList.value = careTeamList
+    }
+
     //  get connections and observe changes
     fun getConnectionsAndObserve() {
         viewModelScope.launch {
             try {
-                repository?.getMemberConnections()?.collect { connectionsResult ->
+                val connectionsFlow = repository?.getMemberConnections() ?: return@launch
+
+                val careTeamsRequest = CareTeamsRequest.Builder().page(0).pageSize(10).build()
+                val careTeamsFlow = repository.getCareTeams(careTeamsRequest)
+                combine(connectionsFlow, careTeamsFlow) { connectionsResult, careTeamsResult ->
+                    Pair(connectionsResult, careTeamsResult)
+                }.collect { (connectionsResult, careTeamsResult) ->
                     processMemberConnectionsResult(connectionsResult)
+                    processCareTeamsResult(careTeamsResult)
                 }
             } catch (ex: Exception) {
                 Log.i(TAG, ex.toString())

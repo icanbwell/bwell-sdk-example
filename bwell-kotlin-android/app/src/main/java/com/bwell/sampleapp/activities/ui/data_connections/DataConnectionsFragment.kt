@@ -73,27 +73,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
         checkIfAnyExistingConnections()
 
-        /**
-         * Calling the getCareTeams
-         */
-        val careTeamsRequest = CareTeamsRequest.Builder().page(0).pageSize(10).build()
-        dataConnectionsViewModel.getCareTeams(careTeamsRequest)
-        viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                dataConnectionsViewModel.careTeamResults.collect { result ->
-                    when(result) {
-                        is BWellResult.ResourceCollection -> {
-                            Log.i("CareTeam", result.toString())
-                        }
-
-                        else -> {
-                            Log.i("CareTeam", "CareTeam didn't return BwellResult.ResourceCollection")
-                        }
-                    }
-                }
-            }
-        }
-
         return root
     }
 
@@ -106,21 +85,34 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             }
         }
 
+        // Observe both connections and care teams, and display the combined list
         dataConnectionsViewModel.connectionsList.observe(viewLifecycleOwner) { connectionListItems ->
-            if (connectionListItems.isNotEmpty())
-                setDataConnectionsAdapter(connectionListItems)
-            else
+            val careTeamListItems = dataConnectionsViewModel.careTeamsList.value ?: emptyList()
+            val combinedList = mutableListOf<Any>()
+            combinedList.addAll(connectionListItems)
+            combinedList.addAll(careTeamListItems)
+            if (combinedList.isNotEmpty()) {
+                setCombinedDataConnectionsAdapter(combinedList)
+            } else {
                 displayDataConnectionsHomeInfo()
+            }
+        }
+        dataConnectionsViewModel.careTeamsList.observe(viewLifecycleOwner) { careTeamListItems ->
+            val connectionListItems = dataConnectionsViewModel.connectionsList.value ?: emptyList()
+            val combinedList = mutableListOf<Any>()
+            combinedList.addAll(connectionListItems)
+            combinedList.addAll(careTeamListItems)
+            if (combinedList.isNotEmpty()) {
+                setCombinedDataConnectionsAdapter(combinedList)
+            } else {
+                displayDataConnectionsHomeInfo()
+            }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mBinding = null
-    }
-
-    private fun setDataConnectionsAdapter(suggestedActivitiesLIst: List<Connection>) {
-        val adapter = DataConnectionsListAdapter(suggestedActivitiesLIst)
+    // Adapter for combined list of Connection and CareTeam
+    private fun setCombinedDataConnectionsAdapter(combinedList: List<Any>) {
+        val adapter = DataConnectionsListAdapter(combinedList)
         adapter.dataConnectionsClickListener = this
         binding.includeDataConnections.dataConnectionFragment.visibility = View.VISIBLE
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE
