@@ -7,19 +7,27 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.DataConnectionsItemsViewBinding
 
+// Sealed class for combined items
+sealed class DataConnectionItem {
+    data class ConnectionItem(val connection: Connection) : DataConnectionItem()
+    data class CareTeamItem(val careTeam: CareTeam) : DataConnectionItem()
+}
+
 /*
-*Display the Data Connections List in RecyclerView
-* */
-class DataConnectionsListAdapter(private val launches: List<Connection>) :
-    RecyclerView.Adapter<DataConnectionsListAdapter.ViewHolder>() {
+* Display the Data Connections and Care Teams List in RecyclerView
+*/
+class DataConnectionsListAdapter(
+    private val items: List<Any>
+) : RecyclerView.Adapter<DataConnectionsListAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: DataConnectionsItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface DataConnectionsClickListener {
-        fun onChangeStatusClicked(connection: Connection,parent_view:ViewGroup,status_change_view: View,frameLayoutConnectionStatus: FrameLayout)
+        fun onChangeStatusClicked(connection: Connection, parent_view: ViewGroup, status_change_view: View, frameLayoutConnectionStatus: FrameLayout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,35 +35,45 @@ class DataConnectionsListAdapter(private val launches: List<Connection>) :
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return launches.size
-    }
+    override fun getItemCount(): Int = items.size
 
     var onEndOfListReached: (() -> Unit)? = null
-    var onItemClicked: ((Connection) -> Unit)? = null
+    var onItemClicked: ((Any) -> Unit)? = null
     var dataConnectionsClickListener: DataConnectionsClickListener? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val launch = launches[position]
-        holder.binding.header.text = (launch.name?: "").toString()
-        holder.binding.textViewStatus.text = (launch.status?: "").toString()
-        holder.binding.changeStatusIv.load(R.drawable.baseline_more_vert_24) {
-            placeholder(R.drawable.insurance_logo)
+        val item = items[position]
+        when (item) {
+            is Connection -> {
+                holder.binding.header.text = item.name ?: ""
+                holder.binding.textViewStatus.text = item.status?.toString() ?: ""
+                holder.binding.changeStatusIv.load(R.drawable.baseline_more_vert_24) {
+                    placeholder(R.drawable.insurance_logo)
+                }
+                holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
+                    placeholder(R.drawable.baseline_person_pin_24)
+                }
+                holder.binding.changeStatusIv.setOnClickListener {
+                    dataConnectionsClickListener?.onChangeStatusClicked(item, holder.binding.root, holder.binding.changeStatusIv, holder.binding.frameLayoutConnectionStatus)
+                }
+                holder.binding.root.setOnClickListener {
+                    onItemClicked?.invoke(item)
+                }
+            }
+            is CareTeam -> {
+                holder.binding.header.text = item.name ?: "Care Team"
+                holder.binding.textViewStatus.text = "Care Team"
+                holder.binding.changeStatusIv.visibility = View.GONE
+                holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
+                    placeholder(R.drawable.baseline_person_pin_24)
+                }
+                holder.binding.root.setOnClickListener {
+                    onItemClicked?.invoke(item)
+                }
+            }
         }
-        holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
-            placeholder(R.drawable.baseline_person_pin_24)
-        }
-
-        holder.binding.changeStatusIv.setOnClickListener {
-            dataConnectionsClickListener?.onChangeStatusClicked(launch,holder.binding.root,holder.binding.changeStatusIv,holder.binding.frameLayoutConnectionStatus)
-        }
-
-        if (position == launches.size - 1) {
+        if (position == items.size - 1) {
             onEndOfListReached?.invoke()
-        }
-
-        holder.binding.root.setOnClickListener {
-            onItemClicked?.invoke(launch)
         }
     }
 }
