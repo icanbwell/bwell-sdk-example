@@ -113,6 +113,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="suggested_activities">Suggested activities</string>
     <string name="see_more">See More</string>
+    <string name="test_endpoints">Test Endpoints</string>
+    <string name="delete_user">deleteUser</string>
+    <string name="get_consents">getConsents</string>
+    <string name="get_fhir_data">getFhir (JSON)</string>
     <string name="connect_your_care_providers">Connect Your Care Providers</string>
     <string name="build_your_care_team">Build Your Care Team</string>
     <string name="find_a_primary_care_provider_you">Find a Primary Care Provider You</string>

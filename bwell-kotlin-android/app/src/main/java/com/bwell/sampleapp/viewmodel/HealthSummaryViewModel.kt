@@ -9,6 +9,9 @@ import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enu
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.healthdata.requests.fhir.enums.ResourceType
+//import com.bwell.healthdata.requests.fhir.FhirRequest
+//import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.repository.HealthSummaryRepository
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +36,9 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
     private val _healthSummaryResults = MutableStateFlow<BWellResult<Any>?>(null)
     val healthSummaryResults: StateFlow<BWellResult<Any>?> = _healthSummaryResults
 
+    private val _getFhirDataResults = MutableStateFlow<BWellResult<Any>?>(null)
+    val getFhirDataResults: StateFlow<BWellResult<Any>?> = _getFhirDataResults
+
     fun <T> getHealthSummaryGroupData(request: T, category: HealthSummaryCategory?) {
         viewModelScope.launch {
             try {
@@ -49,6 +55,18 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
         viewModelScope.launch {
             try {
                 repository?.getHealthSummaryData(request, category)?.collect { result ->
+                    _healthSummaryResults.emit(result)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
+
+    fun getFHIRData(id: String, resourceType: ResourceType) {
+        viewModelScope.launch {
+            try {
+                repository?.getFhirData(id, resourceType)?.collect { result ->
                     _healthSummaryResults.emit(result)
                 }
             } catch (e: Exception) {

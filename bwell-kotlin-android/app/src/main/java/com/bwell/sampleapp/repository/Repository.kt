@@ -1,15 +1,20 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
+import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.user.Person
-import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+//import com.bwell.healthdata.requests.fhir.FhirRequest
+//import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
+//import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
@@ -20,11 +25,17 @@ import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.user.requests.consents.ConsentCreateRequest
-import com.bwell.user.requests.createVerificationUrl.CreateVerificationUrlRequest
+import com.bwell.user.requests.consents.ConsentRequest
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 class Repository(private val applicationContext: Context) {
+
+    private val TAG = "Repository"
 
     private val suggestedActivitiesLiveData = MutableLiveData<SuggestedActivitiesLIst>()
 
@@ -60,19 +71,33 @@ class Repository(private val applicationContext: Context) {
         }
     }
 
+    suspend fun deleteUser(): Flow<OperationOutcome?> = flow {
+        try {
+            val deleteOutcome = BWellSdk.user.delete()
+            emit(deleteOutcome)
+            val test = ""
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+
     suspend fun createConsent(consent: ConsentCreateRequest): Flow<BWellResult<Consent>?> = flow {
         var operationOutcome: BWellResult<Consent>? = BWellSdk.user?.createConsent(consent)
         emit(operationOutcome)
     }
 
-    suspend fun createVerificationUrl(request: CreateVerificationUrlRequest): Flow<BWellResult<String>?> = flow {
-        val verificationUrl = BWellSdk.user.createVerificationUrl(request)
-        emit(verificationUrl)
-    }
-
-    suspend fun getVerificationStatus(): Flow<BWellResult<VerificationStatus>> = flow {
-        val verificationStatus = BWellSdk.user.getVerificationStatus()
-        emit(verificationStatus)
+    suspend fun getConsents(): Flow<BWellResult<Consent>?> = flow {
+        try {
+            val consentRequest: ConsentRequest = ConsentRequest.Builder()
+                .category(ConsentCategoryCode.TOS)
+                .build()
+            val consentsResult = BWellSdk.user.getConsents(consentRequest)
+            emit(consentsResult)
+        } catch (e: Exception) {
+            Log.e(TAG, "Could not get consents: " + e.message.toString())
+        }
     }
 
     suspend fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest): Flow<OperationOutcome?> = flow {

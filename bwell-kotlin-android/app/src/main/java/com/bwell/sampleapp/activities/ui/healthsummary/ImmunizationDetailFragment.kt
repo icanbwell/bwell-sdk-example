@@ -14,6 +14,7 @@ import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enu
 import com.bwell.common.models.requests.searchtoken.SearchDate
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
+//import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ImmunizationDetailViewBinding
@@ -73,6 +74,9 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
             R.id.overviewTextView -> {
                 showOverView()
             }
+            R.id.get_fhir_data -> {
+                //healthSummaryViewModel.getFHIRData(immunizationId, ResourceType.IMMUNIZATION)
+            }
         }
     }
 
@@ -107,6 +111,7 @@ class ImmunizationDetailFragment : Fragment(), View.OnClickListener {
                     } else {
                         binding.immunizationOverviewView.organizationLl.visibility = View.GONE
                     }
+                    binding.immunizationOverviewView.getFhirData.setOnClickListener(this@ImmunizationDetailFragment)
                 }
             }
         }

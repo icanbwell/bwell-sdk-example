@@ -10,20 +10,32 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bwell.core.config.types.BWellConfig
+import com.bwell.core.config.types.KeyStoreConfig
+import com.bwell.core.config.types.LogLevel
+import com.bwell.core.config.types.RetryPolicy
+import com.bwell.core.network.auth.Credentials
+import com.bwell.BWellSdk
+import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
+import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
+import com.bwell.common.models.domain.consent.enums.ConsentStatus
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
-import com.bwell.sampleapp.activities.ui.consent.HealthMatchConsentFragment
-import com.bwell.sampleapp.activities.ui.consent.HealthMatchFeedbackFragment
 import com.bwell.sampleapp.databinding.FragmentHomeBinding
 import com.bwell.sampleapp.model.ActivityListItems
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.sampleapp.viewmodel.SharedViewModel
 import com.bwell.sampleapp.viewmodel.SharedViewModelFactory
+import com.bwell.user.requests.consents.ConsentCreateRequest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 
 
-class HomeFragment : Fragment(), View.OnClickListener, HealthMatchFeedbackFragment.ConsentCallback {
+class HomeFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentHomeBinding? = null
+
+    private val TAG = "Home Fragment"
 
     private val binding get() = _binding!!
     private lateinit var repository: Repository
@@ -46,7 +58,8 @@ class HomeFragment : Fragment(), View.OnClickListener, HealthMatchFeedbackFragme
 
         binding.seeMore.setOnClickListener(this)
         binding.homeView.btnGetStarted.setOnClickListener(this)
-        binding.homeHealthMatchIntroView.btnLearnMore.setOnClickListener(this)
+        binding.deleteUser.setOnClickListener(this)
+        binding.getConsents.setOnClickListener(this)
 
         mainViewModel.fetchUserProfile()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -81,18 +94,80 @@ class HomeFragment : Fragment(), View.OnClickListener, HealthMatchFeedbackFragme
                 findNavController().popBackStack(R.id.nav_home, true)
                 findNavController().navigate(R.id.nav_data_connections)
             }
-            R.id.btn_learn_more ->
-            {
-                showConsentModal()
+            R.id.delete_user -> {
+                lifecycleScope.launch {
+                    try {
+                        repository?.deleteUser()?.collect {
+
+                        }
+                        //delay(5000);
+                        tempInitAndAuth()
+                    } catch (ex: Exception) {
+
+                    }
+                }
+            }
+            R.id.get_consents -> {
+                lifecycleScope.launch {
+                    try {
+                        repository.getConsents().collect {
+                            //do nothing
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
         }
     }
-    private fun showConsentModal() {
-        HealthMatchConsentFragment.newInstance().show(childFragmentManager, HealthMatchConsentFragment.TAG)
+
+    suspend private fun tempInitAndAuth() {
+        val keystore: KeyStoreConfig = KeyStoreConfig.Builder()
+            .path(requireContext().filesDir.absolutePath)
+            .build()
+
+        val config: BWellConfig = BWellConfig.Builder()
+            .clientKey("eyJyIjoiaGNxNTloejgyNDB2MjZyMTkzIiwiZW52Ijoic3RhZ2luZyIsImtpZCI6InNhbXN1bmctc3RhZ2luZyJ9")
+            .logLevel(LogLevel.DEBUG)
+            .timeout(20000)
+            .retryPolicy(
+                RetryPolicy.Builder()
+                    .maxRetries(5)
+                    .retryInterval(500)
+                    .build()
+            )
+            .keystore(keystore)
+            .build()
+
+        BWellSdk.initialize(config = config)
+        val credentials =
+            Credentials.OAuthCredentials("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJ3ZWxsLXRlc3QifQ.eyJndWlkIjoiYndlbGwtdGVzdF9XRHd4OGRQQ2c0Um5BVWRIakdiOS9nPT0iLCJvdGlkIjpmYWxzZSwiZXhwIjoyNjk4MjM0MzcxLCJpYXQiOjE3MjY3NjM1Nzd9.K1OoYEIF3GW68p1J4AvmwelGt-fO6H1ClSonyXIUBOzoR-GeEzZREs06b1SC9NuluK4qQpAebkXgbge7uadUZA")
+
+
+        BWellSdk.authenticate(credentials)
+
+        val createConsentRequest: ConsentCreateRequest = ConsentCreateRequest.Builder()
+            .category(ConsentCategoryCode.TOS)
+            .status(ConsentStatus.ACTIVE)
+            .provision(ConsentProvisionType.PERMIT)
+            .build()
+        createConsent(createConsentRequest)
     }
 
-    override fun onConsentSubmitted(granted: Boolean) {
-        binding.homeHealthMatchIntroView.healthMatchView.visibility = View.GONE
+    private fun createConsent(consentCreateRequest: ConsentCreateRequest) {
+        lifecycleScope.launch {
+            val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+            val registerOutcome = repository?.createConsent(consentCreateRequest)
+            registerOutcome?.collect { outcome ->
+                outcome?.let {
+                    if (outcome.success()) {
+                        //device registered successfully
+                    } else {
+                        //device not registered
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -28,9 +28,7 @@ import com.bwell.core.config.types.RetryPolicy
 import com.bwell.core.network.auth.Credentials
 import com.bwell.device.requests.deviceToken.DevicePlatform
 import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
-import com.bwell.healthdata.requests.fhir.FhirRequest
-import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
-import com.bwell.healthdata.requests.fhir.enums.ResourceType
+
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.singletons.BWellSdk
@@ -409,28 +407,6 @@ class LoginFragment : Fragment() {
                 .provision(ConsentProvisionType.PERMIT)
                 .build()
             createConsent(createConsentRequest)
-
-            val dateFormat = SimpleDateFormat("yyyy")
-            val request = FhirRequest.Builder()
-                .resourceType(ResourceType.OBSERVATION)
-                .lastUpdated(
-                    GetFhirSearchDate.Builder()
-                        .greaterThan(dateFormat.parse("2024"))
-                        .build()
-                )
-                .ids(listOf(
-                    "5884a0f8-3d08-4077-a7fc-1817e5b8ce35",
-                    "aab81d50-e53d-45e8-a881-fc22eb2f253f",
-                    "3310e4f4-4a97-47fe-b0ed-7805421aa322",
-                    "fd3fb48c-3565-40fb-be32-9ae014ad2860",
-                    "875ff908-2ebe-46bf-8fe4-72644d7d039f",
-                    "dfd1d287-2b84-45e0-bd5f-39c8c5efca2a"
-                ))
-                .page(0)
-                .pageSize(20)
-                .build()
-            val result = BWellSdk.health.getFhir(request)
-            println(result.toString())
 
             Log.i(TAG, "Finished initializing SDK")
 
