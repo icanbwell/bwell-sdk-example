@@ -90,7 +90,12 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             val careTeamListItems = dataConnectionsViewModel.careTeamsList.value ?: emptyList()
             val combinedList = mutableListOf<Any>()
             combinedList.addAll(connectionListItems)
-            combinedList.addAll(careTeamListItems)
+            // Flatten CareTeam participants into individual items
+            careTeamListItems.forEach { careTeam ->
+                careTeam.participant?.forEach { participant ->
+                    combinedList.add(participant)
+                }
+            }
             if (combinedList.isNotEmpty()) {
                 setCombinedDataConnectionsAdapter(combinedList)
             } else {
@@ -101,7 +106,12 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             val connectionListItems = dataConnectionsViewModel.connectionsList.value ?: emptyList()
             val combinedList = mutableListOf<Any>()
             combinedList.addAll(connectionListItems)
-            combinedList.addAll(careTeamListItems)
+            // Flatten CareTeam participants into individual items
+            careTeamListItems.forEach { careTeam ->
+                careTeam.participant?.forEach { participant ->
+                    combinedList.add(participant)
+                }
+            }
             if (combinedList.isNotEmpty()) {
                 setCombinedDataConnectionsAdapter(combinedList)
             } else {
