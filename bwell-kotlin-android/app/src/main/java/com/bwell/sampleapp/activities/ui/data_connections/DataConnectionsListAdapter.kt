@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeamParticipant
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeamParticipantMember
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.DataConnectionsItemsViewBinding
 
@@ -61,7 +63,10 @@ class DataConnectionsListAdapter(
                 }
             }
             is CareTeam -> {
-                holder.binding.header.text = item.name ?: "Care Team"
+                // Show all participants' organization names, joined by comma
+                val orgNames = item.participant?.mapNotNull { it.member }?.joinToString(", ")
+                    ?: "Care Team"
+                holder.binding.header.text = orgNames
                 holder.binding.textViewStatus.text = "Care Team"
                 holder.binding.changeStatusIv.visibility = View.GONE
                 holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
@@ -69,6 +74,31 @@ class DataConnectionsListAdapter(
                 }
                 holder.binding.root.setOnClickListener {
                     onItemClicked?.invoke(item)
+                }
+            }
+            is CareTeamParticipant -> {
+                // Only display if member is not null
+                val member = item.member
+                if (member != null) {
+                    val participantName = try {
+                        val nameProp = member::class.members.firstOrNull { it.name == "name" }
+                        nameProp?.call(member) as? String
+                    } catch (e: Exception) {
+                        null
+                    } ?: ""
+                    holder.binding.header.text = participantName
+                    holder.binding.textViewStatus.text = "Care Team"
+                    holder.binding.changeStatusIv.visibility = View.GONE
+                    holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
+                        placeholder(R.drawable.baseline_person_pin_24)
+                    }
+                    holder.binding.root.setOnClickListener {
+                        onItemClicked?.invoke(item)
+                    }
+                } else {
+                    // Skip binding if member is null
+                    holder.binding.root.visibility = View.GONE
+                    holder.binding.root.layoutParams = RecyclerView.LayoutParams(0, 0)
                 }
             }
         }

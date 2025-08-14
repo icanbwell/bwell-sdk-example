@@ -174,7 +174,12 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
             try {
                 val connectionsFlow = repository?.getMemberConnections() ?: return@launch
 
-                val careTeamsRequest = CareTeamsRequest.Builder().page(0).pageSize(10).build()
+                val careTeamsRequest = CareTeamsRequest.Builder()
+                    .category("tefca-ias-connections")
+                    .page(0)
+                    .pageSize(10)
+                    .build()
+
                 val careTeamsFlow = repository.getCareTeams(careTeamsRequest)
                 combine(connectionsFlow, careTeamsFlow) { connectionsResult, careTeamsResult ->
                     Pair(connectionsResult, careTeamsResult)
