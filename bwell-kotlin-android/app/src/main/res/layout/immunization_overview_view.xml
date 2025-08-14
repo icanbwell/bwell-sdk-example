@@ -131,6 +131,19 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/get_fhir_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/get_fhir_data"
+        android:textColor="#0000ee"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="left"
+        app:layout_constraintTop_toBottomOf="@+id/organization_ll"
+        />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

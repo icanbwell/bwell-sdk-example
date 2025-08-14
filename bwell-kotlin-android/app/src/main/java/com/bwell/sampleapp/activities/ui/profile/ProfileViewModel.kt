@@ -60,32 +60,9 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     fun fetchVerificationStatus() {
         viewModelScope.launch {
             try {
-                repository?.getVerificationStatus()?.collect({
-                    if(it is BWellResult.SingleResource<VerificationStatus>) {
-                        Log.i("result", it.data.toString())
-                        if(it.data != null) {
-                            _verificationStatus.emit(it.data)
-                        }
-                    }
-                })
+
             } catch (e: Exception) {
                 Log.e("Error", "Failed to fetch verification status: ${e.message}")
-            }
-        }
-    }
-
-    fun createVerificationUrl() {
-        viewModelScope.launch {
-            try {
-                val request = CreateVerificationUrlRequest.Builder().callbackUrl("bwell://ial2-callback").build()
-                repository?.createVerificationUrl(request)?.collect({
-                    if(it is BWellResult.SingleResource<String>) {
-                        Log.i("result", it.data.toString())
-                        _verificationUrl.emit(it.data.toString())
-                    }
-                })
-            }catch (e: Exception) {
-                Log.e("Error", "Failed to create verification URL: ${e.message}")
             }
         }
     }

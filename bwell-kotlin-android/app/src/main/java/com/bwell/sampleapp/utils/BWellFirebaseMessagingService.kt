@@ -45,7 +45,7 @@ class BWellFirebaseMessagingService : FirebaseMessagingService() {
             .setSilent(true)
             .setSmallIcon(coil.base.R.drawable.notification_icon_background)
 
-        if (remoteMessageData["action_type"] == "deep_link") {
+        if (remoteMessageData["action_type"] == "deeplink") {
             var resultIntent: Intent? = null
             if (remoteMessageData["action"]?.startsWith("ActivityDefinition/") == true) {
                 resultIntent = Intent(this, NavigationActivity::class.java).apply {

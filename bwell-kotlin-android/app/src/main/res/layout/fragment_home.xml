@@ -27,48 +27,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_name"
         />
-
-    <include
-        android:id="@+id/home_health_match_intro_view"
-        layout="@layout/health_match_intro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_view" />
-
-    <include
-        android:id="@+id/home_health_match_consent_view"
-        layout="@layout/health_match_consent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <include
-        android:id="@+id/home_health_match_feedback_view"
-        layout="@layout/health_match_feedback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/home"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="20sp"
         android:layout_marginTop="10dp"
         android:text="@string/suggested_activities"
-        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_health_match_intro_view" />
+        app:layout_constraintTop_toBottomOf="@id/home_view" />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="0dp"
         android:layout_height="300dp"
@@ -87,7 +55,41 @@
         android:text="@string/see_more"
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_suggested_activities"
+        />
+    <TextView
+        android:id="@+id/test_endpoints"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:text="@string/test_endpoints"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/see_more"
+        />
+    <TextView
+        android:id="@+id/delete_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/delete_user"
+        android:textColor="#0000ee"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="left"
+        app:layout_constraintTop_toBottomOf="@+id/test_endpoints"
+        />
+    <TextView
+        android:id="@+id/get_consents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/get_consents"
+        android:textColor="#0000ee"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="left"
+        app:layout_constraintTop_toBottomOf="@+id/delete_user"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

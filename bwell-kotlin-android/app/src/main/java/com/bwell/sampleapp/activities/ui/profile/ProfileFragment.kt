@@ -58,12 +58,12 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             profileViewModel.verificationStatus.collect{
                 verificationStaus = it!!
-                updateIAL2UI(verificationStaus)
+                //updateIAL2UI(verificationStaus)
             }
         }
 
         profileViewModel.fetchData()
-        profileViewModel.fetchVerificationStatus()
+       // profileViewModel.fetchVerificationStatus()
         val leftArrowImageView: ImageView = binding.root.findViewById(R.id.leftArrowImageView)
         leftArrowImageView.setOnClickListener {
             binding.includeViewProfile.viewProfileParent.visibility= View.VISIBLE;
@@ -86,12 +86,6 @@ class ProfileFragment : Fragment() {
                 .build()
 
             profileViewModel.updatePersonData(updatedPerson)
-            profileViewModel.createConsent()
-        }
-
-        val  getIAL2VerifiedButton : FrameLayout = binding.root.findViewById(R.id.frameLayoutIAL2Button)
-        getIAL2VerifiedButton.setOnClickListener {
-            onGetIAL2VerifiedClick(it)
         }
 
 
@@ -187,17 +181,6 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun updateIAL2UI(verificationStatus: VerificationStatus?) {
-        if (verificationStatus == null) {
-            binding.includeViewProfile.textViewIAL2Heading.visibility = View.GONE
-            binding.includeViewProfile.textViewVerificationStatusData.visibility = View.GONE
-        } else {
-            binding.includeViewProfile.textViewVerificationStatusData.text =
-                verificationStatus.status.toString()
-            binding.includeViewProfile.textViewIAL2Button.text = resources.getString(R.string.update_ial2_verified)
-        }
-    }
-
     private fun onGetIAL2VerifiedClick(view: View) {
         viewLifecycleOwner.lifecycleScope.launch {
             profileViewModel.verificationUrl.collect { url ->
@@ -211,6 +194,6 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
-        profileViewModel.createVerificationUrl()
+        //profileViewModel.createVerificationUrl()
     }
 }

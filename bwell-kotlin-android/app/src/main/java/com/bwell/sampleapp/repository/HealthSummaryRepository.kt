@@ -26,6 +26,12 @@ import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignsRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.healthdata.requests.fhir.FhirRequest
+import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
+import com.bwell.healthdata.requests.fhir.enums.ResourceType
+///import com.bwell.healthdata.requests.fhir.FhirRequest
+//import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
+//import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.model.HealthSummaryListItems
@@ -35,6 +41,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 
 class HealthSummaryRepository(private val applicationContext: Context) {
 
@@ -171,7 +178,7 @@ class HealthSummaryRepository(private val applicationContext: Context) {
 
                 Log.d(TAG, "Added Health Summary Category: " + healthSummary.category.toString())
             }
-            
+
             Log.d(TAG, "Posting HealthSummary live data")
             // Post live data
             healthSummaryLiveData.postValue(HealthSummaryList(healthSummaryCategoryList))
@@ -209,5 +216,25 @@ class HealthSummaryRepository(private val applicationContext: Context) {
                 throw IllegalStateException("Invalid category row")
             }
         }
+    }
+
+    suspend fun getFhirData(id: String, resourceType: ResourceType) = flow {
+        val dateFormat = SimpleDateFormat("yyyy")
+        val request = FhirRequest.Builder()
+            .resourceType(resourceType)
+            .lastUpdated(
+                GetFhirSearchDate.Builder()
+                    .greaterThan(dateFormat.parse("2024"))
+                    .build()
+            )
+            .ids(listOf(
+                id
+            ))
+            .page(0)
+            .pageSize(20)
+            .build()
+        val result = BWellSdk.health.getFhir(request)
+        emit(result);
+        println(result.toString())
     }
 }
