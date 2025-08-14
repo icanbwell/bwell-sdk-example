@@ -10,6 +10,7 @@ import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeamParticipant
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeamParticipantMember
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.OrganizationCareTeamParticipantMember
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.DataConnectionsItemsViewBinding
 
@@ -77,15 +78,9 @@ class DataConnectionsListAdapter(
                 }
             }
             is CareTeamParticipant -> {
-                // Only display if member is not null
                 val member = item.member
-                if (member != null) {
-                    val participantName = try {
-                        val nameProp = member::class.members.firstOrNull { it.name == "name" }
-                        nameProp?.call(member) as? String
-                    } catch (e: Exception) {
-                        null
-                    } ?: ""
+                if (member is OrganizationCareTeamParticipantMember) {
+                    val participantName = member.name ?: ""
                     holder.binding.header.text = participantName
                     holder.binding.textViewStatus.text = "Care Team"
                     holder.binding.changeStatusIv.visibility = View.GONE
@@ -96,7 +91,7 @@ class DataConnectionsListAdapter(
                         onItemClicked?.invoke(item)
                     }
                 } else {
-                    // Skip binding if member is null
+                    // Skip binding if member is null or not OrganizationCareTeamParticipantMember
                     holder.binding.root.visibility = View.GONE
                     holder.binding.root.layoutParams = RecyclerView.LayoutParams(0, 0)
                 }
