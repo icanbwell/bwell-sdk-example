@@ -347,7 +347,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
     @Suppress("LocalVariableName")
     override fun onChangeStatusClicked(
-        connection: Connection,
+        item: Any, // Accepts Connection or OrganizationCareTeamParticipantMemberDisplay
         parent_view: ViewGroup,
         status_change_view: View,
         frameLayoutConnectionStatus: FrameLayout
@@ -358,8 +358,17 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y
         binding.includeDataConnections.disconnect.setOnClickListener(this)
         binding.includeDataConnections.delete.setOnClickListener(this)
-        this.connection = connection
-        this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
+        when (item) {
+            is Connection -> {
+                this.connection = item
+                this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
+            }
+            is OrganizationCareTeamParticipantMemberDisplay -> {
+                // Do not set 'connection' for non-Connection items
+                this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
+                // Optionally, handle care team participant actions here if needed
+            }
+        }
     }
 
     fun showDataConnectionCategories() {

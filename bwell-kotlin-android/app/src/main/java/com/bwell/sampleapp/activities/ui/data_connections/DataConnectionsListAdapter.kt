@@ -29,7 +29,12 @@ class DataConnectionsListAdapter(
     class ViewHolder(val binding: DataConnectionsItemsViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface DataConnectionsClickListener {
-        fun onChangeStatusClicked(connection: Connection, parent_view: ViewGroup, status_change_view: View, frameLayoutConnectionStatus: FrameLayout)
+        fun onChangeStatusClicked(
+            item: Any, // Accepts Connection or OrganizationCareTeamParticipantMemberDisplay
+            parent_view: ViewGroup,
+            status_change_view: View,
+            frameLayoutConnectionStatus: FrameLayout
+        )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -60,7 +65,12 @@ class DataConnectionsListAdapter(
                     placeholder(R.drawable.baseline_person_pin_24)
                 }
                 holder.binding.changeStatusIv.setOnClickListener {
-                    dataConnectionsClickListener?.onChangeStatusClicked(item, holder.binding.root, holder.binding.changeStatusIv, holder.binding.frameLayoutConnectionStatus)
+                    dataConnectionsClickListener?.onChangeStatusClicked(
+                        item,
+                        holder.binding.root,
+                        holder.binding.changeStatusIv,
+                        holder.binding.frameLayoutConnectionStatus
+                    )
                 }
                 holder.binding.root.setOnClickListener {
                     onItemClicked?.invoke(item)
@@ -82,7 +92,12 @@ class DataConnectionsListAdapter(
                         placeholder(R.drawable.insurance_logo)
                     }
                     holder.binding.changeStatusIv.setOnClickListener {
-                        onItemClicked?.invoke(item)
+                        dataConnectionsClickListener?.onChangeStatusClicked(
+                            item,
+                            holder.binding.root,
+                            holder.binding.changeStatusIv,
+                            holder.binding.frameLayoutConnectionStatus
+                        )
                     }
                 }
                 holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
