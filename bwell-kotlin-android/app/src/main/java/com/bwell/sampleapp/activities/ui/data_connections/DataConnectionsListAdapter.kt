@@ -8,10 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
-import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeamParticipant
-import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeamParticipantMember
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.OrganizationCareTeamParticipantMember
 import com.bwell.sampleapp.R
+import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment.OrganizationCareTeamParticipantMemberDisplay
 import com.bwell.sampleapp.databinding.DataConnectionsItemsViewBinding
 
 // Sealed class for combined items
@@ -50,6 +49,10 @@ class DataConnectionsListAdapter(
             is Connection -> {
                 holder.binding.header.text = item.name ?: ""
                 holder.binding.textViewStatus.text = item.status?.toString() ?: ""
+                holder.binding.changeStatusIv.visibility = View.VISIBLE
+                holder.binding.changeStatusIv.isEnabled = true
+                holder.binding.changeStatusIv.isClickable = true
+                holder.binding.changeStatusIv.bringToFront()
                 holder.binding.changeStatusIv.load(R.drawable.baseline_more_vert_24) {
                     placeholder(R.drawable.insurance_logo)
                 }
@@ -58,6 +61,32 @@ class DataConnectionsListAdapter(
                 }
                 holder.binding.changeStatusIv.setOnClickListener {
                     dataConnectionsClickListener?.onChangeStatusClicked(item, holder.binding.root, holder.binding.changeStatusIv, holder.binding.frameLayoutConnectionStatus)
+                }
+                holder.binding.root.setOnClickListener {
+                    onItemClicked?.invoke(item)
+                }
+            }
+            is OrganizationCareTeamParticipantMemberDisplay -> {
+                holder.binding.header.text = item.name
+                holder.binding.textViewStatus.text = item.status
+                if (item.status.equals("NEEDS ATTENTION", ignoreCase = true)) {
+                    holder.binding.changeStatusIv.visibility = View.GONE
+                    holder.binding.changeStatusIv.isEnabled = false
+                    holder.binding.changeStatusIv.isClickable = false
+                } else {
+                    holder.binding.changeStatusIv.visibility = View.VISIBLE
+                    holder.binding.changeStatusIv.isEnabled = true
+                    holder.binding.changeStatusIv.isClickable = true
+                    holder.binding.changeStatusIv.bringToFront()
+                    holder.binding.changeStatusIv.load(R.drawable.baseline_more_vert_24) {
+                        placeholder(R.drawable.insurance_logo)
+                    }
+                    holder.binding.changeStatusIv.setOnClickListener {
+                        onItemClicked?.invoke(item)
+                    }
+                }
+                holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
+                    placeholder(R.drawable.baseline_person_pin_24)
                 }
                 holder.binding.root.setOnClickListener {
                     onItemClicked?.invoke(item)
@@ -75,25 +104,6 @@ class DataConnectionsListAdapter(
                 }
                 holder.binding.root.setOnClickListener {
                     onItemClicked?.invoke(item)
-                }
-            }
-            is CareTeamParticipant -> {
-                val member = item.member
-                if (member is OrganizationCareTeamParticipantMember) {
-                    val participantName = member.name ?: ""
-                    holder.binding.header.text = participantName
-                    holder.binding.textViewStatus.text = "Care Team"
-                    holder.binding.changeStatusIv.visibility = View.GONE
-                    holder.binding.icon.load(R.drawable.baseline_person_pin_24) {
-                        placeholder(R.drawable.baseline_person_pin_24)
-                    }
-                    holder.binding.root.setOnClickListener {
-                        onItemClicked?.invoke(item)
-                    }
-                } else {
-                    // Skip binding if member is null or not OrganizationCareTeamParticipantMember
-                    holder.binding.root.visibility = View.GONE
-                    holder.binding.root.layoutParams = RecyclerView.LayoutParams(0, 0)
                 }
             }
         }
