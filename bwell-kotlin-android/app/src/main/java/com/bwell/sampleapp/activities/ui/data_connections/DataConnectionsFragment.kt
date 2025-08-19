@@ -34,6 +34,7 @@ import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.domain.search.Provider
 import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.OrganizationCareTeamParticipantMember
 
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener,
@@ -85,33 +86,59 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             }
         }
 
-        // Observe both connections and care teams, and display the combined list
-        dataConnectionsViewModel.connectionsList.observe(viewLifecycleOwner) { connectionListItems ->
+        val buildCombinedList: () -> List<Any> = {
+            val connectionListItems = dataConnectionsViewModel.connectionsList.value ?: emptyList()
             val careTeamListItems = dataConnectionsViewModel.careTeamsList.value ?: emptyList()
+
+            val connectionIdMap = connectionListItems.associateBy { it.id }
+            val usedConnectionIds = mutableSetOf<String>()
             val combinedList = mutableListOf<Any>()
-            combinedList.addAll(connectionListItems)
-            // Flatten CareTeam participants into individual items
+
             careTeamListItems.forEach { careTeam ->
                 careTeam.participant?.forEach { participant ->
-                    combinedList.add(participant)
+                    val member = participant.member
+                    // Use safe cast for member.name to avoid smart cast error
+                    val name = (member as? OrganizationCareTeamParticipantMember)?.name as? String
+                    if (name != null) {
+                        val alias = (member as? OrganizationCareTeamParticipantMember)?.alias
+                        val status = when {
+                            alias == null -> "CONNECTED"
+                            connectionIdMap.containsKey(alias) -> {
+                                usedConnectionIds.add(alias)
+                                connectionIdMap[alias]?.status?.toString() ?: ""
+                            }
+                            else -> "NEEDS ATTENTION"
+                        }
+                        combinedList.add(
+                            OrganizationCareTeamParticipantMemberDisplay(
+                                name = name,
+                                status = status,
+                                alias = alias
+                            )
+                        )
+                    }
                 }
             }
+
+            connectionListItems.forEach { connection ->
+                if (!usedConnectionIds.contains(connection.id)) {
+                    combinedList.add(connection)
+                }
+            }
+
+            combinedList
+        }
+
+        dataConnectionsViewModel.connectionsList.observe(viewLifecycleOwner) {
+            val combinedList = buildCombinedList()
             if (combinedList.isNotEmpty()) {
                 setCombinedDataConnectionsAdapter(combinedList)
             } else {
                 displayDataConnectionsHomeInfo()
             }
         }
-        dataConnectionsViewModel.careTeamsList.observe(viewLifecycleOwner) { careTeamListItems ->
-            val connectionListItems = dataConnectionsViewModel.connectionsList.value ?: emptyList()
-            val combinedList = mutableListOf<Any>()
-            combinedList.addAll(connectionListItems)
-            // Flatten CareTeam participants into individual items
-            careTeamListItems.forEach { careTeam ->
-                careTeam.participant?.forEach { participant ->
-                    combinedList.add(participant)
-                }
-            }
+        dataConnectionsViewModel.careTeamsList.observe(viewLifecycleOwner) {
+            val combinedList = buildCombinedList()
             if (combinedList.isNotEmpty()) {
                 setCombinedDataConnectionsAdapter(combinedList)
             } else {
@@ -119,6 +146,13 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             }
         }
     }
+
+    // Data class for displaying care team participant members
+    data class OrganizationCareTeamParticipantMemberDisplay(
+        val name: String,
+        val status: String,
+        val alias: String?
+    )
 
     // Adapter for combined list of Connection and CareTeam
     private fun setCombinedDataConnectionsAdapter(combinedList: List<Any>) {
