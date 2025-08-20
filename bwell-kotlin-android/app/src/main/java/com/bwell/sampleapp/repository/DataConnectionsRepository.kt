@@ -8,10 +8,12 @@ import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.data.DataSource
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.common.models.responses.error.BWellError
 import com.bwell.connections.requests.ConnectionCreateRequest
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.model.DataConnectionListItems
@@ -43,12 +45,21 @@ class DataConnectionsRepository(private val applicationContext: Context) {
     val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = dataConnectionsClinicsLiveData
 
-    suspend fun getConnections(): Flow<BWellResult<Connection>?> = flow {
+    suspend fun getMemberConnections(): Flow<BWellResult<Connection>?> = flow {
         try {
             val connectionsResult = BWellSdk.connections.getMemberConnections()
             emit(connectionsResult)
         } catch (e: Exception) {
             // Handle exceptions, if any
+            emit(null)
+        }
+    }
+
+    suspend fun getCareTeams(careTeamRequest : CareTeamsRequest?): Flow<BWellResult<CareTeam>?> = flow {
+        try {
+            val careTeamResult = BWellSdk.health.getCareTeams(careTeamRequest)
+            emit(careTeamResult)
+        } catch (e: Exception) {
             emit(null)
         }
     }
@@ -190,6 +201,4 @@ class DataConnectionsRepository(private val applicationContext: Context) {
         val activityList = SuggestedDataConnectionsList(suggestionsList)
         suggestedDataConnectionsLiveData.postValue(activityList)
     }
-
-
 }

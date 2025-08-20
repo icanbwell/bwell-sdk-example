@@ -29,10 +29,10 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var userData: Person
-    private lateinit var verificationStaus: VerificationStatus
     private lateinit var verificationUrl: String;
     private lateinit var selectedSex:String;
     private lateinit var selectedState:String;
+    private var latestVerificationStatus: VerificationStatus? = null
 
 
     @SuppressLint("SetTextI18n", "NewApi")
@@ -51,14 +51,13 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             profileViewModel.userData.collect{
                 userData = it!!
-                 updateUI(userData)
+                updateUI(userData)
             }
-
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            profileViewModel.verificationStatus.collect{
-                verificationStaus = it!!
-                updateIAL2UI(verificationStaus)
+            profileViewModel.verificationStatus.collect { verificationStatus ->
+                latestVerificationStatus = verificationStatus
+                updateIAL2UI(verificationStatus)
             }
         }
 
@@ -94,6 +93,11 @@ class ProfileFragment : Fragment() {
             onGetIAL2VerifiedClick(it)
         }
 
+        // IAS Consent Button
+        val iasConsentButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutIASConsentButton)
+        iasConsentButton.setOnClickListener {
+            profileViewModel.createIASConsent()
+        }
 
         val editButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutEditProfile)
         editButton.setOnClickListener {
@@ -185,16 +189,27 @@ class ProfileFragment : Fragment() {
                 selectedState = it.stateOrProvidence.toString();
             }
         }
+        // Always update IAL2 UI when profile is loaded
+        updateIAL2UI(latestVerificationStatus)
     }
 
     private fun updateIAL2UI(verificationStatus: VerificationStatus?) {
+        val iasConsentButton: FrameLayout = binding.root.findViewById(R.id.frameLayoutIASConsentButton)
         if (verificationStatus == null) {
-            binding.includeViewProfile.textViewIAL2Heading.visibility = View.GONE
-            binding.includeViewProfile.textViewVerificationStatusData.visibility = View.GONE
+            binding.includeViewProfile.textViewIAL2Heading.visibility = View.VISIBLE
+            binding.includeViewProfile.textViewVerificationStatusData.visibility = View.VISIBLE
+            binding.includeViewProfile.textViewVerificationStatusData.text = getString(R.string.ial2_never_verified)
+            iasConsentButton.isEnabled = false
+            iasConsentButton.alpha = 0.5f // visually indicate disabled
         } else {
             binding.includeViewProfile.textViewVerificationStatusData.text =
                 verificationStatus.status.toString()
             binding.includeViewProfile.textViewIAL2Button.text = resources.getString(R.string.update_ial2_verified)
+            val status = verificationStatus.status?.toString()
+            val isIAL2Validated = status == "VALIDATED"
+            val isIAL2Failed = status == "VAL_FAILED"
+            iasConsentButton.isEnabled = isIAL2Validated
+            iasConsentButton.alpha = if (isIAL2Validated) 1.0f else 0.5f
         }
     }
 
