@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.data.DataSource
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.sampleapp.model.DataConnectionsClinicsList
 import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
@@ -20,6 +22,7 @@ import com.bwell.user.requests.consents.ConsentRequest
 import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -138,7 +141,7 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
     val connectionsList: LiveData<List<Connection>> get() = _connectionsList
 
     //  process the BWellResult and update the LiveData
-    private fun processConnectionsResult(connectionsResult: BWellResult<Connection>?) {
+    private fun processMemberConnectionsResult(connectionsResult: BWellResult<Connection>?) {
         val connectionList = when (connectionsResult) {
             is BWellResult.ResourceCollection -> {
                 connectionsResult.data ?: emptyList()
@@ -149,15 +152,57 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
         _connectionsList.value = connectionList
     }
 
+    // LiveData for the list of Connection objects
+    private val _careTeamsList = MutableLiveData<List<CareTeam>>()
+    val careTeamsList: LiveData<List<CareTeam>> get() = _careTeamsList
+
+    //  process the BWellResult and update the LiveData
+    private fun processCareTeamsResult(careTeamsResult: BWellResult<CareTeam>?) {
+        val careTeamList = when (careTeamsResult) {
+            is BWellResult.ResourceCollection -> {
+                careTeamsResult.data ?: emptyList()
+            }
+
+            else -> emptyList()
+        }
+        _careTeamsList.value = careTeamList
+    }
+
     //  get connections and observe changes
     fun getConnectionsAndObserve() {
         viewModelScope.launch {
             try {
-                repository?.getConnections()?.collect { connectionsResult ->
-                    processConnectionsResult(connectionsResult)
+                val connectionsFlow = repository?.getMemberConnections() ?: return@launch
+
+                val careTeamsRequest = CareTeamsRequest.Builder()
+                    .category("tefca-ias-connections")
+                    .page(0)
+                    .pageSize(10)
+                    .build()
+
+                val careTeamsFlow = repository.getCareTeams(careTeamsRequest)
+                combine(connectionsFlow, careTeamsFlow) { connectionsResult, careTeamsResult ->
+                    Pair(connectionsResult, careTeamsResult)
+                }.collect { (connectionsResult, careTeamsResult) ->
+                    processMemberConnectionsResult(connectionsResult)
+                    processCareTeamsResult(careTeamsResult)
                 }
             } catch (ex: Exception) {
                 Log.i(TAG, ex.toString())
+            }
+        }
+    }
+
+    private val _careTeamResults = MutableStateFlow<BWellResult<CareTeam?>?>(null)
+    val careTeamResults: StateFlow<BWellResult<CareTeam?>?> = _careTeamResults
+    fun getCareTeams(careTeamsRequest: CareTeamsRequest?) {
+        viewModelScope.launch {
+            try {
+                repository?.getCareTeams(careTeamsRequest)?.collect { result ->
+                    _careTeamResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
             }
         }
     }
