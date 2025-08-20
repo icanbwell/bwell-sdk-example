@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
+import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.common.models.responses.BWellResult
@@ -128,6 +129,23 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
             }
         }
 
+    }
+
+    fun createIASConsent() {
+        val createConsentRequest = ConsentCreateRequest.Builder()
+            .category(ConsentCategoryCode.IAS_IMPORT_RECORDS)
+            .provision(ConsentProvisionType.PERMIT)
+            .build()
+
+        viewModelScope.launch {
+            try {
+                val operationOutcomeFlow: Flow<BWellResult<Consent>?>? = repository?.createConsent(createConsentRequest)
+                operationOutcomeFlow?.collect { operationOutcome ->
+                    //_consentData.emit(consentData)
+                }
+            } catch (_: Exception) {
+            }
+        }
     }
 
 }
