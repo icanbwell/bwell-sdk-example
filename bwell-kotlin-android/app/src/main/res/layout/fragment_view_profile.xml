@@ -259,7 +259,6 @@
         android:focusable="true"
         android:onClick="onGetIAL2VerifiedClick">
 
-
         <TextView
             android:id="@+id/textViewIAL2Button"
             android:layout_width="wrap_content"
@@ -269,7 +268,30 @@
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:padding="16dp"/>
+    </FrameLayout>
 
+    <!-- IAS Consent Button -->
+    <FrameLayout
+        android:id="@+id/frameLayoutIASConsentButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayoutIAL2Button"
+        android:background="@drawable/rounded_rectangle_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="true"
+        android:layout_margin="30dp"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/textViewIASConsentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IAS Consent"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:padding="16dp"/>
     </FrameLayout>
 
 
