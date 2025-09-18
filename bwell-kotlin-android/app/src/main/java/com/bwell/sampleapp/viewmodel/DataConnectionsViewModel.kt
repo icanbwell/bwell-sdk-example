@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bwell.activity.requests.TasksRequest
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.data.Connection
 import com.bwell.common.models.domain.data.DataSource
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
+import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
@@ -18,6 +20,7 @@ import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.sampleapp.model.SuggestedDataConnectionsList
 import com.bwell.sampleapp.repository.DataConnectionsRepository
+import com.bwell.sampleapp.repository.HealthJourneyRepository
 import com.bwell.user.requests.consents.ConsentRequest
 import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +30,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class DataConnectionsViewModel(private val repository: DataConnectionsRepository?) : ViewModel() {
+class DataConnectionsViewModel(
+    private val repository: DataConnectionsRepository?,
+    private val healthJourneyRepository: HealthJourneyRepository = HealthJourneyRepository()
+) : ViewModel() {
 
     private val TAG = "DataConnectionsViewModel"
     init {
@@ -175,7 +181,7 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
                 val connectionsFlow = repository?.getMemberConnections() ?: return@launch
 
                 val careTeamsRequest = CareTeamsRequest.Builder()
-                    .category("tefca-ias-connections")
+                    .category("recommended-connections")
                     .page(0)
                     .pageSize(10)
                     .build()
@@ -229,6 +235,22 @@ class DataConnectionsViewModel(private val repository: DataConnectionsRepository
             try {
                 repository?.getOAuthUrl(datasourceId)?.collect { oauthUrlResult ->
                     _oauthUrlData.emit(oauthUrlResult)
+                }
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
+            }
+        }
+    }
+
+    // --- Task fetching for Record Location Status ---
+    private val _taskResults = MutableStateFlow<BWellResult<Task>?>(null)
+    val taskResults: StateFlow<BWellResult<Task>?> = _taskResults
+
+    fun getTasks(tasksRequest: TasksRequest) {
+        viewModelScope.launch {
+            try {
+                healthJourneyRepository.getTasks(tasksRequest).collect { result ->
+                    _taskResults.emit(result)
                 }
             } catch (ex: Exception) {
                 Log.i(TAG, ex.toString())

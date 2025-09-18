@@ -50,6 +50,8 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
         savedInstanceState: Bundle?
     ): View {
 
+        activity?.findViewById<View>(R.id.recordLocationStatusTextView)?.visibility = View.GONE
+
         val parentFragment = requireParentFragment()
         dataConnectionsViewModel = ViewModelProvider(parentFragment)[DataConnectionsViewModel::class.java]
 
@@ -166,6 +168,8 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
                     binding.constraintLayout.visibility = View.VISIBLE
                     binding.constraintWebLayout.visibility = View.GONE
                 }
+
+                activity?.findViewById<View>(R.id.recordLocationStatusTextView)?.visibility = View.GONE
             }
         }
     }
