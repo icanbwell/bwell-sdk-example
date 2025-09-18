@@ -45,6 +45,7 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        activity?.findViewById<View>(R.id.recordLocationStatusTextView)?.visibility = View.GONE
         val parentFragment = requireParentFragment()
         entityInfoViewModel = ViewModelProvider(parentFragment)[EntityInfoViewModel::class.java]
         _binding = FragmentDataConnectionsClinicsBinding.inflate(inflater, container, false)
@@ -177,6 +178,7 @@ class ClinicsSearchFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.leftArrowImageView -> {
+                activity?.findViewById<View>(R.id.recordLocationStatusTextView)?.visibility = View.GONE
                 parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 val parentFrag: DataConnectionsFragment =
                     this@ClinicsSearchFragment.parentFragment as DataConnectionsFragment

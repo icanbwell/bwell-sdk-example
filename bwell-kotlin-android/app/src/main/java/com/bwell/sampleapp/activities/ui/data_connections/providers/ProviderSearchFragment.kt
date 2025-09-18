@@ -58,6 +58,7 @@ class ProviderSearchFragment : Fragment(),View.OnClickListener, PopupFragment.Po
         binding.providerSearchView.applyFiltersIv.setOnClickListener(this)
         binding.providerFiltersView.frameLayoutapplyFilters.setOnClickListener(this)
         binding.providerSearchView.leftArrowImageView.setOnClickListener {
+            activity?.findViewById<View>(R.id.recordLocationStatusTextView)?.visibility = View.GONE
             parentFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             val parentFrag: DataConnectionsFragment = this@ProviderSearchFragment.getParentFragment() as DataConnectionsFragment
             parentFrag.showDataConnectionCategories()
