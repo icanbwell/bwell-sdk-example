@@ -35,6 +35,8 @@ import com.bwell.common.models.domain.search.Provider
 import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.sampleapp.viewmodel.EntityInfoViewModel
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.OrganizationCareTeamParticipantMember
+import com.bwell.activity.requests.TasksRequest
+import com.bwell.common.models.domain.task.Task
 
 
 class DataConnectionsFragment : Fragment(), View.OnClickListener,
@@ -55,6 +57,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
     ): View {
         mBinding = FragmentDataConnectionsParentBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        binding.recordLocationStatusTextView.visibility = View.GONE
         val repository =
             (activity?.application as? BWellSampleApplication)?.dataConnectionsRepository
 
@@ -73,8 +76,32 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
 
         checkIfAnyExistingConnections()
+        getRecordLocationStatusTask() // <-- Call the new function
 
         return root
+    }
+
+    private fun getRecordLocationStatusTask() {
+        val taskRequest = TasksRequest.Builder()
+            .activityType(listOf("network-data-retrieval"))
+            //.performerType(listOf("system"))
+            .build()
+        // Assuming you have a method in your ViewModel to fetch tasks, similar to HealthJourneyViewModel
+        dataConnectionsViewModel.getTasks(taskRequest)
+        viewLifecycleOwner.lifecycleScope.launch {
+            dataConnectionsViewModel.taskResults.collect { result ->
+                val statusTextView = binding.recordLocationStatusTextView
+                var statusString = "Not Started"
+                if (result is BWellResult.ResourceCollection) {
+                    val taskList = result.data as? List<Task>
+                    if (!taskList.isNullOrEmpty()) {
+                        val task = taskList.firstOrNull()
+                        statusString = task?.status?.name ?: "Not Started"
+                    }
+                }
+                statusTextView.text = "Record Location Status: $statusString"
+            }
+        }
     }
 
     private fun checkIfAnyExistingConnections() {
@@ -90,7 +117,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
             val connectionListItems = dataConnectionsViewModel.connectionsList.value ?: emptyList()
             val careTeamListItems = dataConnectionsViewModel.careTeamsList.value ?: emptyList()
 
-            val connectionIdMap = connectionListItems.associateBy { it.id }
             val usedConnectionIds = mutableSetOf<String>()
             val combinedList = mutableListOf<Any>()
 
@@ -101,14 +127,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                     val name = (member as? OrganizationCareTeamParticipantMember)?.name as? String
                     if (name != null) {
                         val alias = (member as? OrganizationCareTeamParticipantMember)?.alias
-                        val status = when {
-                            alias == null -> "CONNECTED"
-                            connectionIdMap.containsKey(alias) -> {
-                                usedConnectionIds.add(alias)
-                                connectionIdMap[alias]?.status?.toString() ?: ""
-                            }
-                            else -> "NEEDS ATTENTION"
-                        }
+                        val status = "NEEDS ATTENTION"
                         combinedList.add(
                             OrganizationCareTeamParticipantMemberDisplay(
                                 name = name,
@@ -156,6 +175,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
     // Adapter for combined list of Connection and CareTeam
     private fun setCombinedDataConnectionsAdapter(combinedList: List<Any>) {
+        binding.recordLocationStatusTextView.visibility = View.VISIBLE
         val adapter = DataConnectionsListAdapter(combinedList)
         adapter.dataConnectionsClickListener = this
         binding.includeDataConnections.dataConnectionFragment.visibility = View.VISIBLE
@@ -168,6 +188,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
     }
 
     private fun setDataConnectionsCategoryAdapter(suggestedActivitiesLIst: List<DataConnectionCategoriesListItems>) {
+        binding.recordLocationStatusTextView.visibility = View.GONE
         val adapter = DataConnectionsCategoriesListAdapter(suggestedActivitiesLIst)
         adapter.onItemClicked = { selectedDataConnection ->
             when (selectedDataConnection.connectionCategoryName) {
@@ -215,6 +236,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
     }
 
     private fun displayDataConnectionsHomeInfo() {
+        binding.recordLocationStatusTextView.visibility = View.GONE
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.GONE
         binding.includeDataConnections.dataConnectionFragment.visibility = View.GONE
         binding.includeHomeView.headerView.visibility = View.VISIBLE
@@ -222,6 +244,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
     private fun displayDataConnectionsCategoriesList() {
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
+        binding.recordLocationStatusTextView.visibility = View.GONE
     }
 
     override fun onClick(view: View?) {
@@ -343,6 +366,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         dataConnectionsViewModel.suggestedDataConnectionsCategories.observe(viewLifecycleOwner) {
             setDataConnectionsCategoryAdapter(it.suggestedDataConnectionsCategoriesList)
         }
+        binding.recordLocationStatusTextView.visibility = View.GONE
     }
 
     @Suppress("LocalVariableName")
@@ -372,5 +396,6 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
 
     fun showDataConnectionCategories() {
         binding.includeDataConnectionCategory.dataConnectionFragment.visibility = View.VISIBLE
+        binding.recordLocationStatusTextView.visibility = View.GONE
     }
 }

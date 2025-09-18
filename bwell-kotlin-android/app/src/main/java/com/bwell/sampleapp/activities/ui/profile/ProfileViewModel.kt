@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.consent.Consent
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
+import com.bwell.common.models.domain.consent.enums.ConsentStatus
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.common.models.responses.BWellResult
@@ -135,6 +136,7 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
         val createConsentRequest = ConsentCreateRequest.Builder()
             .category(ConsentCategoryCode.IAS_IMPORT_RECORDS)
             .provision(ConsentProvisionType.PERMIT)
+            .status(ConsentStatus.ACTIVE)
             .build()
 
         viewModelScope.launch {
