@@ -12,9 +12,11 @@ import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.domain.user.VerificationStatus
 import com.bwell.sampleapp.BWellSampleApplication
@@ -153,6 +155,11 @@ class ProfileFragment : Fragment() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
+        }
+
+        val developerToolsButton: View = binding.root.findViewById(R.id.frameLayoutDeveloperTools)
+        developerToolsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_profile_to_nav_developer_tools)
         }
 
         return root
