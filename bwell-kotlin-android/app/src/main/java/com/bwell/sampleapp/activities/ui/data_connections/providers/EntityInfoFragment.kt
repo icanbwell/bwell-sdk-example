@@ -137,7 +137,7 @@ class EntityInfoFragment: Fragment(),View.OnClickListener,WebViewCallback {
         when(authType) {
             ConnectionCategory.BASIC -> binding.frameLayoutProceed.setOnClickListener { onClickProceedBasic() }
             ConnectionCategory.OAUTH -> binding.frameLayoutProceed.setOnClickListener { onClickProceedOAuth() }
-            ConnectionCategory.UNRECOGNIZED -> {
+            ConnectionCategory.UNRECOGNIZED, ConnectionCategory.IDENTITY -> {
                 Log.w("addListenersToProceed", "tried to set listeners with UNKNOWN authType")
                 return
             }
