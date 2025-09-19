@@ -81,6 +81,12 @@
     <string name="ial2_never_verified">Never Verified</string>
     <string name="get_ial2_verified">Get IAL2 Verified</string>
     <string name="update_ial2_verified">Update IAL2 Verified</string>
+    <string name="developer_tools">Developer Tools</string>
+    <string name="delete_user">Delete User</string>
+    <string name="delete_user_confirmation">Are you sure you want to delete your user?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="get_consents">Get Consents</string>
     <string name="proceed">Proceed</string>
     <string name="apply_filters">Apply Filters</string>
     <string name="connect_insurance">Connect Insurance</string>
