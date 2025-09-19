@@ -84,7 +84,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
     private fun getRecordLocationStatusTask() {
         val taskRequest = TasksRequest.Builder()
             .activityType(listOf("network-data-retrieval"))
-            //.performerType(listOf("system"))
+            .performerType(listOf("system"))
             .build()
         // Assuming you have a method in your ViewModel to fetch tasks, similar to HealthJourneyViewModel
         dataConnectionsViewModel.getTasks(taskRequest)
