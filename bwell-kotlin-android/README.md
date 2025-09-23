@@ -1,6 +1,95 @@
 # bwell-sdk-kotlin
 This document outlines the usage of b.well's Kotlin SDK in the context of an Android app.
 
+## Quick Start (No Notifications)
+The app works out of the box without Firebase configuration. Push notifications are **optional** and disabled by default.
+
+## Optional: Firebase Push Notifications Setup
+
+**Note**: Push notifications are currently disabled by default. Follow these steps only if you want to enable them.
+
+### Step 1: Configure Firebase
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Add an Android app to your Firebase project with package name: `com.bwell.sampleapp`
+3. Download the `google-services.json` file
+
+### Step 2: Add Configuration File
+1. Copy the downloaded `google-services.json` file to `app/google-services.json`
+2. You can use the template file `app/google-services.json.template` as a reference
+
+### Step 3: Enable Firebase Dependencies
+1. In `app/build.gradle.kts`, uncomment the Firebase plugin:
+   ```kotlin
+   plugins {
+       id("com.android.application")
+       id("org.jetbrains.kotlin.android")
+       id("com.google.gms.google-services") // Uncomment this line
+   }
+   ```
+
+2. In the same file, uncomment the Firebase dependencies:
+   ```kotlin
+   implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+   implementation("com.google.firebase:firebase-messaging")
+   ```
+
+### Step 4: Enable Firebase Service
+1. In `app/src/main/AndroidManifest.xml`, uncomment the Firebase service configuration:
+   ```xml
+   <meta-data
+       android:name="com.google.android.gms.version"
+       android:value="@integer/google_play_services_version" />
+   <service
+       android:name=".utils.BWellFirebaseMessagingService"
+       android:exported="false">
+       <intent-filter>
+           <action android:name="com.google.firebase.MESSAGING_EVENT" />
+       </intent-filter>
+   </service>
+   ```
+
+2. Rename the disabled Firebase service file:
+   ```bash
+   mv app/src/main/java/com/bwell/sampleapp/utils/BWellFirebaseMessagingService.kt.disabled \
+      app/src/main/java/com/bwell/sampleapp/utils/BWellFirebaseMessagingService.kt
+   ```
+
+### Step 5: Enable Device Token Registration and Notifications
+1. In `LoginFragment.kt`, uncomment the Firebase imports and device token registration code
+2. In `NavigationActivity.kt`, uncomment the notification permission and device token methods
+3. Look for the commented sections marked with "Firebase notifications"
+
+**Architecture Note**: The notification logic is consolidated into `NotificationHandler.kt` which works with or without Firebase. This keeps Firebase-specific code minimal and isolated.
+
+## Architecture Overview
+
+### Notification System Design
+The notification system has been designed with a clean separation of concerns:
+
+1. **`NotificationHandler.kt`** - Core notification logic that works with or without Firebase
+   - Handles notification display and formatting
+   - Processes deep links from notifications
+   - Manages navigation to appropriate screens
+   - Can be used independently of Firebase
+
+2. **`BWellFirebaseMessagingService.kt`** - Minimal Firebase wrapper (when enabled)
+   - Receives Firebase push notifications
+   - Delegates to `NotificationHandler` for processing
+   - Only contains Firebase-specific code
+
+3. **`NavigationActivity.kt`** - Main app activity with minimal notification coupling
+   - Uses `NotificationHandler` for deep link processing
+   - Firebase-specific code is commented out by default
+   - Maintains core navigation functionality independent of notifications
+
+This architecture allows the app to:
+- Work immediately without Firebase setup
+- Have minimal commented code when notifications are disabled
+- Easy to enable notifications by uncommenting clearly marked sections
+- Keep notification logic centralized and reusable
+
+**Security Note**: The `google-services.json` file contains sensitive Firebase configuration and is excluded from version control for security reasons.
+
 ## Reference the Maven Repository
 In the application's settings.gradle file (or settings.gradle.kts if using Kotlin with gradle) add the following:
 
@@ -96,3 +185,19 @@ content_navigation
 -> one of the fragments in mobile_navigation.xml is selected at a time
 -> when layout/fragment_data_connections.xml is selected
 -> -> Includes the RecyclerView rv_suggested_data_connections
+
+## Summary
+
+### Default Configuration (Recommended for Testing)
+- The app works immediately without any Firebase setup
+- Push notifications are disabled by default
+- No `google-services.json` file required
+- No sensitive credentials exposed in public repository
+
+### With Push Notifications (Optional)
+- Requires Firebase project setup
+- Requires `google-services.json` configuration file
+- Follow the "Optional: Firebase Push Notifications Setup" section above
+- Uncomment Firebase-related code in multiple files
+
+This approach ensures the sample app can be run immediately while keeping sensitive configuration optional and secure.

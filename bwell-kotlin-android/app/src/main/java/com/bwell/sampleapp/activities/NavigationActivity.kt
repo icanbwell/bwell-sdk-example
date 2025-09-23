@@ -1,16 +1,11 @@
 package com.bwell.sampleapp.activities
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.Secure
 import android.provider.Settings.Secure.getString
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -19,19 +14,27 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.bwell.device.requests.deviceToken.DevicePlatform
-import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.databinding.ActivityNavigationBinding
 import com.bwell.sampleapp.repository.Repository
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.sampleapp.utils.getEncryptedSharedPreferences
+import com.bwell.sampleapp.utils.NotificationHandler
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.json.JSONObject
+
+// Firebase notifications - uncomment to enable push notifications
+// import android.Manifest
+// import android.content.pm.PackageManager
+// import android.os.Build
+// import androidx.activity.result.contract.ActivityResultContracts
+// import androidx.core.content.ContextCompat
+// import com.bwell.device.requests.deviceToken.DevicePlatform
+// import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+// import kotlinx.coroutines.CoroutineScope
+// import kotlinx.coroutines.Dispatchers
+// import kotlinx.coroutines.launch
+// import org.json.JSONObject
 
 
 class NavigationActivity : AppCompatActivity() {
@@ -70,7 +73,8 @@ class NavigationActivity : AppCompatActivity() {
             tempDeviceId = "foo"
         }
         deviceId = tempDeviceId
-        askNotificationPermission()
+        // Firebase notifications - uncomment to enable push notifications
+        // askNotificationPermission()
     }
 
     override fun onResume() {
@@ -79,31 +83,13 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     private fun handleDeeplink() {
-        val remoteMessageDataStringified = intent.getStringExtra("remoteMessageDataStringified")
-        if (!remoteMessageDataStringified.isNullOrBlank()) {
-            val remoteMessageData = JSONObject(remoteMessageDataStringified)
-            val action = remoteMessageData.getString("action")
-            if (action.startsWith("ActivityDefinition/")) {
-                // NOTE: This current flow _only_ supports a task id being embedded in the `action` iterable
-                val bundle = Bundle().apply {
-                    val taskId = action.replace("ActivityDefinition/", "")
-                    putString("task_id", taskId)
-                }
-                CoroutineScope(Dispatchers.IO).launch {
-                    // (fire and forget) Register that an Activity with intent data has been received
-                    val result = BWellSdk.event.handleNotification(remoteMessageDataStringified)
-                    if (result.success()) {
-                        Log.i(TAG, "Push notification registered.")
-                    } else {
-                        Log.e(TAG, "There was an error registering a push notification")
-                    }
-                }
-                navController.navigate(R.id.nav_health_journey, bundle)
+        // Delegate deep link handling to NotificationHandler
+        NotificationHandler.handleDeepLink(intent, navController) { success ->
+            if (success) {
+                Log.i(TAG, "Deep link handled successfully")
+            } else {
+                Log.w(TAG, "Deep link handling failed or not applicable")
             }
-        }
-        val intentData = intent?.data
-        if (intentData != null && intentData.scheme == "bwell" && intentData.host == "ial2-callback") {
-            navController.navigate(R.id.nav_profile)
         }
     }
 
@@ -113,10 +99,13 @@ class NavigationActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        //unregisterDeviceToken(deviceId)
+        // Firebase notifications - uncomment to enable push notifications
+        // unregisterDeviceToken(deviceId)
         super.onDestroy()
     }
 
+    // Firebase notifications - uncomment to enable push notifications
+    /*
     private fun unregisterDeviceToken(deviceToken: String) {
         lifecycleScope.launch {
             val unregisterOutcome = repository.unregisterDeviceToken(deviceToken)
@@ -161,4 +150,5 @@ class NavigationActivity : AppCompatActivity() {
             }
         }
     }
+    */
 }

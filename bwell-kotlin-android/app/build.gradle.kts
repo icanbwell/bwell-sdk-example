@@ -1,7 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("com.google.gms.google-services")
+    // Firebase notifications - uncomment to enable push notifications
+    // Requires google-services.json file to be configured
+    // id("com.google.gms.google-services")
 }
 
 configurations.all {
@@ -93,8 +95,10 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("androidx.annotation:annotation:1.7.1")
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-    implementation("com.google.firebase:firebase-messaging")
+    // Firebase notifications - uncomment to enable push notifications
+    // Requires google-services.json file to be configured
+    // implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    // implementation("com.google.firebase:firebase-messaging")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.11.1")
     testImplementation("androidx.test.ext:junit:1.1.5")

@@ -1,0 +1,21 @@
+package com.bwell.sampleapp.utils
+
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
+
+/**
+ * Firebase messaging service that delegates notification handling to NotificationHandler.
+ * This keeps Firebase-specific code minimal and isolated.
+ */
+class BWellFirebaseMessagingService : FirebaseMessagingService() {
+    
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        if (remoteMessage.data.isNotEmpty()) {
+            val title = remoteMessage.data["title"] ?: ""
+            val body = remoteMessage.data["body"] ?: ""
+            
+            // Delegate to the consolidated notification handler
+            NotificationHandler.createNotification(this, title, body, remoteMessage.data)
+        }
+    }
+}
