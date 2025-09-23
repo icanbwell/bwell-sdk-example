@@ -26,8 +26,9 @@ import com.bwell.core.config.types.KeyStoreConfig
 import com.bwell.core.config.types.LogLevel
 import com.bwell.core.config.types.RetryPolicy
 import com.bwell.core.network.auth.Credentials
-import com.bwell.device.requests.deviceToken.DevicePlatform
-import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
+// Firebase notifications - uncomment to enable push notifications
+// import com.bwell.device.requests.deviceToken.DevicePlatform
+// import com.bwell.device.requests.deviceToken.RegisterDeviceTokenRequest
 import com.bwell.healthdata.requests.fhir.FhirRequest
 import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
 import com.bwell.healthdata.requests.fhir.enums.ResourceType
@@ -35,9 +36,10 @@ import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.user.requests.consents.ConsentCreateRequest
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.CompletableDeferred
+// Firebase notifications - uncomment to enable push notifications
+// import com.google.android.gms.tasks.OnCompleteListener
+// import com.google.firebase.messaging.FirebaseMessaging
+// import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -387,6 +389,9 @@ class LoginFragment : Fragment() {
 
             BWellSdk.authenticate(credentials)
 
+            // Firebase notifications - uncomment to enable push notifications
+            // Requires google-services.json file to be configured
+            /*
             val deferred = CompletableDeferred<String>()
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
                 if (!task.isSuccessful) {
@@ -402,6 +407,7 @@ class LoginFragment : Fragment() {
                 .platform(DevicePlatform.ANDROID)
                 .build()
             registerDeviceToken(registerDeviceTokenRequest)
+            */
 
             val createConsentRequest: ConsentCreateRequest = ConsentCreateRequest.Builder()
                 .category(ConsentCategoryCode.TOS)
@@ -438,38 +444,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest) {
-        lifecycleScope.launch {
-            val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
-            val registerOutcome = repository?.registerDeviceToken(registerDeviceTokenRequest)
-            registerOutcome?.collect { outcome ->
-                outcome?.let {
-                    if (outcome.success()) {
-                        Log.i(TAG, "FCM_TOKEN Registered Successfully")
-                    } else {
-                        Log.e(TAG, "FCM_TOKEN Failed to register")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun deregisterDeviceToken(deviceToken: String) {
-        lifecycleScope.launch {
-            val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
-            val registerOutcome = repository?.unregisterDeviceToken(deviceToken)
-            registerOutcome?.collect { outcome ->
-                outcome?.let {
-                    if (outcome.success()) {
-                        //device registered successfully
-                    } else {
-                        //device not registered
-                    }
-                }
-            }
-        }
-    }
-
     private fun createConsent(consentCreateRequest: ConsentCreateRequest) {
         lifecycleScope.launch {
             val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
@@ -486,4 +460,22 @@ class LoginFragment : Fragment() {
         }
     }
 
+    // Firebase notifications - uncomment to enable push notifications
+    /*
+    private fun registerDeviceToken(registerDeviceTokenRequest: RegisterDeviceTokenRequest) {
+        lifecycleScope.launch {
+            val repository = (activity?.application as? BWellSampleApplication)?.bWellRepository
+            val registerOutcome = repository?.registerDeviceToken(registerDeviceTokenRequest)
+            registerOutcome?.collect { outcome ->
+                outcome?.let {
+                    if (outcome.success()) {
+                        Log.i(TAG, "FCM_TOKEN Registered Successfully")
+                    } else {
+                        Log.e(TAG, "FCM_TOKEN Failed to register")
+                    }
+                }
+            }
+        }
+    }
+    */
 }

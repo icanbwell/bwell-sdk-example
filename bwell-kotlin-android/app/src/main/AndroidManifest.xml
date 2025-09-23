@@ -32,6 +32,9 @@
                     android:host="ial2-callback" />
             </intent-filter>
         </activity>
+        <!-- Firebase notifications - uncomment to enable push notifications -->
+        <!-- Requires google-services.json file to be configured -->
+        <!--
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -42,6 +45,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        -->
     </application>
 
 </manifest>
