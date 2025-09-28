@@ -155,6 +155,12 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        // Observe toast messages from ViewModel and show Toast
+        viewLifecycleOwner.lifecycleScope.launch {
+            profileViewModel.toastMessage.collect { message ->
+                android.widget.Toast.makeText(requireContext(), message, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
         return root
     }
 

@@ -27,6 +27,7 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
     private val _consentData = MutableSharedFlow<Consent?>()
     private val _verificationStatus = MutableSharedFlow<VerificationStatus?>()
     private val _verificationUrl = MutableSharedFlow<String?>()
+    private val _toastMessage = MutableSharedFlow<String>()
 
     val userData: MutableSharedFlow<Person?>
         get() = _userData
@@ -39,6 +40,8 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
 
     val consentData: MutableSharedFlow<Consent?>
         get() = _consentData
+
+    val toastMessage = _toastMessage
 
     companion object {
         private var storedUserData: Person? = null
@@ -143,11 +146,15 @@ class ProfileViewModel(private val repository: Repository?) : ViewModel() {
             try {
                 val operationOutcomeFlow: Flow<BWellResult<Consent>?>? = repository?.createConsent(createConsentRequest)
                 operationOutcomeFlow?.collect { operationOutcome ->
-                    //_consentData.emit(consentData)
+                    if (operationOutcome != null && operationOutcome.success()) {
+                        _toastMessage.emit("Consent created successfully!")
+                    } else {
+                        _toastMessage.emit("Failed to create consent.")
+                    }
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                _toastMessage.emit("Error creating consent.")
             }
         }
     }
-
 }
