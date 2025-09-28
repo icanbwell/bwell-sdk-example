@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.launch
 import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.common.models.domain.consent.enums.ConsentProvisionType
 import com.bwell.common.models.domain.consent.enums.ConsentStatus
@@ -35,13 +36,13 @@ import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.singletons.BWellSdk
+import com.bwell.sampleapp.utils.BWellSdkInitializer
 import com.bwell.user.requests.consents.ConsentCreateRequest
 // Firebase notifications - uncomment to enable push notifications
 // import com.google.android.gms.tasks.OnCompleteListener
 // import com.google.firebase.messaging.FirebaseMessaging
 // import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -364,30 +365,7 @@ class LoginFragment : Fragment() {
 
     private fun initializeBWellSDK(clientKey: String, oAuthCredentials: String) {
         lifecycleScope.launch {
-            Log.i(TAG, "Initializing SDK")
-            val keystore: KeyStoreConfig = KeyStoreConfig.Builder()
-                .path(requireContext().filesDir.absolutePath)
-                .build()
-
-            val config: BWellConfig = BWellConfig.Builder()
-                .clientKey(clientKey)
-                .logLevel(LogLevel.DEBUG)
-                .timeout(20000)
-                .retryPolicy(
-                    RetryPolicy.Builder()
-                        .maxRetries(5)
-                        .retryInterval(500)
-                        .build()
-                )
-                .keystore(keystore)
-                .build()
-
-            BWellSdk.initialize(config = config)
-            val credentials =
-                Credentials.OAuthCredentials(oAuthCredentials)
-            Log.d(TAG, credentials.token)
-
-            BWellSdk.authenticate(credentials)
+            BWellSdkInitializer.initialize(requireContext(), clientKey, oAuthCredentials)
 
             // Firebase notifications - uncomment to enable push notifications
             // Requires google-services.json file to be configured
