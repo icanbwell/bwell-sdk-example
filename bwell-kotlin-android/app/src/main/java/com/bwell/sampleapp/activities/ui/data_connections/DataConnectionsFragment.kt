@@ -16,6 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.enums.ConnectionCategory
+import com.bwell.common.models.domain.data.enums.ConnectionStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.BWellSampleApplication
@@ -439,10 +441,10 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                 this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
                 
                 // Show/hide buttons based on connection category and status
-                val category = item.category.toString()
-                val connectionStatus = item.status.toString()
+                val category = item.category
+                val connectionStatus = item.status
                 
-                if (category == "IDENTITY" && connectionStatus == "DISCONNECTED") {
+                if (category == ConnectionCategory.IDENTITY && connectionStatus == ConnectionStatus.DISCONNECTED) {
                     // Show activate button, hide disconnect button
                     showActivateButton()
                 } else {
