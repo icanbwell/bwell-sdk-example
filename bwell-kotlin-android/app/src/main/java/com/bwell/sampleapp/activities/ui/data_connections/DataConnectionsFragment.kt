@@ -295,7 +295,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                             if (activateOutcome.success()) {
                                 val drawable = ContextCompat.getDrawable(
                                     requireContext(),
-                                    R.drawable.rounded_rectangle_green
+                                    R.drawable.rounded_rectangle_grey
                                 )
                                 frameLayoutConnectionStatus.background = drawable
                                 if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(
@@ -307,7 +307,7 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                                     textView.text = resources.getString(R.string.activated)
                                     textView.setTextColor(
                                         resources.getColor(
-                                            R.color.white,
+                                            R.color.black,
                                             context?.theme
                                         )
                                     )
