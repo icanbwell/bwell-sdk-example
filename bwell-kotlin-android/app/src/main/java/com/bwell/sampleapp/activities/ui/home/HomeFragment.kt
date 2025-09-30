@@ -54,6 +54,11 @@ class HomeFragment : Fragment(), View.OnClickListener, HealthMatchFeedbackFragme
                 binding.userName.text = resources.getString(R.string.welcome_bwell)+" "+(it?.firstName ?: "test" )+"!"
             }
         }
+
+        // Test Patient and RelatedPerson functionality
+        // mainViewModel.testPatients()
+        // mainViewModel.testRelatedPersons()
+
         return root
     }
 

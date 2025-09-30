@@ -21,6 +21,10 @@ import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.user.requests.consents.ConsentCreateRequest
 import com.bwell.user.requests.createVerificationUrl.CreateVerificationUrlRequest
+import com.bwell.user.requests.patient.PatientRequest
+import com.bwell.user.requests.relatedperson.RelatedPersonRequest
+ import com.bwell.common.models.domain.common.Patient
+ import com.bwell.common.models.domain.common.RelatedPerson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -57,6 +61,34 @@ class Repository(private val applicationContext: Context) {
         val profileData = BWellSdk.user?.getProfile()
         if(profileData?.operationOutcome()?.success() == true){
             emit(profileData)
+        }
+    }
+
+    /**
+     * Fetch patients using the provided PatientRequest
+     * @param patientRequest Request parameters for fetching patients
+     * @return Flow of BWellResult with Patient data
+     */
+    suspend fun fetchPatients(patientRequest: PatientRequest): Flow<BWellResult<Patient>?> = flow {
+        try {
+            val patientData = BWellSdk.user?.getPatients(patientRequest)
+            emit(patientData)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+    /**
+     * Fetch related persons using the provided RelatedPersonRequest
+     * @param relatedPersonRequest Request parameters for fetching related persons
+     * @return Flow of BWellResult with RelatedPerson data
+     */
+    suspend fun fetchRelatedPersons(relatedPersonRequest: RelatedPersonRequest): Flow<BWellResult<RelatedPerson>?> = flow {
+        try {
+            val relatedPersonData = BWellSdk.user?.getRelatedPersons(relatedPersonRequest)
+            emit(relatedPersonData)
+        } catch (e: Exception) {
+            emit(null)
         }
     }
 
