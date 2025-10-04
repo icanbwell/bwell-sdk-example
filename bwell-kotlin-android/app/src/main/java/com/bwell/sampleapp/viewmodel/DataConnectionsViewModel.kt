@@ -126,6 +126,21 @@ class DataConnectionsViewModel(
         }
     }
 
+    private val _activateConnectionData = MutableStateFlow<OperationOutcome?>(null)
+    val activateConnectionData: StateFlow<OperationOutcome?> = _activateConnectionData
+
+    fun activateDirectConnection(connectionId: String) {
+        viewModelScope.launch {
+            try {
+                repository?.activateDirectConnection(connectionId)?.collect { activateOutcome ->
+                    _activateConnectionData.emit(activateOutcome)
+                }
+            } catch (ex: Exception) {
+                Log.i(TAG, ex.toString())
+            }
+        }
+    }
+
     private val _deleteConnectionData = MutableStateFlow<OperationOutcome?>(null)
     val deleteConnectionData: StateFlow<OperationOutcome?> = _deleteConnectionData
 
