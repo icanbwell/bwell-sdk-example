@@ -1,9 +1,11 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.common.models.domain.consent.Consent
+import com.bwell.common.models.domain.consent.enums.ConsentCategoryCode
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.domain.user.VerificationStatus
@@ -20,6 +22,7 @@ import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
 import com.bwell.user.requests.consents.ConsentCreateRequest
+import com.bwell.user.requests.consents.ConsentRequest
 import com.bwell.user.requests.createVerificationUrl.CreateVerificationUrlRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -90,6 +93,30 @@ class Repository(private val applicationContext: Context) {
             emit(outcome)
         } catch (e: Exception) {
             // Handle exceptions
+        }
+    }
+
+    suspend fun getConsents(): Flow<BWellResult<Consent>?> = flow {
+        try {
+            val consentRequest: ConsentRequest = ConsentRequest.Builder()
+                .category(ConsentCategoryCode.TOS)
+                .build()
+            val consentsResult = BWellSdk.user.getConsents(consentRequest)
+            emit(consentsResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+
+    suspend fun deleteUser(): Flow<OperationOutcome?> = flow {
+        try {
+            val deleteOutcome = BWellSdk.user.delete()
+            emit(deleteOutcome)
+            val test = ""
+        } catch (e: Exception) {
+            // Handle exceptions, if any
+            emit(null)
         }
     }
 
