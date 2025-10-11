@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 
-const Connections = () => {
+const ManageConnections = () => {
     const slice = useSelector((state: RootState) => state.connections);
 
     const memberConnections = slice.memberConnections;
@@ -16,7 +16,7 @@ const Connections = () => {
 
     return (
         <Container>
-            <h1>Connections</h1>
+            <h1>Manage Connections</h1>
             { memberConnections &&
                 <TableOrJsonToggle locator={"memberConnections"} />
             }
@@ -33,4 +33,4 @@ const Connections = () => {
     );
 }
 
-export default withAuthCheck('Connections', Connections);
+export default withAuthCheck('Manage Connections', ManageConnections);

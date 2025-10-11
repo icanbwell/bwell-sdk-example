@@ -1,7 +1,7 @@
 import Initialize from "@/pages/Initialize";
 import Page from "@/pages/Page";
 import AllergyIntolerances from "@/pages/AllergyIntolerances";
-import Connections from "@/pages/Connections";
+import ManageConnections from "@/pages/Connections";
 import { createBrowserRouter } from "react-router-dom";
 import HealthSummary from "./pages/HealthSummary";
 import Conditions from "./pages/Conditions";
@@ -23,6 +23,9 @@ const makePageRoute = (path: string, element: JSX.Element) => ({
 const Router = createBrowserRouter([
   makePageRoute("/", <Initialize />),
   makePageRoute("/initialize", <Initialize />),
+  makePageRoute("/profile", <ProfilePage />),
+  makePageRoute("/search", <SearchPage />),
+  makePageRoute("/connections", <ManageConnections />),
   makePageRoute("/healthSummary", <HealthSummary />),
   makePageRoute("/allergyIntolerances", <AllergyIntolerances />),
   makePageRoute("/carePlans", <CarePlans />),
@@ -32,10 +35,7 @@ const Router = createBrowserRouter([
   makePageRoute("/labs", <Labs />),
   makePageRoute("/medications", <Medications />),
   makePageRoute("/procedures", <Procedures />),
-  makePageRoute("/vitalSigns", <VitalSigns />),
-  makePageRoute("/connections", <Connections />),
-  makePageRoute("/profile", <ProfilePage />),
-  makePageRoute("/search", <SearchPage />),
+  makePageRoute("/vitalSigns", <VitalSigns />)  
 ]);
 
 export default Router;

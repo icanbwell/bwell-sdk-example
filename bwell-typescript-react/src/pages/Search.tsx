@@ -2,12 +2,9 @@ import { useState, useRef } from "react";
 import { getSdk } from "@/sdk/bWellSdk";
 import { Container, TextField, Button, Box } from "@mui/material";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
-import { SearchHealthResourcesRequest } from "@icanbwell/bwell-sdk-ts";
-
-const columns = [
-  { field: "content", headerName: "Content", width: 300 },
-  { field: "type", headerName: "Type", width: 160 }
-];
+import { SearchHealthResourcesRequest, DataSourceRequest } from "@icanbwell/bwell-sdk-ts";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,6 +12,55 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const apiRef = useGridApiRef();
+  const memberConnectionsRaw = useSelector((state: RootState) => state.connections.memberConnections);
+  const memberConnections = (memberConnectionsRaw && typeof memberConnectionsRaw === 'object' && 'data' in (memberConnectionsRaw as any) && Array.isArray((memberConnectionsRaw as any).data))
+    ? (memberConnectionsRaw as any).data
+    : [];
+
+  const handleConnect = async (endpointName: string) => {
+    try {
+      const sdk = getSdk();
+      if (!sdk) throw new Error("SDK not initialized");
+      const req = new DataSourceRequest({ connectionId: endpointName });
+      const response = await sdk.connection.getOauthUrl(req);
+      const url = response?.data?.redirectUrl;
+      if (url) {
+        window.open(url, "_blank");
+      }
+    } catch (err: any) {
+      // Optionally handle error
+    }
+  };
+
+  const columns = [
+    { field: "content", headerName: "Health Record Source", width: 450 },
+    { field: "type", headerName: "Type", width: 160 },
+    {
+      field: "connect",
+      headerName: "Connect",
+      width: 200,
+      renderCell: (params: any) => {
+        const endpoints = params.row.endpoint;
+        const connectionId = Array.isArray(endpoints) && endpoints.length > 0 && endpoints[0]?.name;
+        const alreadyConnected = memberConnections.some((conn: any) => conn.id === connectionId);
+        if (connectionId) {
+          if (alreadyConnected) {
+            return <span>Already Connected</span>;
+          }
+          return (
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => handleConnect(connectionId)}
+            >
+              Connect
+            </Button>
+          );
+        }
+        return null;
+      }
+    }
+  ];
 
   const handleSearch = async () => {
     setLoading(true);
