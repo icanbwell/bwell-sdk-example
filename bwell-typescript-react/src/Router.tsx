@@ -12,6 +12,7 @@ import Immunizations from "./pages/Immunizations";
 import Medications from "./pages/Medications";
 import Procedures from "./pages/Procedures";
 import VitalSigns from "./pages/VitalSigns";
+import ProfilePage from "./pages/Profile";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
@@ -32,7 +33,7 @@ const Router = createBrowserRouter([
   makePageRoute("/procedures", <Procedures />),
   makePageRoute("/vitalSigns", <VitalSigns />),
   makePageRoute("/connections", <Connections />),
-])
-
+  makePageRoute("/profile", <ProfilePage />),
+]);
 
 export default Router;
