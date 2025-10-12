@@ -67,12 +67,99 @@ const HealthDataGrid = ({
     const { healthData, loading, error } = slice;
 
     //get the rows; use a custom getter if provided
-    let rows = healthData?.data?.resources || [];
-
+    let rows = [];
+    if (healthData?.data?.resources) {
+        rows = healthData.data.resources;
+    } else if (healthData?.data?.entry) {
+        rows = healthData.data.entry;
+    } else if (healthData?.data?.items) {
+        rows = healthData.data.items;
+    } else if (healthData?.data) {
+        // fallback: try to use data directly if it's an array
+        if (Array.isArray(healthData.data)) {
+            rows = healthData.data;
+        }
+    }
+    // flatten allergy intolerance rows if selector is allergyIntolerances
+    if (selector === 'allergyIntolerances' && rows && rows.length > 0) {
+        rows = rows.map((row: any) => ({
+            id: row.id,
+            category: Array.isArray(row.resource?.category) ? row.resource.category.join(', ') : '',
+            criticality: row.resource?.criticality ?? '',
+            code: row.resource?.code?.coding?.[0]?.display ?? row.resource?.code?.text ?? '',
+            onsetDateTime: row.resource?.onsetDateTime ? new Date(row.resource.onsetDateTime) : null,
+            lastOccurrence: row.resource?.lastOccurrence ? new Date(row.resource.lastOccurrence) : null,
+            clinicalStatus: row.resource?.clinicalStatus?.coding?.[0]?.display ?? row.resource?.clinicalStatus?.text ?? '',
+            recordedDate: row.resource?.recordedDate ? new Date(row.resource.recordedDate) : null,
+            sourceDisplay: row.resource?.sourceDisplay ?? '',
+        }));
+    }
+    // flatten condition rows if selector is conditions
+    if (selector === 'conditions' && rows && rows.length > 0) {
+        rows = rows.map((row: any) => ({
+            id: row.id,
+            code: row.resource?.code?.coding?.[0]?.display ?? row.resource?.code?.text ?? '',
+            severity: row.resource?.severity?.text ?? '',
+            bodySite: row.resource?.bodySite?.[0]?.text ?? '',
+            recordedDate: row.resource?.recordedDate ? new Date(row.resource.recordedDate) : null,
+        }));
+    }
+    // flatten immunization rows if selector is immunizations
+    if (selector === 'immunizations' && rows && rows.length > 0) {
+        rows = rows.map((row: any) => ({
+            id: row.id,
+            vaccineCode: row.resource?.vaccineCode?.text ?? row.resource?.vaccineCode?.coding?.[0]?.display ?? '',
+            site: row.resource?.site?.coding?.[0]?.display ?? row.resource?.site?.text ?? '',
+            route: row.resource?.route?.coding?.[0]?.display ?? row.resource?.route?.text ?? '',
+            occurrenceDateTime: row.resource?.occurrenceDateTime ? new Date(row.resource.occurrenceDateTime) : null,
+        }));
+    }
+    // flatten procedure rows if selector is procedures
+    if (selector === 'procedures' && rows && rows.length > 0) {
+        rows = rows.map((row: any) => ({
+            id: row.id,
+            code: row.resource?.code?.text ?? row.resource?.code?.coding?.[0]?.display ?? '',
+            performer: row.resource?.performer?.[0]?.actor?.name?.[0]?.text ?? '',
+            outcome: row.resource?.outcome?.text ?? '',
+            performedDateTime: row.resource?.performedDateTime ? new Date(row.resource.performedDateTime) : null,
+        }));
+    }
+    // flatten vital sign rows if selector is vitalSigns
+    if (selector === 'vitalSigns' && rows && rows.length > 0) {
+        rows = rows.map((row: any) => ({
+            id: row.id,
+            code: row.resource?.code?.text ?? row.resource?.code?.coding?.[0]?.display ?? '',
+            value: row.resource?.valueQuantity ? `${row.resource.valueQuantity.value ?? ''} ${row.resource.valueQuantity.unit ?? ''}` : '',
+            interpretation: row.resource?.interpretation?.[0]?.text ?? '',
+            note: row.resource?.note?.[0]?.text ?? '',
+            effectiveDateTime: row.resource?.effectiveDateTime ? new Date(row.resource.effectiveDateTime) : null,
+        }));
+    }
+    // flatten care plan rows if selector is carePlans
+    if (selector === 'carePlans' && rows && rows.length > 0) {
+        rows = rows.map((row: any, idx: number) => ({
+            id: row.id ?? row.resource?.id ?? `carePlan-${idx}`,
+            category: row.resource?.category?.[0]?.display ?? row.resource?.category?.[0]?.text ?? '',
+            activity: row.resource?.activity,
+            period: row.resource?.period,
+        }));
+    }
+    // flatten encounter rows if selector is encounters
+    if (selector === 'encounters' && rows && rows.length > 0) {
+        rows = rows.map((row: any, idx: number) => ({
+            id: row.id ?? row.resource?.id ?? `encounter-${idx}`,
+            status: row.resource?.status ?? '',
+            type: row.resource?.type?.[0]?.text ?? row.resource?.type?.[0]?.coding?.[0]?.display ?? '',
+            class: row.resource?.class?.code ?? '',
+            period: row.resource?.period ?? null,
+            reason: row.resource?.reasonCode?.[0]?.text ?? row.resource?.reasonCode?.[0]?.coding?.[0]?.display ?? '',
+            serviceProvider: row.resource?.serviceProvider?.display ?? '',
+        }));
+    }
     if (getRows) rows = getRows(healthData);
 
     //check toggle state to see if we should display a table or json
-    const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true) && rows?.length > 0;
+    const showTable = useSelector((state: RootState) => state.toggle[selector] ?? true);
 
     //re-fetch data when the request changes, but only if we're doing server-side pagination
     useEffect(getData, serverPagination ? [requestInfo] : []);
