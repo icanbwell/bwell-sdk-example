@@ -14,45 +14,10 @@ const ProfilePage = () => {
   useEffect(() => {
     setLoading(true);
     getUserProfile()
-      .then((result) => {
-        const data = result?.data;
-        setProfile(data);
-        if (data) {
-          // Flatten nested fields to flat format
-          const flat: any = { ...data };
-          if (data.address && Array.isArray(data.address) && data.address[0]) {
-            flat.addressStreet = data.address[0].line?.[0] || "";
-            flat.city = data.address[0].city || "";
-            flat.stateOrProvidence = data.address[0].state || "";
-            flat.postageOrZipCode = data.address[0].postalCode || "";
-          }
-          if (data.telecom && Array.isArray(data.telecom)) {
-            flat.homePhone = data.telecom.find((t: any) => t.system === "phone" && t.use === "home")?.value || "";
-            flat.mobilePhone = data.telecom.find((t: any) => t.system === "phone" && t.use === "mobile")?.value || "";
-            flat.workPhone = data.telecom.find((t: any) => t.system === "phone" && t.use === "work")?.value || "";
-            flat.email = data.telecom.find((t: any) => t.system === "email")?.value || "";
-          }
-          if (data.name && Array.isArray(data.name) && data.name[0]) {
-            flat.firstName = data.name[0].given?.[0] || "";
-            flat.lastName = data.name[0].family || "";
-          }
-          // Remove parent fields that are objects/arrays and have children already mapped
-          ["address", "telecom", "name"].forEach((field) => {
-            if (flat[field]) {
-              delete flat[field];
-            }
-          });
-          // Fix: If any remaining field is an object, convert to string or pick a sensible value
-          Object.keys(flat).forEach((key) => {
-            if (typeof flat[key] === "object" && flat[key] !== null) {
-              if (Array.isArray(flat[key])) {
-                flat[key] = flat[key].join(", ");
-              } else {
-                flat[key] = JSON.stringify(flat[key]);
-              }
-            }
-          });
-          setEditData(flat);
+      .then((profile) => {
+        setProfile(profile);
+        if (profile) {
+          setEditData({ ...profile });
         }
       })
       .catch((err) => setError(err?.message || "Error fetching profile"))
