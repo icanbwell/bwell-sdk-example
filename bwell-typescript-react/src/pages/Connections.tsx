@@ -1,18 +1,27 @@
+import React from "react";
 import { Box, Container } from "@mui/material";
 import { CONNECTION_COLUMNS } from "@/column-defs";
 import withAuthCheck from "@/components/withAuthCheck";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
 import { DataGrid } from "@mui/x-data-grid";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
+import { getMemberConnections } from "@/store/connectionSlice";
 
 const ManageConnections = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    // Fetch member connections on every page load
+    React.useEffect(() => {
+        dispatch(getMemberConnections());
+    }, [dispatch]);
+
     const slice = useSelector((state: RootState) => state.connections);
 
-    const memberConnections = slice.memberConnections;
+    const memberConnections = slice.memberConnections ?? { data: [] };
 
     // @ts-ignore TODO: strong-type memberConnections
-    const showTable = useSelector((state: RootState) => state.toggle["memberConnections"] ?? true) && memberConnections.data.length > 0;
+    const showTable = useSelector((state: RootState) => state.toggle["memberConnections"] ?? true) && Array.isArray(memberConnections.data);
 
     return (
         <Container>
@@ -22,7 +31,7 @@ const ManageConnections = () => {
             }
             {showTable && memberConnections &&
                 // @ts-ignore TODO: strong-typing here
-                slice.memberConnections && <DataGrid rows={slice.memberConnections.data} columns={CONNECTION_COLUMNS} />
+                <DataGrid rows={memberConnections.data} columns={CONNECTION_COLUMNS} />
             }
             {!showTable && memberConnections &&
                 <Box>
