@@ -56,8 +56,8 @@ class HomeFragment : Fragment(), View.OnClickListener, HealthMatchFeedbackFragme
         }
 
         // Test Patient and RelatedPerson functionality
-        // mainViewModel.testPatients()
-        // mainViewModel.testRelatedPersons()
+//         mainViewModel.testPatients()
+//         mainViewModel.testRelatedPersons()
 
         return root
     }

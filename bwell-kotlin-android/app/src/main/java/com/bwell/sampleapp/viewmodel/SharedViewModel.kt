@@ -91,9 +91,11 @@ class SharedViewModel(private val repository: Repository?) : ViewModel() {
             .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-02-12"))
             .build()
         val request = PatientRequest
-                .Builder().page(0).pageSize(5)
-                .id("dc8495fc-5403-4878-8db1-fd747daff402")
+                .Builder()
+//               .id("dc8495fc-5403-4878-8db1-fd747daff402")
 //                .lastUpdated(lastUpdatedSearchDate)
+                .page(0)
+                .pageSize(5)
                 .build()
         fetchPatients(request)
     }
@@ -102,9 +104,10 @@ class SharedViewModel(private val repository: Repository?) : ViewModel() {
         val lastUpdatedSearchDate = SearchDate.Builder()
             .greaterThan(SimpleDateFormat("yyyy-MM-dd").parse("2020-02-12"))
             .build()
-        val request = RelatedPersonRequest.Builder().page(0).pageSize(5)
-            .id("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
-            .lastUpdated(lastUpdatedSearchDate)
+        val request = RelatedPersonRequest.Builder()
+//            .id("a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+//            .lastUpdated(lastUpdatedSearchDate)
+            .page(0).pageSize(5)
             .build()
         fetchRelatedPersons(request)
     }
