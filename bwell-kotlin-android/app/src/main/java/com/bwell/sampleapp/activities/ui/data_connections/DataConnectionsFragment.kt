@@ -16,6 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Organization
 import com.bwell.common.models.domain.data.Connection
+import com.bwell.common.models.domain.data.enums.ConnectionCategory
+import com.bwell.common.models.domain.data.enums.ConnectionStatus
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.connections.requests.ConnectionCreateRequest
 import com.bwell.sampleapp.BWellSampleApplication
@@ -279,6 +281,45 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                 }
             }
 
+            R.id.activate -> {
+                binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.GONE
+                lifecycleScope.launch {
+                    try {
+                        val connectionId = connection.id
+                        dataConnectionsViewModel.activateDirectConnection(connectionId)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                viewLifecycleOwner.lifecycleScope.launch {
+                    dataConnectionsViewModel.activateConnectionData.collect { activateOutcome ->
+                        activateOutcome?.let {
+                            if (activateOutcome.success()) {
+                                val drawable = ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.rounded_rectangle_grey
+                                )
+                                frameLayoutConnectionStatus.background = drawable
+                                if (frameLayoutConnectionStatus.childCount > 0 && frameLayoutConnectionStatus.getChildAt(
+                                        0
+                                    ) is TextView
+                                ) {
+                                    val textView =
+                                        frameLayoutConnectionStatus.getChildAt(0) as TextView
+                                    textView.text = resources.getString(R.string.activated)
+                                    textView.setTextColor(
+                                        resources.getColor(
+                                            R.color.black,
+                                            context?.theme
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             R.id.disconnect -> {
                 binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.GONE
                 lifecycleScope.launch {
@@ -369,6 +410,18 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         binding.recordLocationStatusTextView.visibility = View.GONE
     }
 
+    private fun showActivateButton() {
+        binding.includeDataConnections.activate.visibility = View.VISIBLE
+        binding.includeDataConnections.disconnect.visibility = View.GONE
+        binding.includeDataConnections.activate.setOnClickListener(this)
+    }
+
+    private fun showDisconnectButton() {
+        binding.includeDataConnections.activate.visibility = View.GONE
+        binding.includeDataConnections.disconnect.visibility = View.VISIBLE
+        binding.includeDataConnections.disconnect.setOnClickListener(this)
+    }
+
     @Suppress("LocalVariableName")
     override fun onChangeStatusClicked(
         item: Any, // Accepts Connection or OrganizationCareTeamParticipantMemberDisplay
@@ -380,16 +433,30 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
         binding.includeDataConnections.frameLayoutUpdateStatus.visibility = View.VISIBLE
         binding.includeDataConnections.frameLayoutUpdateStatus.y =
             binding.includeDataConnections.rvSuggestedDataConnections.y + parent_view.y + status_change_view.y
-        binding.includeDataConnections.disconnect.setOnClickListener(this)
         binding.includeDataConnections.delete.setOnClickListener(this)
+
         when (item) {
             is Connection -> {
                 this.connection = item
                 this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
+                
+                // Show/hide buttons based on connection category and status
+                val category = item.category
+                val connectionStatus = item.status
+                
+                if (category == ConnectionCategory.IDENTITY && connectionStatus == ConnectionStatus.DISCONNECTED) {
+                    // Show activate button, hide disconnect button
+                    showActivateButton()
+                } else {
+                    // Show disconnect button, hide activate button
+                    showDisconnectButton()
+                }
             }
             is OrganizationCareTeamParticipantMemberDisplay -> {
                 // Do not set 'connection' for non-Connection items
                 this.frameLayoutConnectionStatus = frameLayoutConnectionStatus
+                // For non-Connection items, show default buttons
+                showDisconnectButton()
             }
         }
     }
