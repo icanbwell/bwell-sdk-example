@@ -35,7 +35,7 @@ const Router = createBrowserRouter([
   makePageRoute("/labs", <Labs />),
   makePageRoute("/medications", <Medications />),
   makePageRoute("/procedures", <Procedures />),
-  makePageRoute("/vitalSigns", <VitalSigns />)  
+  makePageRoute("/vitalSigns", <VitalSigns />)
 ]);
 
 export default Router;

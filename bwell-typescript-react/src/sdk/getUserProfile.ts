@@ -16,13 +16,13 @@ export async function getUserProfile() {
   if (addressArr[0]) {
     flat.addressStreet = addressArr[0]?.line?.[0] || "";
     flat.city = addressArr[0]?.city || "";
-    flat.stateOrProvidence = addressArr[0]?.state || "";
-    flat.postageOrZipCode = addressArr[0]?.postalCode || "";
+    flat.state = addressArr[0]?.state || "";
+    flat.postalCode = addressArr[0]?.postalCode || "";
   } else {
     flat.addressStreet = "";
     flat.city = "";
-    flat.stateOrProvidence = "";
-    flat.postageOrZipCode = "";
+    flat.state = "";
+    flat.postalCode = "";
   }
 
   // Safely extract telecom fields
@@ -59,8 +59,8 @@ export async function getUserProfile() {
     language: flat.language ?? "",
     addressStreet: flat.addressStreet ?? "",
     city: flat.city ?? "",
-    stateOrProvidence: flat.stateOrProvidence ?? "",
-    postageOrZipCode: flat.postageOrZipCode ?? "",
+    state: flat.state ?? "",
+    postalCode: flat.postalCode ?? "",
     homePhone: flat.homePhone ?? "",
     mobilePhone: flat.mobilePhone ?? "",
     workPhone: flat.workPhone ?? "",

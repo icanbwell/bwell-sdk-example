@@ -63,7 +63,7 @@ export const ALLERGY_INTOLERANCE_COLUMNS: GridColDef[] = [
     { field: 'criticality', headerName: 'Criticality', width: 150 },
     { field: 'code', headerName: 'Code', width: 200 },
     { field: 'onsetDateTime', headerName: 'Onset', valueGetter: (params) => monthDayYearTime(params), width: 200 },
-    { field: 'lastOccurrence', headerName: 'Last Occurence', valueGetter: (params) => monthDayYearTime(params), width: 200 },
+    { field: 'lastOccurrence', headerName: 'Last Occurrence', valueGetter: (params) => monthDayYearTime(params), width: 200 },
     { field: 'clinicalStatus', headerName: 'Clinical Status', width: 125 },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (params) => monthDayYearTime(params), width: 175 },
     { field: 'sourceDisplay', headerName: 'Source', width: 200 },
