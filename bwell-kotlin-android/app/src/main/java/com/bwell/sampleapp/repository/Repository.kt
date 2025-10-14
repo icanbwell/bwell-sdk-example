@@ -72,7 +72,9 @@ class Repository(private val applicationContext: Context) {
     suspend fun fetchPatients(patientRequest: PatientRequest): Flow<BWellResult<Patient>?> = flow {
         try {
             val patientData = BWellSdk.user?.getPatients(patientRequest)
-            emit(patientData)
+            if (patientData?.operationOutcome()?.success() == true) {
+                emit(patientData)
+            }
         } catch (e: Exception) {
             emit(null)
         }
@@ -84,11 +86,9 @@ class Repository(private val applicationContext: Context) {
      * @return Flow of BWellResult with RelatedPerson data
      */
     suspend fun fetchRelatedPersons(relatedPersonRequest: RelatedPersonRequest): Flow<BWellResult<RelatedPerson>?> = flow {
-        try {
-            val relatedPersonData = BWellSdk.user?.getRelatedPersons(relatedPersonRequest)
+        val relatedPersonData = BWellSdk.user?.getRelatedPersons(relatedPersonRequest)
+        if (relatedPersonData?.operationOutcome()?.success() == true) {
             emit(relatedPersonData)
-        } catch (e: Exception) {
-            emit(null)
         }
     }
 
