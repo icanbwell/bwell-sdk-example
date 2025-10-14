@@ -56,7 +56,7 @@ class SharedViewModel(private val repository: Repository?) : ViewModel() {
      * @param patientRequest Request parameters for fetching patients
      */
     fun fetchPatients(patientRequest: PatientRequest) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 repository?.fetchPatients(patientRequest)?.collect { result ->
                     _patientResults.emit(result)
@@ -73,7 +73,7 @@ class SharedViewModel(private val repository: Repository?) : ViewModel() {
      * @param relatedPersonRequest Request parameters for fetching related persons
      */
     fun fetchRelatedPersons(relatedPersonRequest: RelatedPersonRequest) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 repository?.fetchRelatedPersons(relatedPersonRequest)?.collect { result ->
                     _relatedPersonResults.emit(result)
