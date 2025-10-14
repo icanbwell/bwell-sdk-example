@@ -25,6 +25,7 @@ const HamburgerMenu = ({ menuId, router }: HamburgerMenuProps) => {
     const escapedPath = path.replace("/", "");
 
     if (escapedPath === "") return "Home";
+    if (escapedPath === "connections") return "Manage Connections";
     else return addSpaceBeforeUppercase(escapedPath.charAt(0).toUpperCase() + escapedPath.slice(1));
   };
 
