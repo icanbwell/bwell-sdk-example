@@ -156,6 +156,17 @@ const HealthDataGrid = ({
             serviceProvider: row.resource?.serviceProvider?.display ?? '',
         }));
     }
+    // flatten lab rows if selector is labs
+    if (selector === 'labs' && rows && rows.length > 0) {
+        rows = rows.map((row: any, idx: number) => ({
+            id: row.id ?? row.resource?.id ?? `lab-${idx}`,
+            code: row.resource?.code?.coding?.[0]?.display ?? row.resource?.code?.text ?? '',
+            effectiveDateTime: row.resource?.effectiveDateTime ? new Date(row.resource.effectiveDateTime) : null,
+            value: row.resource?.valueQuantity ? `${row.resource.valueQuantity.value ?? ''} ${row.resource.valueQuantity.unit ?? ''}` : '',
+            referenceRange: row.resource?.referenceRange?.[0] ? `${row.resource.referenceRange[0].low?.value ?? ''} ${row.resource.referenceRange[0].low?.unit ?? ''} - ${row.resource.referenceRange[0].high?.value ?? ''} ${row.resource.referenceRange[0].high?.unit ?? ''}` : '',
+            note: row.resource?.note?.[0]?.text ?? '',
+        }));
+    }
     if (getRows) rows = getRows(healthData);
 
     //check toggle state to see if we should display a table or json
