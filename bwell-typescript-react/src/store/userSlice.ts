@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authenticateSdk, initializeSdk } from "@/sdk/bWellSdk";
-import { BWellSDK } from "@icanbwell/bwell-sdk-ts";
 
 interface UserState {
   clientKey?: string;
@@ -14,18 +13,25 @@ interface UserState {
 
 export const authenticate = createAsyncThunk<
   string,
-  { oauthCreds: string },
+  { oauthCreds?: string; username?: string; password?: string },
   { rejectValue: string }
->("user/authenticate", async ({ oauthCreds }, { rejectWithValue }) => {
+>("user/authenticate", async (params, { rejectWithValue }) => {
   try {
-    const authenticationOutcome = await authenticateSdk(oauthCreds);
-
+    let authenticationOutcome;
+    if (params.oauthCreds) {
+      authenticationOutcome = await authenticateSdk(params.oauthCreds);
+    } else if (params.username && params.password) {
+      authenticationOutcome = await authenticateSdk({
+        email: params.username,
+        password: params.password,
+      });
+    } else {
+      return rejectWithValue("Missing authentication credentials");
+    }
     const success = authenticationOutcome.success();
-
     if (!success)
       return rejectWithValue(authenticationOutcome.error().message ?? "Unknown error");
-
-    return oauthCreds;
+    return params.oauthCreds ?? params.username ?? "";
   } catch (error) {
     return rejectWithValue("Unhandled error logging in user.");
   }
