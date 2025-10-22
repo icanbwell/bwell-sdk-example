@@ -58,6 +58,7 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_labs">Labs</string>
     <string name="menu_medicines">Medicines</string>
+    <string name="menu_coverage">Coverage</string>
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
