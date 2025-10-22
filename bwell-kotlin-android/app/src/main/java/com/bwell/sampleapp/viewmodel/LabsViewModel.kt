@@ -3,9 +3,13 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.common.observation.Observation
+import com.bwell.common.models.domain.healthdata.healthsummary.diagnosticreport.DiagnosticReport
+import com.bwell.common.models.domain.healthdata.healthsummary.diagnosticreportlab.DiagnosticReportLabGroup
 import com.bwell.common.models.domain.healthdata.lab.LabGroup
 import com.bwell.common.models.domain.healthdata.lab.LabKnowledge
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.healthsummary.requests.diagnosticreport.DiagnosticReportRequest
+import com.bwell.healthdata.healthsummary.requests.diagnosticreportlab.DiagnosticReportLabGroupsRequest
 import com.bwell.healthdata.lab.requests.LabGroupsRequest
 import com.bwell.healthdata.lab.requests.LabKnowledgeRequest
 import com.bwell.healthdata.lab.requests.LabsRequest
@@ -68,6 +72,36 @@ class LabsViewModel(private val repository: LabsRepository?) : ViewModel() {
             try {
                 repository?.getLabKnowledge(labKnowledgeRequest)?.collect { result ->
                     _labKnowledgeResults.emit(result)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
+
+    private val _diagnosticReportGroupResults = MutableStateFlow<BWellResult<DiagnosticReportLabGroup>?>(null)
+    val diagnosticReportLabGroupResults: StateFlow<BWellResult<DiagnosticReportLabGroup>?> = _diagnosticReportGroupResults
+
+    fun getDiagnosticReportLabGroups(diagnosticReportLabGroupRequest: DiagnosticReportLabGroupsRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getDiagnosticReportGroups(diagnosticReportLabGroupRequest)?.collect { result ->
+                        _diagnosticReportGroupResults.emit(result)
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, if any
+            }
+        }
+    }
+
+    private val _diagnosticReportResults = MutableStateFlow<BWellResult<DiagnosticReport>?>(null)
+    val diagnosticReporportResults: StateFlow<BWellResult<DiagnosticReport>?> = _diagnosticReportResults
+
+    fun getDiagnosticReports(diagnosticReportRequest: DiagnosticReportRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getDiagnosticReports(diagnosticReportRequest)?.collect { result ->
+                    _diagnosticReportResults.emit(result)
                 }
             } catch (e: Exception) {
                 // Handle exceptions, if any
