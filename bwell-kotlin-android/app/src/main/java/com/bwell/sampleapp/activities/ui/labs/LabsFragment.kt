@@ -45,6 +45,10 @@ class LabsFragment : Fragment() {
 
         getGroupLabList()
         addSearchTextListeners()
+
+        labsViewModel.testDiagnosticReportGroups()
+        labsViewModel.testDiagnosticReports()
+
         return root
     }
 
