@@ -108,4 +108,23 @@ class LabsViewModel(private val repository: LabsRepository?) : ViewModel() {
             }
         }
     }
+
+    // Simple test functions
+    fun testDiagnosticReportGroups() {
+        val request = DiagnosticReportLabGroupsRequest
+            .Builder()
+            .page(0)
+            .pageSize(5)
+            .build()
+        getDiagnosticReportLabGroups(request)
+    }
+
+    fun testDiagnosticReports() {
+        val request = DiagnosticReportRequest
+            .Builder()
+            .page(0)
+            .pageSize(5)
+            .build()
+        getDiagnosticReports(request)
+    }
 }
