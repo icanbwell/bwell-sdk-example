@@ -69,7 +69,7 @@ android {
 dependencies {
 
     // BWell SDK Usage
-    implementation("com.bwell:bwell-sdk-kotlin:1.9.0")
+    implementation("com.bwell:bwell-sdk-kotlin:1.8.0-20251017.181326-14")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -95,6 +95,7 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("androidx.annotation:annotation:1.7.1")
+    implementation("com.google.code.gson:gson:2.10.1")
     // Firebase notifications - uncomment to enable push notifications
     // Requires google-services.json file to be configured
     // implementation(platform("com.google.firebase:firebase-bom:32.7.1"))

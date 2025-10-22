@@ -58,4 +58,10 @@
         android:name="com.bwell.sampleapp.activities.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_coverage"
+        android:name="com.bwell.sampleapp.activities.ui.coverage.CoverageFragment"
+        android:label="@string/menu_coverage"
+        tools:layout="@layout/fragment_coverage" />
 </navigation>
