@@ -14,6 +14,10 @@ import com.bwell.common.models.domain.task.Task
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.OperationOutcome
 import com.bwell.connections.requests.ConnectionCreateRequest
+import com.bwell.connections.requests.MemberConnectionsRequest
+import com.bwell.common.models.domain.data.enums.ConnectionStatus
+import com.bwell.common.models.domain.data.enums.IntegrationType
+import com.bwell.common.models.domain.data.enums.SyncStatus
 import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamsRequest
 import com.bwell.sampleapp.model.DataConnectionsClinicsList
 import com.bwell.sampleapp.model.DataConnectionsClinicsListItems
@@ -193,7 +197,12 @@ class DataConnectionsViewModel(
     fun getConnectionsAndObserve() {
         viewModelScope.launch {
             try {
-                val connectionsFlow = repository?.getMemberConnections() ?: return@launch
+                val memberConnectionRequest = MemberConnectionsRequest.Builder()
+//                    .status(listOf(ConnectionStatus.DELETED))
+//                    .syncStatus(listOf(SyncStatus.DATA_DELETED))
+//                    .integrationType(listOf(IntegrationType.DIRECT_IAS))
+                    .build()
+                val connectionsFlow = repository?.getMemberConnections(memberConnectionRequest) ?: return@launch
 
                 val careTeamsRequest = CareTeamsRequest.Builder()
                     .category("recommended-connections")

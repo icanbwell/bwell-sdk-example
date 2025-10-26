@@ -24,6 +24,7 @@ import com.bwell.user.requests.consents.ConsentRequest
 import com.bwell.user.requests.consents.ConsentCreateRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.bwell.connections.requests.MemberConnectionsRequest
 
 class DataConnectionsRepository(private val applicationContext: Context) {
 
@@ -45,9 +46,9 @@ class DataConnectionsRepository(private val applicationContext: Context) {
     val dataConnectionsClinics: LiveData<DataConnectionsClinicsList>
         get() = dataConnectionsClinicsLiveData
 
-    suspend fun getMemberConnections(): Flow<BWellResult<Connection>?> = flow {
+    suspend fun getMemberConnections(memberConnectionRequest: MemberConnectionsRequest?): Flow<BWellResult<Connection>?> = flow {
         try {
-            val connectionsResult = BWellSdk.connections.getMemberConnections()
+            val connectionsResult = BWellSdk.connections.getMemberConnections(memberConnectionRequest)
             emit(connectionsResult)
         } catch (e: Exception) {
             // Handle exceptions, if any
