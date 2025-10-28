@@ -6,7 +6,6 @@
 //
 
 import Testing
-@testable import bwell_swift_ios
 
 struct bwell_swift_iosTests {
 

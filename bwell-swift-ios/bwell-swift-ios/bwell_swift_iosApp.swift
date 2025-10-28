@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct bwell_swift_iosApp: App {
+    @StateObject private var bwellSDKManager = BWellSDKManager.shared
+    @StateObject private var router = NavigationRouter()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+                .environmentObject(bwellSDKManager)
+                .environmentObject(router)
         }
     }
 }
