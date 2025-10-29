@@ -13,15 +13,6 @@ enum SideMenuOptionModel: Int, CaseIterable {
     case search
     case manageConnections
     case healthSummary
-    // case allergyIntolerances
-    // case carePlans
-    // case conditions
-    // case encounters
-    // case immunizations
-    // case labs
-    // case medications
-    // case procedures
-    // case vitalSigns
     case logout
 
 
@@ -32,15 +23,6 @@ enum SideMenuOptionModel: Int, CaseIterable {
             case .search: "Search"
             case .manageConnections: "Manage Connections"
             case .healthSummary: "Health Summary"
-            // case .allergyIntolerances: "Allergy Intolerances"
-            // case .carePlans: "Care Plans"
-            // case .conditions: "Conditions"
-            // case .encounters: "Encounters"
-            // case .immunizations: "Immunizations"
-            // case .labs: "Labs"
-            // case .medications: "Medications"
-            // case .procedures: "Procedures"
-            // case .vitalSigns: "Vital Signs"
             case .logout: "Logout"
         }
     }
@@ -52,24 +34,54 @@ enum SideMenuOptionModel: Int, CaseIterable {
             case .search: "magnifyingglass"
             case .manageConnections: "rectangle.connected.to.line.below"
             case .healthSummary: "heart.text.clipboard"
-            // case .allergyIntolerances: "facemask"
-            // case .carePlans: "list.clipboard"
-            // case .conditions: "stethoscope"
-            // case .encounters: "person.2.wave.2"
-            // case .immunizations: "syringe"
-            // case .labs: "testtube.2"
-            // case .medications: "pills"
-            // case .procedures: "ivfluid.bag"
-            // case .vitalSigns: "waveform.path.ecg.rectangle"
             case .logout: "arrow.right.square"
         }
     }
 
-    // TODO: Add another switch case with the views names for navigation
+    var destination: AppView {
+        switch self {
+            case .home: .home
+            case .profile: .profile
+            case .search: .search
+            case .healthSummary: .healthSummary
+            case .manageConnections: .manageConnections
+            case .logout: .home
+        }
+    }
 }
 
 extension SideMenuOptionModel: Identifiable {
     var id: Int {
         return self.rawValue
+    }
+}
+
+@MainActor 
+final class SideMenuOptionViewModel: ObservableObject {
+    private var router: NavigationRouter?
+    private var sdkManager: BWellSDKManager?
+    @Published var optionSelected: SideMenuOptionModel?
+
+    init() { }
+
+    func setup(router: NavigationRouter, sdkManager: BWellSDKManager) {
+        self.router = router
+        self.sdkManager = sdkManager
+    }
+
+    func navigate(to optionSelected: SideMenuOptionModel) {
+        guard let router = router else { return }
+        
+        // Handle logout separately
+        if optionSelected == .logout {
+            sdkManager?.logout()
+            return
+        }
+        
+        // Update the selected option
+        self.optionSelected = optionSelected
+        
+        // For other navigation, navigate and replace the current stack
+        router.navigateAndReplace(to: optionSelected.destination)
     }
 }

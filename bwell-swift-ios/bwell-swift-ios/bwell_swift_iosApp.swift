@@ -11,12 +11,14 @@ import SwiftUI
 struct bwell_swift_iosApp: App {
     @StateObject private var bwellSDKManager = BWellSDKManager.shared
     @StateObject private var router = NavigationRouter()
+    @StateObject private var sideMenuViewModel = SideMenuOptionViewModel()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(bwellSDKManager)
                 .environmentObject(router)
+                .environmentObject(sideMenuViewModel)
         }
     }
 }

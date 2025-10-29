@@ -10,9 +10,8 @@ import BWellSDK
 @MainActor
 final class ClientKeyViewModel: ObservableObject {
     private let sdkManager: BWellSDKManager
-    // private var router: NavigationRouter?
 
-    @Published var clientKey: String = ""
+    @Published var clientKey: String = "eyJyIjoiY2Zoa2h3ODZvNHdoNWFiOW9kaHgiLCJlbnYiOiJkZXYiLCJraWQiOiJid2VsbF9kZW1vLWRldiJ9"
     @Published var isLoading: Bool = false
     @Published var authenticated: Bool = false
     @Published var errorMessage: String?
@@ -21,35 +20,30 @@ final class ClientKeyViewModel: ObservableObject {
         sdkManager = .shared
     }
 
-    /*func setup(router: NavigationRouter) {
-        self.router = router
-    }*/
-
     func initializeSDK() {
-        // guard let router = router else { return }
-
         // Check the client key is not empty.
         guard !clientKey.isEmpty else {
             errorMessage = "Client key is required."
+            isLoading = false
             return
         }
 
-        isLoading = false
+        isLoading = true
         errorMessage = nil
 
-        // Call the initialization method in the SDK Manager and handle the errors.
         Task {
             do {
                 try await sdkManager.initilize(clientKey: clientKey)
-                self.authenticated = true
-                // router.navigate(to: .login)
+                await MainActor.run {
+                    self.authenticated = true
+                    self.isLoading = false
+                }
             } catch {
                 await MainActor.run {
                     errorMessage = "SDK initilization failed: \(error)"
+                    isLoading = false
                 }
-
             }
-            isLoading = false
         }
     }
 }

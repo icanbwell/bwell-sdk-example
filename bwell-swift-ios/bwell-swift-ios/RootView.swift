@@ -11,6 +11,7 @@ import BWellSDK
 struct RootView: View {
     @EnvironmentObject private var bwellSDKManager: BWellSDKManager
     @EnvironmentObject private var router: NavigationRouter
+    @State private var showMenu: Bool = false
 
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -21,13 +22,17 @@ struct RootView: View {
                             HomeView()
                                 .navigationBarBackButtonHidden()
                         case .profile:
-                            EmptyView()
+                            ProfileView()
+                                .navigationBarBackButtonHidden()
                         case .search:
-                            EmptyView()
-                        case .manageConnections:
-                            EmptyView()
+                            SearchView()
+                                .navigationBarBackButtonHidden()
                         case .healthSummary:
-                            EmptyView()
+                            HealthSummaryView()
+                                .navigationBarBackButtonHidden()
+                        case .manageConnections:
+                            ManageConnectionsView()
+                                .navigationBarBackButtonHidden()
                     }
                 }
         }.onChange(of: bwellSDKManager.isAuthenticated) { _, isAuthenticated in

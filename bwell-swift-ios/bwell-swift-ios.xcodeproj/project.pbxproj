@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		551538732EB25C7D001174F9 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551538722EB25C79001174F9 /* ProfileViewModel.swift */; };
 		5522DC872EAFE10C00F9BCD7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */; };
 		5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */; };
 		5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */; };
@@ -23,8 +24,14 @@
 		5522DCAC2EB0380800F9BCD7 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCAB2EB0380800F9BCD7 /* SideMenuView.swift */; };
 		5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCAD2EB1082500F9BCD7 /* SideMenuOptionModel.swift */; };
 		5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */; };
-		5522DCB32EB1314300F9BCD7 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB22EB1314300F9BCD7 /* CustomTextField.swift */; };
-		5522DCB52EB1320D00F9BCD7 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB42EB1320700F9BCD7 /* CustomButton.swift */; };
+		5522DCB32EB1314300F9BCD7 /* BWellTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB22EB1314300F9BCD7 /* BWellTextField.swift */; };
+		5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB42EB1320700F9BCD7 /* BWellButton.swift */; };
+		5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */; };
+		5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */; };
+		5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */; };
+		5522DCBE2EB1893F00F9BCD7 /* HealthSummaryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBD2EB1892E00F9BCD7 /* HealthSummaryDetailView.swift */; };
+		5522DCC02EB1961000F9BCD7 /* HealthSummaryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBF2EB1960800F9BCD7 /* HealthSummaryModels.swift */; };
+		5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		551538722EB25C79001174F9 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "bwell-swift-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5522DC652EAFE0FF00F9BCD7 /* bwell-swift-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "bwell-swift-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5522DC6F2EAFE0FF00F9BCD7 /* bwell-swift-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "bwell-swift-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,8 +72,14 @@
 		5522DCAB2EB0380800F9BCD7 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
 		5522DCAD2EB1082500F9BCD7 /* SideMenuOptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionModel.swift; sourceTree = "<group>"; };
 		5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		5522DCB22EB1314300F9BCD7 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
-		5522DCB42EB1320700F9BCD7 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		5522DCB22EB1314300F9BCD7 /* BWellTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellTextField.swift; sourceTree = "<group>"; };
+		5522DCB42EB1320700F9BCD7 /* BWellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellButton.swift; sourceTree = "<group>"; };
+		5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellNavigationBar.swift; sourceTree = "<group>"; };
+		5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryViewModel.swift; sourceTree = "<group>"; };
+		5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryView.swift; sourceTree = "<group>"; };
+		5522DCBD2EB1892E00F9BCD7 /* HealthSummaryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryDetailView.swift; sourceTree = "<group>"; };
+		5522DCBF2EB1960800F9BCD7 /* HealthSummaryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryModels.swift; sourceTree = "<group>"; };
+		5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataSummaryModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +108,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		551538712EB25C6A001174F9 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				551538722EB25C79001174F9 /* ProfileViewModel.swift */,
+				5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		5522DC4E2EAFE0FD00F9BCD7 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +140,7 @@
 		5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */ = {
 			isa = PBXGroup;
 			children = (
+				551538712EB25C6A001174F9 /* Profile */,
 				5522DCAF2EB11F9C00F9BCD7 /* Health */,
 				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
 				5522DCA82EB037B000F9BCD7 /* Home */,
@@ -159,8 +183,9 @@
 		5522DCA72EB032BB00F9BCD7 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				5522DCB42EB1320700F9BCD7 /* CustomButton.swift */,
-				5522DCB22EB1314300F9BCD7 /* CustomTextField.swift */,
+				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
+				5522DCB42EB1320700F9BCD7 /* BWellButton.swift */,
+				5522DCB22EB1314300F9BCD7 /* BWellTextField.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -188,9 +213,21 @@
 		5522DCAF2EB11F9C00F9BCD7 /* Health */ = {
 			isa = PBXGroup;
 			children = (
-				5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */,
+				5522DCC12EB2386A00F9BCD7 /* Summary */,
 			);
 			path = Health;
+			sourceTree = "<group>";
+		};
+		5522DCC12EB2386A00F9BCD7 /* Summary */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */,
+				5522DCBD2EB1892E00F9BCD7 /* HealthSummaryDetailView.swift */,
+				5522DCBF2EB1960800F9BCD7 /* HealthSummaryModels.swift */,
+				5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */,
+				5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */,
+			);
+			path = Summary;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -333,18 +370,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5522DCB32EB1314300F9BCD7 /* CustomTextField.swift in Sources */,
+				5522DCC02EB1961000F9BCD7 /* HealthSummaryModels.swift in Sources */,
+				5522DCB32EB1314300F9BCD7 /* BWellTextField.swift in Sources */,
+				5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */,
+				5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */,
 				5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */,
 				5522DCAC2EB0380800F9BCD7 /* SideMenuView.swift in Sources */,
-				5522DCB52EB1320D00F9BCD7 /* CustomButton.swift in Sources */,
+				5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */,
 				5522DC9B2EAFF8D300F9BCD7 /* HomeView.swift in Sources */,
 				5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */,
+				5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */,
 				5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */,
 				5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */,
 				5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */,
 				5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */,
+				551538732EB25C7D001174F9 /* ProfileViewModel.swift in Sources */,
 				5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */,
 				5522DC9F2EB00BE100F9BCD7 /* ClientKeyViewModel.swift in Sources */,
+				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,
+				5522DCBE2EB1893F00F9BCD7 /* HealthSummaryDetailView.swift in Sources */,
 				5522DCA62EB0294B00F9BCD7 /* LoginViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

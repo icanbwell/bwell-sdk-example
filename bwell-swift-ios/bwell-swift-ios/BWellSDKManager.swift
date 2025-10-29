@@ -39,8 +39,8 @@ final class BWellSDKManager: ObservableObject {
     func initilize(clientKey: String) async throws {
         do {
             let config = BWell.SDKConfig(clientKey: clientKey, logLevel: .verbose)
-            
             let sdkInstance = try BWellSDK(config: config)
+
             try await sdkInstance.initialize()
             self.sdk = sdkInstance
             print("BWell SDK Initialized successfully.")
@@ -114,5 +114,13 @@ extension BWellSDKManager {
         }
 
         return search
+    }
+
+    func user() throws -> UserManager {
+        guard let user = sdk?.user else {
+            throw SDKError.notInitialized
+        }
+
+        return user
     }
 }

@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-struct CustomTextField: View {
+struct BWellTextField: View {
     var placeholder: String
     @Binding var text: String
     var iconName: String
@@ -51,7 +51,7 @@ struct CustomTextField: View {
 }
 
 #Preview {
-    CustomTextField(placeholder: "Placeholder",
+    BWellTextField(placeholder: "Placeholder",
                     text: .constant(""),
                     iconName: "envelope",
                     errorMessage: "error message")
