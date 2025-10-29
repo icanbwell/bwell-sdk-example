@@ -26,6 +26,12 @@ final class NavigationRouter: ObservableObject {
         path.append(destination)
     }
 
+    // Navigate to a specific destination, clearing the current path first
+    func navigateAndReplace(to destination: AppView) {
+        path = NavigationPath()
+        path.append(destination)
+    }
+
     // Navigate to the previous screen
     func pop() {
         path.removeLast()

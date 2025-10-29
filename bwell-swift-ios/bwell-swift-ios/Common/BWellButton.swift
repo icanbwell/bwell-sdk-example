@@ -1,5 +1,5 @@
 //
-//  CustomButton.swift
+//  BWellButton.swift
 //  bwell-swift-ios
 //
 //  Created by Ivan Villanueva on 28/10/25.
@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-struct CustomButton: View {
+struct BWellButton: View {
     let title: String
     let action: () -> Void
     var isLoading: Bool = false

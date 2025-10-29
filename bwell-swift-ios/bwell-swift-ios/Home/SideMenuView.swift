@@ -9,8 +9,10 @@ import SwiftUI
 
 struct SideMenuView: View {
     @Binding var isShowing: Bool
-    @State private var selectedOpton: SideMenuOptionModel? = .home
-
+    @ObservedObject var viewModel: SideMenuOptionViewModel
+    @EnvironmentObject var router: NavigationRouter
+    @EnvironmentObject var sdkManager: BWellSDKManager
+    
     var body: some View {
         ZStack {
             if isShowing {
@@ -22,21 +24,26 @@ struct SideMenuView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 32) {
                         HeaderView()
-                        // ScrollView {
-                            VStack {
-                                ForEach(SideMenuOptionModel.allCases.dropLast()) { option in
-                                    Button(action: {
-                                        selectedOpton = option
-                                        print("\(option.title) pressed")
-                                    }, label: {
-                                        RowView(option: option, selectedOption: $selectedOpton)
-                                    })
-                                }
+                        VStack {
+                            ForEach(SideMenuOptionModel.allCases.dropLast()) { option in
+                                Button(action: {
+                                    viewModel.navigate(to: option)
+                                    isShowing = false
+                                }, label: {
+                                    RowView(option: option,
+                                            selectedOption: $viewModel.optionSelected)
+                                })
                             }
-                        // }.scrollIndicators(.hidden)
+                        }
                         Spacer()
 
-                        RowView(option: .logout, selectedOption: .constant(.logout))
+                        Button(action: {
+                            viewModel.navigate(to: .logout)
+                            isShowing = false
+                        }, label: {
+                            RowView(option: .logout,
+                                    selectedOption: .constant(.logout))
+                        })
                     }
                     .padding()
                     .frame(width: 270, alignment: .leading)
@@ -48,6 +55,12 @@ struct SideMenuView: View {
         }
         .transition(.move(edge: .leading))
         .animation(.easeInOut, value: isShowing)
+        .onAppear {
+            viewModel.setup(router: router, sdkManager: sdkManager)
+            if viewModel.optionSelected == nil {
+                viewModel.optionSelected = .home
+            }
+        }
     }
 }
 
@@ -103,5 +116,8 @@ private struct RowView: View {
 
 
 #Preview {
-    SideMenuView(isShowing: .constant(true))
+    SideMenuView(isShowing: .constant(true), viewModel: SideMenuOptionViewModel())
+        .environmentObject(NavigationRouter())
+        .environmentObject(BWellSDKManager.shared)
+        .environmentObject(SideMenuOptionViewModel())
 }

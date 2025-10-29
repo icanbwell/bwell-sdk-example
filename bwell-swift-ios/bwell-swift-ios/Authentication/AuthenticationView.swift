@@ -16,7 +16,7 @@ struct AuthenticationView: View {
         ZStack(alignment: .center) {
             Color.bwellPurple
                 .ignoresSafeArea()
-            VStack(alignment: .center, spacing: 0) {
+            VStack(alignment: .center, spacing: 20) {
                 Image("bwell-logo")
                     .resizable()
                     .scaledToFit()
@@ -41,10 +41,14 @@ struct AuthenticationView: View {
                 .background(.white.opacity(0.25))
                 .clipShape(RoundedRectangle(cornerRadius: 10.0))
                 .padding(.horizontal)
+
+                if loginViewModel.isLoading {
+                    ProgressView("Authenticating...")
+                        .padding(.top, 20)
+                        .foregroundStyle(.white)
+                }
                 Spacer()
             }
-        }.onAppear {
-            clientKeyViewModel.setup(router: router)
         }
     }
 }
@@ -54,16 +58,16 @@ struct ClientKeyView: View {
 
     var body: some View {
         VStack {
-            CustomTextField(placeholder: "Client key",
+            BWellTextField(placeholder: "Client key",
                             text: $viewModel.clientKey,
                             iconName: "key.fill",
                             isSecure: true,
                             errorMessage: viewModel.errorMessage)
             .padding(.bottom)
 
-            CustomButton(title: "Submit") {
+            BWellButton(title: "Submit") {
                 viewModel.initializeSDK()
-            }
+            }.disabled(viewModel.isLoading)
         }
     }
 }
@@ -73,20 +77,22 @@ struct LoginView: View {
 
     var body: some View {
         VStack {
-            CustomTextField(placeholder: "Email",
-                            text: $viewModel.email,
-                            iconName: "envelope.fill")
+            BWellTextField(placeholder: "Email",
+                           text: $viewModel.email,
+                           iconName: "envelope.fill",
+                           errorMessage: viewModel.errorMessage)
             .keyboardType(.emailAddress)
 
-            CustomTextField(placeholder: "Password",
-                            text: $viewModel.password,
-                            iconName: "key.fill",
-                            isSecure: true)
+            BWellTextField(placeholder: "Password",
+                           text: $viewModel.password,
+                           iconName: "lock.fill",
+                           isSecure: true,
+                           errorMessage: viewModel.errorMessage)
             .padding(.bottom)
 
-            CustomButton(title: "Login") {
+            BWellButton(title: "Login") {
                 viewModel.login()
-            }
+            }.disabled(viewModel.isLoading)
         }.padding()
     }
 }

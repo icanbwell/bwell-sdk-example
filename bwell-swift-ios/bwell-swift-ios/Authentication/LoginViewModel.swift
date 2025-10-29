@@ -23,17 +23,26 @@ final class LoginViewModel: ObservableObject {
     func login() {
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Email and password are required."
+            isLoading = false
             return
         }
 
+        isLoading = true
         errorMessage = nil
 
         Task {
             do {
                 let credentials = BWell.Credentials.emailPassword(email: email, password: password)
                 try await sdkManager.authenticate(credentials: credentials, clientToken: "")
+                await MainActor.run {
+                    isLoading = false
+                }
             } catch {
-                errorMessage = "Login failed"
+                await MainActor.run {
+                    errorMessage = "Login failed"
+                    print(error)
+                    isLoading = false
+                }
             }
         }
     }
