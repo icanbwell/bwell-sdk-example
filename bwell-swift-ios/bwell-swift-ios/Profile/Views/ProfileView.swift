@@ -82,6 +82,7 @@ struct ProfileView: View {
         }
     } // end VStack
 
+    @ViewBuilder
     var readOnlyProfileView: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top, spacing: 20) {

@@ -36,6 +36,8 @@
 		55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */; };
 		55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256D2EB42BE7000D3783 /* ConditionsView.swift */; };
 		55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625712EB44B71000D3783 /* CarePlansView.swift */; };
+		55E625762EB5402F000D3783 /* DetailedItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625752EB53FE0000D3783 /* DetailedItemView.swift */; };
+		55E625782EB54376000D3783 /* BWellTypesWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625772EB54362000D3783 /* BWellTypesWrapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +90,8 @@
 		55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyIntolerancesView.swift; sourceTree = "<group>"; };
 		55E6256D2EB42BE7000D3783 /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
 		55E625712EB44B71000D3783 /* CarePlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarePlansView.swift; sourceTree = "<group>"; };
+		55E625752EB53FE0000D3783 /* DetailedItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedItemView.swift; sourceTree = "<group>"; };
+		55E625772EB54362000D3783 /* BWellTypesWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellTypesWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +196,7 @@
 		5522DCA72EB032BB00F9BCD7 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				55E625772EB54362000D3783 /* BWellTypesWrapper.swift */,
 				55E625642EB34782000D3783 /* Extensions.swift */,
 				55E625632EB34775000D3783 /* ReusableViews */,
 			);
@@ -241,6 +246,7 @@
 		55E625632EB34775000D3783 /* ReusableViews */ = {
 			isa = PBXGroup;
 			children = (
+				55E625752EB53FE0000D3783 /* DetailedItemView.swift */,
 				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
 				5522DCB42EB1320700F9BCD7 /* BWellButton.swift */,
 				5522DCB22EB1314300F9BCD7 /* BWellTextField.swift */,
@@ -424,6 +430,7 @@
 				5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */,
 				5522DC9B2EAFF8D300F9BCD7 /* HomeView.swift in Sources */,
 				5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */,
+				55E625782EB54376000D3783 /* BWellTypesWrapper.swift in Sources */,
 				55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */,
 				5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */,
 				5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */,
@@ -433,6 +440,7 @@
 				5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */,
 				551538732EB25C7D001174F9 /* ProfileViewModel.swift in Sources */,
 				5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */,
+				55E625762EB5402F000D3783 /* DetailedItemView.swift in Sources */,
 				5522DC9F2EB00BE100F9BCD7 /* ClientKeyViewModel.swift in Sources */,
 				55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */,
 				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,
@@ -596,6 +604,7 @@
 				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NGBA5QG5TU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Sample App";
@@ -614,7 +623,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ivanvillanueva;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -634,6 +643,7 @@
 				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NGBA5QG5TU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Sample App";
@@ -652,7 +662,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-ios";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ivanvillanueva;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;

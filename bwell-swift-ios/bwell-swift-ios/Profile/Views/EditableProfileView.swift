@@ -11,6 +11,7 @@ import BWellSDK
 
 struct EditableProfileView: View {
     @State private var shouldRotate: Bool = false
+
     // Properties for the editable fields
     @Binding var givenName: String
     @Binding var familyName: String
@@ -59,6 +60,7 @@ struct EditableProfileView: View {
         }
     }
 
+    @ViewBuilder
     var birthDateView: some View {
         HStack(spacing: 12) {
             Image(systemName: "calendar")
@@ -74,6 +76,7 @@ struct EditableProfileView: View {
         }
     }
 
+    @ViewBuilder
     var genderPickerView: some View {
         HStack(spacing: 12) {
             Image(systemName: "figure.stand.dress.line.vertical.figure")
@@ -102,6 +105,7 @@ struct EditableProfileView: View {
         }
     }
 
+    @ViewBuilder
     var separatorView: some View {
         Rectangle()
             .fill(.separator)
