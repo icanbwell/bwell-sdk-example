@@ -9,8 +9,9 @@ import SwiftUI
 
 struct BWellButton: View {
     let title: String
-    let action: () -> Void
+    var buttonColor: Color = .bwellBlue
     var isLoading: Bool = false
+    let action: () -> Void
 
     var body: some View {
         Button(action: action) {
@@ -25,7 +26,7 @@ struct BWellButton: View {
             }
         }
         .padding()
-        .background(Color.bwellBlue)
+        .background(buttonColor)
         .foregroundColor(.white)
         .cornerRadius(10)
         .disabled(isLoading)

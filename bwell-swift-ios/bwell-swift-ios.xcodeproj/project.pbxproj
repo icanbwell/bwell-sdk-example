@@ -29,9 +29,13 @@
 		5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */; };
 		5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */; };
 		5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */; };
-		5522DCBE2EB1893F00F9BCD7 /* HealthSummaryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBD2EB1892E00F9BCD7 /* HealthSummaryDetailView.swift */; };
-		5522DCC02EB1961000F9BCD7 /* HealthSummaryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBF2EB1960800F9BCD7 /* HealthSummaryModels.swift */; };
+		5522DCBE2EB1893F00F9BCD7 /* HealtDataDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBD2EB1892E00F9BCD7 /* HealtDataDetailView.swift */; };
 		5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */; };
+		55E625652EB34785000D3783 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625642EB34782000D3783 /* Extensions.swift */; };
+		55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625662EB348FC000D3783 /* EditableProfileView.swift */; };
+		55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */; };
+		55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256D2EB42BE7000D3783 /* ConditionsView.swift */; };
+		55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625712EB44B71000D3783 /* CarePlansView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,9 +81,13 @@
 		5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellNavigationBar.swift; sourceTree = "<group>"; };
 		5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryViewModel.swift; sourceTree = "<group>"; };
 		5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryView.swift; sourceTree = "<group>"; };
-		5522DCBD2EB1892E00F9BCD7 /* HealthSummaryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryDetailView.swift; sourceTree = "<group>"; };
-		5522DCBF2EB1960800F9BCD7 /* HealthSummaryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryModels.swift; sourceTree = "<group>"; };
+		5522DCBD2EB1892E00F9BCD7 /* HealtDataDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealtDataDetailView.swift; sourceTree = "<group>"; };
 		5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataSummaryModel.swift; sourceTree = "<group>"; };
+		55E625642EB34782000D3783 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		55E625662EB348FC000D3783 /* EditableProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableProfileView.swift; sourceTree = "<group>"; };
+		55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyIntolerancesView.swift; sourceTree = "<group>"; };
+		55E6256D2EB42BE7000D3783 /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
+		55E625712EB44B71000D3783 /* CarePlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarePlansView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,8 +119,8 @@
 		551538712EB25C6A001174F9 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				55E625682EB42B5A000D3783 /* Views */,
 				551538722EB25C79001174F9 /* ProfileViewModel.swift */,
-				5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -142,10 +150,11 @@
 			children = (
 				551538712EB25C6A001174F9 /* Profile */,
 				5522DCAF2EB11F9C00F9BCD7 /* Health */,
+				5522DCBD2EB1892E00F9BCD7 /* HealtDataDetailView.swift */,
 				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
 				5522DCA82EB037B000F9BCD7 /* Home */,
 				5522DCA22EB01BEA00F9BCD7 /* Navigation */,
-				5522DCA72EB032BB00F9BCD7 /* Common */,
+				5522DCA72EB032BB00F9BCD7 /* Utils */,
 				5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */,
 				5522DCA02EB0168D00F9BCD7 /* RootView.swift */,
 				5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */,
@@ -180,14 +189,13 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
-		5522DCA72EB032BB00F9BCD7 /* Common */ = {
+		5522DCA72EB032BB00F9BCD7 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
-				5522DCB42EB1320700F9BCD7 /* BWellButton.swift */,
-				5522DCB22EB1314300F9BCD7 /* BWellTextField.swift */,
+				55E625642EB34782000D3783 /* Extensions.swift */,
+				55E625632EB34775000D3783 /* ReusableViews */,
 			);
-			path = Common;
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		5522DCA82EB037B000F9BCD7 /* Home */ = {
@@ -213,6 +221,8 @@
 		5522DCAF2EB11F9C00F9BCD7 /* Health */ = {
 			isa = PBXGroup;
 			children = (
+				55E625702EB42C5B000D3783 /* Model */,
+				55E625692EB42B88000D3783 /* Views */,
 				5522DCC12EB2386A00F9BCD7 /* Summary */,
 			);
 			path = Health;
@@ -222,12 +232,46 @@
 			isa = PBXGroup;
 			children = (
 				5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */,
-				5522DCBD2EB1892E00F9BCD7 /* HealthSummaryDetailView.swift */,
-				5522DCBF2EB1960800F9BCD7 /* HealthSummaryModels.swift */,
 				5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */,
 				5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */,
 			);
 			path = Summary;
+			sourceTree = "<group>";
+		};
+		55E625632EB34775000D3783 /* ReusableViews */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
+				5522DCB42EB1320700F9BCD7 /* BWellButton.swift */,
+				5522DCB22EB1314300F9BCD7 /* BWellTextField.swift */,
+			);
+			path = ReusableViews;
+			sourceTree = "<group>";
+		};
+		55E625682EB42B5A000D3783 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */,
+				55E625662EB348FC000D3783 /* EditableProfileView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		55E625692EB42B88000D3783 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */,
+				55E625712EB44B71000D3783 /* CarePlansView.swift */,
+				55E6256D2EB42BE7000D3783 /* ConditionsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		55E625702EB42C5B000D3783 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -370,8 +414,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5522DCC02EB1961000F9BCD7 /* HealthSummaryModels.swift in Sources */,
+				55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */,
 				5522DCB32EB1314300F9BCD7 /* BWellTextField.swift in Sources */,
+				55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */,
 				5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */,
 				5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */,
 				5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */,
@@ -379,16 +424,19 @@
 				5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */,
 				5522DC9B2EAFF8D300F9BCD7 /* HomeView.swift in Sources */,
 				5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */,
+				55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */,
 				5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */,
 				5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */,
 				5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */,
 				5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */,
+				55E625652EB34785000D3783 /* Extensions.swift in Sources */,
 				5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */,
 				551538732EB25C7D001174F9 /* ProfileViewModel.swift in Sources */,
 				5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */,
 				5522DC9F2EB00BE100F9BCD7 /* ClientKeyViewModel.swift in Sources */,
+				55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */,
 				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,
-				5522DCBE2EB1893F00F9BCD7 /* HealthSummaryDetailView.swift in Sources */,
+				5522DCBE2EB1893F00F9BCD7 /* HealtDataDetailView.swift in Sources */,
 				5522DCA62EB0294B00F9BCD7 /* LoginViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

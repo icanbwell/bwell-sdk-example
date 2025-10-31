@@ -67,12 +67,11 @@ struct SideMenuView: View {
 private struct HeaderView: View {
     var body: some View {
         HStack {
-            Image(systemName: "person.circle.fill")
-                .imageScale(.large)
-                .foregroundStyle(.white)
+            Image("user-profile-picture")
+                .resizable()
+                .scaledToFill()
                 .frame(width: 48, height: 48)
-                .background(.bwellPurple)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .clipShape(Circle())
                 .padding(.vertical)
 
             VStack(alignment: .leading, spacing: 4) {
@@ -100,15 +99,15 @@ private struct RowView: View {
         HStack {
             Image(systemName: option.iconName)
                 .imageScale(.small)
+                .foregroundStyle(selectedOption == .logout ? .red : .bwellPurple)
 
             Text(option.title)
                 .font(.subheadline)
-
+                .foregroundStyle(selectedOption == .logout ? .red : .black)
             Spacer()
         }
         .padding(.leading)
         .frame(height: 44)
-        .foregroundStyle((isSelected && selectedOption != .logout) ? .bwellPurple : .black)
         .background((isSelected && selectedOption != .logout) ? .bwellPurple.opacity(0.25) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
