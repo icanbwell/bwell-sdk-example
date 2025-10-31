@@ -7,9 +7,10 @@
 import Foundation
 import SwiftUI
 
-struct BWellNavigationBar: ViewModifier {
+struct BWellNavigationBar<TrailingItem: View>: ViewModifier {
     @Binding var showMenu: Bool
     @EnvironmentObject var viewModel: SideMenuOptionViewModel
+    var trailingItem: (() -> TrailingItem)?
 
     func body(content: Content) -> some View {
         NavigationView {
@@ -33,6 +34,12 @@ struct BWellNavigationBar: ViewModifier {
                                 .scaledToFit()
                                 .frame(width: 60)
                         }
+
+                        if let item = trailingItem?() {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                item
+                            }
+                        }
                     }
 
                 SideMenuView(isShowing: $showMenu, viewModel: viewModel)
@@ -42,7 +49,12 @@ struct BWellNavigationBar: ViewModifier {
 }
 
 extension View {
+    func bwellNavigationBar<TrailingItem: View>(showMenu: Binding<Bool>,
+                                                trailingItem: @escaping () -> TrailingItem) -> some View {
+        self.modifier(BWellNavigationBar(showMenu: showMenu, trailingItem: trailingItem))
+    }
+
     func bwellNavigationBar(showMenu: Binding<Bool>) -> some View {
-        self.modifier(BWellNavigationBar(showMenu: showMenu))
+        self.modifier(BWellNavigationBar(showMenu: showMenu) { EmptyView() })
     }
 }

@@ -1,37 +1,18 @@
 //
-//  HealthSummaryDetailView.swift
+//  AllergyIntolerancesView.swift
 //  bwell-swift-ios
 //
-//  Created by Ivan Villanueva on 28/10/25.
+//  Created by Ivan Villanueva on 30/10/25.
 //
 
-import Foundation
 import SwiftUI
 
-struct HealthSummaryDetailView<Content: View>: View {
-    var view: Content
-
-    var body: some View {
-        ZStack(alignment: .topLeading) {
-            view
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Image("bwell-logo-header")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 60)
-            }
-        }
-    }
-}
-
 struct AllergyIntolerancesDetailView: View {
-    var entries:  [AllergyIntoleranceEntry]
+    @ObservedObject var viewModel: HealthSummaryViewModel
 
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Total: \(entries.count)")
+            Text("Total: \(viewModel.allergyIntolerances.count)")
                 .font(.title2)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 20)
@@ -44,9 +25,10 @@ struct AllergyIntolerancesDetailView: View {
                     .font(.system(size: 18, weight: .semibold))
             }.padding(.bottom, 10)
 
-            ForEach(entries) { entry in
+            ForEach(viewModel.allergyIntolerances, id: \.id) { entry in
                 HStack {
-                    if let allergy = entry.allergy, let criticality = entry.criticality {
+                    if let allergy = entry.code?.coding?.first?.display,
+                       let criticality = entry.criticality {
                         Text(allergy)
                         Spacer()
                         Text(criticality)
@@ -57,11 +39,10 @@ struct AllergyIntolerancesDetailView: View {
         }
         .padding(.horizontal)
         .padding(.top, 20)
-    }
-}
-
-struct GenericView: View {
-    var body: some View {
-        Text("Hello, world!")
+        .task {
+            if !viewModel.allergyIntolerances.isEmpty {
+                await viewModel.getAllergyIntolerances()
+            }
+        }
     }
 }

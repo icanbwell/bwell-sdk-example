@@ -16,7 +16,7 @@ struct HealthSummaryView: View {
         List {
             ForEach(HealthDataSummaryModel.allCases) { item in
                 NavigationLink {
-                    HealthSummaryDetailView(view: getView(from: item))
+                    HealthDataDetailView(view: getView(from: item))
                         .navigationTitle(item.title)
                         .navigationBarTitleDisplayMode(.inline)
                 } label: {
@@ -41,12 +41,9 @@ struct HealthSummaryView: View {
     func getView(from item: HealthDataSummaryModel) -> some View {
         switch item {
             case .allergyIntolerances:
-                AllergyIntolerancesDetailView(entries: viewModel.allergyIntolerances)
-                    .onAppear {
-                        Task {
-                            await viewModel.getAllergyIntolerances()
-                        }
-                    }
+                AllergyIntolerancesDetailView(viewModel: viewModel)
+            case .carePlans:
+                CarePlansView(viewModel: viewModel)
             default:
                 GenericView()
                 // TODO: Remove default case and implement the other cases
