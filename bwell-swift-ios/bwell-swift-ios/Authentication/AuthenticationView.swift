@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    @StateObject var clientKeyViewModel = ClientKeyViewModel()
-    @StateObject var loginViewModel = LoginViewModel()
+    @StateObject private var viewModel = AuthenticationViewModel()
     @EnvironmentObject var router: NavigationRouter
 
     var body: some View {
         ZStack(alignment: .center) {
             Color.bwellPurple
                 .ignoresSafeArea()
+
             VStack(alignment: .center, spacing: 20) {
                 Image("bwell-logo")
                     .resizable()
@@ -31,10 +31,10 @@ struct AuthenticationView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
 
-                    if clientKeyViewModel.authenticated {
-                        LoginView()
+                    if viewModel.authenticated {
+                        emailPasswordView
                     } else {
-                        ClientKeyView(viewModel: clientKeyViewModel)
+                        apiKeyView
                     }
                 }
                 .padding()
@@ -42,7 +42,7 @@ struct AuthenticationView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10.0))
                 .padding(.horizontal)
 
-                if loginViewModel.isLoading {
+                if viewModel.isLoading {
                     ProgressView("Authenticating...")
                         .padding(.top, 20)
                         .foregroundStyle(.white)
@@ -51,18 +51,16 @@ struct AuthenticationView: View {
             }
         }
     }
-}
 
-struct ClientKeyView: View {
-    @StateObject var viewModel: ClientKeyViewModel
-
-    var body: some View {
+    // MARK: - API Key authentication view
+    @ViewBuilder
+    var apiKeyView: some View {
         VStack {
             BWellTextField(placeholder: "Client key",
-                            text: $viewModel.clientKey,
-                            iconName: "key.fill",
-                            isSecure: true,
-                            errorMessage: viewModel.errorMessage)
+                           text: $viewModel.clientKey,
+                           iconName: "key.fill",
+                           isSecure: true,
+                           errorMessage: viewModel.errorMessage)
             .padding(.bottom)
 
             BWellButton(title: "Submit") {
@@ -70,12 +68,10 @@ struct ClientKeyView: View {
             }.disabled(viewModel.isLoading)
         }
     }
-}
 
-struct LoginView: View {
-    @StateObject var viewModel = LoginViewModel()
-
-    var body: some View {
+    // MARK: - Email/Password authentication view
+    @ViewBuilder
+    var emailPasswordView: some View {
         VStack {
             BWellTextField(placeholder: "Email",
                            text: $viewModel.email,
