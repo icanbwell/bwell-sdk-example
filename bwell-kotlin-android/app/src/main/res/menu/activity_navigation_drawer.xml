@@ -42,5 +42,13 @@
             android:id="@+id/nav_medicines"
             android:icon="@drawable/medicine_logo"
             android:title="@string/menu_medicines" />
+        <item
+            android:id="@+id/nav_coverage"
+            android:icon="@drawable/icon_hurt_summary"
+            android:title="@string/menu_coverage" />
+        <item
+            android:id="@+id/nav_eob"
+            android:icon="@drawable/icon_hurt_summary"
+            android:title="@string/menu_eob" />
     </group>
 </menu>
