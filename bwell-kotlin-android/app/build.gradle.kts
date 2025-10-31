@@ -69,7 +69,7 @@ android {
 dependencies {
 
     // BWell SDK Usage
-    implementation("com.bwell:bwell-sdk-kotlin:1.9.0")
+    implementation("com.bwell:bwell-sdk-kotlin:1.12.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -113,5 +113,6 @@ dependencies {
     implementation(kotlin("reflect"))
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     implementation("com.google.android.gms:play-services-location:21.1.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 
 }
