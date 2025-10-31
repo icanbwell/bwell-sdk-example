@@ -14,8 +14,10 @@ final class HealthSummaryViewModel: ObservableObject {
     @Published var isLoading: Bool = false
 
     // Published properties
+    @Published var healthSummary: [BWell.HealthSummary.Resource] = []
     @Published var allergyIntolerances: [BWell.AllergyIntolerance] = []
     @Published var carePlans: [BWell.CarePlan] = []
+    @Published var conditions: [BWell.Condition] = []
 
     // Group Published properties
     @Published var allergyIntoleranceGroup: BWell.GroupResult<BWell.AllergyIntoleranceGroup>? = nil
@@ -28,7 +30,29 @@ final class HealthSummaryViewModel: ObservableObject {
         self.sdkManager = sdkManager
     }
 
-    // MARK: - Allergy Intolerance 
+    // MARK: - Get Summary
+    func getHealthDataSummary() async {
+        isLoading = true
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
+
+            let response  = try await sdkManager.health().getHealthSummary()
+
+            for resource in response.resources {
+                healthSummary.append(resource)
+            }
+            isLoading = false
+        } catch {
+            errorMessage = "Failed to fetch health data: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
+
+    // MARK: - Allergy Intolerance
     func getAllergyIntolerances() async {
         isLoading = true
         do {
@@ -39,9 +63,9 @@ final class HealthSummaryViewModel: ObservableObject {
             }
             // Create the health data request
             let request = BWell.HealthDataRequest(page: 1)
-            let allergyIntoleranceResponse = try await sdkManager.health().getAllergyIntolerances(request)
+            let response = try await sdkManager.health().getAllergyIntolerances(request)
 
-            guard let entries = allergyIntoleranceResponse.entry else {
+            guard let entries = response.entry else {
                 isLoading = false
                 return
             }
@@ -84,17 +108,49 @@ final class HealthSummaryViewModel: ObservableObject {
                 return
             }
             let request = BWell.HealthDataRequest(page: 1)
-            let carePlansResponse = try await sdkManager.health().getCarePlans(request)
+            let response = try await sdkManager.health().getCarePlans(request)
 
-            guard let entries = carePlansResponse.entry else {
+            guard let entries = response.entry else {
                 isLoading = false
                 return
             }
 
             for entry in entries {
                 if let carePlan = entry.resource {
-                    print(carePlan)
                     carePlans.append(carePlan)
+                }
+            }
+            isLoading = false
+        } catch {
+            errorMessage = "Failed to fetch health data: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
+
+    // TODO: Add Care Plan Groups here
+
+    // MARK: - Conditions
+    func getConditions() async {
+        isLoading = true
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
+
+            let request = BWell.HealthDataRequest(page: 1)
+            let response = try await sdkManager.health().getConditions(request)
+
+            guard let entries = response.entry else {
+                isLoading = false
+                return
+            }
+            print("condition entries: \(entries.count)")
+            for entry in entries {
+                if let condition = entry.resource {
+                    print("\n \(condition) \n")
+                    conditions.append(condition)
                 }
             }
             isLoading = false

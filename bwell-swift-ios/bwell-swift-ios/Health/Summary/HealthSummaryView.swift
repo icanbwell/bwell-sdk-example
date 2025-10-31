@@ -6,6 +6,7 @@
 //
 import Foundation
 import SwiftUI
+import BWellSDK
 
 struct HealthSummaryView: View {
     @State private var showMenu: Bool = false
@@ -24,6 +25,16 @@ struct HealthSummaryView: View {
                         Image(systemName: item.icon)
                             .frame(width: 24, alignment: .center)
                         Text(item.title)
+                        Spacer()
+
+                        if viewModel.isLoading {
+                            ProgressView()
+                        } else {
+                            if let total = viewModel.healthSummary.first(where: { $0.category == item.category})?.total {
+                                Text("\(total)")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
                 }
             }.listRowSeparator(.hidden)
@@ -35,19 +46,25 @@ struct HealthSummaryView: View {
         .onAppear {
             viewModel.setup(sdkManager: sdkManager)
         }
+        .task {
+            if viewModel.healthSummary.isEmpty {
+                await viewModel.getHealthDataSummary()
+            }
+        }
     }
 
     @ViewBuilder
     func getView(from item: HealthDataSummaryModel) -> some View {
         switch item {
-            case .allergyIntolerances:
+            case .allergyIntolerance:
                 AllergyIntolerancesDetailView(viewModel: viewModel)
-            case .carePlans:
+            case .carePlan:
                 CarePlansView(viewModel: viewModel)
+            case .condition:
+                ConditionsView(viewModel: viewModel)
             default:
                 GenericView()
                 // TODO: Remove default case and implement the other cases
-            // case .carePlans:
             // case .conditions:
             // case .encounters:
             // case .immunizations:
