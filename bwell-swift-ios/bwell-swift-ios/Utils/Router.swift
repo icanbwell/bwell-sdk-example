@@ -13,7 +13,6 @@ enum AppView {
     case profile
     case search
     case manageConnections
-    case healthSummary
 }
 
 @MainActor

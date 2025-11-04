@@ -16,7 +16,13 @@ struct ConditionsView: View {
             } else {
                 List {
                     Section("Conditions") {
-                        conditionsDetailView
+                        ForEach(viewModel.conditions, id: \.id) { condition in
+                            NavigationLink {
+                                ConditionsDetailView(condition)
+                            } label: {
+                                Text("\(condition.code?.text ?? "Title not available")")
+                            }
+                        }
                     }
 
                     Section("Condition Groups") {
@@ -27,19 +33,6 @@ struct ConditionsView: View {
         }.task {
             if viewModel.conditions.isEmpty {
                 await viewModel.getConditions()
-            }
-        }
-    }
-
-    @ViewBuilder
-    var conditionsDetailView: some View {
-        Group {
-            ForEach(viewModel.conditions, id: \.id) { condition in
-                NavigationLink {
-                    ConditionsDetailView(condition)
-                } label: {
-                    Text("\(condition.code?.text ?? "Title not available")")
-                }
             }
         }
     }

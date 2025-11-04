@@ -10,12 +10,14 @@ import SwiftUI
 struct BWellNavigationBar<TrailingItem: View>: ViewModifier {
     @Binding var showMenu: Bool
     @EnvironmentObject var viewModel: SideMenuOptionViewModel
+    var navigationTitle: String = ""
     var trailingItem: (() -> TrailingItem)?
 
     func body(content: Content) -> some View {
         NavigationView {
             ZStack {
                 content
+                    .navigationTitle(navigationTitle)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar(showMenu ? .hidden: .visible, for: .navigationBar)
                     .toolbar {
@@ -26,13 +28,6 @@ struct BWellNavigationBar<TrailingItem: View>: ViewModifier {
                                 Image(systemName: "line.3.horizontal")
                                     .foregroundStyle(.black)
                             }
-                        }
-
-                        ToolbarItem(placement: .principal) {
-                            Image("bwell-logo-header")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 60)
                         }
 
                         if let item = trailingItem?() {
@@ -50,11 +45,12 @@ struct BWellNavigationBar<TrailingItem: View>: ViewModifier {
 
 extension View {
     func bwellNavigationBar<TrailingItem: View>(showMenu: Binding<Bool>,
+                                                navigationTitle: String = "",
                                                 trailingItem: @escaping () -> TrailingItem) -> some View {
-        self.modifier(BWellNavigationBar(showMenu: showMenu, trailingItem: trailingItem))
+        self.modifier(BWellNavigationBar(showMenu: showMenu, navigationTitle: navigationTitle, trailingItem: trailingItem))
     }
 
-    func bwellNavigationBar(showMenu: Binding<Bool>) -> some View {
-        self.modifier(BWellNavigationBar(showMenu: showMenu) { EmptyView() })
+    func bwellNavigationBar(showMenu: Binding<Bool>, navigationTitle: String = "") -> some View {
+        self.modifier(BWellNavigationBar(showMenu: showMenu, navigationTitle: navigationTitle) { EmptyView() })
     }
 }

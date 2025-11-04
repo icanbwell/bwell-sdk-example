@@ -66,7 +66,8 @@ struct ProfileView: View {
             }
         }
         .ignoresSafeArea(edges: .bottom)
-        .bwellNavigationBar(showMenu: $showMenu, trailingItem: {
+        .bwellNavigationBar(showMenu: $showMenu,
+                            navigationTitle: "Profile", trailingItem: {
             Button {
                 isEditing.toggle()
             } label: {
@@ -80,7 +81,7 @@ struct ProfileView: View {
                 await viewModel.getUserProfile()
             }
         }
-    } // end VStack
+    }
 
     @ViewBuilder
     var readOnlyProfileView: some View {

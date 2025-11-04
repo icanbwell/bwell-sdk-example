@@ -17,7 +17,7 @@ struct HealthSummaryView: View {
         List {
             ForEach(HealthDataSummaryModel.allCases) { item in
                 NavigationLink {
-                    HealthDataDetailView(view: getView(from: item))
+                    DetailView(view: getView(from: item))
                         .navigationTitle(item.title)
                         .navigationBarTitleDisplayMode(.inline)
                 } label: {
@@ -40,7 +40,7 @@ struct HealthSummaryView: View {
             }.listRowSeparator(.hidden)
         }
         .padding(.top, 20)
-        .bwellNavigationBar(showMenu: $showMenu)
+        .bwellNavigationBar(showMenu: $showMenu, navigationTitle: "Health Summary")
         .listStyle(.plain)
         .listRowSeparator(.hidden)
         .onAppear {
@@ -57,21 +57,33 @@ struct HealthSummaryView: View {
     func getView(from item: HealthDataSummaryModel) -> some View {
         switch item {
             case .allergyIntolerance:
-                AllergyIntolerancesDetailView(viewModel: viewModel)
+                AllergyIntolerancesView(viewModel: viewModel)
             case .carePlan:
                 CarePlansView(viewModel: viewModel)
             case .condition:
                 ConditionsView(viewModel: viewModel)
-            default:
-                GenericView()
-                // TODO: Remove default case and implement the other cases
-            // case .conditions:
-            // case .encounters:
-            // case .immunizations:
-            // case .labs:
-            // case .medications:
-            // case .procedures:
-            // case .vitalSigns:
+            case .immunization:
+                ImmunizationsView(viewModel: viewModel)
+            case .labs:
+                LabsView(viewModel: viewModel)
+            case .medications:
+                MedicationsView(viewModel: viewModel)
+            case .procedure:
+                ProceduresView(viewModel: viewModel)
+            case .vitalSigns:
+                VitalSignsView(viewModel: viewModel)
+            case .encounter:
+                EncountersView(viewModel: viewModel)
+        }
+    }
+}
+
+private struct DetailView<Content: View>: View {
+    var view: Content
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            view
         }
     }
 }

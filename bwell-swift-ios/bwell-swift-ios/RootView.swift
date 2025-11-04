@@ -19,16 +19,13 @@ struct RootView: View {
                 .navigationDestination(for: AppView.self) { screen in
                     switch screen {
                         case .home:
-                            HomeView()
+                            HealthSummaryView()
                                 .navigationBarBackButtonHidden()
                         case .profile:
                             ProfileView()
                                 .navigationBarBackButtonHidden()
                         case .search:
                             SearchView()
-                                .navigationBarBackButtonHidden()
-                        case .healthSummary:
-                            HealthSummaryView()
                                 .navigationBarBackButtonHidden()
                         case .manageConnections:
                             ManageConnectionsView()

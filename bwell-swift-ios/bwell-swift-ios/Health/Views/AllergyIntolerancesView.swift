@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AllergyIntolerancesDetailView: View {
+struct AllergyIntolerancesView: View {
     @ObservedObject var viewModel: HealthSummaryViewModel
 
     var body: some View {
