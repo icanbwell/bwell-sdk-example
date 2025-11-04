@@ -55,7 +55,7 @@ export const requestInfoSlice = createSlice({
             requestInfo.groupCode = {
               value: {
                 value: action.payload.groupCode.code,
-                system: "https://www.bwell.com/encoding/base64",
+                system: action.payload.groupCode.system,
               },
             };
           } else {
