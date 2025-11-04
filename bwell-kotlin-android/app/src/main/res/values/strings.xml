@@ -240,6 +240,10 @@
     <string name="immunizations">Immunizations</string>
     <string name="devices">Devices</string>
     <string name="goals">Goals</string>
+    <string name="menu_questionnaire">Questionnaire</string>
+    <string name="questionnaire">Questionnaire</string>
+    <string name="questionnaire_response">QuestionnaireResponse</string>
+    <string name="questionnaire_description">View your questionnaire responses</string>
     <string name="status">Status</string>
     <string name="intent">Intent</string>
     <string name="dose_number">Dose Number</string>

@@ -30,6 +30,11 @@
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_gallery" />
     <fragment
+        android:id="@+id/nav_questionnaire"
+        android:name="com.bwell.sampleapp.activities.ui.questionnaire.QuestionnaireFragment"
+        android:label="@string/menu_questionnaire"
+        tools:layout="@layout/fragment_questionnaire" />
+    <fragment
         android:id="@+id/nav_health_journey"
         android:name="com.bwell.sampleapp.activities.ui.health_journey.HealthJourneyFragment"
         android:label="@string/menu_health_journey"
