@@ -36,8 +36,6 @@ final class ProfileViewModel: ObservableObject {
         "use": ""
     ]
 
-    init() { }
-
     func setup(sdkManager: BWellSDKManager) {
         self.sdkManager = sdkManager
     }
@@ -59,7 +57,7 @@ final class ProfileViewModel: ObservableObject {
             parseData(data: profileInformation)
             isLoading = false
         } catch {
-            print("❌ Failed with error: \(error)")
+            print("Failed retrieving user's profile information: \(error)")
             isLoading = false
         }
     }

@@ -96,7 +96,7 @@ extension BWellSDKManager {
         guard let connectionManager = sdk?.connection else {
             throw SDKError.notInitialized
         }
-        
+
         return connectionManager
     }
 

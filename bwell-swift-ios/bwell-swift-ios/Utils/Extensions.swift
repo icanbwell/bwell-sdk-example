@@ -25,6 +25,7 @@ extension String {
         formatter.locale = Locale(identifier: "en_US_POSIX")
         
         let formats = [
+            "yyyy-MM-dd/HH:mm:ssZZZZZ",
             "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
             "yyyy-MM-dd'T'HH:mm:ssZ",
             "yyyy-MM-dd"

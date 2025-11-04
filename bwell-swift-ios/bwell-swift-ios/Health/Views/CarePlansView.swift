@@ -18,7 +18,13 @@ struct CarePlansView: View {
             } else {
                 List {
                     Section("Care Plans") {
-                        carePlanDetailView
+                        ForEach(viewModel.carePlans, id: \.id)  { plan in
+                            NavigationLink {
+                                CarePlanDetailView(plan)
+                            } label: {
+                                Text(plan.title ?? "Title not available")
+                            }
+                        }
                     }
 
                     Section("Care Plan Groups") {
@@ -29,19 +35,6 @@ struct CarePlansView: View {
         }.task {
             if viewModel.carePlans.isEmpty {
                 await viewModel.getCarePlans()
-            }
-        }
-    }
-
-    @ViewBuilder
-    var carePlanDetailView: some View {
-        Group {
-            ForEach(viewModel.carePlans, id: \.id)  { plan in
-                NavigationLink {
-                    CarePlanDetailView(plan)
-                } label: {
-                    Text(plan.title ?? "Title not available")
-                }
             }
         }
     }
