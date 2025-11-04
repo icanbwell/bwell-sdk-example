@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { DataGrid } from "@mui/x-data-grid";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
-import { getCoverages } from "@/store/healthData/coveragesSlice";
+import { getCoverages } from "@/store/financial/coveragesSlice";
 
 const Coverages = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,8 +17,8 @@ const Coverages = () => {
     dispatch(getCoverages({ page: 0, pageSize: 10 }));
   }, [dispatch]);
 
-  const slice = useSelector((state: RootState) => state.health.coverages);
-  const coveragesData = slice.healthData ?? { data: { entry: [] } };
+  const slice = useSelector((state: RootState) => state.financial.coverages);
+  const coveragesData = slice.data ?? { data: { entry: [] } };
   const showTable =
     useSelector((state: RootState) => state.toggle["coverages"] ?? true) &&
     Array.isArray(coveragesData.data?.entry);

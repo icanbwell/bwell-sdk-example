@@ -4,7 +4,7 @@ import {
   CoverageRequestInput,
   CoveragesRequest,
 } from "@icanbwell/bwell-sdk-ts";
-import { makeHealthDataSlice } from "./makeHealthDataSlice";
+import { makeFinancialSlice } from "./makeFinancialSlice";
 
 const SLICE_NAME = "coverages";
 
@@ -16,4 +16,4 @@ export const getCoverages = createAsyncThunk(
   }
 );
 
-export const coveragesSlice = makeHealthDataSlice(SLICE_NAME, getCoverages);
+export const coveragesSlice = makeFinancialSlice(SLICE_NAME, getCoverages);
