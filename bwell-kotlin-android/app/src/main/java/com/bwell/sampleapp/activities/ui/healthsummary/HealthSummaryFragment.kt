@@ -14,7 +14,9 @@ import com.bwell.common.models.domain.healthdata.healthsummary.allergyintoleranc
 import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.condition.ConditionGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.device.Device
 import com.bwell.common.models.domain.healthdata.healthsummary.encounter.EncounterGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.goal.Goal
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureGroup
@@ -24,8 +26,10 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.allergyintolerance.AllergyIntoleranceGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.careplan.CarePlanGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.condition.ConditionGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.device.DeviceRequest
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
+import com.bwell.healthdata.healthsummary.requests.goal.GoalRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
@@ -121,44 +125,83 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             binding.healthSummaryCategoriesView.healthSummaryCategoriesView.visibility = View.GONE
             binding.healthSummaryCategoriesDataView.healthSummaryCategoriesDataView.visibility = View.VISIBLE
 
-            val  healthSummaryRequest: Any? = when (selectedList.category) {
-                HealthSummaryCategory.CARE_PLAN -> {
-                    CarePlanGroupsRequest.Builder().build()
+            // Handle custom categories (Device and Goal)
+            if (selectedList.customCategoryId != null) {
+                binding.healthSummaryCategoriesDataView.titleTextView.text = selectedList.categoryFriendlyName
+                
+                when (selectedList.customCategoryId) {
+                    "DEVICE" -> {
+                        val request = DeviceRequest.Builder()
+                            .page(0)
+                            .pageSize(20)
+                            .build()
+                        healthSummaryViewModel.getDevices(request)
+                        
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            healthSummaryViewModel.devicesResults.collect { result ->
+                                if (result != null) {
+                                    setDataAdapter(result)
+                                }
+                            }
+                        }
+                    }
+                    "GOAL" -> {
+                        val request = GoalRequest.Builder()
+                            .page(0)
+                            .pageSize(20)
+                            .build()
+                        healthSummaryViewModel.getGoals(request)
+                        
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            healthSummaryViewModel.goalsResults.collect { result ->
+                                if (result != null) {
+                                    setDataAdapter(result)
+                                }
+                            }
+                        }
+                    }
                 }
-                HealthSummaryCategory.IMMUNIZATION -> {
-                    ImmunizationGroupsRequest.Builder().build()
+            } else {
+                // Handle regular categories with groups
+                val  healthSummaryRequest: Any? = when (selectedList.category) {
+                    HealthSummaryCategory.CARE_PLAN -> {
+                        CarePlanGroupsRequest.Builder().build()
+                    }
+                    HealthSummaryCategory.IMMUNIZATION -> {
+                        ImmunizationGroupsRequest.Builder().build()
+                    }
+                    HealthSummaryCategory.PROCEDURE -> {
+                        ProcedureGroupsRequest.Builder().build()
+                    }
+                    HealthSummaryCategory.VITAL_SIGNS -> {
+                        VitalSignGroupsRequest.Builder().build()
+                    }
+                    HealthSummaryCategory.ENCOUNTER -> {
+                        EncounterGroupsRequest.Builder().build()
+                    }
+                    HealthSummaryCategory.ALLERGY_INTOLERANCE -> {
+                        AllergyIntoleranceGroupsRequest.Builder().build()
+                    }
+                    HealthSummaryCategory.CONDITION -> {
+                        ConditionGroupsRequest.Builder().build()
+                    }
+                    else -> {
+                        null
+                    }
                 }
-                HealthSummaryCategory.PROCEDURE -> {
-                    ProcedureGroupsRequest.Builder().build()
-                }
-                HealthSummaryCategory.VITAL_SIGNS -> {
-                    VitalSignGroupsRequest.Builder().build()
-                }
-                HealthSummaryCategory.ENCOUNTER -> {
-                    EncounterGroupsRequest.Builder().build()
-                }
-                HealthSummaryCategory.ALLERGY_INTOLERANCE -> {
-                    AllergyIntoleranceGroupsRequest.Builder().build()
-                }
-                HealthSummaryCategory.CONDITION -> {
-                    ConditionGroupsRequest.Builder().build()
-                }
-                else -> {
-                    null
-                }
-            }
 
-            if(healthSummaryRequest != null) {
-                binding.healthSummaryCategoriesDataView.titleTextView.text = selectedList.categoryFriendlyName + " (" + selectedList.count + ")"
-                healthSummaryViewModel.getHealthSummaryGroupData(
-                    healthSummaryRequest,
-                    selectedList.category
-                )
+                if(healthSummaryRequest != null) {
+                    binding.healthSummaryCategoriesDataView.titleTextView.text = selectedList.categoryFriendlyName + " (" + selectedList.count + ")"
+                    healthSummaryViewModel.getHealthSummaryGroupData(
+                        healthSummaryRequest,
+                        selectedList.category
+                    )
 
-                viewLifecycleOwner.lifecycleScope.launch {
-                    healthSummaryViewModel.healthSummaryGroupResults.collect { result ->
-                        if (result != null) {
-                            setDataAdapter(result)
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        healthSummaryViewModel.healthSummaryGroupResults.collect { result ->
+                            if (result != null) {
+                                setDataAdapter(result)
+                            }
                         }
                     }
                 }
@@ -200,6 +243,14 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                         }
                         is VitalSignGroup -> {
                             fragment = VitalSignDetailFragment()
+                        }
+                        is Device -> {
+                            // Device items - for now, just show in list without further navigation
+                            // Could add DeviceDetailFragment here if needed
+                        }
+                        is Goal -> {
+                            // Goal items - for now, just show in list without further navigation
+                            // Could add GoalDetailFragment here if needed
                         }
                     }
                     if (fragment != null) {
