@@ -241,7 +241,7 @@ class HealthSummaryRepository(private val applicationContext: Context) {
                 HealthSummaryListItems(
                     R.drawable.baseline_person_24,
                     R.drawable.baseline_keyboard_arrow_right_24,
-                    null, // category is null for custom categories
+                    null,
                     applicationContext.getString(R.string.goals),
                     goalCount,
                     "GOAL" // customCategoryId
