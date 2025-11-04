@@ -19,6 +19,7 @@ import { vitalSignGroupsSlice } from "./vitalSignGroupsSlice";
 import { medicationKnowledgeSlice } from "./medicationKnowledgeSlice";
 import { labKnowledgeSlice } from "./labKnowledgeSlice";
 import { procedureGroupsSlice } from "./procedureGroupsSlice";
+import { coveragesSlice } from "./coveragesSlice";
 
 import { combineReducers } from "@reduxjs/toolkit";
 
@@ -30,6 +31,7 @@ export const healthReducer = combineReducers({
   carePlanGroups: carePlanGroupsSlice.reducer,
   conditions: conditionsSlice.reducer,
   conditionGroups: conditionGroupsSlice.reducer,
+  coverages: coveragesSlice.reducer,
   encounters: encountersSlice.reducer,
   encounterGroups: encounterGroupsSlice.reducer,
   immunizations: immunizationsSlice.reducer,
