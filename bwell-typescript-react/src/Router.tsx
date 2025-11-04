@@ -7,6 +7,7 @@ import HealthSummary from "./pages/HealthSummary";
 import Conditions from "./pages/Conditions";
 import Labs from "./pages/Labs";
 import CarePlans from "./pages/CarePlans";
+import Coverages from "./pages/Coverages";
 import Encounters from "./pages/Encounters";
 import Immunizations from "./pages/Immunizations";
 import Medications from "./pages/Medications";
@@ -30,12 +31,13 @@ const Router = createBrowserRouter([
   makePageRoute("/allergyIntolerances", <AllergyIntolerances />),
   makePageRoute("/carePlans", <CarePlans />),
   makePageRoute("/conditions", <Conditions />),
+  makePageRoute("/coverages", <Coverages />),
   makePageRoute("/encounters", <Encounters />),
   makePageRoute("/immunizations", <Immunizations />),
   makePageRoute("/labs", <Labs />),
   makePageRoute("/medications", <Medications />),
   makePageRoute("/procedures", <Procedures />),
-  makePageRoute("/vitalSigns", <VitalSigns />)
+  makePageRoute("/vitalSigns", <VitalSigns />),
 ]);
 
 export default Router;

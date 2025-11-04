@@ -16,3 +16,5 @@ yalc.lock
 dist
 
 dist/*
+
+.npmrc
