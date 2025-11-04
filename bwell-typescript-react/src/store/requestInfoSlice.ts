@@ -51,12 +51,21 @@ export const requestInfoSlice = createSlice({
             requestInfo.groupCode = undefined;
         }),
         setGroupCode: createRequestInfoReducer<{ selector: string, groupCode: SearchTokenValue }>((requestInfo, action) => {
+          if (action.payload.selector == "encounters") {
             requestInfo.groupCode = {
-                value: {
-                    code: action.payload.groupCode.code,
-                    value: action.payload.groupCode.value,
-                }
-            }
+              value: {
+                value: action.payload.groupCode.code,
+                system: action.payload.groupCode.system,
+              },
+            };
+          } else {
+            requestInfo.groupCode = {
+              value: {
+                code: action.payload.groupCode.code, // From coding.code
+                value: action.payload.groupCode.value,
+              },
+            };
+          }
         }),
         clearGroupCode: createRequestInfoReducer<string>((requestInfo) => {
             requestInfo.groupCode = undefined;
