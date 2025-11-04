@@ -243,7 +243,7 @@
     <string name="menu_questionnaire">Questionnaire</string>
     <string name="questionnaire">Questionnaire</string>
     <string name="questionnaire_response">QuestionnaireResponse</string>
-    <string name="questionnaire_description">View your questionnaire responses</string>
+    <string name="questionnaire_description">View your questionnaire</string>
     <string name="status">Status</string>
     <string name="intent">Intent</string>
     <string name="dose_number">Dose Number</string>

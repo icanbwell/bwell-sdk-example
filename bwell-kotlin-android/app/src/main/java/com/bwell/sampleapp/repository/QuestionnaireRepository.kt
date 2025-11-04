@@ -9,8 +9,6 @@ import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.questionnaire.QuestionnaireItem
 import com.bwell.sampleapp.singletons.BWellSdk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Repository for managing questionnaire data
@@ -35,9 +33,7 @@ class QuestionnaireRepository(private val applicationContext: Context) {
                     .pageSize(20)
                     .build()
                     
-                val result = withContext(Dispatchers.IO) {
-                    BWellSdk.questionnaire.getQuestionnaireResponses(request)
-                }
+                val result = BWellSdk.questionnaire.getQuestionnaireResponses(request)
                 
                 if (result is BWellResult.ResourceCollection) {
                     questionnaireResponseCount = result.pagingInfo?.totalItems
@@ -48,7 +44,7 @@ class QuestionnaireRepository(private val applicationContext: Context) {
             
             questionnaireList.add(
                 QuestionnaireItem(
-                    R.drawable.baseline_person_24,
+                    R.drawable.baseline_feed_24,
                     applicationContext.getString(R.string.questionnaire_response),
                     questionnaireResponseCount
                 )

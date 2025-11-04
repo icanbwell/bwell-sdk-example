@@ -40,6 +40,9 @@ class QuestionnaireFragment : Fragment() {
             setQuestionnaireAdapter(it)
         }
 
+        // Explicitly trigger fetch (mirrors pattern of calling getX methods in other fragments)
+        questionnaireViewModel.getQuestionnaireResponses()
+
         return root
     }
 
