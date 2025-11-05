@@ -17,6 +17,8 @@ const CenteredGridItem = ({ children }: { children: React.ReactNode }) => (
 const Initialize = () => {
   const [key, setKey] = useState<string>(DEFAULT_KEY);
   const [oauthCreds, setOauthCreds] = useState<string>(DEFAULT_OAUTH_CREDS);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -27,6 +29,8 @@ const Initialize = () => {
   const initializeWithProvidedKey = () => dispatch(initialize({ clientKey: key }));
 
   const loginWithProvidedOAuthCreds = () => dispatch(authenticate({ oauthCreds }));
+
+  const loginWithProvidedUsernamePassword = () => dispatch(authenticate({ username, password }));
 
   if (!isRehydrated)
     return <Box>Rehydrating...</Box>
@@ -89,7 +93,41 @@ const Initialize = () => {
                 disabled={!(key && oauthCreds) || isLoggedIn}
                 onClick={loginWithProvidedOAuthCreds}
               >
-                Login
+                Login with OAuth Token
+              </Button>
+            </CenteredGridItem>
+            <CenteredGridItem>
+              <h2>Or Login with Username & Password</h2>
+              <TextField
+                aria-label="username"
+                id="txtUsername"
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+                value={username}
+                fullWidth
+                style={{ minWidth: "80%", padding: "10px" }}
+                disabled={isLoggedIn}
+              />
+              <TextField
+                type="password"
+                aria-label="password"
+                id="txtPassword"
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                value={password}
+                fullWidth
+                style={{ minWidth: "80%", padding: "10px" }}
+                disabled={isLoggedIn}
+              />
+            </CenteredGridItem>
+            <CenteredGridItem>
+              <Button
+                id="btnSubmitUsernamePassword"
+                variant="contained"
+                disabled={!(key && username && password) || isLoggedIn}
+                onClick={loginWithProvidedUsernamePassword}
+              >
+                Login with Username & Password
               </Button>
             </CenteredGridItem>
             {
