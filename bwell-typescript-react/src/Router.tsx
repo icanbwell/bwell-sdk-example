@@ -15,6 +15,7 @@ import Procedures from "./pages/Procedures";
 import VitalSigns from "./pages/VitalSigns";
 import ProfilePage from "./pages/Profile";
 import SearchPage from "./pages/Search";
+import ExplanationOfBenefits from "./pages/ExplanationOfBenefits";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
@@ -38,6 +39,7 @@ const Router = createBrowserRouter([
   makePageRoute("/medications", <Medications />),
   makePageRoute("/procedures", <Procedures />),
   makePageRoute("/vitalSigns", <VitalSigns />),
+  makePageRoute("/explanationOfBenefits", <ExplanationOfBenefits />),
 ]);
 
 export default Router;
