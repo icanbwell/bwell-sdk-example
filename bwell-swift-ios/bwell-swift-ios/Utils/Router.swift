@@ -8,11 +8,15 @@
 import Foundation
 import SwiftUI
 
-enum AppView {
+enum AppView: Hashable {
     case home
     case profile
     case search
+    case healthSummary
     case manageConnections
+
+    // Subviews of manageConnections
+    case searchConnections(connection: ConnectionsModel)
 }
 
 @MainActor

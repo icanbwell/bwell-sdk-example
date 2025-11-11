@@ -9,58 +9,53 @@ import SwiftUI
 
 struct AuthenticationView: View {
     @StateObject private var viewModel = AuthenticationViewModel()
+    @StateObject private var connectionsViewModel = ManageConnectionsViewModel()
     @EnvironmentObject var router: NavigationRouter
+    @State private var authWithToken: Bool = false
 
     var body: some View {
-        ZStack(alignment: .center) {
-            Color.bwellPurple
-                .ignoresSafeArea()
+        ZStack {
+            ZStack(alignment: .top) {
+                Color.bwellPurple
+                    .ignoresSafeArea()
 
-            VStack(alignment: .center, spacing: 20) {
                 Image("bwell-logo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 150)
                     .padding(.bottom, 40)
+            }
 
+            VStack(alignment: .center, spacing: 15) {
                 Spacer()
-
-                VStack(spacing: 20) {
-                    Text("Authentication")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-
-                    if viewModel.authenticated {
-                        emailPasswordView
-                    } else {
-                        apiKeyView
-                    }
-                }
-                .padding()
-                .background(.white.opacity(0.25))
-                .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                .padding(.horizontal)
-
-                if viewModel.isLoading {
-                    ProgressView("Authenticating...")
-                        .padding(.top, 20)
-                        .foregroundStyle(.white)
+                if !viewModel.apiKeyValidated {
+                    apiKeyView
+                } else {
+                    credentialsView
                 }
                 Spacer()
             }
+            .padding(.horizontal)
+            .frame(height: 350)
+            .padding(.horizontal)
         }
     }
 
     // MARK: - API Key authentication view
     @ViewBuilder
     var apiKeyView: some View {
-        VStack {
-            BWellTextField(placeholder: "Client key",
-                           text: $viewModel.clientKey,
-                           iconName: "key.fill",
-                           isSecure: true,
-                           errorMessage: viewModel.errorMessage)
+        VStack(alignment: .leading) {
+            Text("Client Key")
+                .font(.headline)
+                .fontWeight(.bold)
+                .foregroundStyle(.white)
+                .padding(.bottom, 7)
+
+            AuthenticationTextField(placeholder: "Client key",
+                                    text: $viewModel.clientKey,
+                                    iconName: "key.fill",
+                                    isSecure: true,
+                                    errorMessage: viewModel.errorMessage)
             .padding(.bottom)
 
             BWellButton(title: "Submit") {
@@ -71,25 +66,87 @@ struct AuthenticationView: View {
 
     // MARK: - Email/Password authentication view
     @ViewBuilder
-    var emailPasswordView: some View {
-        VStack {
-            BWellTextField(placeholder: "Email",
-                           text: $viewModel.email,
-                           iconName: "envelope.fill",
-                           errorMessage: viewModel.errorMessage)
-            .keyboardType(.emailAddress)
+    var credentialsView: some View {
+        VStack(alignment: .leading) {
+            if authWithToken {
+                Text("JWT Token")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 7)
 
-            BWellTextField(placeholder: "Password",
-                           text: $viewModel.password,
-                           iconName: "lock.fill",
-                           isSecure: true,
-                           errorMessage: viewModel.errorMessage)
-            .padding(.bottom)
+                AuthenticationTextField(placeholder: "JWT Token",
+                                        text: $viewModel.oauthToken,
+                                        iconName: "key.card.fill",
+                                        isSecure: true,
+                                        errorMessage: viewModel.errorMessage)
+                .padding(.bottom)
+            } else {
+                Text("Email")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 7)
+
+                AuthenticationTextField(placeholder: "Email",
+                                        text: $viewModel.email,
+                                        iconName: "envelope.fill",
+                                        errorMessage: viewModel.emailErrorMessage)
+                .keyboardType(.emailAddress)
+                .padding(.bottom)
+
+                Text("Password")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+                    .padding(.bottom, 7)
+
+                AuthenticationTextField(placeholder: "Password",
+                                        text: $viewModel.password,
+                                        iconName: "lock.fill",
+                                        isSecure: true,
+                                        errorMessage: viewModel.passwordErrorMessage)
+                .padding(.bottom)
+            }
+
 
             BWellButton(title: "Login") {
-                viewModel.login()
+                authWithToken ? viewModel.loginWithOAuthToken() : viewModel.loginWithEmailAndPassword()
             }.disabled(viewModel.isLoading)
-        }.padding()
+
+            HStack(spacing: 5) {
+                Spacer()
+
+                Text("Login with ")
+                    .foregroundStyle(.white)
+
+                Button {
+                    authWithToken.toggle()
+                    viewModel.errorMessage = nil
+                    viewModel.emailErrorMessage = nil
+                    viewModel.passwordErrorMessage = nil
+                } label: {
+                    Text(authWithToken ? "email & password": "OAuth token.")
+                        .foregroundStyle(.white)
+                        .underline(true, color: .white)
+                }
+                Spacer()
+            }.padding(.top)
+        }
+        .onChange(of: viewModel.email) {
+            viewModel.emailErrorMessage = nil
+        }
+        .onChange(of: viewModel.password) {
+            viewModel.passwordErrorMessage = nil
+        }
+        .onChange(of: viewModel.oauthToken) {
+            viewModel.errorMessage = nil
+        }
+        .onChange(of: viewModel.clientKey) {
+            viewModel.errorMessage = nil
+        }
+        .padding()
+
     }
 }
 

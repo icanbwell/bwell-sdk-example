@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ConditionsView: View {
-    @ObservedObject var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var viewModel: HealthSummaryViewModel
+
     var body: some View {
         ZStack {
             if viewModel.isLoading {
@@ -83,9 +84,5 @@ private struct ConditionsDetailView: View {
         .navigationBarTitle("Condition Information")
         .navigationBarTitleDisplayMode(.inline)
     }
-}
-
-#Preview {
-    ConditionsView(viewModel: HealthSummaryViewModel())
 }
 

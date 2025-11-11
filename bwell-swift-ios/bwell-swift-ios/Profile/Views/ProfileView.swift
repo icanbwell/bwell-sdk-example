@@ -26,43 +26,40 @@ struct ProfileView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
+        ZStack(alignment: .center) {
             if viewModel.isLoading {
                 ProgressView("Loading profile data...")
             } else {
-                if !isEditing {
-                    readOnlyProfileView
-                        .padding(.top, 20)
-                } else {
-                    EditableProfileView(
-                        givenName: $viewModel.givenName,
-                        familyName: $viewModel.familyName,
-                        gender: $viewModel.gender,
-                        addressLineOne: $viewModel.addressLineOne,
-                        addressLineTwo: $viewModel.addressLineTwo,
-                        city: $viewModel.city,
-                        state: $viewModel.state,
-                        postalCode: $viewModel.postalCode,
-                        language: $viewModel.language,
-                        selectedBirthdate: Binding<Date>(
-                            get: {
-                                let formatted = viewModel.birthdate.dateFormatter()
-                                let date = formatted.toDate()
-                                return date
-                                },
-                            set: { newDate in
-                                viewModel.birthdate = newDate.toString()
-                            }
-                        ), action: {
-                            Task {
-                                await viewModel.updateUserProfile()
-                            }
-                            isEditing = false
+                if isEditing {
+                   EditableProfileView(
+                    givenName: $viewModel.givenName,
+                    familyName: $viewModel.familyName,
+                    gender: $viewModel.gender,
+                    email: $viewModel.email,
+                    workPhone: $viewModel.workPhone,
+                    homePhone: $viewModel.homePhone,
+                    mobilePhone: $viewModel.mobilePhone,
+                    addressLineOne: $viewModel.addressLineOne,
+                    addressLineTwo: $viewModel.addressLineTwo,
+                    city: $viewModel.city,
+                    state: $viewModel.state,
+                    postalCode: $viewModel.postalCode,
+                    language: $viewModel.language,
+                    selectedBirthdate: Binding<Date>(
+                        get: {
+                            return viewModel.birthdate.dateFormatter().toDate()
+                        }, set: { newDate in
+                            viewModel.birthdate = newDate.toString()
                         }
-                    ).padding(.top, 5)
+                    ),
+                    action: {
+                        Task {
+                            await viewModel.updateUserProfile()
+                        }
+                    }).padding(.top, 5)
+                } else {
+                    readOnlyProfileView
                 }
-
-                Spacer()
             }
         }
         .ignoresSafeArea(edges: .bottom)
@@ -71,8 +68,12 @@ struct ProfileView: View {
             Button {
                 isEditing.toggle()
             } label: {
-                Text(isEditing ? "Cancel" : "Edit")
-                    .foregroundStyle(.bwellBlue)
+                if isEditing {
+                    Text("Cancel")
+                        .foregroundStyle(.bwellBlue)
+                } else {
+                    Image(systemName: "square.and.pencil")
+                }
             }
         })
         .onAppear {
@@ -85,47 +86,80 @@ struct ProfileView: View {
 
     @ViewBuilder
     var readOnlyProfileView: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top, spacing: 20) {
-                Image("user-profile-picture")
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(Circle())
-                    .frame(width: 90, height: 90, alignment: .leading)
-                
-                VStack(alignment: .leading, spacing: 5) {
-                    Text(fullName)
-                        .font(.system(.title3, design: .rounded, weight: .semibold))
-                    
-                    if let contactPoint = viewModel.contactPoint["value"] {
-                        Text(contactPoint)
-                            .font(.system(.headline, design: .rounded, weight: .regular))
-                    }
-                }.padding(.leading, 15)
+        ScrollView {
+            Image("user-profile-picture")
+                .resizable()
+                .scaledToFill()
+                .clipShape(Circle())
+                .frame(width: 120, height: 120, alignment: .center)
+                .padding(.bottom, 20)
 
-                Spacer()
+            VStack {
+                Text("Personal Information")
+                    .font(.title3)
+                    .fontWeight(.medium)
+                    .padding(.bottom, 10)
+
+                ListItem(icon: "person.text.rectangle", title: "Full name", text: fullName)
+                ListItem(icon: "calendar", title: "Birthdate", text: viewModel.birthdate)
+                ListItem(icon: "figure.stand.dress.line.vertical.figure", title: "Gender", text: viewModel.gender.description())
+                ListItem(icon: "house", title: "Address", text: address)
+
+                Text("Contact Information")
+                    .font(.title3)
+                    .fontWeight(.medium)
+                    .padding(.vertical, 10)
+
+                if !viewModel.email.isEmpty {
+                    ListItem(icon: "envelope", title: "Email address", text: viewModel.email)
+                }
+
+                if !viewModel.workPhone.isEmpty {
+                    ListItem(icon: "suitcase", title: "Work phone number", text: viewModel.workPhone)
+                }
+
+                if !viewModel.homePhone.isEmpty {
+                    ListItem(icon: "house", title: "Home phone number", text: viewModel.homePhone)
+                }
+
+                if !viewModel.mobilePhone.isEmpty {
+                    ListItem(icon: "iphone", title: "Mobile phone number", text: viewModel.mobilePhone)
+                }
+
+                Text("Language")
+                    .font(.title3)
+                    .fontWeight(.medium)
+                    .padding(.vertical, 10)
+
+                ListItem(icon: "translate", title: "Language", text: viewModel.language)
             }
-
-            List {
-                ProfileListItem(icon: "person.fill", text: viewModel.gender.description())
-                ProfileListItem(icon: "calendar", text: viewModel.birthdate.dateFormatter())
-                ProfileListItem(icon: "house", text: address)
-                ProfileListItem(icon: "character.book.closed", text: viewModel.language)
-            }.listStyle(.plain)
-        }
+            .padding()
+            .frame(height: .infinity)
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 20, topTrailingRadius: 20))
+        }.ignoresSafeArea(edges: .bottom)
     }
 }
 
-private struct ProfileListItem: View {
+private struct ListItem: View {
     var icon: String
+    var title: String
     var text: String
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .center, spacing: 17) {
             Image(systemName: icon)
+                .font(.title2)
                 .frame(width: 24, alignment: .center)
-            Text(text)
-        }
+
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.headline)
+                    .fontWeight(.medium)
+
+                Text(text)
+            }
+            Spacer()
+        }.padding(.bottom, 5)
     }
 }
 
@@ -134,24 +168,4 @@ private struct ProfileListItem: View {
         .environmentObject(BWellSDKManager.shared)
         .environmentObject(NavigationRouter())
         .environmentObject(SideMenuOptionViewModel())
-}
-
-struct SearchView: View {
-    @State private var showMenu: Bool = false
-
-    var body: some View {
-        VStack {
-            Text("Search view")
-        }.bwellNavigationBar(showMenu: $showMenu)
-    }
-}
-
-struct ManageConnectionsView: View {
-    @State private var showMenu: Bool = false
-
-    var body: some View {
-        VStack {
-            Text("Manage connection view")
-        }.bwellNavigationBar(showMenu: $showMenu)
-    }
 }

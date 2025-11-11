@@ -27,11 +27,17 @@ final class HealthSummaryViewModel: ObservableObject {
 
 
     // Group Published properties
-    @Published var allergyIntoleranceGroup: BWell.GroupResult<BWell.AllergyIntoleranceGroup>? = nil
-    @Published var conditionsGroup: BWell.GroupResult<BWell.ConditionGroup>? = nil
-    @Published var carePlansIntoleranceGroup: BWell.GroupResult<BWell.CarePlanGroup>? = nil
+    @Published var allergyIntoleranceGroups: BWell.GroupResult<BWell.AllergyIntoleranceGroup>? = nil
+    @Published var conditionGroups: BWell.GroupResult<BWell.ConditionGroup>? = nil
+    @Published var carePlanGroups: BWell.GroupResult<BWell.CarePlanGroup>? = nil
+    @Published var immunizationGroups: BWell.GroupResult<BWell.ImmunizationGroup>? = nil
+    @Published var labGroups: BWell.GroupResult<BWell.LabGroups>? = nil
+    @Published var procedureGroups: BWell.GroupResult<BWell.ProcedureGroups>? = nil
+    @Published var vitalSignsGroups: BWell.GroupResult<BWell.VitalSignGroups>? = nil
+    @Published var medicationGroups: BWell.GroupResult<BWell.MedicationGroup>? = nil
+    @Published var encounterGroups: BWell.GroupResult<BWell.EncounterGroup>? = nil
 
-    func setup(sdkManager: BWellSDKManager) {
+    func setup(router: NavigationRouter, sdkManager: BWellSDKManager) {
         self.sdkManager = sdkManager
     }
 
@@ -88,18 +94,21 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     func getAllergyIntoleranceGroups() async {
+        isLoading = true
         do {
-            guard let sdkManager else { return }
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
 
             let request = BWell.HealthDataGroupRequest(page: 1)
-            allergyIntoleranceGroup = try await sdkManager.health().getAllergyIntoleranceGroups(request)
+            allergyIntoleranceGroups = try await sdkManager.health().getAllergyIntoleranceGroups(request)
 
-            if let response = allergyIntoleranceGroup {
-                print(response)
-            }
+            isLoading = false
         } catch {
             errorMessage = "Failed to fetch allergy intolerance group: \(error.localizedDescription)"
-            allergyIntoleranceGroup = nil
+            isLoading = false
         }
     }
 
@@ -132,7 +141,26 @@ final class HealthSummaryViewModel: ObservableObject {
         }
     }
 
-    // TODO: Add Care Plan Groups here
+    // MARK: Care Plan Groups
+    func getCarePlanGroups() async {
+        isLoading = true
+
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
+
+            let request = BWell.HealthDataGroupRequest(page: 1)
+            carePlanGroups = try await sdkManager.health().getCarePlanGroups(request)
+
+            isLoading = false
+        } catch {
+            errorMessage = "Failed to fetch health data: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
 
     // MARK: - Conditions
     func getConditions() async {
@@ -164,6 +192,28 @@ final class HealthSummaryViewModel: ObservableObject {
         }
     }
 
+    // MARK: Condition Groups
+    func getConditionGroups() async {
+        isLoading = true
+
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
+
+            let request = BWell.HealthDataGroupRequest(page: 1)
+            conditionGroups = try await sdkManager.health().getConditionGroups(request)
+
+            isLoading = false
+        } catch {
+            errorMessage = "Failed to fetch health data: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
+
+
     // MARK: - Immunization
     func getImmunizations() async {
         isLoading = true
@@ -187,6 +237,27 @@ final class HealthSummaryViewModel: ObservableObject {
                     immunizations.append(immunization)
                 }
             }
+            isLoading = false
+        } catch {
+            errorMessage = "Failed to fetch health data: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
+
+    // MARK: Get Immunization Groups
+    func getImmunizationGroups() async {
+        isLoading = true
+
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
+
+            let request = BWell.HealthDataGroupRequest(page: 1)
+            immunizationGroups = try await sdkManager.health().getImmunizationGroups(request)
+
             isLoading = false
         } catch {
             errorMessage = "Failed to fetch health data: \(error.localizedDescription)"
