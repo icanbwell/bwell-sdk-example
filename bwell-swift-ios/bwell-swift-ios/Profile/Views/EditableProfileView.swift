@@ -12,17 +12,31 @@ import BWellSDK
 struct EditableProfileView: View {
     @State private var shouldRotate: Bool = false
 
-    // Properties for the editable fields
+    // Personal Information
     @Binding var givenName: String
     @Binding var familyName: String
     @Binding var gender: BWell.Gender
+
+    // Contact Information
+    @Binding var email: String
+    @Binding var workPhone: String
+    @Binding var homePhone: String
+    @Binding var mobilePhone: String
+
+    // Address Information
     @Binding var addressLineOne: String
     @Binding var addressLineTwo: String
     @Binding var city: String
     @Binding var state: String
     @Binding var postalCode: String
+
+    // Language
     @Binding var language: String
+
+    // Birthdate
     @Binding var selectedBirthdate: Date
+
+
     let action: () -> Void
 
     var body: some View {
@@ -36,6 +50,13 @@ struct EditableProfileView: View {
 
                 Section("Birth date") {
                     birthDateView
+                }.listRowSeparator(.hidden, edges: .top)
+
+                Section("Contact Information") {
+                    ListItem(text: $email, placeholder: "Email", icon: "envelope")
+                    ListItem(text: $workPhone, placeholder: "Work phone number", icon: "suitcase")
+                    ListItem(text: $homePhone, placeholder: "Home phone number", icon: "house")
+                    ListItem(text: $mobilePhone, placeholder: "Mobile phone number", icon: "iphone")
                 }.listRowSeparator(.hidden, edges: .top)
 
                 Section("Address") {
@@ -167,6 +188,10 @@ private struct GenderMenuButton: View {
     EditableProfileView(givenName: .constant("John"),
                         familyName: .constant("Doe"),
                         gender: .constant(.male),
+                        email: .constant("example@example.com"),
+                        workPhone: .constant("221-923-1033"),
+                        homePhone: .constant("221-629-2253"),
+                        mobilePhone: .constant("221-812-7803"),
                         addressLineOne: .constant("145 W Osten St"),
                         addressLineTwo:  .constant("Suite 300"),
                         city: .constant("Baltimore"),

@@ -9,22 +9,24 @@ import SwiftUI
 import BWellSDK
 
 struct HealthSummaryView: View {
+    @EnvironmentObject private var router: NavigationRouter
+    @EnvironmentObject private var sdkManager: BWellSDKManager
+    @StateObject private var viewModel = HealthSummaryViewModel()
+
     @State private var showMenu: Bool = false
-    @ObservedObject private var viewModel = HealthSummaryViewModel()
-    @EnvironmentObject var sdkManager: BWellSDKManager
 
     var body: some View {
         List {
             ForEach(HealthDataSummaryModel.allCases) { item in
-                NavigationLink {
-                    DetailView(view: getView(from: item))
-                        .navigationTitle(item.title)
-                        .navigationBarTitleDisplayMode(.inline)
+                Button {
+                    router.path.append(item)
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: item.icon)
                             .frame(width: 24, alignment: .center)
+
                         Text(item.title)
+
                         Spacer()
 
                         if viewModel.isLoading {
@@ -35,6 +37,11 @@ struct HealthSummaryView: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .frame(width: 24)
+                            .foregroundStyle(.gray)
                     }
                 }
             }.listRowSeparator(.hidden)
@@ -44,46 +51,27 @@ struct HealthSummaryView: View {
         .listStyle(.plain)
         .listRowSeparator(.hidden)
         .onAppear {
-            viewModel.setup(sdkManager: sdkManager)
+            viewModel.setup(router: router, sdkManager: sdkManager)
         }
         .task {
             if viewModel.healthSummary.isEmpty {
                 await viewModel.getHealthDataSummary()
             }
         }
-    }
-
-    @ViewBuilder
-    func getView(from item: HealthDataSummaryModel) -> some View {
-        switch item {
-            case .allergyIntolerance:
-                AllergyIntolerancesView(viewModel: viewModel)
-            case .carePlan:
-                CarePlansView(viewModel: viewModel)
-            case .condition:
-                ConditionsView(viewModel: viewModel)
-            case .immunization:
-                ImmunizationsView(viewModel: viewModel)
-            case .labs:
-                LabsView(viewModel: viewModel)
-            case .medications:
-                MedicationsView(viewModel: viewModel)
-            case .procedure:
-                ProceduresView(viewModel: viewModel)
-            case .vitalSigns:
-                VitalSignsView(viewModel: viewModel)
-            case .encounter:
-                EncountersView(viewModel: viewModel)
+        .navigationDestination(for: HealthDataSummaryModel.self) { category in
+            HealthSummaryDetailView(category: category)
+                .environmentObject(viewModel)
         }
     }
 }
 
-private struct DetailView<Content: View>: View {
-    var view: Content
+struct HealthSummaryDetailView: View {
+    @EnvironmentObject private var vieModel: HealthSummaryViewModel
+    var category: HealthDataSummaryModel
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            view
+        Group {
+            category.view
         }
     }
 }

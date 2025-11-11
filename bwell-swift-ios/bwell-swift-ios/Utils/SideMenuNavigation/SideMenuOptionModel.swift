@@ -10,9 +10,8 @@ import Foundation
 enum SideMenuOptionModel: Int, CaseIterable {
     case home
     case profile
-    case search
     case manageConnections
-    // case healthSummary
+    case healthSummary
     case logout
 
 
@@ -20,9 +19,8 @@ enum SideMenuOptionModel: Int, CaseIterable {
         switch self {
             case .home: "Home"
             case .profile: "Profile"
-            case .search: "Search"
             case .manageConnections: "Manage Connections"
-            // case .healthSummary: "Health Summary"
+            case .healthSummary: "Health Summary"
             case .logout: "Logout"
         }
     }
@@ -31,9 +29,8 @@ enum SideMenuOptionModel: Int, CaseIterable {
         switch self {
             case .home: "house"
             case .profile: "person"
-            case .search: "magnifyingglass"
             case .manageConnections: "rectangle.connected.to.line.below"
-            // case .healthSummary: "heart.text.clipboard"
+            case .healthSummary: "heart.text.clipboard"
             case .logout: "arrow.right.square"
         }
     }
@@ -42,9 +39,8 @@ enum SideMenuOptionModel: Int, CaseIterable {
         switch self {
             case .home: .home
             case .profile: .profile
-            case .search: .search
             case .manageConnections: .manageConnections
-                // case .healthSummary: .healthSummary
+            case .healthSummary: .healthSummary
             case .logout: .home
         }
     }

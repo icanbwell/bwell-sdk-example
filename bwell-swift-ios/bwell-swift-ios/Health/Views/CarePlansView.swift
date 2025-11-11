@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct CarePlansView: View {
-    @ObservedObject var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var viewModel: HealthSummaryViewModel
 
     var body: some View {
         ZStack {

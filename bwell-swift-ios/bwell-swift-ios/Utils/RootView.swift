@@ -19,17 +19,22 @@ struct RootView: View {
                 .navigationDestination(for: AppView.self) { screen in
                     switch screen {
                         case .home:
-                            HealthSummaryView()
+                            HomeView()
                                 .navigationBarBackButtonHidden()
                         case .profile:
                             ProfileView()
                                 .navigationBarBackButtonHidden()
                         case .search:
-                            SearchView()
+                            EmptyView()
+                                .navigationBarBackButtonHidden()
+                        case .healthSummary:
+                            HealthSummaryView()
                                 .navigationBarBackButtonHidden()
                         case .manageConnections:
                             ManageConnectionsView()
                                 .navigationBarBackButtonHidden()
+                        case .searchConnections(let connection):
+                            SearchConnectionsView(connection: connection)
                     }
                 }
         }.onChange(of: bwellSDKManager.isAuthenticated) { _, isAuthenticated in

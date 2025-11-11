@@ -15,26 +15,25 @@ final class ProfileViewModel: ObservableObject {
     @Published var isLoading: Bool = false
 
     // User's name
-    @Published var givenName: String = "Given"
-    @Published var familyName: String = "Family"
+    @Published var givenName: String = "John"
+    @Published var familyName: String = "Doe"
 
     // User's address
-    @Published var addressLineOne: String = ""
-    @Published var addressLineTwo: String = ""
-    @Published var country: String = ""
-    @Published var postalCode: String = ""
-    @Published var state: String = ""
-    @Published var city: String = ""
+    @Published var addressLineOne: String = "145 W Osten St"
+    @Published var addressLineTwo: String = "Suite 300"
+    @Published var country: String = "United States"
+    @Published var postalCode: String = "21230"
+    @Published var state: String = "Maryland"
+    @Published var city: String = "Baltimore"
 
     // Other user's information
-    @Published var gender: BWell.Gender = .unknown
-    @Published var birthdate: String = ""
-    @Published var language: String = "N/A"
-    @Published var contactPoint: [String:String] = [
-        "system": "",
-        "value": "user@example.com",
-        "use": ""
-    ]
+    @Published var gender: BWell.Gender = .male
+    @Published var birthdate: String = "January 2, 1990"
+    @Published var language: String = "English"
+    @Published var email: String = "example@example.com"
+    @Published var workPhone: String = "221-923-1033"
+    @Published var homePhone: String = "221-629-2253"
+    @Published var mobilePhone: String = "221-812-7803"
 
     func setup(sdkManager: BWellSDKManager) {
         self.sdkManager = sdkManager
@@ -87,6 +86,8 @@ final class ProfileViewModel: ObservableObject {
                                                                              language: language)
 
             _ = try await sdkManager.user().updateProfile(updateProfileRequest)
+            try await sdkManager.createConsent()
+
             isLoading = false
         } catch {
             isLoading = false
@@ -130,14 +131,16 @@ final class ProfileViewModel: ObservableObject {
         }
 
         if let telecom = data.telecom {
-            if let contactPoint = telecom.first {
-                guard let system = contactPoint.system,
-                      let value = contactPoint.value,
-                      let use = contactPoint.use else { return }
-
-                self.contactPoint["system"] = system
-                self.contactPoint["value"] = value
-                self.contactPoint["use"] = use
+            for contactPoint in telecom {
+                if contactPoint.use == "email" {
+                    email = contactPoint.value ?? ""
+                } else if contactPoint.use == "mobile" {
+                    mobilePhone = contactPoint.value ?? ""
+                } else if contactPoint.use == "work" {
+                    workPhone = contactPoint.value ?? ""
+                } else if contactPoint.use == "home" {
+                    homePhone = contactPoint.value ?? ""
+                }
             }
         }
     }

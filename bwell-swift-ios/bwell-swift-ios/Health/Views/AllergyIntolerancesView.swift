@@ -8,52 +8,95 @@
 import SwiftUI
 
 struct AllergyIntolerancesView: View {
-    @ObservedObject var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var viewModel: HealthSummaryViewModel
 
     var body: some View {
         ZStack {
             if viewModel.isLoading {
                 ProgressView("Loading allergy intolerance data...")
             } else {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("Allergy")
-                            .font(.system(size: 18, weight: .semibold))
-                        Spacer()
-                        Text("Criticality")
-                            .font(.system(size: 18, weight: .semibold))
-                    }.padding(.bottom, 5)
-
-                    ForEach(viewModel.allergyIntolerances, id: \.id) { entry in
-                        HStack {
-                            if let allergy = entry.code?.coding?.first?.display,
-                               let criticality = entry.criticality {
-                                Text(allergy)
-                                Spacer()
-                                Text(criticality)
-                            }
-                        }
+                List {
+                    Section("Allergy Intolerances") {
+                        AllergiesView(allergies: viewModel.allergyIntolerances)
                     }
 
-                    Rectangle()
-                        .frame(height: 1)
-                        .foregroundStyle(.gray)
-
-                    Text("Total: \(viewModel.allergyIntolerances.count)")
-                        .font(.headline)
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, 20)
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.top, 20)
+                    Section("Allergy Intolerance Groups") {
+                        AllergyIntoleranceGroupsView()
+                    }
+                }.listStyle(.plain)
             }
         }.task {
             if viewModel.allergyIntolerances.isEmpty {
                 await viewModel.getAllergyIntolerances()
-                // await viewModel.getAllergyIntoleranceGroups()
+            }
+
+            if let _ = viewModel.allergyIntoleranceGroups {
+                await viewModel.getAllergyIntoleranceGroups()
             }
         }
+    }
+}
+
+// MARK: - Allergy Intolerances
+private struct AllergiesView: View {
+    var allergies: [BWellWrapper.allergyIntolerances]
+
+    var body: some View {
+        Group {
+            HStack {
+                Text("Allergy")
+                    .font(.system(size: 18, weight: .semibold))
+                Spacer()
+                Text("Criticality")
+                    .font(.system(size: 18, weight: .semibold))
+            }.listRowSeparator(.hidden, edges: .top)
+
+            ForEach(allergies, id: \.id) { entry in
+                HStack {
+                    if let allergy = entry.code?.coding?.first?.display,
+                       let criticality = entry.criticality {
+                        Text(allergy)
+
+                        Spacer()
+
+                        Text(criticality)
+                            .padding(5)
+                            .background(getStatusColor(of: criticality))
+                            .foregroundStyle(.white)
+                            .fontWeight(.semibold)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                    }
+                }
+            }
+
+            /*
+             Text("Total: \(viewModel.allergyIntolerances.count)")
+                 .font(.headline)
+                 .fontWeight(.semibold)
+                 .frame(maxWidth: .infinity, alignment: .leading)
+                 .listRowSeparator(.hidden, edges: .bottom)
+             */
+        }
+    }
+}
+
+extension AllergiesView {
+    func getStatusColor(of criticality: String) -> Color {
+        if criticality == "high" {
+            return .bwellRed
+        } else if criticality == "low" {
+            return .bwellGreen
+        } else if criticality == "unable-to-assess" || criticality == "unknown" {
+            return .gray
+        } else {
+            return .gray
+        }
+    }
+}
+
+// MARK: - Allergy Intolerance Groups
+private struct AllergyIntoleranceGroupsView: View {
+    var body: some View {
+        
     }
 }

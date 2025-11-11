@@ -10,6 +10,7 @@ import BWellSDK
 enum SDKError: Error {
     case notInitialized
     case invalidCredentials
+    case createConsentNotCreated
 
     var errorDescription: String? {
         switch self {
@@ -17,6 +18,8 @@ enum SDKError: Error {
                 return "The BWell SDK has not been initialized. Please call initializeSDK() before using any SDK functionality."
             case .invalidCredentials:
                 return "The provided credentials for the BWell SDK are invalid."
+            case .createConsentNotCreated:
+                return "The TOS consent could not be created."
         }
     }
 }
@@ -57,7 +60,7 @@ final class BWellSDKManager: ObservableObject {
      * - Throws:
      *    - An error is authentication fails.
      */
-    func authenticate(credentials: BWell.Credentials, clientToken: String) async throws {
+    func authenticate(credentials: BWell.Credentials) async throws {
         guard let sdk = sdk else { throw SDKError.notInitialized }
 
         do {
@@ -67,6 +70,20 @@ final class BWellSDKManager: ObservableObject {
         } catch {
             print("Authentication failed with error: \(error)")
             self.isAuthenticated = false
+            throw error
+        }
+    }
+    
+    func createConsent() async throws {
+        guard let sdk = sdk else { throw SDKError.createConsentNotCreated }
+
+        do {
+            let request: BWell.CreateConsentRequest = .init(status: .active,
+                                                            provision: .init(type: .permit),
+                                                            category: .tos)
+
+            _ = try await sdk.user.createConsent(request)
+        } catch {
             throw error
         }
     }

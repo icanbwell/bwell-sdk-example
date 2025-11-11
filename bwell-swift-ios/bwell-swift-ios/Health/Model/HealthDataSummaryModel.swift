@@ -4,9 +4,11 @@
 //
 //  Created by Ivan Villanueva on 29/10/25.
 //
+import Foundation
+import SwiftUI
 import BWellSDK
 
-enum HealthDataSummaryModel: Int, CaseIterable {
+enum HealthDataSummaryModel: Int, CaseIterable, Hashable {
     case allergyIntolerance
     case carePlan
     case condition
@@ -56,6 +58,29 @@ enum HealthDataSummaryModel: Int, CaseIterable {
             case .medications: .medications
             case .procedure: .procedure
             case .vitalSigns: .vitalSigns
+        }
+    }
+
+    var view: AnyView {
+        switch self {
+            case .allergyIntolerance:
+                AnyView(AllergyIntolerancesView())
+            case .carePlan:
+                AnyView(CarePlansView())
+            case .condition:
+                AnyView(ConditionsView())
+            case .immunization:
+                AnyView(ImmunizationsView())
+            case .labs:
+                AnyView(LabsView())
+            case .medications:
+                AnyView(MedicationsView())
+            case .procedure:
+                AnyView(ProceduresView())
+            case .vitalSigns:
+                AnyView(VitalSignsView())
+            case .encounter:
+                AnyView(EncountersView())
         }
     }
 }
