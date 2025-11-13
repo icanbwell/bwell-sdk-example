@@ -6,13 +6,14 @@
 //
 import Foundation
 import BWellSDK
+import Combine
 
 struct Credentials {
-    static let clientKey: String = "eyJyIjoidGk3ank1N2J4ODdheGV3MzBzMHciLCJlbnYiOiJjbGllbnQtc2FuZGJveCIsImtpZCI6IndhbGdyZWVucy1jbGllbnQtc2FuZGJveCJ9"
+    static let apiKey: String = "eyJyIjoidGk3ank1N2J4ODdheGV3MzBzMHciLCJlbnYiOiJjbGllbnQtc2FuZGJveCIsImtpZCI6IndhbGdyZWVucy1jbGllbnQtc2FuZGJveCJ9"
     
-    static let katesClientKey: String = "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
+    static let katesApiKey: String = "eyJyIjoiNWV4b3d2N2RqZzVtbWpyb2JlaiIsImVudiI6ImNsaWVudC1zYW5kYm94Iiwia2lkIjoic2Ftc3VuZy1jbGllbnQtc2FuZGJveCJ9"
 
-    static let colesClientKey: String = "eyJyIjoiY2Zoa2h3ODZvNHdoNWFiOW9kaHgiLCJlbnYiOiJkZXYiLCJraWQiOiJid2VsbF9kZW1vLWRldiJ9"
+    static let colesApiKey: String = "eyJyIjoiY2Zoa2h3ODZvNHdoNWFiOW9kaHgiLCJlbnYiOiJkZXYiLCJraWQiOiJid2VsbF9kZW1vLWRldiJ9"
 
     static let token: String = "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiRUNESC1FUyIsImtpZCI6IndhbGdyZWVucy1jbGllbnQtc2FuZGJveCIsImVwayI6eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6Ilo0ZXNYMnFRSWNVZjlmWG5lSUxnQ1JaZV9HZVFoVC1jd0xDTGZPQWdPZXMiLCJ5IjoiYjY0LU9UN29GUmpxSFBsLU9ULWpIekJrcU43VFp1eFk5R1ZLMDNqS1FOayJ9fQ..fwBk9qqw4ceyFW-1NqGGRQ.qN-uJGoPHcNG2CUwGw1hkvRfBgkqu_ZAh7RY8-gRPr5tHMYHVVR-tZquu9QidqKNqbAwXpP11stL32FjE4kLPSetmFJOH0w92a7fYmBUdG52WN1ObInToXchBLLa9cFLHyCz53g67sgW09-D0EDCjOuskh9d0f8FeAUE1ubtQSYvz9bnDISWtJ4yGHTpc6hPKRJI1aWxm8AQ8jfe_YZ6_eM-lKfjPrs7m-RCrIpENxdvMOMMf_tH16T1lohUoA9HRVwpLr1DdSgbGGyG69UuxYw89yTBBUnMTKltrydH9p-424530Bs6ylWrkJHJ60NHuESmPvEltNUcfW45t-VOR3KViiVnebVu93hC1-W2_Z802H2qlbICNAHF4FRgnhfduz6AeLq5CEVPj-daBsevcQ6dVmHo5Tp-HuzV1qd_3JczE-RYCODnJhZDaO6Lf2OF85hmYLco0i1S5e_CclNHVQX53Ggs_8OgWJWZVeg02aJOK9w52EeHS5M_-Q_bsPUhl92ZQWXRt6WmmMGqoise6d0Eke-GBPdiCF8_r0-2GdnTGhABcrDitx4Dgx_B5oFkRwBtVeDxb0rB7refmAgkBWl9vScHAoOqq_QOLBs8t-K_n4H306HAfz4e056UoVNcRo92ntmsyWNlDQSaeGCxCJ6sfHARWH7RGVvfQ92hJzBjaE_73JNUCL56oZnh5JaluyvVV3XqBq4ruO_a1lKduKc5-2zR0XQDFYrFjVC0TDdeTOmAWGEp1wEQGC1ygpzHGOrDJHC2gya7YRvFGzH7xGRvxdKop-hjD2RJ9ThJEYXA_nD6P3at6OuVrRubSRknkV43NERRIPMM4ckSo6pN-9craCk1s27CW_h_J9FDR_8.5x8h4562PaZ9pUdjeo5lWQ"
 }
@@ -20,9 +21,10 @@ struct Credentials {
 @MainActor
 final class AuthenticationViewModel: ObservableObject {
     private let sdkManager: BWellSDKManager
+    private var cancellables = Set<AnyCancellable>()
 
     // Authentication published properties
-    @Published var clientKey: String = Credentials.clientKey
+    @Published var apiKey: String = Credentials.apiKey
     @Published var oauthToken: String = Credentials.token
     @Published var email: String = "test@test.test"
     @Published var password: String = "Password@1"
@@ -37,30 +39,59 @@ final class AuthenticationViewModel: ObservableObject {
 
     init() {
         sdkManager = .shared
+        sdkManager.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                self?.handleSDKStateChange(state)
+            }
+            .store(in: &cancellables)
     }
 
     func initializeSDK() {
         isLoading = true
 
-        guard !clientKey.isEmpty else {
-            errorMessage = "Client key is required."
+        guard !apiKey.isEmpty else {
+            errorMessage = "API key is required."
             isLoading = false
             return
         }
 
         Task {
             do {
-                try await sdkManager.initilize(clientKey: clientKey)
-
-                self.apiKeyValidated = true
-                self.isLoading = false
+                try await sdkManager.initilize(apiKey)
             } catch {
                 errorMessage = "SDK initilization failed"
                 isLoading = false
             }
         }
     }
-
+    
+    private func handleSDKStateChange(_ state: SDKState) {
+        switch state {
+        case .initializing:
+            isLoading = true
+            errorMessage = nil
+        case .initialized:
+            APIKeyService.shared.save(apiKey)
+            apiKeyValidated = true
+            isLoading = false
+        case .authenticating:
+            isLoading = true
+            errorMessage = nil
+        case .authenticated:
+            apiKeyValidated = true
+            isLoading = false
+        case .uninitialized, .unauthenticated:
+            apiKeyValidated = false
+            isLoading = false
+        case .failed(let error):
+            errorMessage = "SDK error: \(error.localizedDescription)"
+            isLoading = false
+        case .checkingSession:
+            break
+        }
+    }
+    
     func loginWithOAuthToken() {
         isLoading = true
 
@@ -74,9 +105,7 @@ final class AuthenticationViewModel: ObservableObject {
             do {
                 let credentials = BWell.Credentials.oauth(token: oauthToken)
 
-                try await sdkManager.authenticate(credentials: credentials)
-                try await sdkManager.createConsent()
-
+                try await sdkManager.login(credentials: credentials)
                 isLoading = false
             } catch {
                 errorMessage = "Login failed"
@@ -102,9 +131,7 @@ final class AuthenticationViewModel: ObservableObject {
             do {
                 let credentials = BWell.Credentials.emailPassword(email: email, password: password)
 
-                try await sdkManager.authenticate(credentials: credentials)
-                try await sdkManager.createConsent()        
-
+                try await sdkManager.login(credentials: credentials)
                 isLoading = false
             } catch {
                 errorMessage = "Login failed"

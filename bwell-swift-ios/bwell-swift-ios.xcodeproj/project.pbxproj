@@ -33,6 +33,10 @@
 		5548A09D2EBEB13800C0ACF5 /* SearchConnectionDisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5548A09C2EBEB12E00C0ACF5 /* SearchConnectionDisclaimerView.swift */; };
 		5551A3A52EC296E600394D59 /* Home.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5551A3A42EC296E600394D59 /* Home.xcstrings */; };
 		5551A3A72EC29AEC00394D59 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3A62EC29AE700394D59 /* HomeView.swift */; };
+		5551A3AA2EC390A200394D59 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3A92EC3909A00394D59 /* KeychainService.swift */; };
+		5551A3AC2EC3B8EB00394D59 /* KeychainTokenStorageAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */; };
+		5551A3B02EC3ECC000394D59 /* BWellSDKManager+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */; };
+		5551A3B42EC4023200394D59 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3B32EC4023200394D59 /* HomeViewModel.swift */; };
 		5597E5482EBE561C00A744CD /* WebViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E5472EBE560500A744CD /* WebViewWrapper.swift */; };
 		5597E54A2EBE566700A744CD /* SearchConnectionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E5492EBE565C00A744CD /* SearchConnectionsViewModel.swift */; };
 		5597E54C2EBE56AC00A744CD /* SearchConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E54B2EBE56A000A744CD /* SearchConnectionsView.swift */; };
@@ -48,10 +52,12 @@
 		55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256D2EB42BE7000D3783 /* ConditionsView.swift */; };
 		55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625712EB44B71000D3783 /* CarePlansView.swift */; };
 		55E625762EB5402F000D3783 /* DetailedItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625752EB53FE0000D3783 /* DetailedItemView.swift */; };
-		55E625782EB54376000D3783 /* BWellTypeWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625772EB54362000D3783 /* BWellTypeWrapper.swift */; };
+		55E625782EB54376000D3783 /* BWellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625772EB54362000D3783 /* BWellWrapper.swift */; };
 		55E6257A2EB54FC9000D3783 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625792EB54FC2000D3783 /* AuthenticationViewModel.swift */; };
 		55E6257D2EB56867000D3783 /* ManageConnectionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6257C2EB56861000D3783 /* ManageConnectionsViewModel.swift */; };
 		55E6257F2EB56871000D3783 /* ManageConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */; };
+		55F2035B2EC4FE42001DA1E8 /* APIKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */; };
+		55F2035D2EC504E9001DA1E8 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035C2EC504E3001DA1E8 /* LaunchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +107,11 @@
 		5548A09C2EBEB12E00C0ACF5 /* SearchConnectionDisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionDisclaimerView.swift; sourceTree = "<group>"; };
 		5551A3A42EC296E600394D59 /* Home.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Home.xcstrings; sourceTree = "<group>"; };
 		5551A3A62EC29AE700394D59 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		5551A3A92EC3909A00394D59 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStorageAdapter.swift; sourceTree = "<group>"; };
+		5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BWellSDKManager+Helpers.swift"; sourceTree = "<group>"; };
+		5551A3B32EC4023200394D59 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		557D68922EC5542F0089DCC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5597E5472EBE560500A744CD /* WebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewWrapper.swift; sourceTree = "<group>"; };
 		5597E5492EBE565C00A744CD /* SearchConnectionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionsViewModel.swift; sourceTree = "<group>"; };
 		5597E54B2EBE56A000A744CD /* SearchConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionsView.swift; sourceTree = "<group>"; };
@@ -116,10 +127,12 @@
 		55E6256D2EB42BE7000D3783 /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
 		55E625712EB44B71000D3783 /* CarePlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarePlansView.swift; sourceTree = "<group>"; };
 		55E625752EB53FE0000D3783 /* DetailedItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedItemView.swift; sourceTree = "<group>"; };
-		55E625772EB54362000D3783 /* BWellTypeWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellTypeWrapper.swift; sourceTree = "<group>"; };
+		55E625772EB54362000D3783 /* BWellWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellWrapper.swift; sourceTree = "<group>"; };
 		55E625792EB54FC2000D3783 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 		55E6257C2EB56861000D3783 /* ManageConnectionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageConnectionsViewModel.swift; sourceTree = "<group>"; };
 		55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageConnectionsView.swift; sourceTree = "<group>"; };
+		55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyService.swift; sourceTree = "<group>"; };
+		55F2035C2EC504E3001DA1E8 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,15 +193,18 @@
 		5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */ = {
 			isa = PBXGroup;
 			children = (
-				5551A3A62EC29AE700394D59 /* HomeView.swift */,
+				557D68922EC5542F0089DCC0 /* Info.plist */,
+				5551A3B52EC4023900394D59 /* Home */,
 				5597E5462EBE55FC00A744CD /* SearchConnections */,
 				55E6257B2EB56858000D3783 /* ManageConnections */,
 				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
 				551538712EB25C6A001174F9 /* Profile */,
 				5522DCAF2EB11F9C00F9BCD7 /* Health */,
+				5522DCA82EB037B000F9BCD7 /* SideMenuNavigation */,
+				5551A3AE2EC3ECA700394D59 /* SDKManager */,
+				5551A3A82EC38FA800394D59 /* Keychain */,
 				5522DCA72EB032BB00F9BCD7 /* Utils */,
 				5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */,
-				5551A3A32EC296B400394D59 /* Localizables */,
 				5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */,
 				5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */,
 			);
@@ -215,12 +231,12 @@
 		5522DCA72EB032BB00F9BCD7 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				55F2035C2EC504E3001DA1E8 /* LaunchView.swift */,
 				5522DCA32EB01BEF00F9BCD7 /* Router.swift */,
 				5522DCA02EB0168D00F9BCD7 /* RootView.swift */,
-				55E625772EB54362000D3783 /* BWellTypeWrapper.swift */,
+				55E625772EB54362000D3783 /* BWellWrapper.swift */,
 				55E625642EB34782000D3783 /* Extensions.swift */,
-				5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */,
-				5522DCA82EB037B000F9BCD7 /* SideMenuNavigation */,
+				5551A3A32EC296B400394D59 /* Localizables */,
 				55E625632EB34775000D3783 /* ReusableViews */,
 			);
 			path = Utils;
@@ -278,6 +294,34 @@
 				5551A3A42EC296E600394D59 /* Home.xcstrings */,
 			);
 			path = Localizables;
+			sourceTree = "<group>";
+		};
+		5551A3A82EC38FA800394D59 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */,
+				5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */,
+				5551A3A92EC3909A00394D59 /* KeychainService.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		5551A3AE2EC3ECA700394D59 /* SDKManager */ = {
+			isa = PBXGroup;
+			children = (
+				5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */,
+				5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */,
+			);
+			path = SDKManager;
+			sourceTree = "<group>";
+		};
+		5551A3B52EC4023900394D59 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				5551A3A62EC29AE700394D59 /* HomeView.swift */,
+				5551A3B32EC4023200394D59 /* HomeViewModel.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 		5597E5462EBE55FC00A744CD /* SearchConnections */ = {
@@ -497,6 +541,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5548A09D2EBEB13800C0ACF5 /* SearchConnectionDisclaimerView.swift in Sources */,
+				55F2035D2EC504E9001DA1E8 /* LaunchView.swift in Sources */,
 				55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */,
 				5522DCB32EB1314300F9BCD7 /* AuthenticationTextField.swift in Sources */,
 				55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */,
@@ -512,10 +557,13 @@
 				5597E54A2EBE566700A744CD /* SearchConnectionsViewModel.swift in Sources */,
 				5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */,
 				5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */,
-				55E625782EB54376000D3783 /* BWellTypeWrapper.swift in Sources */,
+				55E625782EB54376000D3783 /* BWellWrapper.swift in Sources */,
+				5551A3B02EC3ECC000394D59 /* BWellSDKManager+Helpers.swift in Sources */,
 				55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */,
 				5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */,
 				55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */,
+				5551A3AA2EC390A200394D59 /* KeychainService.swift in Sources */,
+				5551A3AC2EC3B8EB00394D59 /* KeychainTokenStorageAdapter.swift in Sources */,
 				55D5DF8C2EB9813700D71D99 /* EncountersView.swift in Sources */,
 				55E6257F2EB56871000D3783 /* ManageConnectionsView.swift in Sources */,
 				5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */,
@@ -528,8 +576,10 @@
 				5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */,
 				551538732EB25C7D001174F9 /* ProfileViewModel.swift in Sources */,
 				5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */,
+				55F2035B2EC4FE42001DA1E8 /* APIKeyService.swift in Sources */,
 				55D5DF862EB9459800D71D99 /* MedicationsView.swift in Sources */,
 				55E625762EB5402F000D3783 /* DetailedItemView.swift in Sources */,
+				5551A3B42EC4023200394D59 /* HomeViewModel.swift in Sources */,
 				55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */,
 				55D5DF842EB9458E00D71D99 /* LabsView.swift in Sources */,
 				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,
@@ -697,6 +747,7 @@
 				DEVELOPMENT_TEAM = NGBA5QG5TU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "bwell-swift-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Sample App";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -713,7 +764,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ivanvillanueva;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bwell.sdkSampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -736,6 +787,7 @@
 				DEVELOPMENT_TEAM = NGBA5QG5TU;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "bwell-swift-ios/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Sample App";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -752,7 +804,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ivanvillanueva;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bwell.sdkSampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;

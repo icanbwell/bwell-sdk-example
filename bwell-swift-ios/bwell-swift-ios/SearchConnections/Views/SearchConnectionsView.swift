@@ -11,6 +11,7 @@ struct SearchConnectionsView: View {
     @Environment(\.dismissSearch) private var dismissSearch
     @EnvironmentObject private var router: NavigationRouter
     @EnvironmentObject private var sdkManager: BWellSDKManager
+
     @ObservedObject private var viewModel = SearchConnectionsViewModel()
     @ObservedObject private var manageConnectionsViewModel = ManageConnectionsViewModel()
 

@@ -92,7 +92,7 @@ struct ProfileView: View {
                 .scaledToFill()
                 .clipShape(Circle())
                 .frame(width: 120, height: 120, alignment: .center)
-                .padding(.bottom, 20)
+                .padding(.top, 20)
 
             VStack {
                 Text("Personal Information")
@@ -135,8 +135,11 @@ struct ProfileView: View {
             }
             .padding()
             .frame(height: .infinity)
-            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 20, topTrailingRadius: 20))
-        }.ignoresSafeArea(edges: .bottom)
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 25,
+                                              topTrailingRadius: 25))
+
+        }
+        .ignoresSafeArea(edges: .bottom)
     }
 }
 

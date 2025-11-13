@@ -50,6 +50,9 @@
     "Allergy Intolerances" : {
 
     },
+    "API Key" : {
+
+    },
     "Authentication successful!" : {
 
     },
@@ -66,9 +69,6 @@
 
     },
     "Care Plans" : {
-
-    },
-    "Client Key" : {
 
     },
     "Clinics Description" : {
@@ -334,7 +334,7 @@
     "Vital Signs Groups" : {
 
     },
-    "Welcome, !" : {
+    "Welcome, %@!" : {
 
     }
   },
