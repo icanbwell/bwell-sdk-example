@@ -1,5 +1,5 @@
 //
-//  ClientKeyAuthView.swift
+//  AuthenticationView.swift
 //  bwell-swift-ios
 //
 //  Created by Ivan Villanueva on 27/10/25.
@@ -45,14 +45,14 @@ struct AuthenticationView: View {
     @ViewBuilder
     var apiKeyView: some View {
         VStack(alignment: .leading) {
-            Text("Client Key")
+            Text("API Key")
                 .font(.headline)
                 .fontWeight(.bold)
                 .foregroundStyle(.white)
                 .padding(.bottom, 7)
 
-            AuthenticationTextField(placeholder: "Client key",
-                                    text: $viewModel.clientKey,
+            AuthenticationTextField(placeholder: "API key",
+                                    text: $viewModel.apiKey,
                                     iconName: "key.fill",
                                     isSecure: true,
                                     errorMessage: viewModel.errorMessage)
@@ -142,11 +142,10 @@ struct AuthenticationView: View {
         .onChange(of: viewModel.oauthToken) {
             viewModel.errorMessage = nil
         }
-        .onChange(of: viewModel.clientKey) {
+        .onChange(of: viewModel.apiKey) {
             viewModel.errorMessage = nil
         }
         .padding()
-
     }
 }
 

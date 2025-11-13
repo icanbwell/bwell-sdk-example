@@ -6,20 +6,24 @@
 //
 import Foundation
 import SwiftUI
+import BWellSDK
 
 struct HomeView: View {
+    @StateObject private var viewModel = HomeViewModel()
+    @State private var showMenu: Bool = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Text("Welcome, !")
+                Text("Welcome, \(viewModel.firstName)!")
                     .font(.title)
                     .fontWeight(.semibold)
                     .padding(.bottom, 15)
-                
+
                 BannerView(title: "First Banner Title",
                            description: "First Banner Description",
                            buttonTitle: "Get Started")
-                
+
                 BannerView(title: "Second Banner Title",
                            description: "Second Banner Description",
                            buttonTitle: "Learn More")
@@ -46,7 +50,7 @@ struct HomeView: View {
 
                 Spacer()
             }.padding(.horizontal)
-        }
+        }.bwellNavigationBar(showMenu: $showMenu, navigationTitle: "Home")
     }
 }
 
@@ -129,10 +133,13 @@ private struct ActivityListItemView: View {
 
             Image(systemName: "chevron.right")
                 .foregroundStyle(.gray)
-        }.padding()
+        }.padding(.vertical, 10)
     }
 }
 
 #Preview {
     HomeView()
+        .environmentObject(BWellSDKManager.shared)
+        .environmentObject(SideMenuOptionViewModel())
+        .environmentObject(NavigationRouter())
 }

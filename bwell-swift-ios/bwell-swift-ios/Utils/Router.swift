@@ -11,7 +11,6 @@ import SwiftUI
 enum AppView: Hashable {
     case home
     case profile
-    case search
     case healthSummary
     case manageConnections
 

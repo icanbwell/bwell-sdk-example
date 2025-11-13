@@ -20,25 +20,28 @@ struct BWellNavigationBar<TrailingItem: View>: ViewModifier {
                     .navigationTitle(navigationTitle)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar(showMenu ? .hidden: .visible, for: .navigationBar)
+                    .toolbarBackground(.bwellPurple, for: .navigationBar)
+                    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             Button {
                                 showMenu.toggle()
                             } label: {
                                 Image(systemName: "line.3.horizontal")
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(.white)
                             }
                         }
 
                         if let item = trailingItem?() {
                             ToolbarItem(placement: .topBarTrailing) {
-                                item
+                                item.foregroundStyle(.white)
                             }
                         }
                     }
 
                 SideMenuView(isShowing: $showMenu, viewModel: viewModel)
             }
+
         }
     }
 }
