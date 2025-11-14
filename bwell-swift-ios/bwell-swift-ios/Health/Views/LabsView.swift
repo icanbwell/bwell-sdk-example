@@ -8,46 +8,36 @@ import SwiftUI
 
 struct LabsView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading labs data...")
-            } else {
-                List {
-                    Section("Labs") {
-                        ForEach(viewModel.labs, id: \.id) { entry in
-                            NavigationLink {
-                                LabsDetailView(entry)
-                            } label: {
-                                Text(entry.code?.text ?? "Title not available")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.labGroups,
+            fetch: {
+                await viewModel.getLabGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.effectiveDateTime?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Lab Groups") {
-
-                    }
-
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .labs, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.labs.isEmpty {
-                await viewModel.getLabs()
-            }
-        }
+        ).navigationTitle("Labs")
     }
 }
 
-private struct LabsDetailView: View {
+struct LabsSheetView: View {
     var labs: BWellWrapper.labs
-
-    init(_ labs: BWellWrapper.labs) {
-        self.labs = labs
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(labs.code?.text ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
             VStack(alignment: .leading, spacing: 5) {
                 DetailedItemView(title: "Effective date: ", content: labs.effectiveDateTime?.dateFormatter())
                 DetailedItemView(title: "Effective period: ", content: labs.effectivePeriod?.start)
@@ -71,7 +61,7 @@ private struct LabsDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle(labs.code?.text ?? "Title not available")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }

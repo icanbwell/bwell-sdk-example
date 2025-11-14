@@ -9,31 +9,46 @@ import SwiftUI
 import BWellSDK
 
 struct RootView: View {
-    @EnvironmentObject private var bwellSDKManager: BWellSDKManager
-    @EnvironmentObject private var router: NavigationRouter
+    @StateObject private var bwellSDKManager = BWellSDKManager.shared
+    @StateObject private var router = NavigationRouter()
+    @StateObject private var viewModel = SideMenuOptionViewModel()
+    @StateObject private var healthSummaryViewModel = HealthSummaryViewModel()
+    @State private var showMenu: Bool = false
 
     var body: some View {
-        NavigationStack(path: $router.path) {
-            AuthenticationView()
-                .navigationDestination(for: AppView.self) { screen in
-                    switch screen {
-                    case .home:
-                        HomeView()
-                            .navigationBarBackButtonHidden()
-                    case .profile:
-                        ProfileView()
-                            .navigationBarBackButtonHidden()
-                    case .healthSummary:
-                        HealthSummaryView()
-                            .navigationBarBackButtonHidden()
-                    case .manageConnections:
-                        ManageConnectionsView()
-                            .navigationBarBackButtonHidden()
-                    case .searchConnections(let connection):
-                        SearchConnectionsView(connection: connection)
+        ZStack {
+            NavigationStack(path: $router.path) {
+                AuthenticationView()
+                    .navigationDestination(for: AppView.self) { screen in
+                        switch screen {
+                        case .home:
+                            HomeView(showMenu: $showMenu)
+                                .navigationBarBackButtonHidden()
+                        case .profile:
+                            ProfileView(showMenu: $showMenu)
+                                .navigationBarBackButtonHidden()
+                        case .healthSummary:
+                            HealthSummaryView(showMenu: $showMenu)
+                                .navigationBarBackButtonHidden()
+                        case .manageConnections:
+                            ManageConnectionsView(showMenu: $showMenu)
+                                .navigationBarBackButtonHidden()
+                        case .searchConnections(let connection):
+                            SearchConnectionsView(connection: connection)
+                        case .connections:
+                            ConnectionsView()
+                        case .healthGroupItems(let category, let groupCode):
+                            // Health data summary detail views
+                            HealthDataFactoryView(category, groupCode)
+                        }
                     }
-                }
+            }
+            
+            SideMenuView(isShowing: $showMenu, viewModel: viewModel)
         }
+        .environmentObject(router)
+        .environmentObject(viewModel)
+        .environmentObject(healthSummaryViewModel)
         .onAppear {
             // Critical: handle the already-authenticated state when this view first appears.
             handleStateChange(bwellSDKManager.state)

@@ -8,46 +8,36 @@ import SwiftUI
 
 struct MedicationsView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading medication data...")
-            } else {
-                List {
-                    Section("Medications") {
-                        ForEach(viewModel.medications, id: \.id) { entry in
-                            NavigationLink {
-                                MedicationsDetailView(entry)
-                            } label: {
-                                Text(entry.medicationCodeableConcept?.text ?? "Title not available")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.medicationGroups,
+            fetch: {
+                await viewModel.getMedicationGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.authoredOn?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Medication Groups") {
-
-                    }
-
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .medications, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.medications.isEmpty {
-                await viewModel.getMedicationStatements()
-            }
-        }
+        ).navigationTitle("Medications")
     }
 }
 
-private struct MedicationsDetailView: View {
+struct MedicationsSheetView: View {
     var medications: BWellWrapper.medications
-
-    init(_ medications: BWellWrapper.medications) {
-        self.medications = medications
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(medications.medicationCodeableConcept?.text ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
             VStack(alignment: .leading, spacing: 5) {
                 DetailedItemView(title: "Period start: ", content: medications.effectivePeriod?.start?.dateFormatter())
                 DetailedItemView(title: "Period end: ", content: medications.effectivePeriod?.end?.dateFormatter())
@@ -68,8 +58,8 @@ private struct MedicationsDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle(medications.medicationCodeableConcept?.text ?? "Title not available")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }
 

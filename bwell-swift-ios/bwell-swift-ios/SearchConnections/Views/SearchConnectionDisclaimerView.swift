@@ -30,14 +30,22 @@ struct SearchConnectionDisclaimerView: View {
     var resourceTitle: String
     var action: () -> Void
 
-    // TODO: FIND A BETTER WAY TO ADD A NAVIGATION BAR TO THE SHEET WITHOUT USING .bwellNavigationBar() ViewModifier
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Spacer()
+                Text("Discalimer")
+                    .font(.headline)
+                    .fontWeight(.medium)
+                    .padding(.vertical, 10)
+                Spacer()
+            }
+
             Text("\(resourceTitle) \(String(localized: "Connection Disclaimer"))")
                 .multilineTextAlignment(.leading)
 
-            VStack(spacing: 3) {
-                Text("NOTE: ")
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Note: ")
                     .fontWeight(.semibold)
 
                 Text("Connection Note", tableName: "Localizable")
@@ -59,9 +67,7 @@ struct SearchConnectionDisclaimerView: View {
             }.padding(.bottom, 10)
 
             proceedButton
-        }
-        .padding()
-        .bwellNavigationBar(showMenu: .constant(false), navigationTitle: "Terms & Conditions") // TODO: Adjust correctly this navigation bar
+        }.padding()
     }
 
     // MARK: Proceed Button

@@ -10,7 +10,7 @@ import BWellSDK
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @State private var showMenu: Bool = false
+    @Binding var showMenu: Bool
 
     var body: some View {
         ScrollView {
@@ -138,7 +138,7 @@ private struct ActivityListItemView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(showMenu: .constant(false))
         .environmentObject(BWellSDKManager.shared)
         .environmentObject(SideMenuOptionViewModel())
         .environmentObject(NavigationRouter())

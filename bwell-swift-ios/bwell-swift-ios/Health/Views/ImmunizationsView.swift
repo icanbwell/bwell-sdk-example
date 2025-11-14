@@ -8,46 +8,36 @@ import SwiftUI
 
 struct ImmunizationsView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading immnuzations data...")
-            } else {
-                List {
-                    Section("Immunizations") {
-                        ForEach(viewModel.immunizations, id: \.id) { entry in
-                            NavigationLink {
-                                ImmunizationDetailView(entry)
-                            } label: {
-                                Text(entry.vaccineCode?.text ?? "Title not available")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.immunizationGroups,
+            fetch: {
+                await viewModel.getImmunizationGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.occurrenceDateTime?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Immunization Groups") {
-
-                    }
-
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .immunization, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.immunizations.isEmpty {
-                await viewModel.getImmunizations()
-            }
-        }
+        ).navigationTitle("Immunizations")
     }
 }
 
-private struct ImmunizationDetailView: View {
+struct ImmunizationSheetView: View {
     var immunization: BWellWrapper.immunization
-
-    init(_ immunization: BWellWrapper.immunization) {
-        self.immunization = immunization
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(immunization.vaccineCode?.text ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
             VStack(alignment: .leading, spacing: 5) {
                 DetailedItemView(title: "Occurance date: ", content: immunization.occurrenceDateTime?.dateFormatter())
                 DetailedItemView(title: "Expiration date: ", content: immunization.expirationDate?.dateFormatter())
@@ -58,7 +48,7 @@ private struct ImmunizationDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle(immunization.vaccineCode?.text ?? "Title not available")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }
