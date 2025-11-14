@@ -11,7 +11,7 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject private var sdkManager: BWellSDKManager
     @ObservedObject private var viewModel = ProfileViewModel()
-    @State private var showMenu: Bool = false
+    @Binding var showMenu: Bool
     @State private var text: String = ""
     @State private var isEditing: Bool = false
 
@@ -55,6 +55,7 @@ struct ProfileView: View {
                     action: {
                         Task {
                             await viewModel.updateUserProfile()
+                            isEditing = false
                         }
                     }).padding(.top, 5)
                 } else {
@@ -70,17 +71,14 @@ struct ProfileView: View {
             } label: {
                 if isEditing {
                     Text("Cancel")
-                        .foregroundStyle(.bwellBlue)
+                        .foregroundStyle(.white)
                 } else {
                     Image(systemName: "square.and.pencil")
                 }
             }
         })
-        .onAppear {
-            viewModel.setup(sdkManager: sdkManager)
-            Task {
-                await viewModel.getUserProfile()
-            }
+        .task {
+            await viewModel.getUserProfile()
         }
     }
 
@@ -167,7 +165,7 @@ private struct ListItem: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(showMenu: .constant(false))
         .environmentObject(BWellSDKManager.shared)
         .environmentObject(NavigationRouter())
         .environmentObject(SideMenuOptionViewModel())

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import BWellSDK
 
 enum AppView: Hashable {
     case home
@@ -15,7 +16,12 @@ enum AppView: Hashable {
     case manageConnections
 
     // Subviews of manageConnections
+    case connections
     case searchConnections(connection: ConnectionsModel)
+
+    // Health Summary details views
+    case healthGroupItems(category: HealthDataSummaryModel,
+                          groupCode: BWellHealthDataWrapper<BWell.Coding>)
 }
 
 @MainActor

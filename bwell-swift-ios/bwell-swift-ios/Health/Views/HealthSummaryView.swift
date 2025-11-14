@@ -11,9 +11,9 @@ import BWellSDK
 struct HealthSummaryView: View {
     @EnvironmentObject private var router: NavigationRouter
     @EnvironmentObject private var sdkManager: BWellSDKManager
-    @StateObject private var viewModel = HealthSummaryViewModel()
 
-    @State private var showMenu: Bool = false
+    @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @Binding var showMenu: Bool
 
     var body: some View {
         List {
@@ -32,12 +32,14 @@ struct HealthSummaryView: View {
                         if viewModel.isLoading {
                             ProgressView()
                         } else {
-                            if let total = viewModel.healthSummary.first(where: { $0.category == item.category})?.total {
+                            if let total = viewModel.healthSummary.first(where: {
+                                $0.category == item.category
+                            })?.total {
                                 Text("\(total)")
                                     .foregroundStyle(.secondary)
                             }
                         }
-                        
+
                         Image(systemName: "chevron.right")
                             .font(.caption)
                             .frame(width: 24)
@@ -46,13 +48,10 @@ struct HealthSummaryView: View {
                 }
             }.listRowSeparator(.hidden)
         }
-        .padding(.top, 20)
+        .padding(.top, 10)
         .bwellNavigationBar(showMenu: $showMenu, navigationTitle: "Health Summary")
         .listStyle(.plain)
         .listRowSeparator(.hidden)
-        .onAppear {
-            viewModel.setup(router: router, sdkManager: sdkManager)
-        }
         .task {
             if viewModel.healthSummary.isEmpty {
                 await viewModel.getHealthDataSummary()
@@ -77,7 +76,7 @@ struct HealthSummaryDetailView: View {
 }
 
 #Preview {
-    HealthSummaryView()
+    HealthSummaryView(showMenu: .constant(false))
         .environmentObject(BWellSDKManager.shared)
         .environmentObject(NavigationRouter())
         .environmentObject(SideMenuOptionViewModel())

@@ -10,13 +10,13 @@ import BWellSDK
 @MainActor
 final class SearchConnectionsViewModel: ObservableObject {
     private var sdkManager: BWellSDKManager?
+
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
-
     @Published var healthResources: [BWell.SearchHealthResourcesResults.Result] = []
 
-    func setup(router: NavigationRouter, sdkManager: BWellSDKManager) {
-        self.sdkManager = sdkManager
+    init() {
+        self.sdkManager = .shared
     }
 
     func searchHealthResources(searchedText: String?) async {
@@ -46,11 +46,8 @@ final class SearchConnectionsViewModel: ObservableObject {
             if let healthResourcesResults = response.results, !healthResourcesResults.isEmpty {
                 healthResources = healthResourcesResults
             }
-
-            print("HEALTH RESOURCES: \n \(String(describing: healthResources))")
-
         } catch {
-            errorMessage = "Failed to load data. Please try again." // TODO: Change this error message.
+            errorMessage = "Failed to load connections."
             isLoading = false
             return
         }

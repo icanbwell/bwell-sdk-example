@@ -73,6 +73,10 @@ extension String {
 
         return attributedString.string
     }
+
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).capitalized + dropFirst().lowercased()
+    }
 }
 
 extension BWell.Gender {

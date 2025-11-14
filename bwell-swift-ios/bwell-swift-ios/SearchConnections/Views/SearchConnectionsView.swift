@@ -26,6 +26,7 @@ struct SearchConnectionsView: View {
         ZStack {
             if !viewModel.healthResources.isEmpty {
                 resultsView
+                    .padding(.top, 10)
             } else {
                 VStack {
                     Image(systemName: "magnifyingglass")
@@ -35,14 +36,13 @@ struct SearchConnectionsView: View {
                 }.padding(.horizontal)
             }
         }
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        .toolbarBackground(.bwellPurple, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(connection.title))
         .searchable(text: $searchedText, placement: .toolbar, prompt: Text("Search"))
         .submitLabel(.search)
-        .task {
-            viewModel.setup(router: router, sdkManager: sdkManager)
-            manageConnectionsViewModel.setup(router: router, sdkManager: sdkManager)
-        }
         .onSubmit(of: .search) {
             Task {
                 await viewModel.searchHealthResources(searchedText: searchedText)

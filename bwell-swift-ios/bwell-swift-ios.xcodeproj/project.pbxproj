@@ -14,9 +14,6 @@
 		5522DC872EAFE10C00F9BCD7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */; };
 		5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */; };
 		5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */; };
-		5522DC8C2EAFE11000F9BCD7 /* bwell_swift_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC8A2EAFE11000F9BCD7 /* bwell_swift_iosTests.swift */; };
-		5522DC902EAFE11400F9BCD7 /* bwell_swift_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC8D2EAFE11400F9BCD7 /* bwell_swift_iosUITests.swift */; };
-		5522DC912EAFE11400F9BCD7 /* bwell_swift_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC8E2EAFE11400F9BCD7 /* bwell_swift_iosUITestsLaunchTests.swift */; };
 		5522DC942EAFE22800F9BCD7 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5522DC932EAFE22800F9BCD7 /* BWellSDK */; };
 		5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */; };
 		5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCA02EB0168D00F9BCD7 /* RootView.swift */; };
@@ -46,6 +43,8 @@
 		55D5DF882EB945A300D71D99 /* ProceduresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF872EB9459E00D71D99 /* ProceduresView.swift */; };
 		55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF892EB945A700D71D99 /* VitalSignsView.swift */; };
 		55D5DF8C2EB9813700D71D99 /* EncountersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */; };
+		55DEF6072EC6FDA700C8DB85 /* HealthDataListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */; };
+		55DEF60E2EC7746300C8DB85 /* HealthDataViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */; };
 		55E625652EB34785000D3783 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625642EB34782000D3783 /* Extensions.swift */; };
 		55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625662EB348FC000D3783 /* EditableProfileView.swift */; };
 		55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */; };
@@ -89,9 +88,6 @@
 		5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bwell_swift_ios.entitlements; sourceTree = "<group>"; };
 		5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bwell_swift_iosApp.swift; sourceTree = "<group>"; };
 		5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
-		5522DC8A2EAFE11000F9BCD7 /* bwell_swift_iosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bwell_swift_iosTests.swift; sourceTree = "<group>"; };
-		5522DC8D2EAFE11400F9BCD7 /* bwell_swift_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bwell_swift_iosUITests.swift; sourceTree = "<group>"; };
-		5522DC8E2EAFE11400F9BCD7 /* bwell_swift_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bwell_swift_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellSDKManager.swift; sourceTree = "<group>"; };
 		5522DCA02EB0168D00F9BCD7 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5522DCA32EB01BEF00F9BCD7 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
@@ -111,7 +107,7 @@
 		5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStorageAdapter.swift; sourceTree = "<group>"; };
 		5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BWellSDKManager+Helpers.swift"; sourceTree = "<group>"; };
 		5551A3B32EC4023200394D59 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		557D68922EC5542F0089DCC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		557D68922EC5542F0089DCC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5597E5472EBE560500A744CD /* WebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewWrapper.swift; sourceTree = "<group>"; };
 		5597E5492EBE565C00A744CD /* SearchConnectionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionsViewModel.swift; sourceTree = "<group>"; };
 		5597E54B2EBE56A000A744CD /* SearchConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionsView.swift; sourceTree = "<group>"; };
@@ -121,6 +117,8 @@
 		55D5DF872EB9459E00D71D99 /* ProceduresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProceduresView.swift; sourceTree = "<group>"; };
 		55D5DF892EB945A700D71D99 /* VitalSignsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalSignsView.swift; sourceTree = "<group>"; };
 		55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncountersView.swift; sourceTree = "<group>"; };
+		55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataListView.swift; sourceTree = "<group>"; };
+		55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataViewFactory.swift; sourceTree = "<group>"; };
 		55E625642EB34782000D3783 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		55E625662EB348FC000D3783 /* EditableProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableProfileView.swift; sourceTree = "<group>"; };
 		55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyIntolerancesView.swift; sourceTree = "<group>"; };
@@ -174,8 +172,6 @@
 			isa = PBXGroup;
 			children = (
 				5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */,
-				5522DC8B2EAFE11000F9BCD7 /* bwell-swift-iosTests */,
-				5522DC8F2EAFE11400F9BCD7 /* bwell-swift-iosUITests */,
 				5522DC582EAFE0FD00F9BCD7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -193,7 +189,6 @@
 		5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */ = {
 			isa = PBXGroup;
 			children = (
-				557D68922EC5542F0089DCC0 /* Info.plist */,
 				5551A3B52EC4023900394D59 /* Home */,
 				5597E5462EBE55FC00A744CD /* SearchConnections */,
 				55E6257B2EB56858000D3783 /* ManageConnections */,
@@ -206,26 +201,10 @@
 				5522DCA72EB032BB00F9BCD7 /* Utils */,
 				5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */,
 				5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */,
+				557D68922EC5542F0089DCC0 /* Info.plist */,
 				5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */,
 			);
 			path = "bwell-swift-ios";
-			sourceTree = "<group>";
-		};
-		5522DC8B2EAFE11000F9BCD7 /* bwell-swift-iosTests */ = {
-			isa = PBXGroup;
-			children = (
-				5522DC8A2EAFE11000F9BCD7 /* bwell_swift_iosTests.swift */,
-			);
-			path = "bwell-swift-iosTests";
-			sourceTree = "<group>";
-		};
-		5522DC8F2EAFE11400F9BCD7 /* bwell-swift-iosUITests */ = {
-			isa = PBXGroup;
-			children = (
-				5522DC8D2EAFE11400F9BCD7 /* bwell_swift_iosUITests.swift */,
-				5522DC8E2EAFE11400F9BCD7 /* bwell_swift_iosUITestsLaunchTests.swift */,
-			);
-			path = "bwell-swift-iosUITests";
 			sourceTree = "<group>";
 		};
 		5522DCA72EB032BB00F9BCD7 /* Utils */ = {
@@ -235,6 +214,7 @@
 				5522DCA32EB01BEF00F9BCD7 /* Router.swift */,
 				5522DCA02EB0168D00F9BCD7 /* RootView.swift */,
 				55E625772EB54362000D3783 /* BWellWrapper.swift */,
+				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
 				55E625642EB34782000D3783 /* Extensions.swift */,
 				5551A3A32EC296B400394D59 /* Localizables */,
 				55E625632EB34775000D3783 /* ReusableViews */,
@@ -266,6 +246,7 @@
 				55E625702EB42C5B000D3783 /* Model */,
 				5522DCC12EB2386A00F9BCD7 /* ViewModel */,
 				55E625692EB42B88000D3783 /* Views */,
+				55DEF6082EC773BB00C8DB85 /* GenericViews */,
 			);
 			path = Health;
 			sourceTree = "<group>";
@@ -343,11 +324,19 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		55DEF6082EC773BB00C8DB85 /* GenericViews */ = {
+			isa = PBXGroup;
+			children = (
+				55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */,
+				55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */,
+			);
+			path = GenericViews;
+			sourceTree = "<group>";
+		};
 		55E625632EB34775000D3783 /* ReusableViews */ = {
 			isa = PBXGroup;
 			children = (
 				55E625752EB53FE0000D3783 /* DetailedItemView.swift */,
-				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
 				5522DCB42EB1320700F9BCD7 /* BWellButton.swift */,
 				5522DCB22EB1314300F9BCD7 /* AuthenticationTextField.swift */,
 			);
@@ -548,6 +537,7 @@
 				5506C2002EBD14D5005842A6 /* ConnectionsModel.swift in Sources */,
 				5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */,
 				5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */,
+				55DEF6072EC6FDA700C8DB85 /* HealthDataListView.swift in Sources */,
 				5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */,
 				5597E5482EBE561C00A744CD /* WebViewWrapper.swift in Sources */,
 				55D5DF882EB945A300D71D99 /* ProceduresView.swift in Sources */,
@@ -571,6 +561,7 @@
 				5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */,
 				55E6257D2EB56867000D3783 /* ManageConnectionsViewModel.swift in Sources */,
 				5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */,
+				55DEF60E2EC7746300C8DB85 /* HealthDataViewFactory.swift in Sources */,
 				5597E54C2EBE56AC00A744CD /* SearchConnectionsView.swift in Sources */,
 				55E625652EB34785000D3783 /* Extensions.swift in Sources */,
 				5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */,
@@ -591,7 +582,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5522DC8C2EAFE11000F9BCD7 /* bwell_swift_iosTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,8 +589,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5522DC902EAFE11400F9BCD7 /* bwell_swift_iosUITests.swift in Sources */,
-				5522DC912EAFE11400F9BCD7 /* bwell_swift_iosUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,45 +8,36 @@ import SwiftUI
 
 struct ProceduresView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading procedures data...")
-            } else {
-                List {
-                    Section("Procedures") {
-                        ForEach(viewModel.procedures, id: \.id) { entry in
-                            NavigationLink {
-                                ProceduresDetailView(entry)
-                            } label: {
-                                Text(entry.code?.text ?? "Title not available")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.procedureGroups,
+            fetch: {
+                await viewModel.getProcedureGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.performedDate?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Procedure Groups") {
-
-                    }
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .procedure, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.procedures.isEmpty {
-                await viewModel.getProcedures()
-            }
-        }
+        ).navigationTitle("Procedures")
     }
 }
 
-private struct ProceduresDetailView: View {
+struct ProceduresSheetView: View {
     var procedures: BWellWrapper.procedures
-
-    init(_ procedures: BWellWrapper.procedures) {
-        self.procedures = procedures
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(procedures.code?.text ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+            
             VStack(alignment: .leading, spacing: 5) {
                 DetailedItemView(title: "Performed date: ", content: procedures.performedDateTime?.dateFormatter())
                 DetailedItemView(title: "Performed period: ", content: procedures.performedPeriod?.start)
@@ -70,8 +61,8 @@ private struct ProceduresDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle(procedures.code?.text ?? "Title not available")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }
 

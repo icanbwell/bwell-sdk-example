@@ -58,11 +58,12 @@ final class SideMenuOptionViewModel: ObservableObject {
     private var sdkManager: BWellSDKManager?
     @Published var optionSelected: SideMenuOptionModel?
 
-    init() { }
+    init() {
+        self.sdkManager = .shared
+    }
 
-    func setup(router: NavigationRouter, sdkManager: BWellSDKManager) {
+    func setup(router: NavigationRouter) {
         self.router = router
-        self.sdkManager = sdkManager
     }
 
     func navigate(to optionSelected: SideMenuOptionModel) {

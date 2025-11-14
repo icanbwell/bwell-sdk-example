@@ -20,6 +20,8 @@ struct SideMenuView: View {
                     .opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture { isShowing.toggle() }
+                    // .toolbarBackground(.bwellPurple, for: .navigationBar)
+                    // .toolbarVisibility(.visible, for: .navigationBar)
 
                 HStack {
                     VStack(alignment: .leading, spacing: 32) {
@@ -55,8 +57,8 @@ struct SideMenuView: View {
         }
         .transition(.move(edge: .leading))
         .animation(.easeInOut, value: isShowing)
-        .onAppear {
-            viewModel.setup(router: router, sdkManager: sdkManager)
+        .task {
+            viewModel.setup(router: router)
             if viewModel.optionSelected == nil {
                 viewModel.optionSelected = .home
             }
@@ -111,12 +113,4 @@ private struct RowView: View {
         .background((isSelected && selectedOption != .logout) ? .bwellPurple.opacity(0.25) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
-}
-
-
-#Preview {
-    SideMenuView(isShowing: .constant(true), viewModel: SideMenuOptionViewModel())
-        .environmentObject(NavigationRouter())
-        .environmentObject(BWellSDKManager.shared)
-        .environmentObject(SideMenuOptionViewModel())
 }

@@ -17,8 +17,8 @@ final class ManageConnectionsViewModel: ObservableObject {
 
     @Published var url: URL?
 
-    func setup(router: NavigationRouter, sdkManager: BWellSDKManager) {
-        self.sdkManager = sdkManager
+    init() {
+        self.sdkManager = .shared
     }
 
     func getConnections() async {

@@ -12,7 +12,7 @@ struct ManageConnectionsView: View {
     @EnvironmentObject private var router: NavigationRouter
     @EnvironmentObject private var sdkManager: BWellSDKManager
     @ObservedObject private var viewModel = ManageConnectionsViewModel()
-    @State private var showMenu: Bool = false
+    @Binding var showMenu: Bool
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -44,15 +44,13 @@ struct ManageConnectionsView: View {
         }
         .padding()
         .bwellNavigationBar(showMenu: $showMenu, navigationTitle: "Manage Connections") {
-            NavigationLink {
-                ConnectionsView()
+            Button {
+                router.navigate(to: .connections)
             } label: {
                 Image(systemName: "plus")
             }
         }
         .task {
-            viewModel.setup(router: router, sdkManager: sdkManager)
-
             if viewModel.memberConnections.isEmpty {
                 await viewModel.getConnections()
             }
@@ -85,7 +83,6 @@ private struct ListItem: View {
 
             Button {
                 print("Elipsis button tapped.")
-                // TODO: Add an action to this button.
             } label: {
                 Image(systemName: "elipsis")
                     .rotationEffect(Angle(degrees: 90))
@@ -97,7 +94,7 @@ private struct ListItem: View {
 }
 
 #Preview {
-    ManageConnectionsView()
+    ManageConnectionsView(showMenu: .constant(false))
         .environmentObject(BWellSDKManager.shared)
         .environmentObject(NavigationRouter())
         .environmentObject(SideMenuOptionViewModel())

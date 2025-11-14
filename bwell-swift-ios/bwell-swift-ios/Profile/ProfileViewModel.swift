@@ -35,8 +35,8 @@ final class ProfileViewModel: ObservableObject {
     @Published var homePhone: String = "221-629-2253"
     @Published var mobilePhone: String = "221-812-7803"
 
-    func setup(sdkManager: BWellSDKManager) {
-        self.sdkManager = sdkManager
+    init() {
+        self.sdkManager = .shared
     }
 
     func getUserProfile() async {

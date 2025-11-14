@@ -16,12 +16,17 @@ struct ConnectionsView: View {
                 CardView(connection: .clinics)
                 CardView(connection: .labs)
             }
-            .padding(.horizontal)
+            .padding(.top, 10)
             .listStyle(.plain)
             .scrollDisabled(true)
-        }.toolbar {
+        }
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        .toolbarBackground(.bwellPurple, for: .navigationBar)
+        .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Search connections by")
+                    .fontWeight(.medium)
             }
         }
     }

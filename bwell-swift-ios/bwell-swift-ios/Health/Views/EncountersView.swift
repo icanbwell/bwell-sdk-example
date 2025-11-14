@@ -8,46 +8,36 @@ import SwiftUI
 
 struct EncountersView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading encounters data...")
-            } else {
-                List {
-                    Section("Encounters") {
-                        ForEach(viewModel.encounters, id: \.id) { entry in
-                            NavigationLink {
-                                EncountersDetailView(entry)
-                            } label: {
-                                Text("Title not available")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.encounterGroups,
+            fetch: {
+                await viewModel.getEncounterGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.date?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Encounter Groups") {
-
-                    }
-
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .encounter, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.encounters.isEmpty {
-                await viewModel.getEncounters()
-            }
-        }
+        ).navigationTitle("Encounters")
     }
 }
 
-private struct EncountersDetailView: View {
+struct EncountersSheetView: View {
     var encounter: BWellWrapper.encounter
-
-    init(_ encounter: BWellWrapper.encounter) {
-        self.encounter = encounter
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(encounter.text?.div?.stripHTML() ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
             VStack(alignment: .leading, spacing: 5) {
                 DetailedItemView(title: "Encounter start: ", content: encounter.period?.start?.dateFormatter())
                 DetailedItemView(title: "Encounter end: ", content: encounter.period?.end?.dateFormatter())
@@ -61,8 +51,8 @@ private struct EncountersDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle("Title not available")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }
 

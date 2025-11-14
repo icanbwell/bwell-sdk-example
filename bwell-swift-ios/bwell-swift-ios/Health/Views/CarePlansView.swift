@@ -10,45 +10,37 @@ import SwiftUI
 
 struct CarePlansView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading care plan data...")
-            } else {
-                List {
-                    Section("Care Plans") {
-                        ForEach(viewModel.carePlans, id: \.id)  { plan in
-                            NavigationLink {
-                                CarePlanDetailView(plan)
-                            } label: {
-                                Text(plan.title ?? "Title not available")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.carePlanGroups,
+            fetch: {
+                await viewModel.getCarePlanGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.period?.start?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Care Plan Groups") {
-
-                    }
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .carePlan, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.carePlans.isEmpty {
-                await viewModel.getCarePlans()
-            }
-        }
+        ).navigationTitle("Care Plans")
     }
 }
 
-private struct CarePlanDetailView: View {
+// MARK: - Care Plan Sheet View
+struct CarePlanSheetView: View {
     var carePlan: BWellWrapper.carePlan
-
-    init(_ carePlan: BWellWrapper.carePlan) {
-        self.carePlan = carePlan
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(carePlan.title ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
             VStack(alignment: .leading, spacing: 5) {
                 DetailedItemView(title: "Plan created in: ", content: carePlan.created?.dateFormatter())
                 DetailedItemView(title: "Plan start date: ", content: carePlan.period?.start?.dateFormatter())
@@ -61,7 +53,7 @@ private struct CarePlanDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle(carePlan.title ?? "Title not available")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }

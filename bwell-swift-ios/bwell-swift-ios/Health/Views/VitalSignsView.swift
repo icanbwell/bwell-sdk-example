@@ -8,46 +8,36 @@ import SwiftUI
 
 struct VitalSignsView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading vital signs data...")
-            } else {
-                List {
-                    Section("Vital Signs") {
-                        ForEach(viewModel.vitalSigns, id: \.id) { entry in
-                            NavigationLink {
-                                VitalSignsDetailView(entry)
-                            } label: {
-                                Text(entry.code?.text ?? "Title not available")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.vitalSignGroups,
+            fetch: {
+                await viewModel.getVitalSignGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.effectiveDateTime?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Vital Signs Groups") {
-
-                    }
-
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .vitalSigns, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.vitalSigns.isEmpty {
-                await viewModel.getVialSigns()
-            }
-        }
+        ).navigationTitle("Vital Signs")
     }
 }
 
-private struct VitalSignsDetailView: View {
+struct VitalSignsSheetView: View {
     var vitalSigns: BWellWrapper.vitalSigns
-
-    init(_ vitalSigns: BWellWrapper.vitalSigns) {
-        self.vitalSigns = vitalSigns
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(vitalSigns.code?.text ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
             VStack(alignment: .leading, spacing: 5) {
                 DetailedItemView(title: "Effective date: ", content: vitalSigns.effectiveDateTime?.dateFormatter())
                 DetailedItemView(title: "Effective period: ", content: vitalSigns.effectivePeriod?.start)
@@ -71,8 +61,8 @@ private struct VitalSignsDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle(vitalSigns.code?.text ?? "Title not available")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }
 

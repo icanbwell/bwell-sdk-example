@@ -9,78 +9,52 @@ import SwiftUI
 
 struct AllergyIntolerancesView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading allergy intolerance data...")
-            } else {
-                List {
-                    Section("Allergy Intolerances") {
-                        AllergiesView(allergies: viewModel.allergyIntolerances)
-                    }
-
-                    Section("Allergy Intolerance Groups") {
-                        AllergyIntoleranceGroupsView()
-                    }
-                }.listStyle(.plain)
-            }
-        }.task {
-            if viewModel.allergyIntolerances.isEmpty {
-                await viewModel.getAllergyIntolerances()
-            }
-
-            if let _ = viewModel.allergyIntoleranceGroups {
+        HealthDataGroupListView(
+            groups: viewModel.allergyIntoleranceGroups,
+            fetch: {
                 await viewModel.getAllergyIntoleranceGroups()
-            }
-        }
-    }
-}
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.recordedDate)
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-// MARK: - Allergy Intolerances
-private struct AllergiesView: View {
-    var allergies: [BWellWrapper.allergyIntolerances]
-
-    var body: some View {
-        Group {
-            HStack {
-                Text("Allergy")
-                    .font(.system(size: 18, weight: .semibold))
-                Spacer()
-                Text("Criticality")
-                    .font(.system(size: 18, weight: .semibold))
-            }.listRowSeparator(.hidden, edges: .top)
-
-            ForEach(allergies, id: \.id) { entry in
-                HStack {
-                    if let allergy = entry.code?.coding?.first?.display,
-                       let criticality = entry.criticality {
-                        Text(allergy)
-
-                        Spacer()
-
-                        Text(criticality)
-                            .padding(5)
-                            .background(getStatusColor(of: criticality))
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                    }
+                    router.navigate(to: .healthGroupItems(category: .allergyIntolerance, groupCode: groupCode))
                 }
             }
-
-            /*
-             Text("Total: \(viewModel.allergyIntolerances.count)")
-                 .font(.headline)
-                 .fontWeight(.semibold)
-                 .frame(maxWidth: .infinity, alignment: .leading)
-                 .listRowSeparator(.hidden, edges: .bottom)
-             */
-        }
+        ).navigationTitle("Allergy Intolerances")
     }
 }
 
-extension AllergiesView {
+// MARK: - Allergy Intolerance Sheet View
+struct AllergySheetView: View {
+    var allergy: BWellWrapper.allergyIntolerances
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(allergy.code?.coding?.first?.display ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
+            VStack(alignment: .leading, spacing: 10) {
+                DetailedItemView(display: .vertically, title: "Category: ", content: allergy.code?.text?.capitalizingFirstLetter())
+                DetailedItemView(title: "Date of last occurence: ", content: allergy.onsetDateTime?.dateFormatter())
+                DetailedItemView(display: .vertically, title: "Summary: ", content: allergy.text?.div?.stripHTML())
+            }
+
+            Spacer()
+        }
+        .padding(10)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
+    }
+}
+
+extension AllergySheetView {
     func getStatusColor(of criticality: String) -> Color {
         if criticality == "high" {
             return .bwellRed
@@ -91,12 +65,5 @@ extension AllergiesView {
         } else {
             return .gray
         }
-    }
-}
-
-// MARK: - Allergy Intolerance Groups
-private struct AllergyIntoleranceGroupsView: View {
-    var body: some View {
-        
     }
 }

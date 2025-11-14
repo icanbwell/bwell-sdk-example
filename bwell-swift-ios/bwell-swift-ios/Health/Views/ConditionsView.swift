@@ -9,45 +9,36 @@ import SwiftUI
 
 struct ConditionsView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
+    @EnvironmentObject private var router: NavigationRouter
 
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
-                ProgressView("Loading conditions data...")
-            } else {
-                List {
-                    Section("Conditions") {
-                        ForEach(viewModel.conditions, id: \.id) { condition in
-                            NavigationLink {
-                                ConditionsDetailView(condition)
-                            } label: {
-                                Text("\(condition.code?.text ?? "Title not available")")
-                            }
-                        }
-                    }
+        HealthDataGroupListView(
+            groups: viewModel.conditionGroups,
+            fetch: {
+                await viewModel.getConditionGroups()
+            }, rowContent: { group in
+                return .init(title: group.name, date: group.recordedDate?.dateFormatter())
+            }, onSelect: { group in
+                if let id = group.id, let coding = group.coding {
+                    let groupCode = BWellHealthDataWrapper(id, coding)
 
-                    Section("Condition Groups") {
-
-                    }
-                }.listStyle(.plain)
+                    router.navigate(to: .healthGroupItems(category: .condition, groupCode: groupCode))
+                }
             }
-        }.task {
-            if viewModel.conditions.isEmpty {
-                await viewModel.getConditions()
-            }
-        }
+        ).navigationTitle("Conditions")
     }
 }
 
-private struct ConditionsDetailView: View {
+struct ConditionSheetView: View {
     var condition: BWellWrapper.condition
-
-    init(_ condition: BWellWrapper.condition) {
-        self.condition = condition
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
+            Text(condition.code?.text ?? "Title unavailable")
+                .font(.headline)
+                .fontWeight(.medium)
+                .padding(.vertical, 20)
+
             DetailedItemView(title: "Onset date: ", content: condition.onsetDateTime?.dateFormatter())
             DetailedItemView(title: "Recorded date: ", content: condition.recordedDate?.dateFormatter())
                 .padding(.bottom, 10)
@@ -81,8 +72,8 @@ private struct ConditionsDetailView: View {
             Spacer()
         }
         .padding()
-        .navigationBarTitle("Condition Information")
-        .navigationBarTitleDisplayMode(.inline)
+        .presentationDragIndicator(.visible)
+        .presentationDetents([.medium])
     }
 }
 
