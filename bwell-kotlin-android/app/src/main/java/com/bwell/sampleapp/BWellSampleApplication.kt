@@ -8,6 +8,7 @@ import com.bwell.sampleapp.repository.HealthSummaryRepository
 import com.bwell.sampleapp.repository.HealthJourneyRepository
 import com.bwell.sampleapp.repository.MedicineRepository
 import com.bwell.sampleapp.repository.ProviderRepository
+import com.bwell.sampleapp.repository.ProviderResourcesRepository
 import com.bwell.sampleapp.repository.LabsRepository
 import com.bwell.sampleapp.repository.Repository
 
@@ -16,6 +17,7 @@ class BWellSampleApplication : Application() {
      lateinit var bWellRepository: Repository
      lateinit var dataConnectionsRepository: DataConnectionsRepository
      lateinit var providerRepository: ProviderRepository
+     lateinit var providerResourcesRepository: ProviderResourcesRepository
      lateinit var clinicsRepository: ClinicsRepository
      lateinit var dataConnectionLabsRepository: DataConnectionLabsRepository
     lateinit var labsRepository: LabsRepository
@@ -33,6 +35,7 @@ class BWellSampleApplication : Application() {
         dataConnectionsRepository = DataConnectionsRepository( applicationContext)
         medicineRepository = MedicineRepository( applicationContext)
         providerRepository = ProviderRepository()
+        providerResourcesRepository = ProviderResourcesRepository()
         clinicsRepository = ClinicsRepository( applicationContext)
         dataConnectionLabsRepository = DataConnectionLabsRepository( applicationContext)
         labsRepository = LabsRepository( applicationContext)

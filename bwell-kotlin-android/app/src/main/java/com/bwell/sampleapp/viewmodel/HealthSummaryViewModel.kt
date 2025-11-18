@@ -9,14 +9,19 @@ import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enu
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.provider.requests.practitioner.PractitionerRequest
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.repository.HealthSummaryRepository
+import com.bwell.sampleapp.repository.ProviderResourcesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) : ViewModel() {
+class HealthSummaryViewModel (
+    private val repository: HealthSummaryRepository?,
+    private val providerResourcesRepository: ProviderResourcesRepository?
+) : ViewModel() {
 
     init {
         viewModelScope.launch(Dispatchers.IO){
@@ -64,6 +69,20 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
             try {
                 repository?.getDocumentReference(documentReferenceRequest)?.collect { result ->
                     _documentReferencesResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
+
+    private val _practitionersResults = MutableStateFlow<BWellResult<Any>?>(null)
+    val practitionersResults: StateFlow<BWellResult<Any>?> = _practitionersResults
+    fun getPractitioners(practitionerRequest: PractitionerRequest) {
+        viewModelScope.launch {
+            try {
+                providerResourcesRepository?.getPractitioners(practitionerRequest)?.collect { result ->
+                    _practitionersResults.emit(result)
                 }
             } catch (e: Exception){
                 // Handle Exceptions, if any

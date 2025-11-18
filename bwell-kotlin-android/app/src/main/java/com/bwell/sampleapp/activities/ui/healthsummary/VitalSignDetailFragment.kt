@@ -44,7 +44,8 @@ class VitalSignDetailFragment : Fragment(), View.OnClickListener {
         _binding = VitalSignDetailViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.healthSummaryRepository
-        healthSummaryViewModel = ViewModelProvider(this, HealthSummaryViewModelFactory(repository))[HealthSummaryViewModel::class.java]
+        val providerResourcesRepository = (activity?.application as? BWellSampleApplication)?.providerResourcesRepository
+        healthSummaryViewModel = ViewModelProvider(this, HealthSummaryViewModelFactory(repository, providerResourcesRepository))[HealthSummaryViewModel::class.java]
         binding.leftArrowImageView.setOnClickListener(this)
         vitalSignId = arguments?.getString("id").toString()
         groupCode = arguments?.getString("groupCode").toString()
