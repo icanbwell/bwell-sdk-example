@@ -1,6 +1,7 @@
 package com.bwell.sampleapp.repository
 
 import android.content.Context
+import android.util.Log
 import com.bwell.common.models.domain.healthdata.common.observation.Observation
 import com.bwell.common.models.domain.healthdata.healthsummary.diagnosticreport.DiagnosticReport
 import com.bwell.common.models.domain.healthdata.healthsummary.diagnosticreportlab.DiagnosticReportLabGroup
@@ -70,6 +71,7 @@ class LabsRepository(private val applicationContext: Context) {
             emit(diagnosticReportResult)
         } catch (e: Exception) {
             emit(null)
+            Log.e("Error", "Failed to get diagnostic reports: ${e.message} ")
         }
     }
 
