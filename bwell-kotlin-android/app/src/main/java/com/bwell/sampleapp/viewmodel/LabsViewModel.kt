@@ -95,7 +95,7 @@ class LabsViewModel(private val repository: LabsRepository?) : ViewModel() {
     }
 
     private val _diagnosticReportResults = MutableStateFlow<BWellResult<DiagnosticReport>?>(null)
-    val diagnosticReporportResults: StateFlow<BWellResult<DiagnosticReport>?> = _diagnosticReportResults
+    val diagnosticReportResults: StateFlow<BWellResult<DiagnosticReport>?> = _diagnosticReportResults
 
     fun getDiagnosticReports(diagnosticReportRequest: DiagnosticReportRequest) {
         viewModelScope.launch {
