@@ -45,6 +45,7 @@ class LabsRepository(private val applicationContext: Context) {
             emit(null)
         }
     }
+<<<<<<< Updated upstream
 
     /**
      * Fetch diagnostic report groups using the provided DiagnosticReportLabGroupsRequest
@@ -59,6 +60,9 @@ class LabsRepository(private val applicationContext: Context) {
             emit(null)
         }
     }
+=======
+g
+>>>>>>> Stashed changes
 
     /**
      * Fetch diagnostic reports using the provided DiagnosticReportRequest
