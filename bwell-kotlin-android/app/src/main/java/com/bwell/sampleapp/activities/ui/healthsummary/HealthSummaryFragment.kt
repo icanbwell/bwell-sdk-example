@@ -30,6 +30,7 @@ import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGrou
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.provider.requests.organization.OrganizationRequest
 import com.bwell.provider.requests.practitioner.PractitionerRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -83,6 +84,8 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             .build()
         healthSummaryViewModel.getPractitioners(practitionerRequest)
 
+        val organizationRequest = OrganizationRequest.Builder().id("00000107-21f8-57a3-b59e-96f2e1e01775").build()
+        healthSummaryViewModel.getOrganizations(organizationRequest)
 
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
@@ -130,6 +133,21 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                         }
                         else -> {
                             Log.w("getPractitioners", "Unexpected result type: ${result?.javaClass?.simpleName}")
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.organizationsResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("getOrganizations", result.toString())
+                        }
+                        else -> {
+                            Log.w("getOrganizations", "Unexpected result type: ${result?.javaClass?.simpleName}")
                         }
                     }
                 }
