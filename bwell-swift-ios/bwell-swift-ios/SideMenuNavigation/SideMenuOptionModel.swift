@@ -12,6 +12,7 @@ enum SideMenuOptionModel: Int, CaseIterable {
     case profile
     case manageConnections
     case healthSummary
+    case financial
     case logout
 
 
@@ -21,6 +22,7 @@ enum SideMenuOptionModel: Int, CaseIterable {
             case .profile: "Profile"
             case .manageConnections: "Manage Connections"
             case .healthSummary: "Health Summary"
+            case .financial: "Financial"
             case .logout: "Logout"
         }
     }
@@ -31,6 +33,7 @@ enum SideMenuOptionModel: Int, CaseIterable {
             case .profile: "person"
             case .manageConnections: "rectangle.connected.to.line.below"
             case .healthSummary: "heart.text.clipboard"
+            case .financial: "dollarsign.circle"
             case .logout: "arrow.right.square"
         }
     }
@@ -41,6 +44,7 @@ enum SideMenuOptionModel: Int, CaseIterable {
             case .profile: .profile
             case .manageConnections: .manageConnections
             case .healthSummary: .healthSummary
+            case .financial: .financial
             case .logout: .home
         }
     }

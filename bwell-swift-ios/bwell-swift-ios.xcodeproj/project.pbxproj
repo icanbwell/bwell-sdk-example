@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0A4701402ED70254009A9680 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0A47013F2ED70254009A9680 /* BWellSDK */; };
+		0A4D5AFA2ED712CA0021E6F6 /* FinancialSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4D5AF52ED712CA0021E6F6 /* FinancialSummaryViewModel.swift */; };
+		0A4D5AFB2ED712CA0021E6F6 /* FinancialSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4D5AF72ED712CA0021E6F6 /* FinancialSummaryView.swift */; };
 		0A88BF522ED07AEA00F08963 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = 0A88BF512ED07AEA00F08963 /* Apollo */; };
 		0ACBC2012ED6EE74007F779C /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0ACBC2002ED6EE74007F779C /* BWellSDK */; };
 		5506C1FC2EBD0FC7005842A6 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */; };
@@ -79,6 +81,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A4D5AF52ED712CA0021E6F6 /* FinancialSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialSummaryViewModel.swift; sourceTree = "<group>"; };
+		0A4D5AF72ED712CA0021E6F6 /* FinancialSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialSummaryView.swift; sourceTree = "<group>"; };
 		5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsView.swift; sourceTree = "<group>"; };
 		5506C1FF2EBD14D1005842A6 /* ConnectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsModel.swift; sourceTree = "<group>"; };
@@ -170,6 +174,31 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0A4D5AF62ED712CA0021E6F6 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				0A4D5AF52ED712CA0021E6F6 /* FinancialSummaryViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		0A4D5AF82ED712CA0021E6F6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0A4D5AF72ED712CA0021E6F6 /* FinancialSummaryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0A4D5AF92ED712CA0021E6F6 /* Financial */ = {
+			isa = PBXGroup;
+			children = (
+				0A4D5AF62ED712CA0021E6F6 /* ViewModel */,
+				0A4D5AF82ED712CA0021E6F6 /* Views */,
+			);
+			path = Financial;
+			sourceTree = "<group>";
+		};
 		551538712EB25C6A001174F9 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -201,6 +230,7 @@
 		5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */ = {
 			isa = PBXGroup;
 			children = (
+				0A4D5AF92ED712CA0021E6F6 /* Financial */,
 				5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */,
 				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
 				5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */,
@@ -586,6 +616,8 @@
 				55D5DF862EB9459800D71D99 /* MedicationsView.swift in Sources */,
 				55E625762EB5402F000D3783 /* DetailedItemView.swift in Sources */,
 				5551A3B42EC4023200394D59 /* HomeViewModel.swift in Sources */,
+				0A4D5AFA2ED712CA0021E6F6 /* FinancialSummaryViewModel.swift in Sources */,
+				0A4D5AFB2ED712CA0021E6F6 /* FinancialSummaryView.swift in Sources */,
 				55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */,
 				55D5DF842EB9458E00D71D99 /* LabsView.swift in Sources */,
 				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,

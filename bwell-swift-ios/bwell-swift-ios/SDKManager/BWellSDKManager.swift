@@ -195,4 +195,12 @@ extension BWellSDKManager {
 
         return user
     }
+    
+    func financial() throws -> FinancialManager {
+        guard let financial = sdk?.financial else {
+            throw SDKError.notInitialized
+        }
+        
+        return financial
+    }
 }

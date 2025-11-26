@@ -30,6 +30,9 @@ struct RootView: View {
                         case .healthSummary:
                             HealthSummaryView(showMenu: $showMenu)
                                 .navigationBarBackButtonHidden()
+                        case .financial:
+                            FinancialSummaryView()
+                                .navigationBarBackButtonHidden()
                         case .manageConnections:
                             ManageConnectionsView(showMenu: $showMenu)
                                 .navigationBarBackButtonHidden()
