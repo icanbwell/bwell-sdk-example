@@ -12,6 +12,7 @@ import BWellSDK
 enum AppView: Hashable {
     case home
     case profile
+    case financial
     case healthSummary
     case manageConnections
 
