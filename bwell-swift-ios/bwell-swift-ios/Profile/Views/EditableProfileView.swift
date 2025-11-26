@@ -120,7 +120,7 @@ struct EditableProfileView: View {
                                  currentGender: gender) { gender = .other }
             } label: {
                 Image(systemName: "chevron.right.circle.fill")
-                    .foregroundStyle(Color(.systemGray4))
+                    .foregroundStyle(Color(.systemGray))
                     .frame(width: 10)
             }
         }
@@ -156,7 +156,7 @@ private struct ListItem: View {
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .rotationEffect(.degrees(45))
-                        .foregroundStyle(Color(.systemGray4))
+                        .foregroundStyle(Color(.systemGray))
                         .frame(width: 10)
                 }
             }

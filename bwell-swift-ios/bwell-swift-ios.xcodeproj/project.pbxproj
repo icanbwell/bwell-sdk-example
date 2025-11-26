@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A4701402ED70254009A9680 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0A47013F2ED70254009A9680 /* BWellSDK */; };
+		0A88BF522ED07AEA00F08963 /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = 0A88BF512ED07AEA00F08963 /* Apollo */; };
+		0ACBC2012ED6EE74007F779C /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 0ACBC2002ED6EE74007F779C /* BWellSDK */; };
 		5506C1FC2EBD0FC7005842A6 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */; };
 		5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */; };
 		5506C2002EBD14D5005842A6 /* ConnectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5506C1FF2EBD14D1005842A6 /* ConnectionsModel.swift */; };
@@ -14,7 +17,6 @@
 		5522DC872EAFE10C00F9BCD7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */; };
 		5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */; };
 		5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */; };
-		5522DC942EAFE22800F9BCD7 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5522DC932EAFE22800F9BCD7 /* BWellSDK */; };
 		5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */; };
 		5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCA02EB0168D00F9BCD7 /* RootView.swift */; };
 		5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCA32EB01BEF00F9BCD7 /* Router.swift */; };
@@ -138,7 +140,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5522DC942EAFE22800F9BCD7 /* BWellSDK in Frameworks */,
+				0ACBC2012ED6EE74007F779C /* BWellSDK in Frameworks */,
+				0A88BF522ED07AEA00F08963 /* Apollo in Frameworks */,
+				0A4701402ED70254009A9680 /* BWellSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +163,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A47013D2ED70221009A9680 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		551538712EB25C6A001174F9 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -172,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */,
+				0A47013D2ED70221009A9680 /* Frameworks */,
 				5522DC582EAFE0FD00F9BCD7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -189,20 +201,20 @@
 		5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */ = {
 			isa = PBXGroup;
 			children = (
-				5551A3B52EC4023900394D59 /* Home */,
-				5597E5462EBE55FC00A744CD /* SearchConnections */,
-				55E6257B2EB56858000D3783 /* ManageConnections */,
-				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
-				551538712EB25C6A001174F9 /* Profile */,
-				5522DCAF2EB11F9C00F9BCD7 /* Health */,
-				5522DCA82EB037B000F9BCD7 /* SideMenuNavigation */,
-				5551A3AE2EC3ECA700394D59 /* SDKManager */,
-				5551A3A82EC38FA800394D59 /* Keychain */,
-				5522DCA72EB032BB00F9BCD7 /* Utils */,
-				5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */,
 				5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */,
-				557D68922EC5542F0089DCC0 /* Info.plist */,
+				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
 				5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */,
+				5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */,
+				5522DCAF2EB11F9C00F9BCD7 /* Health */,
+				5551A3B52EC4023900394D59 /* Home */,
+				557D68922EC5542F0089DCC0 /* Info.plist */,
+				5551A3A82EC38FA800394D59 /* Keychain */,
+				55E6257B2EB56858000D3783 /* ManageConnections */,
+				551538712EB25C6A001174F9 /* Profile */,
+				5551A3AE2EC3ECA700394D59 /* SDKManager */,
+				5597E5462EBE55FC00A744CD /* SearchConnections */,
+				5522DCA82EB037B000F9BCD7 /* SideMenuNavigation */,
+				5522DCA72EB032BB00F9BCD7 /* Utils */,
 			);
 			path = "bwell-swift-ios";
 			sourceTree = "<group>";
@@ -404,7 +416,9 @@
 			);
 			name = "bwell-swift-ios";
 			packageProductDependencies = (
-				5522DC932EAFE22800F9BCD7 /* BWellSDK */,
+				0A88BF512ED07AEA00F08963 /* Apollo */,
+				0ACBC2002ED6EE74007F779C /* BWellSDK */,
+				0A47013F2ED70254009A9680 /* BWellSDK */,
 			);
 			productName = "bwell-swift-ios";
 			productReference = 5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */;
@@ -483,7 +497,8 @@
 			mainGroup = 5522DC4E2EAFE0FD00F9BCD7;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5560C6982EBC423D0078FB62 /* XCLocalSwiftPackageReference "../../bwell-sdk/bwell-sdk-swift" */,
+				0A88BF502ED07AEA00F08963 /* XCRemoteSwiftPackageReference "apollo-ios" */,
+				0A47013E2ED70254009A9680 /* XCLocalSwiftPackageReference "../../../bwell-sdk/bwell-sdk-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5522DC582EAFE0FD00F9BCD7 /* Products */;
@@ -732,7 +747,7 @@
 				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NGBA5QG5TU;
+				DEVELOPMENT_TEAM = 6S3A9MLDJD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "bwell-swift-ios/Info.plist";
@@ -747,7 +762,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -756,10 +771,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,7";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Debug;
@@ -772,7 +788,7 @@
 				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = NGBA5QG5TU;
+				DEVELOPMENT_TEAM = 6S3A9MLDJD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "bwell-swift-ios/Info.plist";
@@ -787,7 +803,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -796,10 +812,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,7";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Release;
@@ -932,14 +949,34 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		5560C6982EBC423D0078FB62 /* XCLocalSwiftPackageReference "../../bwell-sdk/bwell-sdk-swift" */ = {
+		0A47013E2ED70254009A9680 /* XCLocalSwiftPackageReference "../../../bwell-sdk/bwell-sdk-swift" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../bwell-sdk/bwell-sdk-swift";
+			relativePath = "../../../bwell-sdk/bwell-sdk-swift";
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		0A88BF502ED07AEA00F08963 /* XCRemoteSwiftPackageReference "apollo-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apollographql/apollo-ios.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.23.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		5522DC932EAFE22800F9BCD7 /* BWellSDK */ = {
+		0A47013F2ED70254009A9680 /* BWellSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BWellSDK;
+		};
+		0A88BF512ED07AEA00F08963 /* Apollo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A88BF502ED07AEA00F08963 /* XCRemoteSwiftPackageReference "apollo-ios" */;
+			productName = Apollo;
+		};
+		0ACBC2002ED6EE74007F779C /* BWellSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = BWellSDK;
 		};

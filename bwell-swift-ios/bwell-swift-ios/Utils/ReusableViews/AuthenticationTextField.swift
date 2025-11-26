@@ -29,7 +29,6 @@ struct AuthenticationTextField: View {
                 credentialsTextField
                     .foregroundStyle(.white)
                     .textFieldStyle(.plain)
-                    .autocapitalization(.none)
                     .disableAutocorrection(true)
 
                 if !text.isEmpty {
@@ -38,7 +37,7 @@ struct AuthenticationTextField: View {
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .rotationEffect(.degrees(45))
-                            .foregroundStyle(Color(.systemGray4))
+                            .foregroundStyle(Color(.systemGray))
                             .frame(width: 10)
                     }
                 }
