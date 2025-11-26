@@ -20,7 +20,7 @@ struct HealthDataRowContent {
     }
 }
 
-struct HealthDataGroupListView<Group: Identifiable>: View {
+struct HealthDataGroupListView<Group>: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
     @EnvironmentObject private var router: NavigationRouter
 
@@ -34,7 +34,8 @@ struct HealthDataGroupListView<Group: Identifiable>: View {
             if viewModel.isLoading && groups.isEmpty {
                 ProgressView("Loading data...")
             } else {
-                List(groups, id: \.id) { group in
+                List(groups.indices, id: \.self) { index in
+                    let group = groups[index]
                     Button {
                         onSelect(group)
                     } label: {
@@ -72,9 +73,9 @@ struct HealthDataGroupListView<Group: Identifiable>: View {
 }
 
 // MARK: - Group Items View
-struct HealthDataGroupItemsView<Entry: Identifiable, Detail: View>: View {
+struct HealthDataGroupItemsView<Entry, Detail: View>: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
-    @State private var selectedEntry: Entry?
+    @State private var selectedEntryIndex: Int?
 
     var entry: [Entry]
     let rowContent: (Entry) -> HealthDataRowContent
@@ -86,12 +87,13 @@ struct HealthDataGroupItemsView<Entry: Identifiable, Detail: View>: View {
             if viewModel.isLoading && entry.isEmpty {
                 ProgressView("Loading data...")
             } else {
-                List(entry, id: \.id) { entry in
+                List(entry.indices, id: \.self) { idx in
+                    let item = entry[idx]
                     Button {
-                        selectedEntry = entry
+                        selectedEntryIndex = idx
                     } label: {
                         HStack {
-                            let content = rowContent(entry)
+                            let content = rowContent(item)
                             RowView(content: content)
                         }
                     }
@@ -106,8 +108,13 @@ struct HealthDataGroupItemsView<Entry: Identifiable, Detail: View>: View {
                 await fetch()
             }
         }
-        .sheet(item: $selectedEntry) { entry in
-            detailView(entry)
+        .sheet(isPresented: Binding(get: { selectedEntryIndex != nil }, set: { if !$0 { selectedEntryIndex = nil } })) {
+            if let idx = selectedEntryIndex {
+                detailView(entry[idx])
+            } else {
+                // fallback empty view
+                EmptyView()
+            }
         }
     }
 }

@@ -101,10 +101,11 @@ final class BWellSDKManager: ObservableObject {
 
         do {
             try await sdk.authenticate(credentials: credentials)
+            
 
             let request: BWell.CreateConsentRequest = .init(status: .active,
                                                             provision: .init(type: .permit),
-                                                            category: .tos)
+                                                            category: .tos,)
             _ = try await sdk.user.createConsent(request)
             self.state = .authenticated
 
