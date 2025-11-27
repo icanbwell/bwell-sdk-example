@@ -4,6 +4,7 @@ import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.provider.requests.organization.OrganizationRequest
 import com.bwell.provider.requests.practitioner.PractitionerRequest
+import com.bwell.provider.requests.practitionerrole.PractitionerRoleRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -22,6 +23,15 @@ class ProviderResourcesRepository {
         try {
             val organizationResult = BWellSdk.provider.getOrganizations(organizationRequest)
             emit(organizationResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+    suspend fun getPractitionerRoles(practitionerRoleRequest: PractitionerRoleRequest): Flow<BWellResult<Any>?> = flow {
+        try {
+            val practitionerRoleResult = BWellSdk.provider.getPractitionerRoles(practitionerRoleRequest)
+            emit(practitionerRoleResult)
         } catch (e: Exception) {
             emit(null)
         }
