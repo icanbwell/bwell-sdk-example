@@ -23,6 +23,7 @@ final class ManageConnectionsViewModel: ObservableObject {
 
     func getConnections() async {
         isLoading = true
+        errorMessage = nil  // Clear previous errors
 
         do {
             guard let sdkManager = sdkManager else {
@@ -35,15 +36,63 @@ final class ManageConnectionsViewModel: ObservableObject {
 
             print("ALL MEMBER CONNECTIONS: \(memberConnections)")
 
-            for connection in memberConnections {
-                memberConnections.append(connection)
-            }
-
             isLoading = false
         } catch {
-            errorMessage = "Failed to retrieve member connections."
+            errorMessage = "Failed to retrieve member connections: \(error.localizedDescription)"
             isLoading = false
             return
+        }
+    }
+
+    /// Deletes a connection and refreshes the connections list
+    /// - Parameter connectionId: The ID of the connection to delete
+    func deleteConnection(connectionId: String) async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available."
+                isLoading = false
+                return
+            }
+
+            let request = BWell.DeleteConnectionRequest(connectionId: connectionId)
+            let result = try await sdkManager.connection().deleteConnection(request)
+
+            print("Delete connection result - status: \(String(describing: result.status)), updated: \(result.statusUpdated)")
+
+            // Refresh connections list after successful deletion
+            await getConnections()
+        } catch {
+            errorMessage = "Failed to delete connection: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
+
+    /// Disconnects a connection and refreshes the connections list
+    /// - Parameter connectionId: The ID of the connection to disconnect
+    func disconnectConnection(connectionId: String) async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available."
+                isLoading = false
+                return
+            }
+
+            let request = BWell.DisconnectConnectionRequest(connectionId: connectionId)
+            let result = try await sdkManager.connection().disconnectConnection(request)
+
+            print("Disconnect connection result - status: \(String(describing: result.status)), updated: \(result.statusUpdated)")
+
+            // Refresh connections list after successful disconnection
+            await getConnections()
+        } catch {
+            errorMessage = "Failed to disconnect connection: \(error.localizedDescription)"
+            isLoading = false
         }
     }
 

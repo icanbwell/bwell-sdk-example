@@ -20,11 +20,12 @@ struct HealthDataRowContent {
     }
 }
 
-struct HealthDataGroupListView<Group: Identifiable>: View {
+struct HealthDataGroupListView<Group, ID: Hashable>: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
     @EnvironmentObject private var router: NavigationRouter
 
     let groups: [Group]
+    let id: KeyPath<Group, ID>
     let fetch: () async -> Void
     let rowContent: (Group) -> HealthDataRowContent
     let onSelect: (Group) -> Void
@@ -34,7 +35,7 @@ struct HealthDataGroupListView<Group: Identifiable>: View {
             if viewModel.isLoading && groups.isEmpty {
                 ProgressView("Loading data...")
             } else {
-                List(groups, id: \.id) { group in
+                List(groups, id: id) { group in
                     Button {
                         onSelect(group)
                     } label: {
@@ -72,11 +73,13 @@ struct HealthDataGroupListView<Group: Identifiable>: View {
 }
 
 // MARK: - Group Items View
-struct HealthDataGroupItemsView<Entry: Identifiable, Detail: View>: View {
+struct HealthDataGroupItemsView<Entry, ID: Hashable, Detail: View>: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
     @State private var selectedEntry: Entry?
+    @State private var showSheet = false
 
     var entry: [Entry]
+    let id: KeyPath<Entry, ID>
     let rowContent: (Entry) -> HealthDataRowContent
     let fetch: () async -> Void
     let detailView: (Entry) -> Detail
@@ -86,9 +89,11 @@ struct HealthDataGroupItemsView<Entry: Identifiable, Detail: View>: View {
             if viewModel.isLoading && entry.isEmpty {
                 ProgressView("Loading data...")
             } else {
-                List(entry, id: \.id) { entry in
+                List(entry, id: id) { entry in
                     Button {
                         selectedEntry = entry
+                        showSheet = true
+                        print("DEBUG: Item tapped, showSheet = \(showSheet), selectedEntry = \(selectedEntry != nil ? "present" : "nil")")
                     } label: {
                         HStack {
                             let content = rowContent(entry)
@@ -106,8 +111,17 @@ struct HealthDataGroupItemsView<Entry: Identifiable, Detail: View>: View {
                 await fetch()
             }
         }
-        .sheet(item: $selectedEntry) { entry in
-            detailView(entry)
+        .sheet(isPresented: $showSheet) {
+            if let selectedEntry = selectedEntry {
+                print("DEBUG: Sheet presenting with selectedEntry")
+                return AnyView(detailView(selectedEntry))
+            } else {
+                print("DEBUG: Sheet presenting but no selectedEntry")
+                return AnyView(
+                    Text("No data available")
+                        .padding()
+                )
+            }
         }
     }
 }

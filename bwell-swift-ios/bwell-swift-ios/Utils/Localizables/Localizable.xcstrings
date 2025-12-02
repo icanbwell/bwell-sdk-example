@@ -47,6 +47,12 @@
     "API Key" : {
 
     },
+    "Are you sure you want to disconnect '%@'? You can reconnect later." : {
+
+    },
+    "Are you sure you want to permanently delete '%@'? This action cannot be undone." : {
+
+    },
     "Authentication successful!" : {
 
     },
@@ -74,6 +80,9 @@
       }
     },
     "Conditions" : {
+
+    },
+    "Connection Actions" : {
 
     },
     "Connection Credentials Confirmation" : {
@@ -123,7 +132,19 @@
     "Contact Information" : {
 
     },
+    "Delete" : {
+
+    },
+    "Delete Connection" : {
+
+    },
     "Discalimer" : {
+
+    },
+    "Disconnect" : {
+
+    },
+    "Disconnect Connection" : {
 
     },
     "Done" : {
@@ -199,6 +220,9 @@
 
     },
     "Medications" : {
+
+    },
+    "No data available" : {
 
     },
     "No member connections found." : {

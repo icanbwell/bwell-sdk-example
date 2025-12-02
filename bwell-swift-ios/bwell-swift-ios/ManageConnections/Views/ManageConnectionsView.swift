@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import BWellSDK
 
 struct ManageConnectionsView: View {
     @EnvironmentObject private var router: NavigationRouter
@@ -19,9 +20,19 @@ struct ManageConnectionsView: View {
             if viewModel.isLoading {
                 ProgressView("Loading connections...")
             } else {
-
-
-                if viewModel.memberConnections.isEmpty {
+                if let errorMessage = viewModel.errorMessage {
+                    HStack {
+                        Spacer()
+                        VStack(spacing: 8) {
+                            Image(systemName: "exclamationmark.triangle")
+                                .font(.largeTitle)
+                                .foregroundColor(.red)
+                            Text(errorMessage)
+                                .foregroundColor(.red)
+                        }
+                        Spacer()
+                    }
+                } else if viewModel.memberConnections.isEmpty {
                     HStack {
                         Spacer()
                         Text("No member connections found.")
@@ -31,7 +42,19 @@ struct ManageConnectionsView: View {
                     Text("Connections Description", tableName: "Localizable")
                     List {
                         ForEach(viewModel.memberConnections, id: \.id) { connection in
-                            ListItem(connectionName: connection.name, status: connection.status)
+                            ListItem(
+                                connection: connection,
+                                onDelete: {
+                                    Task {
+                                        await viewModel.deleteConnection(connectionId: connection.id)
+                                    }
+                                },
+                                onDisconnect: {
+                                    Task {
+                                        await viewModel.disconnectConnection(connectionId: connection.id)
+                                    }
+                                }
+                            )
                         }
                     }.listStyle(.plain)
 
@@ -59,8 +82,13 @@ struct ManageConnectionsView: View {
 }
 
 private struct ListItem: View {
-    var connectionName: String
-    var status: BWellWrapper.connectionStatus
+    let connection: BWell.MemberConnectionResult
+    let onDelete: () -> Void
+    let onDisconnect: () -> Void
+
+    @State private var showActionSheet = false
+    @State private var showDeleteConfirmation = false
+    @State private var showDisconnectConfirmation = false
 
     var body: some View {
         HStack(alignment: .center) {
@@ -69,10 +97,10 @@ private struct ListItem: View {
                 .frame(width: 25)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(connectionName)
+                Text(connection.name)
                     .fontWeight(.semibold)
 
-                Text(status.description())
+                Text(connection.status.description())
                     .padding(5)
                     .background(.bwellGreen)
                     .font(.system(size: 16, weight: .bold, design: .rounded))
@@ -82,14 +110,40 @@ private struct ListItem: View {
             Spacer()
 
             Button {
-                print("Elipsis button tapped.")
+                showActionSheet = true
             } label: {
-                Image(systemName: "elipsis")
+                Image(systemName: "ellipsis")
                     .rotationEffect(Angle(degrees: 90))
                     .font(.title3)
                     .frame(width: 25)
             }
-        }.listRowSeparator(.hidden, edges: .all)
+        }
+        .listRowSeparator(.hidden, edges: .all)
+        .confirmationDialog("Connection Actions", isPresented: $showActionSheet, titleVisibility: .visible) {
+            Button("Disconnect", role: .destructive) {
+                showDisconnectConfirmation = true
+            }
+            Button("Delete", role: .destructive) {
+                showDeleteConfirmation = true
+            }
+            Button("Cancel", role: .cancel) { }
+        }
+        .alert("Disconnect Connection", isPresented: $showDisconnectConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Disconnect", role: .destructive) {
+                onDisconnect()
+            }
+        } message: {
+            Text("Are you sure you want to disconnect '\(connection.name)'? You can reconnect later.")
+        }
+        .alert("Delete Connection", isPresented: $showDeleteConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                onDelete()
+            }
+        } message: {
+            Text("Are you sure you want to permanently delete '\(connection.name)'? This action cannot be undone.")
+        }
     }
 }
 

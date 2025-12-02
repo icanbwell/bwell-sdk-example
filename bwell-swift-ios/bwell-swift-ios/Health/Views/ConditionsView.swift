@@ -14,6 +14,7 @@ struct ConditionsView: View {
     var body: some View {
         HealthDataGroupListView(
             groups: viewModel.conditionGroups,
+            id: \.id,
             fetch: {
                 await viewModel.getConditionGroups()
             }, rowContent: { group in

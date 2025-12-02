@@ -28,6 +28,7 @@ struct HealthDataFactoryView: View {
             case .allergyIntolerance:
                 HealthDataGroupItemsView(
                     entry: viewModel.allergyIntolerances,
+                    id: \.id,
                     rowContent: { allergy in
                         return .init(title: allergy.code?.coding?.first?.display,
                                      value: allergy.criticality)
@@ -41,6 +42,7 @@ struct HealthDataFactoryView: View {
             case .carePlan:
                 HealthDataGroupItemsView(
                     entry: viewModel.carePlans,
+                    id: \.id,
                     rowContent: { carePlan in
                         return .init(title: carePlan.title,
                                      date: carePlan.period?.start?.dateFormatter())
@@ -54,6 +56,7 @@ struct HealthDataFactoryView: View {
             case .condition:
                 HealthDataGroupItemsView(
                     entry: viewModel.conditions,
+                    id: \.id,
                     rowContent: { condition in
                         return .init(title: condition.code?.text,
                                      date: condition.recordedDate?.dateFormatter())
@@ -67,6 +70,7 @@ struct HealthDataFactoryView: View {
             case .encounter:
                 HealthDataGroupItemsView(
                     entry: viewModel.encounters,
+                    id: \.id,
                     rowContent: { encounter in
                         return .init(title: encounter.text?.status,
                                      date: encounter.period?.start?.dateFormatter())
@@ -80,6 +84,7 @@ struct HealthDataFactoryView: View {
             case .immunization:
                 HealthDataGroupItemsView(
                     entry: viewModel.immunizations,
+                    id: \.id,
                     rowContent: { immunization in
                         return .init(title: immunization.vaccineCode?.text,
                                      date: immunization.occurrenceDateTime?.dateFormatter())
@@ -93,6 +98,7 @@ struct HealthDataFactoryView: View {
             case .labs:
                 HealthDataGroupItemsView(
                     entry: viewModel.labs,
+                    id: \.id,
                     rowContent: { labs in
                         return .init(title: labs.code?.text,
                                      date: labs.effectiveDateTime?.dateFormatter())
@@ -106,6 +112,7 @@ struct HealthDataFactoryView: View {
             case .medications:
                 HealthDataGroupItemsView(
                     entry: viewModel.medications,
+                    id: \.id,
                     rowContent: { medication in
                         return .init(title: medication.medicationCodeableConcept?.text,
                                      date: medication.effectivePeriod?.start?.dateFormatter())
@@ -119,6 +126,7 @@ struct HealthDataFactoryView: View {
             case .procedure:
                 HealthDataGroupItemsView(
                     entry: viewModel.procedures,
+                    id: \.id,
                     rowContent: { procedure in
                         return .init(title: procedure.code?.text,
                                      date: procedure.performedDateTime?.dateFormatter())
@@ -132,6 +140,7 @@ struct HealthDataFactoryView: View {
             case .vitalSigns:
                 HealthDataGroupItemsView(
                     entry: viewModel.vitalSigns,
+                    id: \.id,
                     rowContent: { vitalSign in
                         return .init(title: vitalSign.code?.text,
                                      date: vitalSign.effectiveDateTime?.dateFormatter())

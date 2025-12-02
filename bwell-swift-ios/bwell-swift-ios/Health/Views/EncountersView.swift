@@ -13,6 +13,7 @@ struct EncountersView: View {
     var body: some View {
         HealthDataGroupListView(
             groups: viewModel.encounterGroups,
+            id: \.id,
             fetch: {
                 await viewModel.getEncounterGroups()
             }, rowContent: { group in

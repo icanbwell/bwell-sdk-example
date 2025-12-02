@@ -13,6 +13,7 @@ struct ProceduresView: View {
     var body: some View {
         HealthDataGroupListView(
             groups: viewModel.procedureGroups,
+            id: \.id,
             fetch: {
                 await viewModel.getProcedureGroups()
             }, rowContent: { group in

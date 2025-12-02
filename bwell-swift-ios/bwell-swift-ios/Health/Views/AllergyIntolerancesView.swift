@@ -14,6 +14,7 @@ struct AllergyIntolerancesView: View {
     var body: some View {
         HealthDataGroupListView(
             groups: viewModel.allergyIntoleranceGroups,
+            id: \.id,
             fetch: {
                 await viewModel.getAllergyIntoleranceGroups()
             }, rowContent: { group in

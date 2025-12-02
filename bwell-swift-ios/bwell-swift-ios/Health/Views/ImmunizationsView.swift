@@ -13,6 +13,7 @@ struct ImmunizationsView: View {
     var body: some View {
         HealthDataGroupListView(
             groups: viewModel.immunizationGroups,
+            id: \.id,
             fetch: {
                 await viewModel.getImmunizationGroups()
             }, rowContent: { group in

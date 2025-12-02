@@ -15,6 +15,7 @@ struct CarePlansView: View {
     var body: some View {
         HealthDataGroupListView(
             groups: viewModel.carePlanGroups,
+            id: \.id,
             fetch: {
                 await viewModel.getCarePlanGroups()
             }, rowContent: { group in
