@@ -61,11 +61,6 @@ struct MedicationsSheetView: View {
         .padding()
         .presentationDragIndicator(.visible)
         .presentationDetents([.medium])
-        .onAppear {
-            print("DEBUG: MedicationsSheetView appeared")
-            print("DEBUG: Medication title: \(medications.medicationCodeableConcept?.text ?? "nil")")
-            print("DEBUG: Medication status: \(medications.status ?? "nil")")
-        }
     }
 }
 

@@ -93,7 +93,6 @@ struct HealthDataGroupItemsView<Entry, ID: Hashable, Detail: View>: View {
                     Button {
                         selectedEntry = entry
                         showSheet = true
-                        print("DEBUG: Item tapped, showSheet = \(showSheet), selectedEntry = \(selectedEntry != nil ? "present" : "nil")")
                     } label: {
                         HStack {
                             let content = rowContent(entry)
@@ -113,14 +112,7 @@ struct HealthDataGroupItemsView<Entry, ID: Hashable, Detail: View>: View {
         }
         .sheet(isPresented: $showSheet) {
             if let selectedEntry = selectedEntry {
-                print("DEBUG: Sheet presenting with selectedEntry")
-                return AnyView(detailView(selectedEntry))
-            } else {
-                print("DEBUG: Sheet presenting but no selectedEntry")
-                return AnyView(
-                    Text("No data available")
-                        .padding()
-                )
+                detailView(selectedEntry)
             }
         }
     }
