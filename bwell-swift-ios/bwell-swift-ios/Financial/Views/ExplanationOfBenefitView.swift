@@ -4,33 +4,14 @@ import UIKit
 #endif
 import BWellSDK
 
-struct FinancialSummaryView: View {
-    @StateObject private var viewModel = FinancialSummaryViewModel()
-    @State private var showCoverages: Bool = false
+struct ExplanationOfBenefitView: View {
+    @StateObject private var viewModel = ExplanationOfBenefitViewModel()
     @State private var showEOB: Bool = false
 
     var body: some View {
         List {
             Section(header: Text("Financial")) {
                 Button {
-                    showCoverages = true
-                } label: {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Coverages")
-                                .fontWeight(.semibold)
-                            Text("View insurance coverages and details")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.gray)
-                    }
-                    .padding(.vertical, 8)
-                }
-                Button {
-                    Task { await viewModel.loadEOBs() }
                     showEOB = true
                 } label: {
                     HStack {
@@ -59,17 +40,7 @@ struct FinancialSummaryView: View {
                 }
             }
         }
-        .task { await viewModel.loadCoverages() }
-        .sheet(isPresented: $showCoverages) {
-            NavigationStack {
-                CoveragesDetailView(jsonText: viewModel.coveragesJson, response: viewModel.coverageData)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button("Close") { showCoverages = false }
-                        }
-                    }
-            }
-        }
+        .task { await viewModel.loadExplanationOfBenefits() }
         .sheet(isPresented: $showEOB) {
             NavigationStack {
                 EOBDetailView(jsonText: viewModel.eobJson, response: viewModel.eobData)
@@ -83,9 +54,9 @@ struct FinancialSummaryView: View {
     }
 }
 
-struct CoveragesDetailView: View {
+struct EOBDetailView: View {
     let jsonText: String
-    let response: BWell.GetCoverageResponse?
+    let response: BWell.GetExplanationOfBenefitsResponse?
 
     @State private var expandAll: Bool = false
     @State private var searchQuery: String = ""
@@ -94,7 +65,7 @@ struct CoveragesDetailView: View {
         VStack(alignment: .leading) {
             if jsonText.isEmpty {
                 Spacer()
-                Text("No coverage data yet")
+                Text("No EOB data yet")
                     .foregroundStyle(.secondary)
                     .padding()
                 Spacer()
@@ -119,7 +90,7 @@ struct CoveragesDetailView: View {
                 }
             }
         }
-        .navigationTitle("Coverages")
+        .navigationTitle("Explanation Of Benefits")
     }
 
     private func copyToClipboard() {
@@ -133,44 +104,10 @@ struct CoveragesDetailView: View {
     }
 }
 
-struct FinancialSummaryView_Previews: PreviewProvider {
+struct ExplanationOfBenefitView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            FinancialSummaryView()
+            ExplanationOfBenefitView()
         }
     }
 }
-
-
-
-// JSONViewer: uses RakuyoKit/JSONPreview when available, otherwise falls back to CollapsibleJSONView
-#if canImport(JSONPreview)
-import JSONPreview
-
-struct JSONViewer: View {
-    let jsonString: String
-    var expandAll: Bool = false
-    var searchQuery: String = ""
-
-    var body: some View {
-        if let data = jsonString.data(using: .utf8) {
-            // NOTE: adjust initializer if JSONPreview's API differs.
-            // Common API might be `JSONPreview(data:)` or `JSONPreviewView(json:)`.
-            // Replace the line below with the correct initializer when adding the package.
-            JSONPreview(data: data)
-        } else {
-            Text("Empty JSON")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-    }
-}
-#else
-struct JSONViewer: View {
-    let jsonString: String
-    var expandAll: Bool = false
-    var searchQuery: String = ""
-    var body: some View { CollapsibleJSONView(jsonString: jsonString, expandAll: expandAll, searchQuery: searchQuery) }
-}
-#endif
-
