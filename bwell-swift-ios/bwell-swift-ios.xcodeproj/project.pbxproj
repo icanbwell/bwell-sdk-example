@@ -1,0 +1,949 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5506C1FC2EBD0FC7005842A6 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */; };
+		5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */; };
+		5506C2002EBD14D5005842A6 /* ConnectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5506C1FF2EBD14D1005842A6 /* ConnectionsModel.swift */; };
+		551538732EB25C7D001174F9 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 551538722EB25C79001174F9 /* ProfileViewModel.swift */; };
+		5522DC872EAFE10C00F9BCD7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */; };
+		5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */; };
+		5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */; };
+		5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */; };
+		5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCA02EB0168D00F9BCD7 /* RootView.swift */; };
+		5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCA32EB01BEF00F9BCD7 /* Router.swift */; };
+		5522DCAC2EB0380800F9BCD7 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCAB2EB0380800F9BCD7 /* SideMenuView.swift */; };
+		5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCAD2EB1082500F9BCD7 /* SideMenuOptionModel.swift */; };
+		5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */; };
+		5522DCB32EB1314300F9BCD7 /* AuthenticationTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB22EB1314300F9BCD7 /* AuthenticationTextField.swift */; };
+		5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB42EB1320700F9BCD7 /* BWellButton.swift */; };
+		5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */; };
+		5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */; };
+		5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */; };
+		5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */; };
+		5548A09D2EBEB13800C0ACF5 /* SearchConnectionDisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5548A09C2EBEB12E00C0ACF5 /* SearchConnectionDisclaimerView.swift */; };
+		5551A3A52EC296E600394D59 /* Home.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5551A3A42EC296E600394D59 /* Home.xcstrings */; };
+		5551A3A72EC29AEC00394D59 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3A62EC29AE700394D59 /* HomeView.swift */; };
+		5551A3AA2EC390A200394D59 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3A92EC3909A00394D59 /* KeychainService.swift */; };
+		5551A3AC2EC3B8EB00394D59 /* KeychainTokenStorageAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */; };
+		5551A3B02EC3ECC000394D59 /* BWellSDKManager+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */; };
+		5551A3B42EC4023200394D59 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3B32EC4023200394D59 /* HomeViewModel.swift */; };
+		5597E5482EBE561C00A744CD /* WebViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E5472EBE560500A744CD /* WebViewWrapper.swift */; };
+		5597E54A2EBE566700A744CD /* SearchConnectionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E5492EBE565C00A744CD /* SearchConnectionsViewModel.swift */; };
+		5597E54C2EBE56AC00A744CD /* SearchConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E54B2EBE56A000A744CD /* SearchConnectionsView.swift */; };
+		55D5DF822EB933BD00D71D99 /* ImmunizationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF812EB933B400D71D99 /* ImmunizationsView.swift */; };
+		55D5DF842EB9458E00D71D99 /* LabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF832EB9458A00D71D99 /* LabsView.swift */; };
+		55D5DF862EB9459800D71D99 /* MedicationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF852EB9459200D71D99 /* MedicationsView.swift */; };
+		55D5DF882EB945A300D71D99 /* ProceduresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF872EB9459E00D71D99 /* ProceduresView.swift */; };
+		55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF892EB945A700D71D99 /* VitalSignsView.swift */; };
+		55D5DF8C2EB9813700D71D99 /* EncountersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */; };
+		55DEF6072EC6FDA700C8DB85 /* HealthDataListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */; };
+		55DEF60E2EC7746300C8DB85 /* HealthDataViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */; };
+		55E625652EB34785000D3783 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625642EB34782000D3783 /* Extensions.swift */; };
+		55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625662EB348FC000D3783 /* EditableProfileView.swift */; };
+		55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */; };
+		55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6256D2EB42BE7000D3783 /* ConditionsView.swift */; };
+		55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625712EB44B71000D3783 /* CarePlansView.swift */; };
+		55E625762EB5402F000D3783 /* DetailedItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625752EB53FE0000D3783 /* DetailedItemView.swift */; };
+		55E625782EB54376000D3783 /* BWellWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625772EB54362000D3783 /* BWellWrapper.swift */; };
+		55E6257A2EB54FC9000D3783 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E625792EB54FC2000D3783 /* AuthenticationViewModel.swift */; };
+		55E6257D2EB56867000D3783 /* ManageConnectionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6257C2EB56861000D3783 /* ManageConnectionsViewModel.swift */; };
+		55E6257F2EB56871000D3783 /* ManageConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */; };
+		55F2035B2EC4FE42001DA1E8 /* APIKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */; };
+		55F2035D2EC504E9001DA1E8 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035C2EC504E3001DA1E8 /* LaunchView.swift */; };
+		A2C35F5F2EDFAA240023FBC5 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A2C35F5E2EDFAA240023FBC5 /* BWellSDK */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5522DC662EAFE0FF00F9BCD7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5522DC4F2EAFE0FD00F9BCD7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5522DC562EAFE0FD00F9BCD7;
+			remoteInfo = "bwell-swift-ios";
+		};
+		5522DC702EAFE0FF00F9BCD7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5522DC4F2EAFE0FD00F9BCD7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5522DC562EAFE0FD00F9BCD7;
+			remoteInfo = "bwell-swift-ios";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsView.swift; sourceTree = "<group>"; };
+		5506C1FF2EBD14D1005842A6 /* ConnectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsModel.swift; sourceTree = "<group>"; };
+		551538722EB25C79001174F9 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "bwell-swift-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5522DC652EAFE0FF00F9BCD7 /* bwell-swift-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "bwell-swift-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5522DC6F2EAFE0FF00F9BCD7 /* bwell-swift-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "bwell-swift-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bwell_swift_ios.entitlements; sourceTree = "<group>"; };
+		5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bwell_swift_iosApp.swift; sourceTree = "<group>"; };
+		5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
+		5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellSDKManager.swift; sourceTree = "<group>"; };
+		5522DCA02EB0168D00F9BCD7 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		5522DCA32EB01BEF00F9BCD7 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		5522DCAB2EB0380800F9BCD7 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
+		5522DCAD2EB1082500F9BCD7 /* SideMenuOptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionModel.swift; sourceTree = "<group>"; };
+		5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		5522DCB22EB1314300F9BCD7 /* AuthenticationTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationTextField.swift; sourceTree = "<group>"; };
+		5522DCB42EB1320700F9BCD7 /* BWellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellButton.swift; sourceTree = "<group>"; };
+		5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellNavigationBar.swift; sourceTree = "<group>"; };
+		5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryViewModel.swift; sourceTree = "<group>"; };
+		5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSummaryView.swift; sourceTree = "<group>"; };
+		5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataSummaryModel.swift; sourceTree = "<group>"; };
+		5548A09C2EBEB12E00C0ACF5 /* SearchConnectionDisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionDisclaimerView.swift; sourceTree = "<group>"; };
+		5551A3A42EC296E600394D59 /* Home.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Home.xcstrings; sourceTree = "<group>"; };
+		5551A3A62EC29AE700394D59 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		5551A3A92EC3909A00394D59 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStorageAdapter.swift; sourceTree = "<group>"; };
+		5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BWellSDKManager+Helpers.swift"; sourceTree = "<group>"; };
+		5551A3B32EC4023200394D59 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		557D68922EC5542F0089DCC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5597E5472EBE560500A744CD /* WebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewWrapper.swift; sourceTree = "<group>"; };
+		5597E5492EBE565C00A744CD /* SearchConnectionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionsViewModel.swift; sourceTree = "<group>"; };
+		5597E54B2EBE56A000A744CD /* SearchConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConnectionsView.swift; sourceTree = "<group>"; };
+		55D5DF812EB933B400D71D99 /* ImmunizationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmunizationsView.swift; sourceTree = "<group>"; };
+		55D5DF832EB9458A00D71D99 /* LabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabsView.swift; sourceTree = "<group>"; };
+		55D5DF852EB9459200D71D99 /* MedicationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationsView.swift; sourceTree = "<group>"; };
+		55D5DF872EB9459E00D71D99 /* ProceduresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProceduresView.swift; sourceTree = "<group>"; };
+		55D5DF892EB945A700D71D99 /* VitalSignsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalSignsView.swift; sourceTree = "<group>"; };
+		55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncountersView.swift; sourceTree = "<group>"; };
+		55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataListView.swift; sourceTree = "<group>"; };
+		55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataViewFactory.swift; sourceTree = "<group>"; };
+		55E625642EB34782000D3783 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		55E625662EB348FC000D3783 /* EditableProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableProfileView.swift; sourceTree = "<group>"; };
+		55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergyIntolerancesView.swift; sourceTree = "<group>"; };
+		55E6256D2EB42BE7000D3783 /* ConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionsView.swift; sourceTree = "<group>"; };
+		55E625712EB44B71000D3783 /* CarePlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarePlansView.swift; sourceTree = "<group>"; };
+		55E625752EB53FE0000D3783 /* DetailedItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedItemView.swift; sourceTree = "<group>"; };
+		55E625772EB54362000D3783 /* BWellWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellWrapper.swift; sourceTree = "<group>"; };
+		55E625792EB54FC2000D3783 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		55E6257C2EB56861000D3783 /* ManageConnectionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageConnectionsViewModel.swift; sourceTree = "<group>"; };
+		55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageConnectionsView.swift; sourceTree = "<group>"; };
+		55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyService.swift; sourceTree = "<group>"; };
+		55F2035C2EC504E3001DA1E8 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5522DC542EAFE0FD00F9BCD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2C35F5F2EDFAA240023FBC5 /* BWellSDK in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5522DC622EAFE0FF00F9BCD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5522DC6C2EAFE0FF00F9BCD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		551538712EB25C6A001174F9 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				55E625682EB42B5A000D3783 /* Views */,
+				551538722EB25C79001174F9 /* ProfileViewModel.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		5522DC4E2EAFE0FD00F9BCD7 = {
+			isa = PBXGroup;
+			children = (
+				5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */,
+				5522DC582EAFE0FD00F9BCD7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5522DC582EAFE0FD00F9BCD7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */,
+				5522DC652EAFE0FF00F9BCD7 /* bwell-swift-iosTests.xctest */,
+				5522DC6F2EAFE0FF00F9BCD7 /* bwell-swift-iosUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */ = {
+			isa = PBXGroup;
+			children = (
+				5551A3B52EC4023900394D59 /* Home */,
+				5597E5462EBE55FC00A744CD /* SearchConnections */,
+				55E6257B2EB56858000D3783 /* ManageConnections */,
+				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
+				551538712EB25C6A001174F9 /* Profile */,
+				5522DCAF2EB11F9C00F9BCD7 /* Health */,
+				5522DCA82EB037B000F9BCD7 /* SideMenuNavigation */,
+				5551A3AE2EC3ECA700394D59 /* SDKManager */,
+				5551A3A82EC38FA800394D59 /* Keychain */,
+				5522DCA72EB032BB00F9BCD7 /* Utils */,
+				5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */,
+				5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */,
+				557D68922EC5542F0089DCC0 /* Info.plist */,
+				5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */,
+			);
+			path = "bwell-swift-ios";
+			sourceTree = "<group>";
+		};
+		5522DCA72EB032BB00F9BCD7 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				55F2035C2EC504E3001DA1E8 /* LaunchView.swift */,
+				5522DCA32EB01BEF00F9BCD7 /* Router.swift */,
+				5522DCA02EB0168D00F9BCD7 /* RootView.swift */,
+				55E625772EB54362000D3783 /* BWellWrapper.swift */,
+				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
+				55E625642EB34782000D3783 /* Extensions.swift */,
+				5551A3A32EC296B400394D59 /* Localizables */,
+				55E625632EB34775000D3783 /* ReusableViews */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		5522DCA82EB037B000F9BCD7 /* SideMenuNavigation */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCAD2EB1082500F9BCD7 /* SideMenuOptionModel.swift */,
+				5522DCAB2EB0380800F9BCD7 /* SideMenuView.swift */,
+			);
+			path = SideMenuNavigation;
+			sourceTree = "<group>";
+		};
+		5522DCAA2EB037CF00F9BCD7 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				55E625792EB54FC2000D3783 /* AuthenticationViewModel.swift */,
+				5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		5522DCAF2EB11F9C00F9BCD7 /* Health */ = {
+			isa = PBXGroup;
+			children = (
+				55E625702EB42C5B000D3783 /* Model */,
+				5522DCC12EB2386A00F9BCD7 /* ViewModel */,
+				55E625692EB42B88000D3783 /* Views */,
+				55DEF6082EC773BB00C8DB85 /* GenericViews */,
+			);
+			path = Health;
+			sourceTree = "<group>";
+		};
+		5522DCC12EB2386A00F9BCD7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCB92EB161EB00F9BCD7 /* HealthSummaryViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		5551A3A22EBF00BA00394D59 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */,
+				55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5551A3A32EC296B400394D59 /* Localizables */ = {
+			isa = PBXGroup;
+			children = (
+				5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */,
+				5551A3A42EC296E600394D59 /* Home.xcstrings */,
+			);
+			path = Localizables;
+			sourceTree = "<group>";
+		};
+		5551A3A82EC38FA800394D59 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */,
+				5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */,
+				5551A3A92EC3909A00394D59 /* KeychainService.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		5551A3AE2EC3ECA700394D59 /* SDKManager */ = {
+			isa = PBXGroup;
+			children = (
+				5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */,
+				5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */,
+			);
+			path = SDKManager;
+			sourceTree = "<group>";
+		};
+		5551A3B52EC4023900394D59 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				5551A3A62EC29AE700394D59 /* HomeView.swift */,
+				5551A3B32EC4023200394D59 /* HomeViewModel.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		5597E5462EBE55FC00A744CD /* SearchConnections */ = {
+			isa = PBXGroup;
+			children = (
+				5597E54D2EBE56B400A744CD /* Views */,
+				5597E5492EBE565C00A744CD /* SearchConnectionsViewModel.swift */,
+			);
+			path = SearchConnections;
+			sourceTree = "<group>";
+		};
+		5597E54D2EBE56B400A744CD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5548A09C2EBEB12E00C0ACF5 /* SearchConnectionDisclaimerView.swift */,
+				5597E54B2EBE56A000A744CD /* SearchConnectionsView.swift */,
+				5597E5472EBE560500A744CD /* WebViewWrapper.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		55DEF6082EC773BB00C8DB85 /* GenericViews */ = {
+			isa = PBXGroup;
+			children = (
+				55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */,
+				55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */,
+			);
+			path = GenericViews;
+			sourceTree = "<group>";
+		};
+		55E625632EB34775000D3783 /* ReusableViews */ = {
+			isa = PBXGroup;
+			children = (
+				55E625752EB53FE0000D3783 /* DetailedItemView.swift */,
+				5522DCB42EB1320700F9BCD7 /* BWellButton.swift */,
+				5522DCB22EB1314300F9BCD7 /* AuthenticationTextField.swift */,
+			);
+			path = ReusableViews;
+			sourceTree = "<group>";
+		};
+		55E625682EB42B5A000D3783 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */,
+				55E625662EB348FC000D3783 /* EditableProfileView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		55E625692EB42B88000D3783 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */,
+				55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */,
+				55E625712EB44B71000D3783 /* CarePlansView.swift */,
+				55E6256D2EB42BE7000D3783 /* ConditionsView.swift */,
+				55D5DF812EB933B400D71D99 /* ImmunizationsView.swift */,
+				55D5DF832EB9458A00D71D99 /* LabsView.swift */,
+				55D5DF852EB9459200D71D99 /* MedicationsView.swift */,
+				55D5DF872EB9459E00D71D99 /* ProceduresView.swift */,
+				55D5DF892EB945A700D71D99 /* VitalSignsView.swift */,
+				55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		55E625702EB42C5B000D3783 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5522DCC22EB2388A00F9BCD7 /* HealthDataSummaryModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		55E6257B2EB56858000D3783 /* ManageConnections */ = {
+			isa = PBXGroup;
+			children = (
+				5551A3A22EBF00BA00394D59 /* Views */,
+				5506C1FF2EBD14D1005842A6 /* ConnectionsModel.swift */,
+				55E6257C2EB56861000D3783 /* ManageConnectionsViewModel.swift */,
+			);
+			path = ManageConnections;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5522DC562EAFE0FD00F9BCD7 /* bwell-swift-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5522DC792EAFE0FF00F9BCD7 /* Build configuration list for PBXNativeTarget "bwell-swift-ios" */;
+			buildPhases = (
+				5522DC532EAFE0FD00F9BCD7 /* Sources */,
+				5522DC542EAFE0FD00F9BCD7 /* Frameworks */,
+				5522DC552EAFE0FD00F9BCD7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "bwell-swift-ios";
+			packageProductDependencies = (
+				A2C35F5E2EDFAA240023FBC5 /* BWellSDK */,
+			);
+			productName = "bwell-swift-ios";
+			productReference = 5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5522DC642EAFE0FF00F9BCD7 /* bwell-swift-iosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5522DC7C2EAFE0FF00F9BCD7 /* Build configuration list for PBXNativeTarget "bwell-swift-iosTests" */;
+			buildPhases = (
+				5522DC612EAFE0FF00F9BCD7 /* Sources */,
+				5522DC622EAFE0FF00F9BCD7 /* Frameworks */,
+				5522DC632EAFE0FF00F9BCD7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5522DC672EAFE0FF00F9BCD7 /* PBXTargetDependency */,
+			);
+			name = "bwell-swift-iosTests";
+			packageProductDependencies = (
+			);
+			productName = "bwell-swift-iosTests";
+			productReference = 5522DC652EAFE0FF00F9BCD7 /* bwell-swift-iosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5522DC6E2EAFE0FF00F9BCD7 /* bwell-swift-iosUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5522DC7F2EAFE0FF00F9BCD7 /* Build configuration list for PBXNativeTarget "bwell-swift-iosUITests" */;
+			buildPhases = (
+				5522DC6B2EAFE0FF00F9BCD7 /* Sources */,
+				5522DC6C2EAFE0FF00F9BCD7 /* Frameworks */,
+				5522DC6D2EAFE0FF00F9BCD7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5522DC712EAFE0FF00F9BCD7 /* PBXTargetDependency */,
+			);
+			name = "bwell-swift-iosUITests";
+			packageProductDependencies = (
+			);
+			productName = "bwell-swift-iosUITests";
+			productReference = 5522DC6F2EAFE0FF00F9BCD7 /* bwell-swift-iosUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5522DC4F2EAFE0FD00F9BCD7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					5522DC562EAFE0FD00F9BCD7 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					5522DC642EAFE0FF00F9BCD7 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 5522DC562EAFE0FD00F9BCD7;
+					};
+					5522DC6E2EAFE0FF00F9BCD7 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 5522DC562EAFE0FD00F9BCD7;
+					};
+				};
+			};
+			buildConfigurationList = 5522DC522EAFE0FD00F9BCD7 /* Build configuration list for PBXProject "bwell-swift-ios" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5522DC4E2EAFE0FD00F9BCD7;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A2C35F5D2EDFAA240023FBC5 /* XCLocalSwiftPackageReference "../../bwell-sdk/bwell-sdk-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5522DC582EAFE0FD00F9BCD7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5522DC562EAFE0FD00F9BCD7 /* bwell-swift-ios */,
+				5522DC642EAFE0FF00F9BCD7 /* bwell-swift-iosTests */,
+				5522DC6E2EAFE0FF00F9BCD7 /* bwell-swift-iosUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5522DC552EAFE0FD00F9BCD7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5506C1FC2EBD0FC7005842A6 /* Localizable.xcstrings in Resources */,
+				5522DC872EAFE10C00F9BCD7 /* Assets.xcassets in Resources */,
+				5551A3A52EC296E600394D59 /* Home.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5522DC632EAFE0FF00F9BCD7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5522DC6D2EAFE0FF00F9BCD7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5522DC532EAFE0FD00F9BCD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5548A09D2EBEB13800C0ACF5 /* SearchConnectionDisclaimerView.swift in Sources */,
+				55F2035D2EC504E9001DA1E8 /* LaunchView.swift in Sources */,
+				55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */,
+				5522DCB32EB1314300F9BCD7 /* AuthenticationTextField.swift in Sources */,
+				55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */,
+				5506C2002EBD14D5005842A6 /* ConnectionsModel.swift in Sources */,
+				5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */,
+				5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */,
+				55DEF6072EC6FDA700C8DB85 /* HealthDataListView.swift in Sources */,
+				5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */,
+				5597E5482EBE561C00A744CD /* WebViewWrapper.swift in Sources */,
+				55D5DF882EB945A300D71D99 /* ProceduresView.swift in Sources */,
+				55D5DF822EB933BD00D71D99 /* ImmunizationsView.swift in Sources */,
+				55E6257A2EB54FC9000D3783 /* AuthenticationViewModel.swift in Sources */,
+				5522DCAC2EB0380800F9BCD7 /* SideMenuView.swift in Sources */,
+				5597E54A2EBE566700A744CD /* SearchConnectionsViewModel.swift in Sources */,
+				5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */,
+				5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */,
+				55E625782EB54376000D3783 /* BWellWrapper.swift in Sources */,
+				5551A3B02EC3ECC000394D59 /* BWellSDKManager+Helpers.swift in Sources */,
+				55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */,
+				5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */,
+				55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */,
+				5551A3AA2EC390A200394D59 /* KeychainService.swift in Sources */,
+				5551A3AC2EC3B8EB00394D59 /* KeychainTokenStorageAdapter.swift in Sources */,
+				55D5DF8C2EB9813700D71D99 /* EncountersView.swift in Sources */,
+				55E6257F2EB56871000D3783 /* ManageConnectionsView.swift in Sources */,
+				5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */,
+				5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */,
+				5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */,
+				55E6257D2EB56867000D3783 /* ManageConnectionsViewModel.swift in Sources */,
+				5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */,
+				55DEF60E2EC7746300C8DB85 /* HealthDataViewFactory.swift in Sources */,
+				5597E54C2EBE56AC00A744CD /* SearchConnectionsView.swift in Sources */,
+				55E625652EB34785000D3783 /* Extensions.swift in Sources */,
+				5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */,
+				551538732EB25C7D001174F9 /* ProfileViewModel.swift in Sources */,
+				5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */,
+				55F2035B2EC4FE42001DA1E8 /* APIKeyService.swift in Sources */,
+				55D5DF862EB9459800D71D99 /* MedicationsView.swift in Sources */,
+				55E625762EB5402F000D3783 /* DetailedItemView.swift in Sources */,
+				5551A3B42EC4023200394D59 /* HomeViewModel.swift in Sources */,
+				55E6256E2EB42BE7000D3783 /* ConditionsView.swift in Sources */,
+				55D5DF842EB9458E00D71D99 /* LabsView.swift in Sources */,
+				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,
+				5551A3A72EC29AEC00394D59 /* HomeView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5522DC612EAFE0FF00F9BCD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5522DC6B2EAFE0FF00F9BCD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5522DC672EAFE0FF00F9BCD7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5522DC562EAFE0FD00F9BCD7 /* bwell-swift-ios */;
+			targetProxy = 5522DC662EAFE0FF00F9BCD7 /* PBXContainerItemProxy */;
+		};
+		5522DC712EAFE0FF00F9BCD7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5522DC562EAFE0FD00F9BCD7 /* bwell-swift-ios */;
+			targetProxy = 5522DC702EAFE0FF00F9BCD7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5522DC772EAFE0FF00F9BCD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5522DC782EAFE0FF00F9BCD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		5522DC7A2EAFE0FF00F9BCD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 93US676C37;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "bwell-swift-ios/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Sample App";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bwell.sdkSampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Debug;
+		};
+		5522DC7B2EAFE0FF00F9BCD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 93US676C37;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "bwell-swift-ios/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Sample App";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bwell.sdkSampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Release;
+		};
+		5522DC7D2EAFE0FF00F9BCD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bwell-swift-ios.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/bwell-swift-ios";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Debug;
+		};
+		5522DC7E2EAFE0FF00F9BCD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bwell-swift-ios.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/bwell-swift-ios";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Release;
+		};
+		5522DC802EAFE0FF00F9BCD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = "bwell-swift-ios";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Debug;
+		};
+		5522DC812EAFE0FF00F9BCD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = "bwell-swift-ios";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5522DC522EAFE0FD00F9BCD7 /* Build configuration list for PBXProject "bwell-swift-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5522DC772EAFE0FF00F9BCD7 /* Debug */,
+				5522DC782EAFE0FF00F9BCD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5522DC792EAFE0FF00F9BCD7 /* Build configuration list for PBXNativeTarget "bwell-swift-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5522DC7A2EAFE0FF00F9BCD7 /* Debug */,
+				5522DC7B2EAFE0FF00F9BCD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5522DC7C2EAFE0FF00F9BCD7 /* Build configuration list for PBXNativeTarget "bwell-swift-iosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5522DC7D2EAFE0FF00F9BCD7 /* Debug */,
+				5522DC7E2EAFE0FF00F9BCD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5522DC7F2EAFE0FF00F9BCD7 /* Build configuration list for PBXNativeTarget "bwell-swift-iosUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5522DC802EAFE0FF00F9BCD7 /* Debug */,
+				5522DC812EAFE0FF00F9BCD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A2C35F5D2EDFAA240023FBC5 /* XCLocalSwiftPackageReference "../../bwell-sdk/bwell-sdk-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../bwell-sdk/bwell-sdk-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A2C35F5E2EDFAA240023FBC5 /* BWellSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BWellSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5522DC4F2EAFE0FD00F9BCD7 /* Project object */;
+}
