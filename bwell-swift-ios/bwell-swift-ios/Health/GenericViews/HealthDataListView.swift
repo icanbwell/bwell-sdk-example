@@ -113,6 +113,20 @@ struct HealthDataGroupItemsView<Entry, ID: Hashable, Detail: View>: View {
         .sheet(isPresented: $showSheet) {
             if let selectedEntry = selectedEntry {
                 detailView(selectedEntry)
+            } else {
+                VStack(spacing: 16) {
+                    Image(systemName: "doc.text")
+                        .font(.largeTitle)
+                        .foregroundColor(.secondary)
+                    Text("No Details Available")
+                        .font(.headline)
+                    Text("This record doesn't have additional information to display")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
+                .presentationDetents([.medium])
             }
         }
     }

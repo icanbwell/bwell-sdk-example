@@ -222,7 +222,7 @@
     "Medications" : {
 
     },
-    "No data available" : {
+    "No Details Available" : {
 
     },
     "No member connections found." : {
@@ -293,6 +293,9 @@
 
     },
     "test@test.test" : {
+
+    },
+    "This record doesn't have additional information to display" : {
 
     },
     "Vital Signs" : {
