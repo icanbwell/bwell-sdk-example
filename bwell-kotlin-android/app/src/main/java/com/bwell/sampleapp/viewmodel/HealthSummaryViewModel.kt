@@ -86,9 +86,33 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
         }
     }
 
+    private val _goalsResults = MutableStateFlow<BWellResult<com.bwell.common.models.domain.healthdata.healthsummary.goal.Goal>?>(null)
+    val goalsResults: StateFlow<BWellResult<com.bwell.common.models.domain.healthdata.healthsummary.goal.Goal>?> = _goalsResults
+    fun getGoals(goalsRequest: com.bwell.healthdata.healthsummary.requests.goal.GoalRequest?) {
+        viewModelScope.launch {
+            try {
+                repository?.getGoals(goalsRequest)?.collect { result ->
+                    _goalsResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
 
-
-
+    private val _devicesResults = MutableStateFlow<BWellResult<com.bwell.common.models.domain.healthdata.healthsummary.device.Device>?>(null)
+    val devicesResults: StateFlow<BWellResult<com.bwell.common.models.domain.healthdata.healthsummary.device.Device>?> = _devicesResults
+    fun getDevices(deviceRequest: com.bwell.healthdata.healthsummary.requests.device.DeviceRequest?) {
+        viewModelScope.launch {
+            try {
+                repository?.getDevices(deviceRequest)?.collect { result ->
+                    _devicesResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
