@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.common.models.domain.consent.Consent
+import com.bwell.common.models.domain.healthdata.common.ServiceRequest
+import com.bwell.common.models.domain.healthdata.common.Specimen
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.user.Person
 import com.bwell.common.models.domain.user.VerificationStatus
@@ -19,6 +21,8 @@ import com.bwell.sampleapp.model.LabsList
 import com.bwell.sampleapp.model.LabsListItems
 import com.bwell.sampleapp.model.SuggestedActivitiesLIst
 import com.bwell.sampleapp.model.SuggestedDataConnectionsCategoriesList
+import com.bwell.user.requests.servicerequest.ServiceRequestRequest
+import com.bwell.user.requests.specimen.SpecimenRequest
 import com.bwell.user.requests.consents.ConsentCreateRequest
 import com.bwell.user.requests.createVerificationUrl.CreateVerificationUrlRequest
 import kotlinx.coroutines.flow.Flow
@@ -246,6 +250,28 @@ class Repository(private val applicationContext: Context) {
 
         val activityList = HealthJourneyList(suggestionsList)
         healthJourneyLiveData.postValue(activityList)
+    }
+
+    suspend fun fetchSpecimens(specimenRequest: SpecimenRequest): Flow<BWellResult<Specimen>?> = flow {
+        try {
+            val specimenData = BWellSdk.user.getSpecimens(specimenRequest)
+            if (specimenData.operationOutcome().success()) {
+                emit(specimenData)
+            }
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+    suspend fun fetchServiceRequests(serviceRequestRequest: ServiceRequestRequest): Flow<BWellResult<ServiceRequest>?> = flow {
+        try {
+            val serviceRequestData = BWellSdk.user.getServiceRequests(serviceRequestRequest)
+            if (serviceRequestData.operationOutcome().success()) {
+                emit(serviceRequestData)
+            }
+        } catch (e: Exception) {
+            emit(null)
+        }
     }
 
 }
