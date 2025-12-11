@@ -1,12 +1,15 @@
 import { BWellSDK } from '@icanbwell/bwell-sdk-ts';
 
-let bWellSdk: BWellSDK;
+let bWellSdk: BWellSDK | undefined;
 
-export const authenticateSdk = async (creds: string | { email: string; password: string }) => {
+export const authenticateSdk = async (creds: string | { username: string; password: string }) => {
+    if (!bWellSdk) {
+        throw new Error('SDK not initialized. Please initialize the SDK first.');
+    }
     if (typeof creds === 'string') {
         return bWellSdk.authenticate({ token: creds });
     } else {
-        return bWellSdk.authenticate({ email: creds.email, password: creds.password });
+        return bWellSdk.authenticate({ username: creds.username, password: creds.password });
     }
 }
 
@@ -14,8 +17,12 @@ export const initializeSdk = async (clientKey: string) => {
     bWellSdk = new BWellSDK({ clientKey });
     const initializationResult = await bWellSdk.initialize();
     return initializationResult;
-};    
+};
 
 export const getSdk = () => {
-    if (bWellSdk) return bWellSdk;
+    return bWellSdk;
+}
+
+export const isSdkInitialized = () => {
+    return bWellSdk !== undefined;
 }

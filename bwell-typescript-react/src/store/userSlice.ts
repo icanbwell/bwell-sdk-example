@@ -22,7 +22,7 @@ export const authenticate = createAsyncThunk<
       authenticationOutcome = await authenticateSdk(params.oauthCreds);
     } else if (params.username && params.password) {
       authenticationOutcome = await authenticateSdk({
-        email: params.username,
+        username: params.username,
         password: params.password,
       });
     } else {
@@ -33,6 +33,9 @@ export const authenticate = createAsyncThunk<
       return rejectWithValue(authenticationOutcome.error().message ?? "Unknown error");
     return params.oauthCreds ?? params.username ?? "";
   } catch (error) {
+    if (error instanceof Error) {
+      return rejectWithValue(error.message);
+    }
     return rejectWithValue("Unhandled error logging in user.");
   }
 });
@@ -86,8 +89,8 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = "";
       })
-      .addCase(authenticate.rejected, (state) => {
-        state.error = "Error while authenticating";
+      .addCase(authenticate.rejected, (state, action) => {
+        state.error = action.payload ?? "Error while authenticating";
         state.loading = false;
         state.isLoggedIn = false;
       })

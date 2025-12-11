@@ -18,19 +18,29 @@ const sdkMiddleware = () => (next) => async (action) => {
 
         const { clientKey, oauthCreds } = action.payload.user;
 
+        // Reset to clean state - only restore if we have valid credentials
         action.payload.user.isInitialized = false;
         action.payload.user.isLoggedIn = false;
+        action.payload.user.error = null;
+        action.payload.user.clientKey = undefined;
+        action.payload.user.oauthCreds = undefined;
 
-        try {
-            if (clientKey && oauthCreds) {
+        // Only rehydrate if we have both clientKey AND credentials (oauthCreds)
+        // This ensures we don't persist a half-initialized state
+        if (clientKey && oauthCreds) {
+            try {
                 await initializeSdk(clientKey);
                 await authenticateSdk(oauthCreds);
 
+                // Only persist state if both init and auth succeeded
+                action.payload.user.clientKey = clientKey;
+                action.payload.user.oauthCreds = oauthCreds;
                 action.payload.user.isInitialized = true;
                 action.payload.user.isLoggedIn = true;
+            } catch (error) {
+                console.error('Error rehydrating SDK:', error);
+                // State remains cleared - user will need to re-initialize
             }
-        } catch (error) {
-            console.error('Error rehydrating SDK:', error);
         }
 
         action.payload.user.isRehydrated = true;
