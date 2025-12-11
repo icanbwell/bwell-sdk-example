@@ -14,7 +14,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@icanbwell/bwell-sdk-ts": "^2.0.0-beta-rc.1762170538",
+    "@icanbwell/bwell-sdk-ts": "^2.0.0-beta-rc.1765486931",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/x-data-grid": "^7.7.1",
