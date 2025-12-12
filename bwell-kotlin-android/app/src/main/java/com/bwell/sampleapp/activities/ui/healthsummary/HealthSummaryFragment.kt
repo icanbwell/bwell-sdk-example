@@ -112,6 +112,27 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
         }
 
 
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.locationResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("getLocation", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("getLocation", "getLocation didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+
+
         return root
     }
 
