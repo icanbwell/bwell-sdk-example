@@ -132,6 +132,9 @@
     "Contact Information" : {
 
     },
+    "Created: %@" : {
+
+    },
     "Delete" : {
 
     },
@@ -151,9 +154,6 @@
 
     },
     "Email" : {
-
-    },
-    "email & password" : {
 
     },
     "Encounters" : {
@@ -201,6 +201,9 @@
       }
     },
     "Language" : {
+
+    },
+    "Last synced: %@" : {
 
     },
     "Learn More" : {
@@ -296,6 +299,12 @@
 
     },
     "This record doesn't have additional information to display" : {
+
+    },
+    "Username" : {
+
+    },
+    "username & password" : {
 
     },
     "Vital Signs" : {

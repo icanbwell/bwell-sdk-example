@@ -106,6 +106,19 @@ private struct ListItem: View {
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
+
+                // Display timestamp information when available
+                if let created = connection.created {
+                    Text("Created: \(formatTimestamp(created))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let lastSynced = connection.lastSynced {
+                    Text("Last synced: \(formatTimestamp(lastSynced))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
             Spacer()
 
@@ -144,6 +157,32 @@ private struct ListItem: View {
         } message: {
             Text("Are you sure you want to permanently delete '\(connection.name)'? This action cannot be undone.")
         }
+    }
+
+    /// Formats an ISO 8601 timestamp string into a user-friendly format
+    private func formatTimestamp(_ isoString: String) -> String {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        // Try parsing with fractional seconds first, then without
+        if let date = isoFormatter.date(from: isoString) {
+            return formatDate(date)
+        }
+
+        isoFormatter.formatOptions = [.withInternetDateTime]
+        if let date = isoFormatter.date(from: isoString) {
+            return formatDate(date)
+        }
+
+        // Return original string if parsing fails
+        return isoString
+    }
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
 }
 
