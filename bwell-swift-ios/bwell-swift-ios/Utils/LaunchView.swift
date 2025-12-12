@@ -46,18 +46,31 @@ final class LaunchViewModel: ObservableObject {
             isCheckingSession = false
             return
         }
-        
+
         do {
-            // 1) Initialize the SDK (rehydrates token manager now).
+            // 1) Initialize the SDK.
             try await BWellSDKManager.shared.initilize(apiKey)
-            // 2) Validate session before revealing RootView so state can be .authenticated.
-            await BWellSDKManager.shared.validateSession()
+
+            // 2) Attempt to authenticate from storage (rehydrate tokens).
+            do {
+                try await BWellSDKManager.shared.login(credentials: .storage)
+                // 3) If storage auth succeeded, validate the session.
+                await BWellSDKManager.shared.validateSession()
+            } catch {
+                // Storage auth failed - no valid tokens exist.
+                // Clear the stored API key so user can enter fresh credentials.
+                print("LaunchViewModel: Storage authentication failed: \(error)")
+                APIKeyService.shared.clear()
+                BWellSDKManager.shared.reset()
+            }
         } catch {
-            // This will only catch errors from the initial setup.
-            print("LaunchViewModel: SDK initialization failed.")
+            // SDK initialization failed - clear stored key and reset.
+            print("LaunchViewModel: SDK initialization failed: \(error)")
+            APIKeyService.shared.clear()
+            BWellSDKManager.shared.reset()
         }
 
-        // 3) Show RootView after session check completes so RootView can react to the final state.
+        // 4) Show RootView after session check completes so RootView can react to the final state.
         isCheckingSession = false
     }
 }

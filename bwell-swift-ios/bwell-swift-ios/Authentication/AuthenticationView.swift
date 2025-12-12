@@ -64,7 +64,7 @@ struct AuthenticationView: View {
         }
     }
 
-    // MARK: - Email/Password authentication view
+    // MARK: - Username/Password authentication view
     @ViewBuilder
     var credentialsView: some View {
         VStack(alignment: .leading) {
@@ -82,17 +82,17 @@ struct AuthenticationView: View {
                                         errorMessage: viewModel.errorMessage)
                 .padding(.bottom)
             } else {
-                Text("Email")
+                Text("Username")
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundStyle(.white)
                     .padding(.bottom, 7)
 
-                AuthenticationTextField(placeholder: "Email",
-                                        text: $viewModel.email,
-                                        iconName: "envelope.fill",
-                                        errorMessage: viewModel.emailErrorMessage)
-                .keyboardType(.emailAddress)
+                AuthenticationTextField(placeholder: "Username",
+                                        text: $viewModel.username,
+                                        iconName: "person.fill",
+                                        errorMessage: viewModel.usernameErrorMessage)
+                .autocapitalization(.none)
                 .padding(.bottom)
 
                 Text("Password")
@@ -107,11 +107,23 @@ struct AuthenticationView: View {
                                         isSecure: true,
                                         errorMessage: viewModel.passwordErrorMessage)
                 .padding(.bottom)
+
+                // General login error message
+                if let errorMessage = viewModel.errorMessage {
+                    HStack {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.yellow)
+                        Text(errorMessage)
+                            .foregroundStyle(.red)
+                            .font(.subheadline)
+                    }
+                    .padding(.bottom)
+                }
             }
 
 
             BWellButton(title: "Login") {
-                authWithToken ? viewModel.loginWithOAuthToken() : viewModel.loginWithEmailAndPassword()
+                authWithToken ? viewModel.loginWithOAuthToken() : viewModel.loginWithUsernameAndPassword()
             }.disabled(viewModel.isLoading)
 
             HStack(spacing: 5) {
@@ -123,21 +135,23 @@ struct AuthenticationView: View {
                 Button {
                     authWithToken.toggle()
                     viewModel.errorMessage = nil
-                    viewModel.emailErrorMessage = nil
+                    viewModel.usernameErrorMessage = nil
                     viewModel.passwordErrorMessage = nil
                 } label: {
-                    Text(authWithToken ? "email & password": "OAuth token.")
+                    Text(authWithToken ? "username & password": "OAuth token.")
                         .foregroundStyle(.white)
                         .underline(true, color: .white)
                 }
                 Spacer()
             }.padding(.top)
         }
-        .onChange(of: viewModel.email) {
-            viewModel.emailErrorMessage = nil
+        .onChange(of: viewModel.username) {
+            viewModel.usernameErrorMessage = nil
+            viewModel.errorMessage = nil
         }
         .onChange(of: viewModel.password) {
             viewModel.passwordErrorMessage = nil
+            viewModel.errorMessage = nil
         }
         .onChange(of: viewModel.oauthToken) {
             viewModel.errorMessage = nil

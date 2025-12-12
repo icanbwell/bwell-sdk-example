@@ -23,8 +23,10 @@ final class BWellSDKManager: ObservableObject {
      *    - An error if the SDK fails to initialize.
      */
     func initilize(_ apiKey: String, shouldCheckSession: Bool = false) async throws {
+        // If SDK already exists, skip re-initialization
         if sdk != nil {
             print("SDK instance already exists.")
+            self.state = .initialized
             return
         }
 
@@ -129,6 +131,17 @@ final class BWellSDKManager: ObservableObject {
         } catch {
             throw error
         }
+    }
+
+    /**
+     * Resets the SDK instance and state to uninitialized.
+     * Call this when storage authentication fails to allow fresh initialization.
+     * Also clears stale tokens from keychain storage.
+     */
+    func reset() {
+        try? KeychainService.shared.clear()
+        self.sdk = nil
+        self.state = .uninitialized
     }
 
     /**
