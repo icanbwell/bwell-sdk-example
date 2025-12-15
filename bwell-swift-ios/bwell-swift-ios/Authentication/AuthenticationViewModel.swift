@@ -16,14 +16,14 @@ final class AuthenticationViewModel: ObservableObject {
     // Authentication published properties
     @Published var apiKey: String = ""
     @Published var oauthToken: String = ""
-    @Published var email: String = ""
+    @Published var username: String = ""
     @Published var password: String = ""
 
     // Published properties
     @Published var isLoading: Bool = false
     @Published var apiKeyValidated: Bool = false
 
-    @Published var emailErrorMessage: String? = nil
+    @Published var usernameErrorMessage: String? = nil
     @Published var passwordErrorMessage: String? = nil
     @Published var errorMessage: String? = nil
 
@@ -104,27 +104,29 @@ final class AuthenticationViewModel: ObservableObject {
         }
     }
 
-    func loginWithEmailAndPassword() {
+    func loginWithUsernameAndPassword() {
         isLoading = true
 
-        if email.isEmpty {
+        if username.isEmpty {
             isLoading = false
-            emailErrorMessage = "email is required."
+            usernameErrorMessage = "Username is required."
+            return
         }
 
         if password.isEmpty {
             isLoading = false
-            passwordErrorMessage = "password is required."
+            passwordErrorMessage = "Password is required."
+            return
         }
 
         Task {
             do {
-                let credentials = BWell.Credentials.emailPassword(email: email, password: password)
+                let credentials = BWell.Credentials.usernamePassword(username: username, password: password)
 
                 try await sdkManager.login(credentials: credentials)
                 isLoading = false
             } catch {
-                errorMessage = "Login failed"
+                errorMessage = "Invalid username or password"
                 isLoading = false
             }
         }

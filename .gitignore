@@ -1,6 +1,9 @@
 **/.DS_Store
 .idea/**
 
+# Xcode user-specific data
+**/xcuserdata/
+
 node_modules
 
 playwright-report
