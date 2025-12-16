@@ -30,6 +30,7 @@ import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGrou
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.provider.requests.locations.LocationRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.medicines.MedicineDetailFragment
@@ -70,8 +71,10 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
         val binaryRequest = BinaryRequest.Builder()
             .ids(listOf("4QPCDMNPf6PMktViyhqiCQ==|lhZknievmAGndyGp7qBG37PYq6Y9xWh9m2+dkYG3fYnApTzBouvTJp+lkovgfdrAvoyCUKvhLbnfGA=="))
             .build()
+        val locationRequest = LocationRequest.Builder().id("000001ca-e5b1-59ba-ac68-95db89e174ab").build()
         healthSummaryViewModel.getDocumentReferences(documentReferenceRequest)
         healthSummaryViewModel.getBinary(binaryRequest)
+        healthSummaryViewModel.getLocation(locationRequest)
 
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -110,6 +113,27 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
+
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.locationResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("getLocation", result.toString())
+                        }
+
+                        else -> {
+                            Log.i("getLocation", "getLocation didn't return BwellResult.ResourceCollection")
+                        }
+                    }
+
+
+                }
+            }
+        }
+
 
 
         return root
