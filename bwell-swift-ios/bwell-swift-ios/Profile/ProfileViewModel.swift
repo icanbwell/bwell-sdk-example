@@ -1,0 +1,147 @@
+//
+//  ProfileViewModel.swift
+//  bwell-swift-ios
+//
+//  Created by Ivan Villanueva on 29/10/25.
+//
+
+import Foundation
+import BWellSDK
+
+@MainActor
+final class ProfileViewModel: ObservableObject {
+    private var sdkManager: BWellSDKManager?
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
+
+    // User's name
+    @Published var givenName: String = "John"
+    @Published var familyName: String = "Doe"
+
+    // User's address
+    @Published var addressLineOne: String = "145 W Osten St"
+    @Published var addressLineTwo: String = "Suite 300"
+    @Published var country: String = "United States"
+    @Published var postalCode: String = "21230"
+    @Published var state: String = "Maryland"
+    @Published var city: String = "Baltimore"
+
+    // Other user's information
+    @Published var gender: BWell.Gender = .male
+    @Published var birthdate: String = "January 2, 1990"
+    @Published var language: String = "English"
+    @Published var email: String = "example@example.com"
+    @Published var workPhone: String = "221-923-1033"
+    @Published var homePhone: String = "221-629-2253"
+    @Published var mobilePhone: String = "221-812-7803"
+
+    init() {
+        self.sdkManager = .shared
+    }
+
+    func getUserProfile() async {
+        isLoading = true
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
+
+            guard let profileInformation = try await sdkManager.user().getProfile() else {
+                isLoading = false
+                return
+            }
+
+            parseData(data: profileInformation)
+            isLoading = false
+        } catch {
+            print("Failed retrieving user's profile information: \(error)")
+            isLoading = false
+        }
+    }
+
+    func updateUserProfile() async {
+        isLoading = true
+        do {
+            guard let sdkManager = sdkManager else {
+                errorMessage = "SDK Manager not available"
+                isLoading = false
+                return
+            }
+
+            print("new state: \(state)")
+            let given: [String] = givenName.components(separatedBy: " ")
+
+            let userName: BWell.HumanName = .init(family: familyName, given: given)
+
+            let updateProfileRequest: BWell.UpdateUserProfileRequest = .init(name: userName,
+                                                                             addressStreet: addressLineOne,
+                                                                             addressUnit: addressLineTwo,
+                                                                             city: city,
+                                                                             stateOrProvidence: state,
+                                                                             postageOrZipCode: postalCode,
+                                                                             birthDate: birthdate,
+                                                                             gender: gender,
+                                                                             language: language)
+
+            _ = try await sdkManager.user().updateProfile(updateProfileRequest)
+            // try await sdkManager.createConsent()
+
+            isLoading = false
+        } catch {
+            isLoading = false
+        }
+    }
+
+    private func parseData(data: BWell.GetUserProfileResult) {
+        if let names = data.name {
+            if let first = names.first {
+                givenName = first.given?.joined(separator: " ") ?? ""
+                familyName = first.family ?? ""
+            }
+        }
+
+        if let address = data.address {
+            if let first = address.first {
+                if let lines = first.line {
+                    addressLineOne = lines[0]
+
+                    if lines.count > 1 {
+                        addressLineTwo = lines[1]
+                    }
+                }
+                country = first.country ?? ""
+                state = first.state ?? ""
+                postalCode = first.postalCode ?? ""
+                city = first.city ?? ""
+            }
+        }
+
+        if let gender = data.gender {
+            self.gender = gender
+        }
+
+        if let birthdate = data.birthdate {
+            self.birthdate = birthdate
+        }
+
+        if let language = data.language {
+            self.language = language
+        }
+
+        if let telecom = data.telecom {
+            for contactPoint in telecom {
+                if contactPoint.use == "email" {
+                    email = contactPoint.value ?? ""
+                } else if contactPoint.use == "mobile" {
+                    mobilePhone = contactPoint.value ?? ""
+                } else if contactPoint.use == "work" {
+                    workPhone = contactPoint.value ?? ""
+                } else if contactPoint.use == "home" {
+                    homePhone = contactPoint.value ?? ""
+                }
+            }
+        }
+    }
+}
