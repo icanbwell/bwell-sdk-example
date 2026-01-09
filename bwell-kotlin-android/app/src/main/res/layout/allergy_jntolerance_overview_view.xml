@@ -5,17 +5,18 @@
     android:layout_margin="10dp"
     android:id="@+id/allergyIntolerance_overview_view"
     android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/allergyIntoleranceTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Allergy Intolerance"
-        android:textStyle="bold"
         android:textColor="#0076AB"
         android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/verificationStatusTitleTextView"
         android:layout_width="0dp"
@@ -24,8 +25,7 @@
         android:textColor="#0076AB"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allergyIntoleranceTitleTextView"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineTitleRx"/>
+        app:layout_constraintTop_toBottomOf="@+id/allergyIntoleranceTitleTextView" />
 
     <TextView
         android:id="@+id/onsetTitleTextView"
