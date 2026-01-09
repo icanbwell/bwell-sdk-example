@@ -17,5 +17,13 @@ test-results
 yalc.lock
 
 dist
-
+dist/
 dist/*
+
+# Swift
+
+*.xcworkspace/
+*.xcodeproj/
+*.xcuserdata/
+
+bwell-swift-iOS/project.xcworkspace
