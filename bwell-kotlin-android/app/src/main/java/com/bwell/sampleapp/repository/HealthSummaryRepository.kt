@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bwell.common.models.domain.healthdata.common.Binary
 import com.bwell.common.models.domain.healthdata.healthsummary.documentreference.DocumentReference
+import com.bwell.common.models.domain.healthdata.healthsummary.goal.Goal
+import com.bwell.common.models.domain.healthdata.healthsummary.device.Device
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.HealthSummary
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
@@ -19,6 +21,8 @@ import com.bwell.healthdata.healthsummary.requests.condition.ConditionRequest
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.encounter.EncounterRequest
+import com.bwell.healthdata.healthsummary.requests.goal.GoalRequest
+import com.bwell.healthdata.healthsummary.requests.device.DeviceRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationRequest
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
@@ -50,6 +54,24 @@ class HealthSummaryRepository(private val applicationContext: Context) {
         try {
             val documentReferenceResult = BWellSdk.health.getDocumentReferences(documentReferencesRequest)
             emit(documentReferenceResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+    suspend fun getGoals(goalsRequest: GoalRequest?): Flow<BWellResult<Goal>?> = flow {
+        try {
+            val goalsResult = BWellSdk.health.getGoals(goalsRequest)
+            emit(goalsResult)
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }
+
+    suspend fun getDevices(deviceRequest: DeviceRequest?): Flow<BWellResult<Device>?> = flow {
+        try {
+            val deviceResult = BWellSdk.health.getDevices(deviceRequest)
+            emit(deviceResult)
         } catch (e: Exception) {
             emit(null)
         }
@@ -171,6 +193,61 @@ class HealthSummaryRepository(private val applicationContext: Context) {
 
                 Log.d(TAG, "Added Health Summary Category: " + healthSummary.category.toString())
             }
+            
+            // Manually add Device and Goal categories and fetch their counts
+            // Fetch Device count
+            var deviceCount: Int? = null
+            try {
+                val deviceRequest = com.bwell.healthdata.healthsummary.requests.device.DeviceRequest.Builder()
+                    .page(0)
+                    .pageSize(1)
+                    .build()
+                val deviceResult = BWellSdk.health.getDevices(deviceRequest)
+                if (deviceResult is BWellResult.ResourceCollection) {
+                    deviceCount = deviceResult.pagingInfo?.totalItems
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching device count: ${e.message}")
+            }
+            
+            healthSummaryCategoryList.add(
+                HealthSummaryListItems(
+                    R.drawable.baseline_person_24,
+                    R.drawable.baseline_keyboard_arrow_right_24,
+                    null, // category is null for custom categories
+                    applicationContext.getString(R.string.devices),
+                    deviceCount,
+                    "DEVICE" // customCategoryId
+                )
+            )
+            Log.d(TAG, "Added Health Summary Category: DEVICE (count: $deviceCount)")
+            
+            // Fetch Goal count
+            var goalCount: Int? = null
+            try {
+                val goalRequest = com.bwell.healthdata.healthsummary.requests.goal.GoalRequest.Builder()
+                    .page(0)
+                    .pageSize(1)
+                    .build()
+                val goalResult = BWellSdk.health.getGoals(goalRequest)
+                if (goalResult is BWellResult.ResourceCollection) {
+                    goalCount = goalResult.pagingInfo?.totalItems
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching goal count: ${e.message}")
+            }
+            
+            healthSummaryCategoryList.add(
+                HealthSummaryListItems(
+                    R.drawable.baseline_person_24,
+                    R.drawable.baseline_keyboard_arrow_right_24,
+                    null,
+                    applicationContext.getString(R.string.goals),
+                    goalCount,
+                    "GOAL" // customCategoryId
+                )
+            )
+            Log.d(TAG, "Added Health Summary Category: GOAL (count: $goalCount)")
             
             Log.d(TAG, "Posting HealthSummary live data")
             // Post live data

@@ -9,6 +9,8 @@ data class HealthSummaryList(
 data class HealthSummaryListItems(
     val healthSummaryTypeLogo: Int,
     val healthSummaryDetailsLogo: Int,
-    val category: HealthSummaryCategory,
+    val category: HealthSummaryCategory?,
     val categoryFriendlyName: String?,
-    val count: Int?)
+    val count: Int?,
+    val customCategoryId: String? = null // For custom categories like Device and Goal
+)

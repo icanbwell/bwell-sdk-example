@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bwell.sampleapp.singletons.BWellSdk
-import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.healthdata.healthsummary.allergyintolerance.AllergyIntoleranceGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.careplan.CarePlanGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.condition.ConditionGroup
@@ -14,12 +12,14 @@ import com.bwell.common.models.domain.healthdata.healthsummary.encounter.Encount
 import com.bwell.common.models.domain.healthdata.healthsummary.immunization.ImmunizationGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.procedure.ProcedureGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.vitalsign.VitalSignGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.device.Device
+import com.bwell.common.models.domain.healthdata.healthsummary.goal.Goal
 import com.bwell.sampleapp.databinding.HealthSummaryCategoriesItemsViewBinding
 import com.bwell.sampleapp.utils.formatDate
 
-/*
-*Display the Labs List in RecyclerView
-* */
+/**
+ * Generic adapter for displaying health summary category items in a RecyclerView
+ */
 class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
     RecyclerView.Adapter<HealthSummaryCategoriesDataAdapter.ViewHolder>() {
 
@@ -95,6 +95,20 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
                 holder.binding.organizationName.text = "from "+ getSource(launch)
                 holder.binding.organizationLl.visibility = if (getSource(launch).isNullOrBlank()) View.GONE else View.VISIBLE
             }
+            is Device ->{
+                holder.binding.header.text = getTitle(launch)
+                holder.binding.textViewDate.text = "ID: ${launch.id ?: "N/A"}"
+                holder.binding.organizationName.text = "UDI: ${launch.udiCarrier?.firstOrNull()?.deviceIdentifier ?: "N/A"}"
+                holder.binding.organizationLl.visibility = View.VISIBLE
+            }
+            is Goal ->{
+                holder.binding.header.text = getTitle(launch)
+                val startDate = getDate(launch)
+                val formattedDate = startDate?.let { formatDate(it) }
+                holder.binding.textViewDate.text = "Target Date : $formattedDate"
+                holder.binding.organizationName.text = "Status: ${launch.lifeCycleStatus?.name ?: "N/A"}"
+                holder.binding.organizationLl.visibility = View.VISIBLE
+            }
             else -> ""
         }
 
@@ -115,6 +129,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is EncounterGroup -> item.source?.joinToString(", ") ?: ""
             is AllergyIntoleranceGroup -> item.source?.joinToString(", ") ?: ""
             is ConditionGroup -> item.source?.joinToString(", ") ?: ""
+            is Device -> ""
+            is Goal -> ""
             else -> ""
         }
     }
@@ -128,6 +144,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is EncounterGroup -> item.name ?: ""
             is AllergyIntoleranceGroup -> item.name ?: ""
             is ConditionGroup -> item.name ?: ""
+            is Device -> item.udiCarrier?.firstOrNull()?.deviceIdentifier ?: item.type?.text ?: "Device"
+            is Goal -> item.description?.text ?: item.description?.coding?.firstOrNull()?.display ?: "Goal"
             else -> ""
         }
     }
@@ -140,6 +158,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is VitalSignGroup -> item.effectiveDateTime.toString()
             is EncounterGroup -> item.date.toString()
             is ConditionGroup -> item.recordedDate.toString()
+            is Device -> item.manufactureDate.toString()
+            is Goal -> item.target?.firstOrNull()?.dueDate.toString()
             else -> null
         }
     }
@@ -153,6 +173,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is EncounterGroup -> item.id ?: ""
             is ConditionGroup -> item.id ?: ""
             is AllergyIntoleranceGroup -> item.id ?: ""
+            is Device -> item.id ?: ""
+            is Goal -> item.id ?: ""
             else -> ""
         }
     }
@@ -166,6 +188,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is EncounterGroup -> item.name ?: ""
             is ConditionGroup -> item.name ?: ""
             is AllergyIntoleranceGroup -> item.name ?: ""
+            is Device -> item.udiCarrier?.firstOrNull()?.deviceIdentifier ?: ""
+            is Goal -> item.description?.text ?: ""
             else -> ""
         }
     }
@@ -179,6 +203,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is EncounterGroup -> item.coding?.system.toString()
             is ConditionGroup -> item.coding?.system.toString()
             is AllergyIntoleranceGroup -> item.coding?.system.toString()
+            is Device -> item.type?.coding?.firstOrNull()?.system.toString()
+            is Goal -> item.description?.coding?.firstOrNull()?.system.toString()
             else -> ""
         }
     }
@@ -192,6 +218,8 @@ class HealthSummaryCategoriesDataAdapter<T>(private val launches: List<T>?) :
             is EncounterGroup -> item.coding?.code.toString()
             is ConditionGroup -> item.coding?.code.toString()
             is AllergyIntoleranceGroup -> item.coding?.code.toString()
+            is Device -> item.type?.coding?.firstOrNull()?.code.toString()
+            is Goal -> ""
             else -> ""
         }
     }
