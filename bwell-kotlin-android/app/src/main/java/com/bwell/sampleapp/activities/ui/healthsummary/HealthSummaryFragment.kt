@@ -30,6 +30,7 @@ import com.bwell.healthdata.healthsummary.requests.immunization.ImmunizationGrou
 import com.bwell.healthdata.healthsummary.requests.procedure.ProcedureGroupsRequest
 import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.provider.requests.practitioner.PractitionerRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.medicines.MedicineDetailFragment
@@ -54,7 +55,8 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
         _binding = FragmentHealthSummaryParentBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val repository = (activity?.application as? BWellSampleApplication)?.healthSummaryRepository
-        healthSummaryViewModel = ViewModelProvider(this, HealthSummaryViewModelFactory(repository))[HealthSummaryViewModel::class.java]
+        val providerResourcesRepository = (activity?.application as? BWellSampleApplication)?.providerResourcesRepository
+        healthSummaryViewModel = ViewModelProvider(this, HealthSummaryViewModelFactory(repository, providerResourcesRepository))[HealthSummaryViewModel::class.java]
         healthSummaryViewModel.healthSummaryData.observe(viewLifecycleOwner) {
             setHealthSummaryAdapter(it.healthSummaryList)
         }
@@ -72,6 +74,14 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
             .build()
         healthSummaryViewModel.getDocumentReferences(documentReferenceRequest)
         healthSummaryViewModel.getBinary(binaryRequest)
+
+        /**
+         * Calling the getPractitioners
+         */
+        val practitionerRequest = PractitionerRequest.Builder()
+            .id("00000590-d9c2-551f-9c5a-f3abb73aad4c")
+            .build()
+        healthSummaryViewModel.getPractitioners(practitionerRequest)
 
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -107,6 +117,21 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                     }
 
 
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.practitionersResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("getPractitioners", result.toString())
+                        }
+                        else -> {
+                            Log.w("getPractitioners", "Unexpected result type: ${result?.javaClass?.simpleName}")
+                        }
+                    }
                 }
             }
         }
