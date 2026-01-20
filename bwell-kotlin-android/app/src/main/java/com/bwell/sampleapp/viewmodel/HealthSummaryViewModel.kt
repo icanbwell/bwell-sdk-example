@@ -3,12 +3,14 @@ package com.bwell.sampleapp.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bwell.common.models.domain.common.location.Location
 import com.bwell.common.models.domain.healthdata.common.Binary
 import com.bwell.common.models.domain.healthdata.healthsummary.documentreference.DocumentReference
 import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enums.HealthSummaryCategory
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.provider.requests.locations.LocationRequest
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.repository.HealthSummaryRepository
 import kotlinx.coroutines.Dispatchers
@@ -87,6 +89,19 @@ class HealthSummaryViewModel (private val repository: HealthSummaryRepository?) 
     }
 
 
+    private val _locationResults = MutableStateFlow<BWellResult<Location>?>(null)
+    val locationResults: StateFlow<BWellResult<Location>?> = _locationResults
+    fun getLocation(locationRequest: LocationRequest) {
+        viewModelScope.launch {
+            try {
+                repository?.getLocation(locationRequest)?.collect { result ->
+                    _locationResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
 
 
 
