@@ -24,6 +24,7 @@ final class HealthSummaryViewModel: ObservableObject {
     @Published var vitalSigns: [BWell.Observation] = []
     @Published var medications: [BWell.MedicationStatement] = []
     @Published var encounters: [BWell.Encounter] = []
+    @Published var goals: [BWell.Goal] = []
 
     // Group Published properties
     @Published var allergyIntoleranceGroups: [BWell.AllergyIntoleranceGroup] = []
@@ -296,6 +297,22 @@ final class HealthSummaryViewModel: ObservableObject {
             }
         )
         self.encounters = encounters
+    }
+
+    // MARK: - Goals (EA-2153)
+    func getGoals() async {
+        guard let sdkManager = sdkManager else { return }
+
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let request = BWell.GoalRequest(page: 0)
+            let response = try await sdkManager.health().getGoals(request)
+            self.goals = response.entry?.compactMap { $0.resource } ?? []
+        } catch {
+            errorMessage = "Failed to fetch goals: \(error.localizedDescription)"
+        }
     }
 }
 

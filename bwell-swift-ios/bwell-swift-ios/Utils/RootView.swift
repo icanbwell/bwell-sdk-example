@@ -33,6 +33,9 @@ struct RootView: View {
                         case .manageConnections:
                             ManageConnectionsView(showMenu: $showMenu)
                                 .navigationBarBackButtonHidden()
+                        case .financial:
+                            FinancialView(showMenu: $showMenu)
+                                .navigationBarBackButtonHidden()
                         case .searchConnections(let connection):
                             SearchConnectionsView(connection: connection)
                         case .connections:

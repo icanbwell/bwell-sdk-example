@@ -33,7 +33,12 @@ final class BWellSDKManager: ObservableObject {
         self.state = .initializing
         do {
             let tokenStorage = KeychainTokenStorageAdapter()
-            let config = BWell.SDKConfig(clientKey: apiKey, logLevel: .verbose,tokenStorage: tokenStorage)
+            let config = BWell.SDKConfig(
+                clientKey: apiKey,
+                logLevel: .verbose,
+                tokenStorage: tokenStorage,
+                telemetry: BWell.TelemetryConfig(enabled: true)
+            )
             let sdkInstance = try BWellSDK(config: config)
 
             try await sdkInstance.initialize()
@@ -206,5 +211,13 @@ extension BWellSDKManager {
         }
 
         return user
+    }
+
+    func financial() throws -> FinancialManager {
+        guard let financial = sdk?.financial else {
+            throw SDKError.notInitialized
+        }
+
+        return financial
     }
 }
