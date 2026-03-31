@@ -57,6 +57,9 @@
 		55F2035B2EC4FE42001DA1E8 /* APIKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */; };
 		55F2035D2EC504E9001DA1E8 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035C2EC504E3001DA1E8 /* LaunchView.swift */; };
 		A264CBC62EE38945000D0AF7 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWellSDK */; };
+		B10000012F00000100000001 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000012F00000100000010 /* GoalsView.swift */; };
+		B10000012F00000100000002 /* FinancialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000012F00000100000020 /* FinancialView.swift */; };
+		B10000012F00000100000003 /* FinancialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000012F00000100000030 /* FinancialViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +134,9 @@
 		55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageConnectionsView.swift; sourceTree = "<group>"; };
 		55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyService.swift; sourceTree = "<group>"; };
 		55F2035C2EC504E3001DA1E8 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
+		B10000012F00000100000010 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
+		B10000012F00000100000020 /* FinancialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialView.swift; sourceTree = "<group>"; };
+		B10000012F00000100000030 /* FinancialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +201,7 @@
 				5522DCAA2EB037CF00F9BCD7 /* Authentication */,
 				551538712EB25C6A001174F9 /* Profile */,
 				5522DCAF2EB11F9C00F9BCD7 /* Health */,
+				B10000012F00000100000040 /* Financial */,
 				5522DCA82EB037B000F9BCD7 /* SideMenuNavigation */,
 				5551A3AE2EC3ECA700394D59 /* SDKManager */,
 				5551A3A82EC38FA800394D59 /* Keychain */,
@@ -365,6 +372,7 @@
 				55D5DF872EB9459E00D71D99 /* ProceduresView.swift */,
 				55D5DF892EB945A700D71D99 /* VitalSignsView.swift */,
 				55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */,
+				B10000012F00000100000010 /* GoalsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -385,6 +393,31 @@
 				55E6257C2EB56861000D3783 /* ManageConnectionsViewModel.swift */,
 			);
 			path = ManageConnections;
+			sourceTree = "<group>";
+		};
+		B10000012F00000100000040 /* Financial */ = {
+			isa = PBXGroup;
+			children = (
+				B10000012F00000100000050 /* Views */,
+				B10000012F00000100000060 /* ViewModel */,
+			);
+			path = Financial;
+			sourceTree = "<group>";
+		};
+		B10000012F00000100000050 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B10000012F00000100000020 /* FinancialView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B10000012F00000100000060 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				B10000012F00000100000030 /* FinancialViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -575,6 +608,9 @@
 				55D5DF842EB9458E00D71D99 /* LabsView.swift in Sources */,
 				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,
 				5551A3A72EC29AEC00394D59 /* HomeView.swift in Sources */,
+				B10000012F00000100000001 /* GoalsView.swift in Sources */,
+				B10000012F00000100000002 /* FinancialView.swift in Sources */,
+				B10000012F00000100000003 /* FinancialViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

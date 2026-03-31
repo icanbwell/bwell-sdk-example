@@ -17,6 +17,21 @@ struct HealthSummaryView: View {
 
     var body: some View {
         List {
+            // Goals (EA-2153 new operation, not in health summary counts)
+            NavigationLink(destination: GoalsView().environmentObject(viewModel)) {
+                HStack(spacing: 12) {
+                    Image(systemName: "target")
+                        .frame(width: 24, alignment: .center)
+                    Text("Goals")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .frame(width: 24)
+                        .foregroundStyle(.gray)
+                }
+            }
+            .listRowSeparator(.hidden)
+
             ForEach(HealthDataSummaryModel.allCases) { item in
                 Button {
                     router.path.append(item)

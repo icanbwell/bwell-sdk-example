@@ -14,6 +14,7 @@ enum AppView: Hashable {
     case profile
     case healthSummary
     case manageConnections
+    case financial
 
     // Subviews of manageConnections
     case connections
