@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BWellSDK
+import BWell
 
 struct EditableProfileView: View {
     @State private var shouldRotate: Bool = false

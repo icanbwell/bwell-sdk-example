@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import BWellSDK
+import SwiftUI
+import BWell
 
 extension Date {
     func toString() -> String {
@@ -20,41 +21,74 @@ extension Date {
 }
 
 extension String {
-    func dateFormatter() -> String {
+    /// Parse FHIR date strings to Date. Handles all common FHIR datetime formats.
+    func fhirDate() -> Date? {
+        // Try ISO8601 first (handles most FHIR formats including timezone offsets)
+        let iso = ISO8601DateFormatter()
+        iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = iso.date(from: self) { return date }
+
+        iso.formatOptions = [.withInternetDateTime]
+        if let date = iso.date(from: self) { return date }
+
+        // Fall back to manual formats
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        
         let formats = [
-            "yyyy-MM-dd/HH:mm:ssZZZZZ",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ",
             "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+            "yyyy-MM-dd'T'HH:mm:ssZZZZZ",
             "yyyy-MM-dd'T'HH:mm:ssZ",
+            "yyyy-MM-dd'T'HH:mm:ss",
             "yyyy-MM-dd"
         ]
-        
-        var date: Date?
         for format in formats {
             formatter.dateFormat = format
-            if let parsedDate = formatter.date(from: self) {
-                date = parsedDate
-                break
-            }
+            if let date = formatter.date(from: self) { return date }
         }
-        
-        guard let validDate = date else { return self }
+        return nil
+    }
+
+    func dateFormatter() -> String {
+        guard let date = fhirDate() else { return self }
 
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = "MMMM dd, yyyy"
         outputFormatter.locale = Locale(identifier: "en_US_POSIX")
 
-        return outputFormatter.string(from: validDate)
+        return outputFormatter.string(from: date)
+    }
+
+    func relativeDate() -> String {
+        guard let validDate = fhirDate() else { return self }
+
+        let calendar = Calendar.current
+        let now = Date.now
+
+        if calendar.isDateInToday(validDate) {
+            return "Today"
+        } else if calendar.isDateInYesterday(validDate) {
+            return "Yesterday"
+        } else {
+            let days = calendar.dateComponents([.day], from: validDate, to: now).day ?? 0
+            if days > 0 && days <= 7 {
+                return "\(days) day\(days == 1 ? "" : "s") ago"
+            } else if calendar.component(.year, from: validDate) == calendar.component(.year, from: now) {
+                let outputFormatter = DateFormatter()
+                outputFormatter.dateFormat = "MMMM d"
+                outputFormatter.locale = Locale(identifier: "en_US")
+                return outputFormatter.string(from: validDate)
+            } else {
+                let outputFormatter = DateFormatter()
+                outputFormatter.dateFormat = "MMMM d, yyyy"
+                outputFormatter.locale = Locale(identifier: "en_US")
+                return outputFormatter.string(from: validDate)
+            }
+        }
     }
 
     func toDate() -> Date {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM dd, yyyy"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-
-        return formatter.date(from: self) ?? .now
+        fhirDate() ?? .now
     }
 
     func stripHTML() -> String {
@@ -78,6 +112,52 @@ extension String {
         return prefix(1).capitalized + dropFirst().lowercased()
     }
 }
+
+extension BWell.HealthSummary.Resource.Category {
+    var displayName: String {
+        switch self {
+        case .allergyIntolerance: return "Allergies"
+        case .carePlan: return "Care Plans"
+        case .condition: return "Conditions"
+        case .encounter: return "Encounters"
+        case .immunization: return "Immunizations"
+        case .labs: return "Labs"
+        case .medications: return "Medications"
+        case .procedure: return "Procedures"
+        case .vitalSigns: return "Vitals"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .allergyIntolerance: return "facemask"
+        case .carePlan: return "list.clipboard"
+        case .condition: return "stethoscope"
+        case .encounter: return "person.2.wave.2"
+        case .immunization: return "syringe"
+        case .labs: return "testtube.2"
+        case .medications: return "pills"
+        case .procedure: return "ivfluid.bag"
+        case .vitalSigns: return "waveform.path.ecg.rectangle"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .allergyIntolerance: return .orange
+        case .carePlan: return .bwellGreen
+        case .condition: return .bwellRed
+        case .encounter: return .bwellBlue
+        case .immunization: return .teal
+        case .labs: return .purple
+        case .medications: return .bwellPurple
+        case .procedure: return .cyan
+        case .vitalSigns: return .pink
+        }
+    }
+}
+
+// BWell.SearchHealthResourcesResults.Result already conforms to Identifiable in the SDK
 
 extension BWell.Gender {
     func description() -> String {

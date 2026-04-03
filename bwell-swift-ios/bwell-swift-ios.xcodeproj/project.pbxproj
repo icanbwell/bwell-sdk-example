@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		007AB91BF22B28E7CA43AA10 /* CareTeamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC27C845D6DF30A787C2078 /* CareTeamsView.swift */; };
+		0123C6216FE92376304BE48A /* FinancialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B2758CC8B45BAD2893B948 /* FinancialView.swift */; };
+		02812FBF19F133A6092AD74B /* LabTrendChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ED2B0C72E76A416E565C5F /* LabTrendChartView.swift */; };
+		050446AE11054CF68CF8890C /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		0697D7299976D4285D482B7B /* ProviderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1BA41ABEE6C0C0775564CE /* ProviderDetailView.swift */; };
+		0815711A62C826FCB6442771 /* VitalSignChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78CF31C1130DC555784AA32 /* VitalSignChartView.swift */; };
+		0B1E6577F61FA55933F7EDDC /* .env in Resources */ = {isa = PBXBuildFile; fileRef = 8C255C3E0751A1B703689C47 /* .env */; };
+		15F57C22DA3AFA1124319D05 /* HealthJourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383A9E34FD6FB51259FCF74 /* HealthJourneyView.swift */; };
+		164E13299D57403692A3B174 /* DevicesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD6F3B0E19212BBD0574994 /* DevicesView.swift */; };
+		1F3F3DDA0BC9AD0FB1DC7EB5 /* ProviderResourcesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B003431C42F0D84098CCA90 /* ProviderResourcesView.swift */; };
+		3F1A88B75738459053BF3FE7 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F1B23C90A1F928F5BE323 /* GoalsView.swift */; };
+		41A6F7F25B5AF8214BF07C58 /* LabDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663EFC82D174C4B0345A9A73 /* LabDetailView.swift */; };
+		4F20F2A007AD4BAA86E1D156 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		519018CFDBBB7FFF7E8E35D3 /* ChartModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A285021D04AC9C727234E87 /* ChartModels.swift */; };
 		5506C1FC2EBD0FC7005842A6 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */; };
 		5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */; };
 		5506C2002EBD14D5005842A6 /* ConnectionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5506C1FF2EBD14D1005842A6 /* ConnectionsModel.swift */; };
@@ -14,9 +28,7 @@
 		5522DC872EAFE10C00F9BCD7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */; };
 		5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */; };
 		5522DC892EAFE10C00F9BCD7 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */; };
-		5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */; };
 		5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCA02EB0168D00F9BCD7 /* RootView.swift */; };
-		5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCA32EB01BEF00F9BCD7 /* Router.swift */; };
 		5522DCAC2EB0380800F9BCD7 /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCAB2EB0380800F9BCD7 /* SideMenuView.swift */; };
 		5522DCAE2EB1083300F9BCD7 /* SideMenuOptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCAD2EB1082500F9BCD7 /* SideMenuOptionModel.swift */; };
 		5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */; };
@@ -31,7 +43,6 @@
 		5551A3A72EC29AEC00394D59 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3A62EC29AE700394D59 /* HomeView.swift */; };
 		5551A3AA2EC390A200394D59 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3A92EC3909A00394D59 /* KeychainService.swift */; };
 		5551A3AC2EC3B8EB00394D59 /* KeychainTokenStorageAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */; };
-		5551A3B02EC3ECC000394D59 /* BWellSDKManager+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */; };
 		5551A3B42EC4023200394D59 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5551A3B32EC4023200394D59 /* HomeViewModel.swift */; };
 		5597E5482EBE561C00A744CD /* WebViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E5472EBE560500A744CD /* WebViewWrapper.swift */; };
 		5597E54A2EBE566700A744CD /* SearchConnectionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5597E5492EBE565C00A744CD /* SearchConnectionsViewModel.swift */; };
@@ -56,7 +67,33 @@
 		55E6257F2EB56871000D3783 /* ManageConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */; };
 		55F2035B2EC4FE42001DA1E8 /* APIKeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */; };
 		55F2035D2EC504E9001DA1E8 /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F2035C2EC504E3001DA1E8 /* LaunchView.swift */; };
-		A264CBC62EE38945000D0AF7 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWellSDK */; };
+		5773978BABAE54CBCFCB4F2B /* BrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC3CFA6C2FDCDF1CC7DBEF6 /* BrowseView.swift */; };
+		6154222D6E6347FDB139A55B /* AccountSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA3BCBE6C653BD3474788C0 /* AccountSettingsView.swift */; };
+		703BA93EAB9D436E0CD71408 /* EnvConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDBC4B1D547AF11E02932452 /* EnvConfig.swift */; };
+		862BE85E6AFD765FBFEEAE82 /* ProviderSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A311AB64720714A008E73A76 /* ProviderSearchViewModel.swift */; };
+		8C8AAC843C19C94F2075130D /* ProviderFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360596043BA7301F2E09D31 /* ProviderFilterView.swift */; };
+		8FB0A27645154D8AB6C45A42 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		93A3D25B00846891FCB7B5D3 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30D940D3989D26EFEE5CB05 /* CustomTextField.swift */; };
+		96E4019877665E4494C6CAC4 /* DocumentReferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A575CBC327F1E1F216F4 /* DocumentReferencesView.swift */; };
+		A14E2445C15960E7C125D08E /* DiagnosticReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D06B19D99FC9884D7F966D9 /* DiagnosticReportsView.swift */; };
+		A264CBC62EE38945000D0AF7 /* BWell in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWell */; };
+		B3DF89A32F7704DE0016498B /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF899E2F7704DE0016498B /* Router.swift */; };
+		B3DF89A42F7704DE0016498B /* SDKManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89992F7704DE0016498B /* SDKManaging.swift */; };
+		B3DF89A52F7704DE0016498B /* SDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89A02F7704DE0016498B /* SDKManager.swift */; };
+		B3DF89A62F7704DE0016498B /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF899A2F7704DE0016498B /* TokenStorage.swift */; };
+		B3DF89A72F7704DE0016498B /* MockTokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF899C2F7704DE0016498B /* MockTokenStorage.swift */; };
+		B3DF89A82F7704DE0016498B /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF899F2F7704DE0016498B /* SDKError.swift */; };
+		B3DF89A92F7704DE0016498B /* SDKState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89A12F7704DE0016498B /* SDKState.swift */; };
+		B4217F8007CD92872CDECBAC /* HealthMatchConsentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E88E6BAF20D73A477C34C68 /* HealthMatchConsentView.swift */; };
+		B8D6B351AC2DE84AAFE78560 /* FinancialViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1CC92CE0DAC58A4004EF33 /* FinancialViewModel.swift */; };
+		BA6B38F73B772488794DA501 /* DeviceRegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737013751605CA366D7EECA8 /* DeviceRegistrationView.swift */; };
+		C04A31EEA2FC61E97382A7BE /* HTMLContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7841617AB4FA1EA47DD7E /* HTMLContentView.swift */; };
+		C1A2394CB4E1BF66EC0FC182 /* TabSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748950E69DC68A16810A0E0 /* TabSelectorView.swift */; };
+		C82BC283BF6703C96282872E /* ProviderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC51A1447ABDF75EFD98618 /* ProviderSearchView.swift */; };
+		E2FF8ACA03774829A3BA4705 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		EAF8AFB635A852A8E02B1A1F /* MedicationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE85E8F93559E78277D9CB2 /* MedicationDetailView.swift */; };
+		EF9E10575C1C84F6B2168278 /* QuestionnaireResponsesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC8578413D28A06CCBDE11B /* QuestionnaireResponsesView.swift */; };
+		FD811D05ACF80E0C78E72407 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34F42E4526447564D806A05 /* MainTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +114,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0441A575CBC327F1E1F216F4 /* DocumentReferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentReferencesView.swift; sourceTree = "<group>"; };
+		06ED2B0C72E76A416E565C5F /* LabTrendChartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LabTrendChartView.swift; sourceTree = "<group>"; };
+		15D7841617AB4FA1EA47DD7E /* HTMLContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLContentView.swift; sourceTree = "<group>"; };
+		1B003431C42F0D84098CCA90 /* ProviderResourcesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProviderResourcesView.swift; sourceTree = "<group>"; };
+		1D7F1B23C90A1F928F5BE323 /* GoalsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
+		2BC3CFA6C2FDCDF1CC7DBEF6 /* BrowseView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrowseView.swift; sourceTree = "<group>"; };
+		2BD6F3B0E19212BBD0574994 /* DevicesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DevicesView.swift; sourceTree = "<group>"; };
+		2FC8578413D28A06CCBDE11B /* QuestionnaireResponsesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuestionnaireResponsesView.swift; sourceTree = "<group>"; };
+		3AA3BCBE6C653BD3474788C0 /* AccountSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccountSettingsView.swift; sourceTree = "<group>"; };
 		5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsView.swift; sourceTree = "<group>"; };
 		5506C1FF2EBD14D1005842A6 /* ConnectionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsModel.swift; sourceTree = "<group>"; };
@@ -88,9 +134,7 @@
 		5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bwell_swift_ios.entitlements; sourceTree = "<group>"; };
 		5522DC842EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bwell_swift_iosApp.swift; sourceTree = "<group>"; };
 		5522DC852EAFE10C00F9BCD7 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
-		5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BWellSDKManager.swift; sourceTree = "<group>"; };
 		5522DCA02EB0168D00F9BCD7 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		5522DCA32EB01BEF00F9BCD7 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		5522DCAB2EB0380800F9BCD7 /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
 		5522DCAD2EB1082500F9BCD7 /* SideMenuOptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuOptionModel.swift; sourceTree = "<group>"; };
 		5522DCB02EB11FB100F9BCD7 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -105,7 +149,6 @@
 		5551A3A62EC29AE700394D59 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		5551A3A92EC3909A00394D59 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		5551A3AB2EC3B8E300394D59 /* KeychainTokenStorageAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStorageAdapter.swift; sourceTree = "<group>"; };
-		5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BWellSDKManager+Helpers.swift"; sourceTree = "<group>"; };
 		5551A3B32EC4023200394D59 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		557D68922EC5542F0089DCC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5597E5472EBE560500A744CD /* WebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewWrapper.swift; sourceTree = "<group>"; };
@@ -131,6 +174,33 @@
 		55E6257E2EB5686B000D3783 /* ManageConnectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageConnectionsView.swift; sourceTree = "<group>"; };
 		55F2035A2EC4FE3A001DA1E8 /* APIKeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyService.swift; sourceTree = "<group>"; };
 		55F2035C2EC504E3001DA1E8 /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
+		5A285021D04AC9C727234E87 /* ChartModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChartModels.swift; sourceTree = "<group>"; };
+		5D06B19D99FC9884D7F966D9 /* DiagnosticReportsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DiagnosticReportsView.swift; sourceTree = "<group>"; };
+		663EFC82D174C4B0345A9A73 /* LabDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabDetailView.swift; sourceTree = "<group>"; };
+		6E88E6BAF20D73A477C34C68 /* HealthMatchConsentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthMatchConsentView.swift; sourceTree = "<group>"; };
+		737013751605CA366D7EECA8 /* DeviceRegistrationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeviceRegistrationView.swift; sourceTree = "<group>"; };
+		8C255C3E0751A1B703689C47 /* .env */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = .env; sourceTree = "<group>"; };
+		A30D940D3989D26EFEE5CB05 /* CustomTextField.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
+		A311AB64720714A008E73A76 /* ProviderSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderSearchViewModel.swift; sourceTree = "<group>"; };
+		A78CF31C1130DC555784AA32 /* VitalSignChartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VitalSignChartView.swift; sourceTree = "<group>"; };
+		B3DF89992F7704DE0016498B /* SDKManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKManaging.swift; sourceTree = "<group>"; };
+		B3DF899A2F7704DE0016498B /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
+		B3DF899C2F7704DE0016498B /* MockTokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTokenStorage.swift; sourceTree = "<group>"; };
+		B3DF899E2F7704DE0016498B /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		B3DF899F2F7704DE0016498B /* SDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKError.swift; sourceTree = "<group>"; };
+		B3DF89A02F7704DE0016498B /* SDKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKManager.swift; sourceTree = "<group>"; };
+		B3DF89A12F7704DE0016498B /* SDKState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKState.swift; sourceTree = "<group>"; };
+		C360596043BA7301F2E09D31 /* ProviderFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderFilterView.swift; sourceTree = "<group>"; };
+		DAE85E8F93559E78277D9CB2 /* MedicationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDetailView.swift; sourceTree = "<group>"; };
+		DD1CC92CE0DAC58A4004EF33 /* FinancialViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialViewModel.swift; sourceTree = "<group>"; };
+		DFC27C845D6DF30A787C2078 /* CareTeamsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareTeamsView.swift; sourceTree = "<group>"; };
+		DFC51A1447ABDF75EFD98618 /* ProviderSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderSearchView.swift; sourceTree = "<group>"; };
+		E34F42E4526447564D806A05 /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		E748950E69DC68A16810A0E0 /* TabSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSelectorView.swift; sourceTree = "<group>"; };
+		EDBC4B1D547AF11E02932452 /* EnvConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnvConfig.swift; sourceTree = "<group>"; };
+		F0B2758CC8B45BAD2893B948 /* FinancialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialView.swift; sourceTree = "<group>"; };
+		F383A9E34FD6FB51259FCF74 /* HealthJourneyView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthJourneyView.swift; sourceTree = "<group>"; };
+		FD1BA41ABEE6C0C0775564CE /* ProviderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A264CBC62EE38945000D0AF7 /* BWellSDK in Frameworks */,
+				A264CBC62EE38945000D0AF7 /* BWell in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,11 +229,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		19B4A74F8A7E7DE17424C4E6 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				E34F42E4526447564D806A05 /* MainTabView.swift */,
+				2BC3CFA6C2FDCDF1CC7DBEF6 /* BrowseView.swift */,
+			);
+			name = Navigation;
+			path = Navigation;
+			sourceTree = "<group>";
+		};
 		551538712EB25C6A001174F9 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 				55E625682EB42B5A000D3783 /* Views */,
 				551538722EB25C79001174F9 /* ProfileViewModel.swift */,
+				3AA3BCBE6C653BD3474788C0 /* AccountSettingsView.swift */,
+				737013751605CA366D7EECA8 /* DeviceRegistrationView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -189,6 +271,9 @@
 		5522DC862EAFE10C00F9BCD7 /* bwell-swift-ios */ = {
 			isa = PBXGroup;
 			children = (
+				7324F0841396804F30753EF9 /* ProviderSearch */,
+				7A987F769E419FB7A583D45F /* Financial */,
+				B3DF89A22F7704DE0016498B /* Core */,
 				5551A3B52EC4023900394D59 /* Home */,
 				5597E5462EBE55FC00A744CD /* SearchConnections */,
 				55E6257B2EB56858000D3783 /* ManageConnections */,
@@ -203,6 +288,10 @@
 				5522DC822EAFE10C00F9BCD7 /* Assets.xcassets */,
 				557D68922EC5542F0089DCC0 /* Info.plist */,
 				5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */,
+				B09A394862D861F54FE5C1CB /* Charts */,
+				19B4A74F8A7E7DE17424C4E6 /* Navigation */,
+				CED71E630AA3942A347C7633 /* Views */,
+				8C255C3E0751A1B703689C47 /* .env */,
 			);
 			path = "bwell-swift-ios";
 			sourceTree = "<group>";
@@ -210,14 +299,16 @@
 		5522DCA72EB032BB00F9BCD7 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				E748950E69DC68A16810A0E0 /* TabSelectorView.swift */,
+				15D7841617AB4FA1EA47DD7E /* HTMLContentView.swift */,
 				55F2035C2EC504E3001DA1E8 /* LaunchView.swift */,
-				5522DCA32EB01BEF00F9BCD7 /* Router.swift */,
 				5522DCA02EB0168D00F9BCD7 /* RootView.swift */,
 				55E625772EB54362000D3783 /* BWellWrapper.swift */,
 				5522DCB62EB1531400F9BCD7 /* BWellNavigationBar.swift */,
 				55E625642EB34782000D3783 /* Extensions.swift */,
 				5551A3A32EC296B400394D59 /* Localizables */,
 				55E625632EB34775000D3783 /* ReusableViews */,
+				A30D940D3989D26EFEE5CB05 /* CustomTextField.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -290,8 +381,6 @@
 		5551A3AE2EC3ECA700394D59 /* SDKManager */ = {
 			isa = PBXGroup;
 			children = (
-				5551A3AF2EC3ECB200394D59 /* BWellSDKManager+Helpers.swift */,
-				5522DC952EAFE5D800F9BCD7 /* BWellSDKManager.swift */,
 			);
 			path = SDKManager;
 			sourceTree = "<group>";
@@ -301,6 +390,7 @@
 			children = (
 				5551A3A62EC29AE700394D59 /* HomeView.swift */,
 				5551A3B32EC4023200394D59 /* HomeViewModel.swift */,
+				6E88E6BAF20D73A477C34C68 /* HealthMatchConsentView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -355,6 +445,10 @@
 		55E625692EB42B88000D3783 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				663EFC82D174C4B0345A9A73 /* LabDetailView.swift */,
+				DAE85E8F93559E78277D9CB2 /* MedicationDetailView.swift */,
+				DFC27C845D6DF30A787C2078 /* CareTeamsView.swift */,
+				0441A575CBC327F1E1F216F4 /* DocumentReferencesView.swift */,
 				5522DCBB2EB161FA00F9BCD7 /* HealthSummaryView.swift */,
 				55E6256B2EB42BB4000D3783 /* AllergyIntolerancesView.swift */,
 				55E625712EB44B71000D3783 /* CarePlansView.swift */,
@@ -365,6 +459,12 @@
 				55D5DF872EB9459E00D71D99 /* ProceduresView.swift */,
 				55D5DF892EB945A700D71D99 /* VitalSignsView.swift */,
 				55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */,
+				1B003431C42F0D84098CCA90 /* ProviderResourcesView.swift */,
+				F383A9E34FD6FB51259FCF74 /* HealthJourneyView.swift */,
+				5D06B19D99FC9884D7F966D9 /* DiagnosticReportsView.swift */,
+				1D7F1B23C90A1F928F5BE323 /* GoalsView.swift */,
+				2FC8578413D28A06CCBDE11B /* QuestionnaireResponsesView.swift */,
+				2BD6F3B0E19212BBD0574994 /* DevicesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -387,6 +487,76 @@
 			path = ManageConnections;
 			sourceTree = "<group>";
 		};
+		7324F0841396804F30753EF9 /* ProviderSearch */ = {
+			isa = PBXGroup;
+			children = (
+				DFC51A1447ABDF75EFD98618 /* ProviderSearchView.swift */,
+				A311AB64720714A008E73A76 /* ProviderSearchViewModel.swift */,
+				FD1BA41ABEE6C0C0775564CE /* ProviderDetailView.swift */,
+				C360596043BA7301F2E09D31 /* ProviderFilterView.swift */,
+			);
+			path = ProviderSearch;
+			sourceTree = "<group>";
+		};
+		7A987F769E419FB7A583D45F /* Financial */ = {
+			isa = PBXGroup;
+			children = (
+				F0B2758CC8B45BAD2893B948 /* FinancialView.swift */,
+				DD1CC92CE0DAC58A4004EF33 /* FinancialViewModel.swift */,
+			);
+			path = Financial;
+			sourceTree = "<group>";
+		};
+		B09A394862D861F54FE5C1CB /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				5A285021D04AC9C727234E87 /* ChartModels.swift */,
+				06ED2B0C72E76A416E565C5F /* LabTrendChartView.swift */,
+				A78CF31C1130DC555784AA32 /* VitalSignChartView.swift */,
+			);
+			name = Charts;
+			path = Charts;
+			sourceTree = "<group>";
+		};
+		B3DF899B2F7704DE0016498B /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				B3DF89992F7704DE0016498B /* SDKManaging.swift */,
+				B3DF899A2F7704DE0016498B /* TokenStorage.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		B3DF899D2F7704DE0016498B /* Testing */ = {
+			isa = PBXGroup;
+			children = (
+				B3DF899C2F7704DE0016498B /* MockTokenStorage.swift */,
+			);
+			path = Testing;
+			sourceTree = "<group>";
+		};
+		B3DF89A22F7704DE0016498B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				B3DF899B2F7704DE0016498B /* Protocols */,
+				B3DF899D2F7704DE0016498B /* Testing */,
+				B3DF899E2F7704DE0016498B /* Router.swift */,
+				B3DF899F2F7704DE0016498B /* SDKError.swift */,
+				B3DF89A02F7704DE0016498B /* SDKManager.swift */,
+				B3DF89A12F7704DE0016498B /* SDKState.swift */,
+				EDBC4B1D547AF11E02932452 /* EnvConfig.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		CED71E630AA3942A347C7633 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			path = Views;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -404,7 +574,7 @@
 			);
 			name = "bwell-swift-ios";
 			packageProductDependencies = (
-				A264CBC52EE38945000D0AF7 /* BWellSDK */,
+				A264CBC52EE38945000D0AF7 /* BWell */,
 			);
 			productName = "bwell-swift-ios";
 			productReference = 5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */;
@@ -424,8 +594,6 @@
 				5522DC672EAFE0FF00F9BCD7 /* PBXTargetDependency */,
 			);
 			name = "bwell-swift-iosTests";
-			packageProductDependencies = (
-			);
 			productName = "bwell-swift-iosTests";
 			productReference = 5522DC652EAFE0FF00F9BCD7 /* bwell-swift-iosTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -444,8 +612,6 @@
 				5522DC712EAFE0FF00F9BCD7 /* PBXTargetDependency */,
 			);
 			name = "bwell-swift-iosUITests";
-			packageProductDependencies = (
-			);
 			productName = "bwell-swift-iosUITests";
 			productReference = 5522DC6F2EAFE0FF00F9BCD7 /* bwell-swift-iosUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -458,7 +624,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					5522DC562EAFE0FD00F9BCD7 = {
 						CreatedOnToolsVersion = 16.4;
@@ -483,7 +649,7 @@
 			mainGroup = 5522DC4E2EAFE0FD00F9BCD7;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A264CBC42EE38945000D0AF7 /* XCLocalSwiftPackageReference "../../bwell-sdk/bwell-sdk-swift" */,
+				A264CBC42EE38945000D0AF7 /* XCLocalSwiftPackageReference "bwell-sdk-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5522DC582EAFE0FD00F9BCD7 /* Products */;
@@ -505,6 +671,7 @@
 				5506C1FC2EBD0FC7005842A6 /* Localizable.xcstrings in Resources */,
 				5522DC872EAFE10C00F9BCD7 /* Assets.xcassets in Resources */,
 				5551A3A52EC296E600394D59 /* Home.xcstrings in Resources */,
+				0B1E6577F61FA55933F7EDDC /* .env in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,16 +696,39 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04A31EEA2FC61E97382A7BE /* HTMLContentView.swift in Sources */,
+				C1A2394CB4E1BF66EC0FC182 /* TabSelectorView.swift in Sources */,
+				C82BC283BF6703C96282872E /* ProviderSearchView.swift in Sources */,
+				862BE85E6AFD765FBFEEAE82 /* ProviderSearchViewModel.swift in Sources */,
+				0697D7299976D4285D482B7B /* ProviderDetailView.swift in Sources */,
+				8C8AAC843C19C94F2075130D /* ProviderFilterView.swift in Sources */,
+				0123C6216FE92376304BE48A /* FinancialView.swift in Sources */,
+				B8D6B351AC2DE84AAFE78560 /* FinancialViewModel.swift in Sources */,
+				41A6F7F25B5AF8214BF07C58 /* LabDetailView.swift in Sources */,
+				EAF8AFB635A852A8E02B1A1F /* MedicationDetailView.swift in Sources */,
+				007AB91BF22B28E7CA43AA10 /* CareTeamsView.swift in Sources */,
+				96E4019877665E4494C6CAC4 /* DocumentReferencesView.swift in Sources */,
+				B4217F8007CD92872CDECBAC /* HealthMatchConsentView.swift in Sources */,
 				5548A09D2EBEB13800C0ACF5 /* SearchConnectionDisclaimerView.swift in Sources */,
 				55F2035D2EC504E9001DA1E8 /* LaunchView.swift in Sources */,
 				55E6256C2EB42BB4000D3783 /* AllergyIntolerancesView.swift in Sources */,
 				5522DCB32EB1314300F9BCD7 /* AuthenticationTextField.swift in Sources */,
 				55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */,
+				B3DF89A32F7704DE0016498B /* Router.swift in Sources */,
+				4F20F2A007AD4BAA86E1D156 /* BuildFile in Sources */,
+				8FB0A27645154D8AB6C45A42 /* BuildFile in Sources */,
+				E2FF8ACA03774829A3BA4705 /* BuildFile in Sources */,
+				050446AE11054CF68CF8890C /* BuildFile in Sources */,
+				B3DF89A42F7704DE0016498B /* SDKManaging.swift in Sources */,
+				B3DF89A52F7704DE0016498B /* SDKManager.swift in Sources */,
+				B3DF89A62F7704DE0016498B /* TokenStorage.swift in Sources */,
+				B3DF89A72F7704DE0016498B /* MockTokenStorage.swift in Sources */,
+				B3DF89A82F7704DE0016498B /* SDKError.swift in Sources */,
+				B3DF89A92F7704DE0016498B /* SDKState.swift in Sources */,
 				5506C2002EBD14D5005842A6 /* ConnectionsModel.swift in Sources */,
 				5522DCBC2EB161FF00F9BCD7 /* HealthSummaryView.swift in Sources */,
 				5522DCC32EB2388A00F9BCD7 /* HealthDataSummaryModel.swift in Sources */,
 				55DEF6072EC6FDA700C8DB85 /* HealthDataListView.swift in Sources */,
-				5522DCA42EB01BF200F9BCD7 /* Router.swift in Sources */,
 				5597E5482EBE561C00A744CD /* WebViewWrapper.swift in Sources */,
 				55D5DF882EB945A300D71D99 /* ProceduresView.swift in Sources */,
 				55D5DF822EB933BD00D71D99 /* ImmunizationsView.swift in Sources */,
@@ -548,7 +738,6 @@
 				5522DCB52EB1320D00F9BCD7 /* BWellButton.swift in Sources */,
 				5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */,
 				55E625782EB54376000D3783 /* BWellWrapper.swift in Sources */,
-				5551A3B02EC3ECC000394D59 /* BWellSDKManager+Helpers.swift in Sources */,
 				55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */,
 				5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */,
 				55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */,
@@ -557,7 +746,6 @@
 				55D5DF8C2EB9813700D71D99 /* EncountersView.swift in Sources */,
 				55E6257F2EB56871000D3783 /* ManageConnectionsView.swift in Sources */,
 				5522DCBA2EB161F600F9BCD7 /* HealthSummaryViewModel.swift in Sources */,
-				5522DC962EAFE5E400F9BCD7 /* BWellSDKManager.swift in Sources */,
 				5522DC882EAFE10C00F9BCD7 /* bwell_swift_iosApp.swift in Sources */,
 				55E6257D2EB56867000D3783 /* ManageConnectionsViewModel.swift in Sources */,
 				5522DCA12EB0168D00F9BCD7 /* RootView.swift in Sources */,
@@ -575,6 +763,21 @@
 				55D5DF842EB9458E00D71D99 /* LabsView.swift in Sources */,
 				5522DCB72EB1532000F9BCD7 /* BWellNavigationBar.swift in Sources */,
 				5551A3A72EC29AEC00394D59 /* HomeView.swift in Sources */,
+				519018CFDBBB7FFF7E8E35D3 /* ChartModels.swift in Sources */,
+				02812FBF19F133A6092AD74B /* LabTrendChartView.swift in Sources */,
+				0815711A62C826FCB6442771 /* VitalSignChartView.swift in Sources */,
+				703BA93EAB9D436E0CD71408 /* EnvConfig.swift in Sources */,
+				1F3F3DDA0BC9AD0FB1DC7EB5 /* ProviderResourcesView.swift in Sources */,
+				15F57C22DA3AFA1124319D05 /* HealthJourneyView.swift in Sources */,
+				A14E2445C15960E7C125D08E /* DiagnosticReportsView.swift in Sources */,
+				3F1A88B75738459053BF3FE7 /* GoalsView.swift in Sources */,
+				EF9E10575C1C84F6B2168278 /* QuestionnaireResponsesView.swift in Sources */,
+				164E13299D57403692A3B174 /* DevicesView.swift in Sources */,
+				FD811D05ACF80E0C78E72407 /* MainTabView.swift in Sources */,
+				5773978BABAE54CBCFCB4F2B /* BrowseView.swift in Sources */,
+				93A3D25B00846891FCB7B5D3 /* CustomTextField.swift in Sources */,
+				6154222D6E6347FDB139A55B /* AccountSettingsView.swift in Sources */,
+				BA6B38F73B772488794DA501 /* DeviceRegistrationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,6 +845,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -664,6 +868,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -704,6 +909,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -719,6 +925,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
@@ -732,6 +939,7 @@
 				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 93US676C37;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -772,6 +980,7 @@
 				CODE_SIGN_ENTITLEMENTS = "bwell-swift-ios/bwell_swift_ios.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 93US676C37;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -810,6 +1019,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -832,6 +1042,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -853,6 +1064,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -874,6 +1086,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -932,16 +1145,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A264CBC42EE38945000D0AF7 /* XCLocalSwiftPackageReference "../../bwell-sdk/bwell-sdk-swift" */ = {
+		A264CBC42EE38945000D0AF7 /* XCLocalSwiftPackageReference "bwell-sdk-swift" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../bwell-sdk/bwell-sdk-swift";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A264CBC52EE38945000D0AF7 /* BWellSDK */ = {
+		A264CBC52EE38945000D0AF7 /* BWell */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = BWellSDK;
+			productName = BWell;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

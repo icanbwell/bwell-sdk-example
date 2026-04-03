@@ -5,11 +5,10 @@
 //  Created by Ivan Villanueva on 31/10/25.
 //
 import Foundation
-import BWellSDK
+import BWell
 
 @MainActor
 final class ManageConnectionsViewModel: ObservableObject {
-    private var sdkManager: BWellSDKManager?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
 
@@ -17,22 +16,12 @@ final class ManageConnectionsViewModel: ObservableObject {
 
     @Published var url: URL?
 
-    init() {
-        self.sdkManager = .shared
-    }
-
-    func getConnections() async {
+    func getConnections(sdk: BWellSDK) async {
         isLoading = true
         errorMessage = nil  // Clear previous errors
 
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available."
-                isLoading = false
-                return
-            }
-
-            memberConnections = try await sdkManager.connection().getMemberConnections()
+            memberConnections = try await sdk.connection.getMemberConnections()
 
             print("ALL MEMBER CONNECTIONS: \(memberConnections)")
 
@@ -45,25 +34,21 @@ final class ManageConnectionsViewModel: ObservableObject {
     }
 
     /// Deletes a connection and refreshes the connections list
-    /// - Parameter connectionId: The ID of the connection to delete
-    func deleteConnection(connectionId: String) async {
+    /// - Parameters:
+    ///   - connectionId: The ID of the connection to delete
+    ///   - sdk: The BWellSDK instance to use
+    func deleteConnection(connectionId: String, sdk: BWellSDK) async {
         isLoading = true
         errorMessage = nil
 
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available."
-                isLoading = false
-                return
-            }
-
             let request = BWell.DeleteConnectionRequest(connectionId: connectionId)
-            let result = try await sdkManager.connection().deleteConnection(request)
+            let result = try await sdk.connection.deleteConnection(request)
 
             print("Delete connection result - status: \(String(describing: result.status)), updated: \(result.statusUpdated)")
 
             // Refresh connections list after successful deletion
-            await getConnections()
+            await getConnections(sdk: sdk)
         } catch {
             errorMessage = "Failed to delete connection: \(error.localizedDescription)"
             isLoading = false
@@ -71,59 +56,44 @@ final class ManageConnectionsViewModel: ObservableObject {
     }
 
     /// Disconnects a connection and refreshes the connections list
-    /// - Parameter connectionId: The ID of the connection to disconnect
-    func disconnectConnection(connectionId: String) async {
+    /// - Parameters:
+    ///   - connectionId: The ID of the connection to disconnect
+    ///   - sdk: The BWellSDK instance to use
+    func disconnectConnection(connectionId: String, sdk: BWellSDK) async {
         isLoading = true
         errorMessage = nil
 
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available."
-                isLoading = false
-                return
-            }
-
             let request = BWell.DisconnectConnectionRequest(connectionId: connectionId)
-            let result = try await sdkManager.connection().disconnectConnection(request)
+            let result = try await sdk.connection.disconnectConnection(request)
 
             print("Disconnect connection result - status: \(String(describing: result.status)), updated: \(result.statusUpdated)")
 
             // Refresh connections list after successful disconnection
-            await getConnections()
+            await getConnections(sdk: sdk)
         } catch {
             errorMessage = "Failed to disconnect connection: \(error.localizedDescription)"
             isLoading = false
         }
     }
 
-    func createConnection(username: String, password: String, connectionId: String = "proa_demo") async {
+    func createConnection(username: String, password: String, connectionId: String = "proa_demo", sdk: BWellSDK) async {
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available"
-                isLoading = false
-                return
-            }
             let request = BWell.CreateConnectionRequest(connectionId: connectionId,
                                                         username: username,
                                                         password: password)
-            _ = try await sdkManager.connection().createConnection(request)
+            _ = try await sdk.connection.createConnection(request)
         } catch {
             errorMessage = "Failed to established a connection."
             return
         }
     }
 
-    func getDataSourceConnections() async {
+    func getDataSourceConnections(sdk: BWellSDK) async {
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available"
-                isLoading = false
-                return
-            }
-
             let request = BWell.DataSourceRequest(connectionId: "proa_demo")
 
-            let response = try await sdkManager.connection().getDataSource(request)
+            let response = try await sdk.connection.getDataSource(request)
             print("ALL DATA SOURCE CONNECTIONS: \(response)")
 
             /*for connection in response {
@@ -135,16 +105,10 @@ final class ManageConnectionsViewModel: ObservableObject {
         }
     }
 
-    func getOAuthURL(search userRequest: String) async {
+    func getOAuthURL(search userRequest: String, sdk: BWellSDK) async {
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available"
-                isLoading = false
-                return
-            }
-
             let request = BWell.OAuthURLRequest(connectionId: userRequest)
-            let response = try await sdkManager.connection().getOAuthURL(request)
+            let response = try await sdk.connection.getOAuthURL(request)
 
             url = URL(string: response.redirectURL)
         } catch {

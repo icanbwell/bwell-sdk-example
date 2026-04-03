@@ -11,6 +11,7 @@ struct AuthenticationView: View {
     @StateObject private var viewModel = AuthenticationViewModel()
     @StateObject private var connectionsViewModel = ManageConnectionsViewModel()
     @EnvironmentObject var router: NavigationRouter
+    @EnvironmentObject var sdkManager: SDKManager
     @State private var authWithToken: Bool = false
 
     var body: some View {
@@ -39,6 +40,17 @@ struct AuthenticationView: View {
             .frame(height: 350)
             .padding(.horizontal)
         }
+        .onAppear {
+            viewModel.autoLoginIfDebug(sdkManager: sdkManager)
+        }
+        .onChange(of: sdkManager.state) { _, newState in
+            viewModel.handleSDKStateChange(newState)
+            #if DEBUG
+            if case .initialized = newState, AuthenticationViewModel.autoLogin {
+                viewModel.autoAuthenticateIfDebug(sdkManager: sdkManager)
+            }
+            #endif
+        }
     }
 
     // MARK: - API Key authentication view
@@ -59,7 +71,7 @@ struct AuthenticationView: View {
             .padding(.bottom)
 
             BWellButton(title: "Submit") {
-                viewModel.initializeSDK()
+                viewModel.initializeSDK(sdkManager: sdkManager)
             }.disabled(viewModel.isLoading)
         }
     }
@@ -123,7 +135,9 @@ struct AuthenticationView: View {
 
 
             BWellButton(title: "Login") {
-                authWithToken ? viewModel.loginWithOAuthToken() : viewModel.loginWithUsernameAndPassword()
+                authWithToken
+                    ? viewModel.loginWithOAuthToken(sdkManager: sdkManager)
+                    : viewModel.loginWithUsernameAndPassword(sdkManager: sdkManager)
             }.disabled(viewModel.isLoading)
 
             HStack(spacing: 5) {
@@ -166,4 +180,5 @@ struct AuthenticationView: View {
 #Preview {
     AuthenticationView()
         .environmentObject(NavigationRouter())
+        .environmentObject(SDKManager())
 }

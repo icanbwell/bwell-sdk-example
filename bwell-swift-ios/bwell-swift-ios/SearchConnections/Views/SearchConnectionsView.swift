@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SearchConnectionsView: View {
     @Environment(\.dismissSearch) private var dismissSearch
-    @EnvironmentObject private var router: NavigationRouter
-    @EnvironmentObject private var sdkManager: BWellSDKManager
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var sdkManager: SDKManager
 
     @ObservedObject private var viewModel = SearchConnectionsViewModel()
     @ObservedObject private var manageConnectionsViewModel = ManageConnectionsViewModel()
@@ -45,7 +45,8 @@ struct SearchConnectionsView: View {
         .submitLabel(.search)
         .onSubmit(of: .search) {
             Task {
-                await viewModel.searchHealthResources(searchedText: searchedText)
+                guard let sdk = sdkManager.sdk else { return }
+                await viewModel.searchHealthResources(searchedText: searchedText, sdk: sdk)
             }
             dismissSearch()
         }
@@ -55,7 +56,8 @@ struct SearchConnectionsView: View {
                     if let title = resource.content {
                         SearchConnectionDisclaimerView(resourceTitle: title) {
                             Task {
-                                await manageConnectionsViewModel.getOAuthURL(search: resource.endpoint?.first?.name ?? "proa_demo")
+                                guard let sdk = sdkManager.sdk else { return }
+                                await manageConnectionsViewModel.getOAuthURL(search: resource.endpoint?.first?.name ?? "proa_demo", sdk: sdk)
                             }
                         }
                         .presentationDetents([.medium])
@@ -83,7 +85,7 @@ struct SearchConnectionsView: View {
         }
         .onChange(of: showOnSuccessMessage) { _, newValue in
             if !newValue {
-                router.navigateAndReplace(to: .manageConnections)
+                dismiss()
             }
         }
     }
@@ -134,6 +136,5 @@ private struct ListItem: View {
 
 #Preview {
     SearchConnectionsView(connection: .clinics)
-        .environmentObject(BWellSDKManager.shared)
         .environmentObject(NavigationRouter())
 }

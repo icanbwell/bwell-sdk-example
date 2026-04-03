@@ -7,13 +7,11 @@
 
 import Foundation
 import SwiftUI
-import BWellSDK
+import BWell
 
 struct ManageConnectionsView: View {
-    @EnvironmentObject private var router: NavigationRouter
-    @EnvironmentObject private var sdkManager: BWellSDKManager
+    @EnvironmentObject private var sdkManager: SDKManager
     @ObservedObject private var viewModel = ManageConnectionsViewModel()
-    @Binding var showMenu: Bool
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -46,12 +44,14 @@ struct ManageConnectionsView: View {
                                 connection: connection,
                                 onDelete: {
                                     Task {
-                                        await viewModel.deleteConnection(connectionId: connection.id)
+                                        guard let sdk = sdkManager.sdk else { return }
+                                        await viewModel.deleteConnection(connectionId: connection.id, sdk: sdk)
                                     }
                                 },
                                 onDisconnect: {
                                     Task {
-                                        await viewModel.disconnectConnection(connectionId: connection.id)
+                                        guard let sdk = sdkManager.sdk else { return }
+                                        await viewModel.disconnectConnection(connectionId: connection.id, sdk: sdk)
                                     }
                                 }
                             )
@@ -66,16 +66,22 @@ struct ManageConnectionsView: View {
             }
         }
         .padding()
-        .bwellNavigationBar(showMenu: $showMenu, navigationTitle: "Manage Connections") {
-            Button {
-                router.navigate(to: .connections)
-            } label: {
-                Image(systemName: "plus")
+        .navigationTitle("Manage Connections")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        .toolbarBackground(.bwellPurple, for: .navigationBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink(value: AppView.connections) {
+                    Image(systemName: "plus")
+                }
             }
         }
         .task {
             if viewModel.memberConnections.isEmpty {
-                await viewModel.getConnections()
+                guard let sdk = sdkManager.sdk else { return }
+                await viewModel.getConnections(sdk: sdk)
             }
         }
     }
@@ -187,8 +193,9 @@ private struct ListItem: View {
 }
 
 #Preview {
-    ManageConnectionsView(showMenu: .constant(false))
-        .environmentObject(BWellSDKManager.shared)
-        .environmentObject(NavigationRouter())
-        .environmentObject(SideMenuOptionViewModel())
+    NavigationStack {
+        ManageConnectionsView()
+    }
+    .environmentObject(NavigationRouter())
+    .environmentObject(SDKManager())
 }

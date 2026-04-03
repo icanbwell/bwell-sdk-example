@@ -7,27 +7,55 @@
 
 import Foundation
 import SwiftUI
+import BWell
 
+// NOTE: Backend inconsistency — health summary reports 2 care plans, groups API returns 0,
+// but direct getCarePlans() returns 5. The fallback to direct fetch below works around this.
+// This is a known backend issue, not a client bug.
 struct CarePlansView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
-    @EnvironmentObject private var router: NavigationRouter
+    @EnvironmentObject private var sdkManager: SDKManager
+    @State private var useDirectFetch = false
 
     var body: some View {
-        HealthDataGroupListView(
-            groups: viewModel.carePlanGroups,
-            id: \.id,
-            fetch: {
-                await viewModel.getCarePlanGroups()
-            }, rowContent: { group in
-                return .init(title: group.name, date: group.period?.start?.dateFormatter())
-            }, onSelect: { group in
-                if let id = group.id, let coding = group.coding {
-                    let groupCode = BWellHealthDataWrapper(id, coding)
-
-                    router.navigate(to: .healthGroupItems(category: .carePlan, groupCode: groupCode))
-                }
+        Group {
+            if useDirectFetch {
+                // Fallback: fetch all care plans directly (no groups available)
+                HealthDataGroupItemsView(
+                    id: \BWell.CarePlan.id,
+                    rowContent: { (carePlan: BWell.CarePlan) in
+                        .init(title: carePlan.title,
+                              subtitle: carePlan.category?.first?.coding?.first?.display,
+                              date: carePlan.period?.start,
+                              value: carePlan.status?.capitalizingFirstLetter())
+                    }, fetch: {
+                        guard let sdk = sdkManager.sdk else { return [] }
+                        return await viewModel.fetchAllCarePlans(sdk: sdk)
+                    }, detailView: { entry in
+                        CarePlanInlineDetail(carePlan: entry)
+                    }
+                )
+            } else {
+                HealthDataGroupListView(
+                    groups: viewModel.carePlanGroups,
+                    id: \.id,
+                    fetch: {
+                        guard let sdk = sdkManager.sdk else { return }
+                        await viewModel.getCarePlanGroups(sdk: sdk)
+                        // If groups are empty, switch to direct fetch
+                        if viewModel.carePlanGroups.isEmpty {
+                            useDirectFetch = true
+                        }
+                    }, rowContent: { group in
+                        .init(title: group.name, date: group.period?.start)
+                    }, destination: { group in
+                        guard let id = group.id, let coding = group.coding else { return nil }
+                        return .healthGroupItems(category: .carePlan, groupCode: BWellHealthDataWrapper(id, coding))
+                    }
+                )
             }
-        ).navigationTitle("Care Plans")
+        }
+        .navigationTitle("Care Plans")
     }
 }
 
@@ -36,25 +64,65 @@ struct CarePlanSheetView: View {
     var carePlan: BWellWrapper.carePlan
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(carePlan.title ?? "Title unavailable")
-                .font(.headline)
-                .fontWeight(.medium)
-                .padding(.vertical, 20)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
+                Text(carePlan.title ?? "Care Plan")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .padding(.top, 16)
 
-            VStack(alignment: .leading, spacing: 5) {
-                DetailedItemView(title: "Plan created in: ", content: carePlan.created?.dateFormatter())
-                DetailedItemView(title: "Plan start date: ", content: carePlan.period?.start?.dateFormatter())
-                DetailedItemView(title: "Plan end date: ", content: carePlan.period?.end?.dateFormatter())
-            }.padding(.bottom, 10)
+                if let status = carePlan.status {
+                    CarePlanStatusBadge(status: status)
+                }
 
-            DetailedItemView(title: "Description: ", content: carePlan.description ?? "")
-            DetailedItemView(display: .vertically, title: "Summary: ", content: carePlan.text?.div?.stripHTML())
+                Divider()
 
-            Spacer()
+                if let start = carePlan.period?.start {
+                    DetailedItemView(title: "Start date: ", content: start.dateFormatter())
+                }
+                if let end = carePlan.period?.end {
+                    DetailedItemView(title: "End date: ", content: end.dateFormatter())
+                }
+                if let created = carePlan.created {
+                    DetailedItemView(title: "Created: ", content: created.dateFormatter())
+                }
+
+                DetailedItemView(title: "Category: ", content: carePlan.category?.first?.coding?.first?.display)
+
+                if let description = carePlan.description, !description.isEmpty {
+                    Divider()
+                    Text("Description")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Text(description)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .padding(.horizontal)
         }
-        .padding()
-        .presentationDragIndicator(.visible)
-        .presentationDetents([.medium])
+    }
+}
+
+private struct CarePlanStatusBadge: View {
+    let status: String
+    var body: some View {
+        Text(status.capitalizingFirstLetter())
+            .font(.caption)
+            .fontWeight(.medium)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(statusColor.opacity(0.15))
+            .foregroundStyle(statusColor)
+            .clipShape(Capsule())
+    }
+
+    private var statusColor: Color {
+        switch status.lowercased() {
+        case "active": return .green
+        case "completed": return .blue
+        case "revoked", "cancelled": return .red
+        default: return .gray
+        }
     }
 }

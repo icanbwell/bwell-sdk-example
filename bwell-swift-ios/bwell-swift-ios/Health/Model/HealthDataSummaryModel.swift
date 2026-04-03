@@ -6,7 +6,7 @@
 //
 import Foundation
 import SwiftUI
-import BWellSDK
+import BWell
 
 enum HealthDataSummaryModel: Int, CaseIterable, Hashable {
     case allergyIntolerance

@@ -6,26 +6,24 @@
 //
 import Foundation
 import SwiftUI
-import BWellSDK
+import BWell
 
 struct HealthSummaryView: View {
-    @EnvironmentObject private var router: NavigationRouter
-    @EnvironmentObject private var sdkManager: BWellSDKManager
-
+    @EnvironmentObject private var sdkManager: SDKManager
     @EnvironmentObject private var viewModel: HealthSummaryViewModel
-    @Binding var showMenu: Bool
 
     var body: some View {
         List {
             ForEach(HealthDataSummaryModel.allCases) { item in
-                Button {
-                    router.path.append(item)
-                } label: {
+                NavigationLink(value: AppView.healthCategory(category: item)) {
                     HStack(spacing: 12) {
                         Image(systemName: item.icon)
-                            .frame(width: 24, alignment: .center)
+                            .font(.title3)
+                            .foregroundStyle(item.category.color)
+                            .frame(width: 32, alignment: .center)
 
                         Text(item.title)
+                            .font(.body)
 
                         Spacer()
 
@@ -34,50 +32,95 @@ struct HealthSummaryView: View {
                         } else {
                             if let total = viewModel.healthSummary.first(where: {
                                 $0.category == item.category
-                            })?.total {
+                            })?.total, total > 0 {
                                 Text("\(total)")
-                                    .foregroundStyle(.secondary)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                                    .background(item.category.color.opacity(0.8))
+                                    .clipShape(Capsule())
                             }
                         }
-
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .frame(width: 24)
-                            .foregroundStyle(.gray)
                     }
+                    .padding(.vertical, 4)
                 }
-            }.listRowSeparator(.hidden)
+            }
+            .listRowSeparator(.hidden)
+
+            Section {
+                NavigationLink(value: AppView.careTeams) {
+                    HealthSummaryRow(icon: "person.3", title: "Care Teams", color: .teal)
+                }
+                NavigationLink(value: AppView.documentReferences) {
+                    HealthSummaryRow(icon: "doc.text", title: "Documents", color: .indigo)
+                }
+                NavigationLink(value: AppView.goals) {
+                    HealthSummaryRow(icon: "target", title: "Goals", color: .mint)
+                }
+                NavigationLink(value: AppView.diagnosticReports) {
+                    HealthSummaryRow(icon: "doc.text.magnifyingglass", title: "Diagnostic Reports", color: .purple)
+                }
+                NavigationLink(value: AppView.devices) {
+                    HealthSummaryRow(icon: "sensor", title: "Devices", color: .gray)
+                }
+            }
+            .listRowSeparator(.hidden)
         }
         .padding(.top, 10)
-        .bwellNavigationBar(showMenu: $showMenu, navigationTitle: "Health Summary")
+        .navigationTitle("Health Summary")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        .toolbarBackground(.bwellPurple, for: .navigationBar)
         .listStyle(.plain)
         .listRowSeparator(.hidden)
+        .refreshable {
+            guard let sdk = sdkManager.sdk else { return }
+            viewModel.healthSummary = []
+            await viewModel.getHealthDataSummary(sdk: sdk)
+        }
         .task {
             if viewModel.healthSummary.isEmpty {
-                await viewModel.getHealthDataSummary()
+                guard let sdk = sdkManager.sdk else { return }
+                await viewModel.getHealthDataSummary(sdk: sdk)
             }
         }
-        .navigationDestination(for: HealthDataSummaryModel.self) { category in
-            HealthSummaryDetailView(category: category)
-                .environmentObject(viewModel)
+    }
+}
+
+private struct HealthSummaryRow: View {
+    let icon: String
+    let title: String
+    let color: Color
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundStyle(color)
+                .frame(width: 32, alignment: .center)
+            Text(title)
         }
+        .padding(.vertical, 4)
     }
 }
 
 struct HealthSummaryDetailView: View {
-    @EnvironmentObject private var vieModel: HealthSummaryViewModel
+    @EnvironmentObject private var viewModel: HealthSummaryViewModel
     var category: HealthDataSummaryModel
 
     var body: some View {
-        Group {
-            category.view
-        }
+        category.view
     }
 }
 
 #Preview {
-    HealthSummaryView(showMenu: .constant(false))
-        .environmentObject(BWellSDKManager.shared)
-        .environmentObject(NavigationRouter())
-        .environmentObject(SideMenuOptionViewModel())
+    NavigationStack {
+        HealthSummaryView()
+    }
+    .environmentObject(NavigationRouter())
+    .environmentObject(HealthSummaryViewModel())
+    .environmentObject(SDKManager())
 }
