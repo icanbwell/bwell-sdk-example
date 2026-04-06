@@ -268,12 +268,6 @@ private struct ImmunizationDetailContent: View {
                 }
             }
 
-            if let code = immunization.vaccineCode?.coding?.first {
-                if let system = code.system, let codeVal = code.code {
-                    let shortSystem = system.components(separatedBy: "/").last ?? system
-                    detailRow("Code", "\(shortSystem): \(codeVal)")
-                }
-            }
         }
     }
 

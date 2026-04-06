@@ -64,7 +64,7 @@ struct DiagnosticReportsView: View {
             }) {
                 HStack(alignment: .center, spacing: 10) {
                     Image(systemName: "doc.text")
-                        .foregroundStyle(reportStatusColor(report.status ?? ""))
+                        .foregroundStyle(FHIRDiagnosticReportStatus(rawStatus: report.status)?.color ?? .gray)
                         .frame(width: 28)
 
                     VStack(alignment: .leading, spacing: 3) {
@@ -91,13 +91,14 @@ struct DiagnosticReportsView: View {
                     Spacer()
 
                     if let status = report.status {
+                        let color = FHIRDiagnosticReportStatus(rawStatus: status)?.color ?? .gray
                         Text(status.capitalized)
                             .font(.caption2)
                             .fontWeight(.medium)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(reportStatusColor(status).opacity(0.15))
-                            .foregroundStyle(reportStatusColor(status))
+                            .background(color.opacity(0.15))
+                            .foregroundStyle(color)
                             .clipShape(Capsule())
                     }
 
@@ -187,13 +188,4 @@ struct DiagnosticReportsView: View {
         isLoading = false
     }
 
-    private func reportStatusColor(_ status: String) -> Color {
-        switch status.lowercased() {
-        case "final": return .green
-        case "preliminary": return .orange
-        case "cancelled": return .red
-        case "registered": return .blue
-        default: return .gray
-        }
-    }
 }

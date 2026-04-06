@@ -149,43 +149,20 @@ private struct EncounterRow: View {
         encounter.status?.lowercased() == "finished"
     }
 
-    // Map FHIR act encounter class codes to icons
+    private var encounterClass: FHIREncounterClass? {
+        FHIREncounterClass(code: encounter.class?.code)
+    }
+
     private var classIcon: String {
-        switch encounter.class?.code?.lowercased() {
-        case "amb", "ambulatory": return "figure.walk"
-        case "emer", "emergency": return "cross.case.fill"
-        case "imp", "inpatient", "acute", "nonacute":
-            return "building.fill"
-        case "vr", "virtual": return "video.fill"
-        case "hh", "home": return "house.fill"
-        case "obsenc", "observation": return "eye.fill"
-        default: return "stethoscope"
-        }
+        encounterClass?.icon ?? "stethoscope"
     }
 
-    // Readable label from class code when display is missing
     private var classCodeLabel: String? {
-        switch encounter.class?.code?.lowercased() {
-        case "amb", "ambulatory": return "Ambulatory"
-        case "emer", "emergency": return "Emergency"
-        case "imp", "inpatient": return "Inpatient"
-        case "acute": return "Inpatient Acute"
-        case "nonacute": return "Inpatient Non-Acute"
-        case "vr", "virtual": return "Virtual"
-        case "hh", "home": return "Home Health"
-        case "obsenc", "observation": return "Observation"
-        default: return nil
-        }
+        encounterClass?.displayName
     }
 
-    // Icon color based on class
     private var classIconColor: Color {
-        switch encounter.class?.code?.lowercased() {
-        case "emer", "emergency": return .red
-        case "imp", "inpatient", "acute", "nonacute": return .orange
-        case "vr", "virtual": return .blue
-        default: return .bwellPurple
-        }
+        encounterClass?.color ?? .bwellPurple
     }
 
     var body: some View {
@@ -378,16 +355,8 @@ private struct EncounterDetailContent: View {
         }
     }
 
-    // Readable label from class code when display is missing
     private var classCodeLabel: String? {
-        switch encounter.class?.code?.lowercased() {
-        case "amb", "ambulatory": return "Ambulatory"
-        case "emer", "emergency": return "Emergency"
-        case "imp", "inpatient": return "Inpatient"
-        case "vr", "virtual": return "Virtual"
-        case "hh", "home": return "Home Health"
-        default: return nil
-        }
+        FHIREncounterClass(code: encounter.class?.code)?.displayName
     }
 
     private struct ParticipantDetail: Identifiable {

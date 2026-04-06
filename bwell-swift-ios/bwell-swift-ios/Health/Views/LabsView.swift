@@ -290,13 +290,14 @@ private struct LabResultRow: View {
                         }
 
                         if let interp = interpretationText {
+                            let interpColor = interpretationBadgeColor
                             Text(interp)
                                 .font(.caption2)
                                 .fontWeight(.medium)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 3)
-                                .background(interpretationColor(interp).opacity(0.12))
-                                .foregroundStyle(interpretationColor(interp))
+                                .background(interpColor.opacity(0.12))
+                                .foregroundStyle(interpColor)
                                 .clipShape(Capsule())
                         }
                     }
@@ -325,11 +326,16 @@ private struct LabResultRow: View {
         return isInRange ? Color.green : Color.red
     }
 
-    private func interpretationColor(_ text: String) -> Color {
-        let lower = text.lowercased()
-        if lower.contains("high") || lower.contains("abnormal") { return .red }
-        if lower.contains("low") { return .orange }
-        if lower.contains("normal") { return .green }
+    private var interpretationBadgeColor: Color {
+        let code = lab.interpretation?.first?.coding?.first?.code
+        if let fhir = FHIRInterpretation(code: code) {
+            return fhir.color
+        }
+        // Fallback to text-based matching
+        let text = (interpretationText ?? "").lowercased()
+        if text.contains("high") || text.contains("abnormal") { return .red }
+        if text.contains("low") { return .orange }
+        if text.contains("normal") { return .green }
         return .secondary
     }
 

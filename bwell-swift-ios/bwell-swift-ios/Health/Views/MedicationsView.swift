@@ -267,13 +267,6 @@ private struct MedicationDetailContent: View {
                 }
             }
 
-            if let code = medication.medicationCodeableConcept?.coding?.first {
-                if let system = code.system, let codeVal = code.code {
-                    let shortSystem = system.components(separatedBy: "/").last ?? system
-                    detailRow("Code", "\(shortSystem): \(codeVal)")
-                }
-            }
-
         }
     }
 

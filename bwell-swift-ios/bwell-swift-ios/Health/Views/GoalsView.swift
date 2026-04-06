@@ -63,7 +63,7 @@ struct GoalsView: View {
             }) {
                 HStack(alignment: .center, spacing: 10) {
                     Image(systemName: "target")
-                        .foregroundStyle(goalStatusColor(goal.lifecycleStatus ?? ""))
+                        .foregroundStyle(FHIRGoalStatus(rawStatus: goal.lifecycleStatus)?.color ?? .gray)
                         .frame(width: 28)
 
                     VStack(alignment: .leading, spacing: 3) {
@@ -83,13 +83,14 @@ struct GoalsView: View {
                     Spacer()
 
                     if let status = goal.lifecycleStatus {
+                        let color = FHIRGoalStatus(rawStatus: status)?.color ?? .gray
                         Text(status.capitalized)
                             .font(.caption2)
                             .fontWeight(.medium)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(goalStatusColor(status).opacity(0.15))
-                            .foregroundStyle(goalStatusColor(status))
+                            .background(color.opacity(0.15))
+                            .foregroundStyle(color)
                             .clipShape(Capsule())
                     }
 
@@ -183,13 +184,4 @@ struct GoalsView: View {
         isLoading = false
     }
 
-    private func goalStatusColor(_ status: String) -> Color {
-        switch status.lowercased() {
-        case "active": return .green
-        case "completed": return .blue
-        case "cancelled": return .red
-        case "on-hold": return .orange
-        default: return .gray
-        }
-    }
 }

@@ -122,8 +122,8 @@ private struct DeviceRow: View {
                             .fontWeight(.medium)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(deviceStatusColor(status).opacity(0.15))
-                            .foregroundStyle(deviceStatusColor(status))
+                            .background((FHIRDeviceStatus(rawStatus: status)?.color ?? .gray).opacity(0.15))
+                            .foregroundStyle((FHIRDeviceStatus(rawStatus: status)?.color ?? .gray))
                             .clipShape(Capsule())
                     }
 
@@ -146,14 +146,6 @@ private struct DeviceRow: View {
         .padding(.vertical, 6)
     }
 
-    private func deviceStatusColor(_ status: String) -> Color {
-        switch status.lowercased() {
-        case "active": return .green
-        case "inactive": return .orange
-        case "entered-in-error": return .red
-        default: return .gray
-        }
-    }
 }
 
 // MARK: - Device Detail (Expanded)

@@ -328,12 +328,6 @@ private struct ConditionDetailContent: View {
                 }
             }
 
-            if let code = condition.code?.coding?.first {
-                if let system = code.system, let codeVal = code.code {
-                    let shortSystem = system.components(separatedBy: "/").last ?? system
-                    detailRow("Code", "\(shortSystem): \(codeVal)")
-                }
-            }
         }
     }
 

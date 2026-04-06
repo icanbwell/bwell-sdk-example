@@ -235,11 +235,7 @@ private struct AllergyRow: View {
     }
 
     private var critColor: Color {
-        switch (allergy.criticality ?? "").lowercased() {
-        case "high": return .red
-        case "low": return .orange
-        default: return .gray
-        }
+        FHIRAllergyCriticality(rawValue: allergy.criticality)?.color ?? .gray
     }
 }
 
@@ -319,12 +315,6 @@ private struct AllergyDetailContent: View {
                 }
             }
 
-            if let code = allergy.code?.coding?.first {
-                if let system = code.system, let codeVal = code.code {
-                    let shortSystem = system.components(separatedBy: "/").last ?? system
-                    detailRow("Code", "\(shortSystem): \(codeVal)")
-                }
-            }
         }
     }
 
