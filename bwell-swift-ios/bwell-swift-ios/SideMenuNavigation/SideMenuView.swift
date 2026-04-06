@@ -11,8 +11,8 @@ struct SideMenuView: View {
     @Binding var isShowing: Bool
     @ObservedObject var viewModel: SideMenuOptionViewModel
     @EnvironmentObject var router: NavigationRouter
-    @EnvironmentObject var sdkManager: BWellSDKManager
-    
+    @EnvironmentObject var sdkManager: SDKManager
+
     var body: some View {
         ZStack {
             if isShowing {
@@ -20,8 +20,6 @@ struct SideMenuView: View {
                     .opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture { isShowing.toggle() }
-                    // .toolbarBackground(.bwellPurple, for: .navigationBar)
-                    // .toolbarVisibility(.visible, for: .navigationBar)
 
                 HStack {
                     VStack(alignment: .leading, spacing: 32) {
@@ -29,7 +27,7 @@ struct SideMenuView: View {
                         VStack {
                             ForEach(SideMenuOptionModel.allCases.dropLast()) { option in
                                 Button(action: {
-                                    viewModel.navigate(to: option)
+                                    viewModel.navigate(to: option, sdkManager: sdkManager)
                                     isShowing = false
                                 }, label: {
                                     RowView(option: option,
@@ -40,7 +38,7 @@ struct SideMenuView: View {
                         Spacer()
 
                         Button(action: {
-                            viewModel.navigate(to: .logout)
+                            viewModel.navigate(to: .logout, sdkManager: sdkManager)
                             isShowing = false
                         }, label: {
                             RowView(option: .logout,
