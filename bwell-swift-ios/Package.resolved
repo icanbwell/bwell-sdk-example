@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "bwell-sdk-swift-package",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/icanbwell/bwell-sdk-swift-package",
+      "state" : {
+        "branch" : "main",
+        "revision" : "65e6093dc3daf17cc5689d4f2d296bc3f0f72126"
+      }
+    }
+  ],
+  "version" : 2
+}

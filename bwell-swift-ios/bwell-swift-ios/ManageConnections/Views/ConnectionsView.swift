@@ -33,13 +33,10 @@ struct ConnectionsView: View {
 }
 
 private struct CardView: View {
-    @EnvironmentObject private var router: NavigationRouter
     var connection: ConnectionsModel
 
     var body: some View {
-        Button {
-            router.navigate(to: .searchConnections(connection: connection))
-        } label: {
+        NavigationLink(value: AppView.searchConnections(connection: connection)) {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
@@ -60,11 +57,6 @@ private struct CardView: View {
                         .multilineTextAlignment(.leading)
                         .foregroundStyle(.black)
                 }
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.subheadline)
-                    .foregroundStyle(.gray)
             }
         }
         .listRowSeparator(.hidden, edges: .all)

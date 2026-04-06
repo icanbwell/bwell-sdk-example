@@ -10,9 +10,16 @@ import BWellSDK
 
 @MainActor
 final class ProfileViewModel: ObservableObject {
-    private var sdkManager: BWellSDKManager?
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
+
+    // Verification
+    @Published var verificationStatus: String?
+    @Published var isVerified = false
+    @Published var verificationURL: String?
+    @Published var isLoadingVerification = false
+
+    var isVerificationFailed: Bool { verificationStatus == "val-fail" }
 
     // User's name
     @Published var givenName: String = "John"
@@ -35,20 +42,10 @@ final class ProfileViewModel: ObservableObject {
     @Published var homePhone: String = "221-629-2253"
     @Published var mobilePhone: String = "221-812-7803"
 
-    init() {
-        self.sdkManager = .shared
-    }
-
-    func getUserProfile() async {
+    func getUserProfile(sdk: BWellClient) async {
         isLoading = true
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available"
-                isLoading = false
-                return
-            }
-
-            guard let profileInformation = try await sdkManager.user().getProfile() else {
+            guard let profileInformation = try await sdk.user.getProfile() else {
                 isLoading = false
                 return
             }
@@ -61,15 +58,9 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
-    func updateUserProfile() async {
+    func updateUserProfile(sdk: BWellClient) async {
         isLoading = true
         do {
-            guard let sdkManager = sdkManager else {
-                errorMessage = "SDK Manager not available"
-                isLoading = false
-                return
-            }
-
             print("new state: \(state)")
             let given: [String] = givenName.components(separatedBy: " ")
 
@@ -85,12 +76,38 @@ final class ProfileViewModel: ObservableObject {
                                                                              gender: gender,
                                                                              language: language)
 
-            _ = try await sdkManager.user().updateProfile(updateProfileRequest)
-            // try await sdkManager.createConsent()
+            _ = try await sdk.user.updateProfile(updateProfileRequest)
 
             isLoading = false
         } catch {
             isLoading = false
+        }
+    }
+
+    func getVerificationStatus(sdk: BWellClient) async {
+        isLoadingVerification = true
+        do {
+            let result = try await sdk.user.getVerificationStatus()
+            verificationStatus = result?.status
+            isVerified = result?.status == "validated"
+        } catch {
+            verificationStatus = nil
+        }
+        isLoadingVerification = false
+    }
+
+    func createVerificationURL(sdk: BWellClient) async {
+        do {
+            let json = """
+            {"callbackURL":"bwellexample://verification-callback","includeAttributeMatchingCheck":false}
+            """
+            let request = try JSONDecoder().decode(
+                BWell.CreateVerificationURLRequest.self,
+                from: json.data(using: .utf8)!
+            )
+            verificationURL = try await sdk.user.createVerificationURL(request)
+        } catch {
+            errorMessage = "Failed to generate verification URL."
         }
     }
 

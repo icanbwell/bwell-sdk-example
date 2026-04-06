@@ -9,51 +9,28 @@ import SwiftUI
 import BWellSDK
 
 struct RootView: View {
-    @StateObject private var bwellSDKManager = BWellSDKManager.shared
+    @EnvironmentObject var sdkManager: SDKManager
     @StateObject private var router = NavigationRouter()
-    @StateObject private var viewModel = SideMenuOptionViewModel()
     @StateObject private var healthSummaryViewModel = HealthSummaryViewModel()
-    @State private var showMenu: Bool = false
+    @State private var isAuthenticated = false
 
     var body: some View {
-        ZStack {
-            NavigationStack(path: $router.path) {
-                AuthenticationView()
-                    .navigationDestination(for: AppView.self) { screen in
-                        switch screen {
-                        case .home:
-                            HomeView(showMenu: $showMenu)
-                                .navigationBarBackButtonHidden()
-                        case .profile:
-                            ProfileView(showMenu: $showMenu)
-                                .navigationBarBackButtonHidden()
-                        case .healthSummary:
-                            HealthSummaryView(showMenu: $showMenu)
-                                .navigationBarBackButtonHidden()
-                        case .manageConnections:
-                            ManageConnectionsView(showMenu: $showMenu)
-                                .navigationBarBackButtonHidden()
-                        case .searchConnections(let connection):
-                            SearchConnectionsView(connection: connection)
-                        case .connections:
-                            ConnectionsView()
-                        case .healthGroupItems(let category, let groupCode):
-                            // Health data summary detail views
-                            HealthDataFactoryView(category, groupCode)
-                        }
-                    }
+        Group {
+            if isAuthenticated {
+                MainTabView()
+            } else {
+                NavigationStack(path: $router.path) {
+                    AuthenticationView()
+                }
             }
-            
-            SideMenuView(isShowing: $showMenu, viewModel: viewModel)
         }
+        .environmentObject(sdkManager)
         .environmentObject(router)
-        .environmentObject(viewModel)
         .environmentObject(healthSummaryViewModel)
         .onAppear {
-            // Critical: handle the already-authenticated state when this view first appears.
-            handleStateChange(bwellSDKManager.state)
+            handleStateChange(sdkManager.state)
         }
-        .onChange(of: bwellSDKManager.state) { _, newState in
+        .onChange(of: sdkManager.state) { _, newState in
             handleStateChange(newState)
         }
     }
@@ -61,12 +38,11 @@ struct RootView: View {
     private func handleStateChange(_ state: SDKState) {
         switch state {
         case .authenticated:
-            if router.path.isEmpty {
-                router.path = NavigationPath([AppView.home])
-            }
-        case .uninitialized, .unauthenticated, .failed:
-            router.navigateToRoot()
-        case .initializing, .authenticating, .initialized, .checkingSession:
+            isAuthenticated = true
+        case .uninitialized, .failed:
+            isAuthenticated = false
+            router.popToRoot()
+        case .initializing, .authenticating, .initialized:
             break
         }
     }
