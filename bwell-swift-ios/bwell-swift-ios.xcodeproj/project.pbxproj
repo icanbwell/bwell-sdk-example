@@ -76,7 +76,7 @@
 		93A3D25B00846891FCB7B5D3 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30D940D3989D26EFEE5CB05 /* CustomTextField.swift */; };
 		96E4019877665E4494C6CAC4 /* DocumentReferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A575CBC327F1E1F216F4 /* DocumentReferencesView.swift */; };
 		A14E2445C15960E7C125D08E /* DiagnosticReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D06B19D99FC9884D7F966D9 /* DiagnosticReportsView.swift */; };
-		A264CBC62EE38945000D0AF7 /* BWell in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWell */; };
+		A264CBC62EE38945000D0AF7 /* BWell in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWellSDK */; };
 		B3DF89A32F7704DE0016498B /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF899E2F7704DE0016498B /* Router.swift */; };
 		B3DF89A42F7704DE0016498B /* SDKManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89992F7704DE0016498B /* SDKManaging.swift */; };
 		B3DF89A52F7704DE0016498B /* SDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89A02F7704DE0016498B /* SDKManager.swift */; };
@@ -574,7 +574,7 @@
 			);
 			name = "bwell-swift-ios";
 			packageProductDependencies = (
-				A264CBC52EE38945000D0AF7 /* BWell */,
+				A264CBC52EE38945000D0AF7 /* BWellSDK */,
 			);
 			productName = "bwell-swift-ios";
 			productReference = 5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */;
@@ -1152,9 +1152,9 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A264CBC52EE38945000D0AF7 /* BWell */ = {
+		A264CBC52EE38945000D0AF7 /* BWellSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = BWell;
+			productName = BWellSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
