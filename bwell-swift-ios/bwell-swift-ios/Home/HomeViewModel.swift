@@ -6,7 +6,7 @@
 //
 import Foundation
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct HighlightVital {
     let name: String

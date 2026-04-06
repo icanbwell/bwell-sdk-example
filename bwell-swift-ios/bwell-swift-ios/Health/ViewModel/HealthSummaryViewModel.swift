@@ -5,7 +5,7 @@
 //  Created by Ivan Villanueva on 28/10/25.
 //
 import Foundation
-import BWell
+import BWellSDK
 
 @MainActor
 final class HealthSummaryViewModel: ObservableObject {

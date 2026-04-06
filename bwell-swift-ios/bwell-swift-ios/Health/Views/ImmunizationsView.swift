@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct ImmunizationsView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel

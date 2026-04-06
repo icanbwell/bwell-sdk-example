@@ -10,7 +10,7 @@
 
 import SwiftUI
 import Charts
-import BWell
+import BWellSDK
 
 struct LabsView: View {
     @EnvironmentObject private var viewModel: HealthSummaryViewModel

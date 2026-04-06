@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Charts
-import BWell
+import BWellSDK
 
 struct LabTrendChartView: View {
     let observations: [BWell.Observation]

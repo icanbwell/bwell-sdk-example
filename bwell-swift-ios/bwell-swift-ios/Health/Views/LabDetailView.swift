@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct LabDetailView: View {
     let lab: BWell.Observation

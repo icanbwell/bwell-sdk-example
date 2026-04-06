@@ -5,7 +5,7 @@
 //  Created by Ivan Villanueva on 11/11/25.
 //
 import Foundation
-import BWell
+import BWellSDK
 
 /**
  * Keychain-backed implementation of BWell.TokenStorage.

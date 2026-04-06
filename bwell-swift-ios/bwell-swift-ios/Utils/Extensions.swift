@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BWell
+import BWellSDK
 
 extension Date {
     func toString() -> String {

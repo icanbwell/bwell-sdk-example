@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct DiagnosticReportsView: View {
     @EnvironmentObject private var sdkManager: SDKManager

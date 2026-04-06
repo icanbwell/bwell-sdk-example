@@ -1,5 +1,5 @@
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct AllergiesView: View {
     @ObservedObject var viewModel: SDKViewModel

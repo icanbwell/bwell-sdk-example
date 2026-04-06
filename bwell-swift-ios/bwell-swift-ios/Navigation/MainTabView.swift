@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 enum Tab: Int, Hashable {
     case home

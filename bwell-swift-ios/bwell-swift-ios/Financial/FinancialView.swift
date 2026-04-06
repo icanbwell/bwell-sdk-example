@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct FinancialView: View {
     @EnvironmentObject private var sdkManager: SDKManager

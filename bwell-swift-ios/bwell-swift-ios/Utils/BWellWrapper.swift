@@ -5,7 +5,7 @@
 //  Created by Ivan Villanueva on 31/10/25.
 //
 import Foundation
-import BWell
+import BWellSDK
 
 struct BWellWrapper {
     typealias carePlan = BWell.CarePlan

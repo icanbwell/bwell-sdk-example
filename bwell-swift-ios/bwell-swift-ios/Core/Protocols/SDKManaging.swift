@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BWell
+import BWellSDK
 
 /// Protocol defining SDK management operations
 @MainActor

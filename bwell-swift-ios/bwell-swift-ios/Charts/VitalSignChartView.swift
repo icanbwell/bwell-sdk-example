@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Charts
-import BWell
+import BWellSDK
 
 struct VitalSignChartView: View {
     let observations: [BWell.Observation]

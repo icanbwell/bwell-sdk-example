@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 import UserNotifications
 
 // Workaround: DeregisterDeviceRequest has no public init in the SDK.

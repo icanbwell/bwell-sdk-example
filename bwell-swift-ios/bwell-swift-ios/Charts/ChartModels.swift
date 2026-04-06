@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct ChartDataPoint: Identifiable {
     let id = UUID()

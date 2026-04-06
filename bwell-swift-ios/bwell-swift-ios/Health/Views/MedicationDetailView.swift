@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct MedicationDetailView: View {
     let medication: BWell.MedicationStatement

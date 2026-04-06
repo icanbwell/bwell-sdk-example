@@ -23,8 +23,6 @@ let package = Package(
         //   machine icanbwell.jfrog.io
         //     login <your-email>
         //     password <your-artifactory-token>
-        // NOTE: XCFramework distribution requires static linking of dependencies (Apollo, OTel)
-        // to work across Swift versions. See EA-2147 for progress.
         // .package(url: "https://github.com/icanbwell/bwell-sdk-swift-package", branch: "main")
 
         // OPTION 3: Released version (production)

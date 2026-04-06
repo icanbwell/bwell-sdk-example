@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct ManageConnectionsView: View {
     @EnvironmentObject private var sdkManager: SDKManager

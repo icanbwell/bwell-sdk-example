@@ -4,7 +4,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct ProviderSearchView: View {
     @EnvironmentObject private var sdkManager: SDKManager

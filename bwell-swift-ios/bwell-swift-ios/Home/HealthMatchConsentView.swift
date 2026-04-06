@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct HealthMatchConsentView: View {
     @EnvironmentObject private var sdkManager: SDKManager

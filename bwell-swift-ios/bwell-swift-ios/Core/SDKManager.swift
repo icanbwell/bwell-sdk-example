@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BWell
+import BWellSDK
 
 @MainActor
 final class SDKManager: ObservableObject {

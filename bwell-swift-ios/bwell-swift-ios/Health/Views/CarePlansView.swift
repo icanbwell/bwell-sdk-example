@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BWell
+import BWellSDK
 
 // NOTE: Backend inconsistency — health summary reports 2 care plans, groups API returns 0,
 // but direct getCarePlans() returns 5. The fallback to direct fetch below works around this.

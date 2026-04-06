@@ -8,7 +8,7 @@
 
 import Foundation
 import SwiftUI
-import BWell
+import BWellSDK
 
 enum AppView: Hashable {
     case home

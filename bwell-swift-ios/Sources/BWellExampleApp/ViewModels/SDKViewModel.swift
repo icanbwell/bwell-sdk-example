@@ -1,5 +1,5 @@
 import Foundation
-import BWell
+import BWellSDK
 
 @MainActor
 class SDKViewModel: ObservableObject {

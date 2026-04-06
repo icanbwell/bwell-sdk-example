@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct ProfileView: View {
     @EnvironmentObject private var sdkManager: SDKManager

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import BWell
+import BWellSDK
 
 struct RootView: View {
     @EnvironmentObject var sdkManager: SDKManager

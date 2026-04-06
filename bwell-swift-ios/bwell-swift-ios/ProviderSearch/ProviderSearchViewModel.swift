@@ -13,7 +13,7 @@
 
 import Foundation
 import Combine
-import BWell
+import BWellSDK
 
 @MainActor
 final class ProviderSearchViewModel: ObservableObject {
