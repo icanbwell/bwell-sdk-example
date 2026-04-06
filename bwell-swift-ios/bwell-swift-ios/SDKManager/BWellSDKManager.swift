@@ -10,7 +10,7 @@ import BWellSDK
 @MainActor
 final class BWellSDKManager: ObservableObject {
     static let shared: BWellSDKManager = BWellSDKManager()
-    private var sdk: BWellSDK?
+    private var sdk: BWellClient?
 
     @Published var state: SDKState = .uninitialized
 

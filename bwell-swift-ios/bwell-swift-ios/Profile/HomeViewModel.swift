@@ -6,7 +6,7 @@ final class ProfileHomeViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var isLoading: Bool = true
 
-    func fetchUsername(sdk: BWellSDK) {
+    func fetchUsername(sdk: BWellClient) {
         // Prevent re-fetching if a fetch is already in progress.
         guard username.isEmpty else {
             isLoading = false

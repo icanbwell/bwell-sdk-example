@@ -16,7 +16,7 @@ final class ManageConnectionsViewModel: ObservableObject {
 
     @Published var url: URL?
 
-    func getConnections(sdk: BWellSDK) async {
+    func getConnections(sdk: BWellClient) async {
         isLoading = true
         errorMessage = nil  // Clear previous errors
 
@@ -36,8 +36,8 @@ final class ManageConnectionsViewModel: ObservableObject {
     /// Deletes a connection and refreshes the connections list
     /// - Parameters:
     ///   - connectionId: The ID of the connection to delete
-    ///   - sdk: The BWellSDK instance to use
-    func deleteConnection(connectionId: String, sdk: BWellSDK) async {
+    ///   - sdk: The BWellClient instance to use
+    func deleteConnection(connectionId: String, sdk: BWellClient) async {
         isLoading = true
         errorMessage = nil
 
@@ -58,8 +58,8 @@ final class ManageConnectionsViewModel: ObservableObject {
     /// Disconnects a connection and refreshes the connections list
     /// - Parameters:
     ///   - connectionId: The ID of the connection to disconnect
-    ///   - sdk: The BWellSDK instance to use
-    func disconnectConnection(connectionId: String, sdk: BWellSDK) async {
+    ///   - sdk: The BWellClient instance to use
+    func disconnectConnection(connectionId: String, sdk: BWellClient) async {
         isLoading = true
         errorMessage = nil
 
@@ -77,7 +77,7 @@ final class ManageConnectionsViewModel: ObservableObject {
         }
     }
 
-    func createConnection(username: String, password: String, connectionId: String = "proa_demo", sdk: BWellSDK) async {
+    func createConnection(username: String, password: String, connectionId: String = "proa_demo", sdk: BWellClient) async {
         do {
             let request = BWell.CreateConnectionRequest(connectionId: connectionId,
                                                         username: username,
@@ -89,7 +89,7 @@ final class ManageConnectionsViewModel: ObservableObject {
         }
     }
 
-    func getDataSourceConnections(sdk: BWellSDK) async {
+    func getDataSourceConnections(sdk: BWellClient) async {
         do {
             let request = BWell.DataSourceRequest(connectionId: "proa_demo")
 
@@ -105,7 +105,7 @@ final class ManageConnectionsViewModel: ObservableObject {
         }
     }
 
-    func getOAuthURL(search userRequest: String, sdk: BWellSDK) async {
+    func getOAuthURL(search userRequest: String, sdk: BWellClient) async {
         do {
             let request = BWell.OAuthURLRequest(connectionId: userRequest)
             let response = try await sdk.connection.getOAuthURL(request)

@@ -8,7 +8,7 @@ class SDKViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var allergies: [BWell.AllergyIntolerance] = []
 
-    private var sdk: BWellSDK?
+    private var sdk: BWellClient?
     private let keychain = KeychainService()
 
     private let clientKeyKey = "bwell_client_key"

@@ -31,5 +31,5 @@ protocol SDKManaging: ObservableObject {
     func logout() async
 
     /// Access the SDK instance
-    var sdk: BWellSDK? { get }
+    var sdk: BWellClient? { get }
 }

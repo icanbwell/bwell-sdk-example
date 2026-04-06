@@ -35,7 +35,7 @@ final class ProviderSearchViewModel: ObservableObject {
     private var cachedResults: [BWell.SearchHealthResourcesResults.Result] = []
     private var cancellables = Set<AnyCancellable>()
     private var debounceTask: Task<Void, Never>?
-    private weak var sdk: BWellSDK?
+    private weak var sdk: BWellClient?
 
     enum OrganizationType: String, CaseIterable {
         case all = "All"
@@ -51,7 +51,7 @@ final class ProviderSearchViewModel: ObservableObject {
         }
     }
 
-    func configure(sdk: BWellSDK) {
+    func configure(sdk: BWellClient) {
         self.sdk = sdk
         setupTypeahead()
     }
@@ -169,7 +169,7 @@ final class ProviderSearchViewModel: ObservableObject {
 
     // MARK: - API Call
 
-    private func fetchProviders(sdk: BWellSDK, searchTerm: String?) async throws -> [BWell.SearchHealthResourcesResults.Result] {
+    private func fetchProviders(sdk: BWellClient, searchTerm: String?) async throws -> [BWell.SearchHealthResourcesResults.Result] {
         let filter = BWell.SearchHealthResourcesRequest.Filter(
             type: organizationType.filterValue,
             id: nil,
@@ -202,7 +202,7 @@ final class ProviderSearchViewModel: ObservableObject {
         return searchResults.results ?? []
     }
 
-    func submitForReview(institution: String, provider: String, state: String, city: String, sdk: BWellSDK) async {
+    func submitForReview(institution: String, provider: String, state: String, city: String, sdk: BWellClient) async {
         isLoading = true
         errorMessage = nil
         do {

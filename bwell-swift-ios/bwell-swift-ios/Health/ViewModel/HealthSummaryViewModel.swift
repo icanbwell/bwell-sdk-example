@@ -36,7 +36,7 @@ final class HealthSummaryViewModel: ObservableObject {
     @Published var encounterGroups: [BWell.EncounterGroup] = []
 
     // MARK: - Get Summary
-    func getHealthDataSummary(sdk: BWellSDK) async {
+    func getHealthDataSummary(sdk: BWellClient) async {
         isLoading = true
         errorMessage = nil
         do {
@@ -55,14 +55,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Allergy Intolerance
-    func getAllergyIntoleranceGroups(sdk: BWellSDK) async {
+    func getAllergyIntoleranceGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "AllergyIntolerance") { request in
             try await sdk.health.getAllergyIntoleranceGroups(request)
         }
         self.allergyIntoleranceGroups = groups
     }
 
-    func getAllergyIntolerances(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getAllergyIntolerances(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "AllergyIntolerance",
             fetch: {
@@ -75,14 +75,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Care Plan
-    func getCarePlanGroups(sdk: BWellSDK) async {
+    func getCarePlanGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "CarePlan") { request in
             try await sdk.health.getCarePlanGroups(request)
         }
         self.carePlanGroups = groups
     }
 
-    func getCarePlans(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getCarePlans(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "CarePlan",
             fetch: {
@@ -95,14 +95,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Conditions
-    func getConditionGroups(sdk: BWellSDK) async {
+    func getConditionGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "Condition") { request in
             try await sdk.health.getConditionGroups(request)
         }
         self.conditionGroups = groups
     }
 
-    func getConditions(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getConditions(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "Condition",
             fetch: {
@@ -115,14 +115,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Immunization
-    func getImmunizationGroups(sdk: BWellSDK) async {
+    func getImmunizationGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "Immunization") { request in
             try await sdk.health.getImmunizationGroups(request)
         }
         self.immunizationGroups = groups
     }
 
-    func getImmunizations(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getImmunizations(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "Immunization",
             fetch: {
@@ -135,14 +135,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Labs
-    func getLabGroups(sdk: BWellSDK) async {
+    func getLabGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "Labs") { request in
             try await sdk.health.getLabGroups(request)
         }
         self.labGroups = groups
     }
 
-    func getLabs(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getLabs(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "Labs",
             fetch: {
@@ -155,14 +155,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Procedures
-    func getProcedureGroups(sdk: BWellSDK) async {
+    func getProcedureGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "Procedure") { request in
             try await sdk.health.getProcedureGroups(request)
         }
         self.procedureGroups = groups
     }
 
-    func getProcedures(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getProcedures(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "Procedure",
             fetch: {
@@ -175,14 +175,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Vital Signs
-    func getVitalSignGroups(sdk: BWellSDK) async {
+    func getVitalSignGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "VitalSigns") { request in
             try await sdk.health.getVitalSignGroups(request)
         }
         self.vitalSignGroups = groups
     }
 
-    func getVitalSigns(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getVitalSigns(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "VitalSigns",
             fetch: {
@@ -195,14 +195,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Medications
-    func getMedicationGroups(sdk: BWellSDK) async {
+    func getMedicationGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "Medication") { request in
             try await sdk.health.getMedicationGroups(request)
         }
         self.medicationGroups = groups
     }
 
-    func getMedicationStatements(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getMedicationStatements(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "Medication",
             fetch: {
@@ -215,14 +215,14 @@ final class HealthSummaryViewModel: ObservableObject {
     }
 
     // MARK: - Encounters
-    func getEncounterGroups(sdk: BWellSDK) async {
+    func getEncounterGroups(sdk: BWellClient) async {
         let groups = await fetchGroupData(sdk: sdk, category: "Encounter") { request in
             try await sdk.health.getEncounterGroups(request)
         }
         self.encounterGroups = groups
     }
 
-    func getEncounters(_ groupCode: BWell.Coding, sdk: BWellSDK) async {
+    func getEncounters(_ groupCode: BWell.Coding, sdk: BWellClient) async {
         let request = createHealthDataRequest(with: groupCode)
         let items = await fetchData(sdk: sdk, category: "Encounter",
             fetch: {
@@ -237,70 +237,70 @@ final class HealthSummaryViewModel: ObservableObject {
 
 // MARK: - Fetch and Return (for self-contained items views)
 extension HealthSummaryViewModel {
-    func fetchAllergyIntolerances(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.AllergyIntolerance] {
+    func fetchAllergyIntolerances(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.AllergyIntolerance] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "AllergyIntolerance",
             fetch: { try await sdk.health.getAllergyIntolerances(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchCarePlans(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.CarePlan] {
+    func fetchCarePlans(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.CarePlan] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "CarePlan",
             fetch: { try await sdk.health.getCarePlans(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchAllCarePlans(sdk: BWellSDK) async -> [BWell.CarePlan] {
+    func fetchAllCarePlans(sdk: BWellClient) async -> [BWell.CarePlan] {
         let request = BWell.HealthDataRequest(page: 0)
         return await fetchDataReturn(sdk: sdk, category: "CarePlan(all)",
             fetch: { try await sdk.health.getCarePlans(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchConditions(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.Condition] {
+    func fetchConditions(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.Condition] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "Condition",
             fetch: { try await sdk.health.getConditions(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchEncounters(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.Encounter] {
+    func fetchEncounters(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.Encounter] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "Encounter",
             fetch: { try await sdk.health.getEncounters(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchImmunizations(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.Immunization] {
+    func fetchImmunizations(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.Immunization] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "Immunization",
             fetch: { try await sdk.health.getImmunizations(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchLabs(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.Observation] {
+    func fetchLabs(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.Observation] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "Labs",
             fetch: { try await sdk.health.getLabs(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchMedicationStatements(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.MedicationStatement] {
+    func fetchMedicationStatements(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.MedicationStatement] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "Medication",
             fetch: { try await sdk.health.getMedicationStatements(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchProcedures(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.Procedure] {
+    func fetchProcedures(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.Procedure] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "Procedure",
             fetch: { try await sdk.health.getProcedures(request) },
             extract: { $0.entry?.compactMap { $0.resource } ?? [] })
     }
 
-    func fetchVitalSigns(_ groupCode: BWell.Coding, sdk: BWellSDK) async -> [BWell.Observation] {
+    func fetchVitalSigns(_ groupCode: BWell.Coding, sdk: BWellClient) async -> [BWell.Observation] {
         let request = createHealthDataRequest(with: groupCode)
         return await fetchDataReturn(sdk: sdk, category: "VitalSigns",
             fetch: { try await sdk.health.getVitalSigns(request) },
@@ -319,7 +319,7 @@ extension HealthSummaryViewModel {
         return request
     }
 
-    private func fetchData<DataType, Response>(sdk: BWellSDK,
+    private func fetchData<DataType, Response>(sdk: BWellClient,
                                                category: String,
                                                fetch: () async throws -> Response,
                                                extract: (Response) -> [DataType]) async -> [DataType] {
@@ -335,7 +335,7 @@ extension HealthSummaryViewModel {
         }
     }
 
-    private func fetchDataReturn<DataType, Response>(sdk: BWellSDK,
+    private func fetchDataReturn<DataType, Response>(sdk: BWellClient,
                                                category: String,
                                                fetch: () async throws -> Response,
                                                extract: (Response) -> [DataType]) async -> [DataType] {
@@ -350,7 +350,7 @@ extension HealthSummaryViewModel {
         }
     }
 
-    private func fetchGroupData<GroupType>(sdk: BWellSDK,
+    private func fetchGroupData<GroupType>(sdk: BWellClient,
                                            category: String,
                                            fetch: (BWell.HealthDataGroupRequest) async throws -> BWell.GroupResult<GroupType>) async -> [GroupType] {
         do {

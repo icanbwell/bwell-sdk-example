@@ -12,7 +12,7 @@ import BWellSDK
 @MainActor
 final class SDKManager: ObservableObject {
     @Published private(set) var state: SDKState = .uninitialized
-    private(set) var sdk: BWellSDK?
+    private(set) var sdk: BWellClient?
 
     func initialize(_ clientKey: String) async throws {
         guard sdk == nil else {
@@ -86,7 +86,7 @@ final class SDKManager: ObservableObject {
 
     // MARK: - Private
 
-    private func createConsent(sdk: BWellSDK) async throws {
+    private func createConsent(sdk: BWellClient) async throws {
         let request = BWell.CreateConsentRequest(
             status: .active,
             provision: .init(type: .permit),

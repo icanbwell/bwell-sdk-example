@@ -66,7 +66,7 @@ final class HomeViewModel: ObservableObject {
         pendingTasks = []
     }
 
-    func loadProfile(sdk: BWellSDK) {
+    func loadProfile(sdk: BWellClient) {
         guard firstName.isEmpty else {
             isLoading = false
             return
@@ -85,7 +85,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    func loadHomeData(sdk: BWellSDK) async {
+    func loadHomeData(sdk: BWellClient) async {
         async let connectionsTask: Void = loadConnections(sdk: sdk)
         async let consentsTask: Void = loadConsents(sdk: sdk)
         async let summaryTask: Void = loadHealthSummary(sdk: sdk)
@@ -96,7 +96,7 @@ final class HomeViewModel: ObservableObject {
         _ = await (connectionsTask, consentsTask, summaryTask, vitalsTask, labsTask, encountersTask, tasksTask)
     }
 
-    private func loadConnections(sdk: BWellSDK) async {
+    private func loadConnections(sdk: BWellClient) async {
         do {
             let connections = try await sdk.connection.getMemberConnections()
             hasConnections = !connections.isEmpty
@@ -105,7 +105,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    private func loadConsents(sdk: BWellSDK) async {
+    private func loadConsents(sdk: BWellClient) async {
         do {
             let result = try await sdk.user.getConsents(nil)
             if let consents = result?.entry, !consents.isEmpty {
@@ -118,7 +118,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    private func loadHealthSummary(sdk: BWellSDK) async {
+    private func loadHealthSummary(sdk: BWellClient) async {
         do {
             let summary = try await sdk.health.getHealthSummary()
             summaryResources = summary.resources
@@ -129,7 +129,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    private func loadRecentVitals(sdk: BWellSDK) async {
+    private func loadRecentVitals(sdk: BWellClient) async {
         do {
             let request = BWell.HealthDataRequest(page: 0, pageSize: 20)
             let response = try await sdk.health.getVitalSigns(request)
@@ -178,7 +178,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    private func loadRecentLabs(sdk: BWellSDK) async {
+    private func loadRecentLabs(sdk: BWellClient) async {
         do {
             let request = BWell.HealthDataRequest(page: 0, pageSize: 20)
             let response = try await sdk.health.getLabs(request)
@@ -207,7 +207,7 @@ final class HomeViewModel: ObservableObject {
         }
     }
 
-    private func loadPendingTasks(sdk: BWellSDK) async {
+    private func loadPendingTasks(sdk: BWellClient) async {
         isLoadingTasks = true
         do {
             let request = BWell.TasksRequest(page: 0, pageSize: 10)
@@ -221,7 +221,7 @@ final class HomeViewModel: ObservableObject {
         isLoadingTasks = false
     }
 
-    private func loadRecentEncounters(sdk: BWellSDK) async {
+    private func loadRecentEncounters(sdk: BWellClient) async {
         do {
             let request = BWell.HealthDataRequest(page: 0, pageSize: 5)
             let response = try await sdk.health.getEncounters(request)

@@ -42,7 +42,7 @@ final class ProfileViewModel: ObservableObject {
     @Published var homePhone: String = "221-629-2253"
     @Published var mobilePhone: String = "221-812-7803"
 
-    func getUserProfile(sdk: BWellSDK) async {
+    func getUserProfile(sdk: BWellClient) async {
         isLoading = true
         do {
             guard let profileInformation = try await sdk.user.getProfile() else {
@@ -58,7 +58,7 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
-    func updateUserProfile(sdk: BWellSDK) async {
+    func updateUserProfile(sdk: BWellClient) async {
         isLoading = true
         do {
             print("new state: \(state)")
@@ -84,7 +84,7 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
-    func getVerificationStatus(sdk: BWellSDK) async {
+    func getVerificationStatus(sdk: BWellClient) async {
         isLoadingVerification = true
         do {
             let result = try await sdk.user.getVerificationStatus()
@@ -96,7 +96,7 @@ final class ProfileViewModel: ObservableObject {
         isLoadingVerification = false
     }
 
-    func createVerificationURL(sdk: BWellSDK) async {
+    func createVerificationURL(sdk: BWellClient) async {
         do {
             let json = """
             {"callbackURL":"bwellexample://verification-callback","includeAttributeMatchingCheck":false}

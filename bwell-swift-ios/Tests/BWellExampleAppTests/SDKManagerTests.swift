@@ -32,7 +32,7 @@ final class SDKManagerTests: XCTestCase {
 
     func testInitialize_WithValidKey_UpdatesState() async throws {
         // Note: This will fail without a real SDK, but demonstrates the pattern
-        // In production, you'd mock BWellSDK as well
+        // In production, you'd mock BWellClient as well
 
         // Given
         let clientKey = "test-client-key"

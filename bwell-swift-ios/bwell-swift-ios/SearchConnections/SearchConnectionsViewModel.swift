@@ -13,7 +13,7 @@ final class SearchConnectionsViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var healthResources: [BWell.SearchHealthResourcesResults.Result] = []
 
-    func searchHealthResources(searchedText: String?, sdk: BWellSDK) async {
+    func searchHealthResources(searchedText: String?, sdk: BWellClient) async {
         isLoading = true
 
         do {

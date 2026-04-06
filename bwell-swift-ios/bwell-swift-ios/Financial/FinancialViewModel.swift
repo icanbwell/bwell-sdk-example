@@ -15,7 +15,7 @@ final class FinancialViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    func getCoverages(sdk: BWellSDK) async {
+    func getCoverages(sdk: BWellClient) async {
         isLoading = true
         errorMessage = nil
         do {
@@ -29,7 +29,7 @@ final class FinancialViewModel: ObservableObject {
         }
     }
 
-    func getExplanationOfBenefits(sdk: BWellSDK) async {
+    func getExplanationOfBenefits(sdk: BWellClient) async {
         do {
             let request = BWell.ExplanationOfBenefitRequest(page: 0)
             let response = try await sdk.financial.getExplanationOfBenefits(request)
