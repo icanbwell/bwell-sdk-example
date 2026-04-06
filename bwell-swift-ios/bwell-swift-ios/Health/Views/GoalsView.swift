@@ -13,86 +13,25 @@ struct GoalsView: View {
     @State private var goals: [BWell.Goal] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var expandedIds: Set<String> = []
 
     var body: some View {
         ZStack {
             if isLoading && goals.isEmpty {
                 ProgressView("Loading goals...")
             } else if let error = errorMessage {
-                ContentUnavailableView("Error", systemImage: "exclamationmark.triangle", description: Text(error))
+                ContentUnavailableView {
+                    Label("Error", systemImage: "exclamationmark.triangle")
+                } description: {
+                    Text(error)
+                } actions: {
+                    Button("Retry") { Task { await loadGoals() } }
+                }
             } else if goals.isEmpty {
                 ContentUnavailableView("No Goals", systemImage: "target", description: Text("No health goals found."))
             } else {
                 List(goals, id: \.id) { goal in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(goal.description?.text ?? goal.description?.coding?.first?.display ?? "Goal")
-                            .font(.headline)
-
-                        if let status = goal.lifecycleStatus {
-                            Text(status)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(goalStatusColor(status).opacity(0.15))
-                                .foregroundStyle(goalStatusColor(status))
-                                .clipShape(Capsule())
-                        }
-
-                        if let achievement = goal.achievementStatus?.text ?? goal.achievementStatus?.coding?.first?.display {
-                            HStack(spacing: 4) {
-                                Text("Achievement:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(achievement)
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                            }
-                        }
-
-                        if let category = goal.category?.first?.text ?? goal.category?.first?.coding?.first?.display {
-                            HStack(spacing: 4) {
-                                Text("Category:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(category)
-                                    .font(.caption)
-                            }
-                        }
-
-                        if let startDate = goal.startDate {
-                            Text("Start: \(startDate.dateFormatter())")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        if let targets = goal.target, !targets.isEmpty {
-                            ForEach(targets.indices, id: \.self) { index in
-                                let target = targets[index]
-                                if let measure = target.measure?.text ?? target.measure?.coding?.first?.display {
-                                    HStack(spacing: 4) {
-                                        Text("Target:")
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                        Text(measure)
-                                            .font(.caption)
-                                    }
-                                }
-                            }
-                        }
-
-                        if let priority = goal.priority?.text ?? goal.priority?.coding?.first?.display {
-                            HStack(spacing: 4) {
-                                Text("Priority:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(priority)
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                            }
-                        }
-                    }
-                    .padding(.vertical, 4)
+                    goalRow(goal)
                 }
                 .listStyle(.plain)
             }
@@ -107,6 +46,126 @@ struct GoalsView: View {
         .task {
             guard goals.isEmpty else { return }
             await loadGoals()
+        }
+    }
+
+    @ViewBuilder
+    private func goalRow(_ goal: BWell.Goal) -> some View {
+        let id = goal.id ?? UUID().uuidString
+        let isExpanded = expandedIds.contains(id)
+
+        VStack(alignment: .leading, spacing: 0) {
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    if expandedIds.contains(id) { expandedIds.remove(id) }
+                    else { expandedIds.insert(id) }
+                }
+            }) {
+                HStack(alignment: .center, spacing: 10) {
+                    Image(systemName: "target")
+                        .foregroundStyle(goalStatusColor(goal.lifecycleStatus ?? ""))
+                        .frame(width: 28)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(goal.description?.text ?? goal.description?.coding?.first?.display ?? "Goal")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.primary)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        if let priority = goal.priority?.text ?? goal.priority?.coding?.first?.display {
+                            Text("Priority: \(priority)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Spacer()
+
+                    if let status = goal.lifecycleStatus {
+                        Text(status.capitalized)
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(goalStatusColor(status).opacity(0.15))
+                            .foregroundStyle(goalStatusColor(status))
+                            .clipShape(Capsule())
+                    }
+
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            .buttonStyle(.plain)
+
+            if isExpanded {
+                Divider().padding(.top, 8)
+                goalDetail(goal)
+                    .padding(.top, 6)
+                    .padding(.leading, 38)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .padding(.vertical, 6)
+    }
+
+    @ViewBuilder
+    private func goalDetail(_ goal: BWell.Goal) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if let achievement = goal.achievementStatus?.text ?? goal.achievementStatus?.coding?.first?.display {
+                detailRow("Achievement", achievement)
+            }
+            if let category = goal.category?.first?.text ?? goal.category?.first?.coding?.first?.display {
+                detailRow("Category", category)
+            }
+            if let startDate = goal.startDate {
+                detailRow("Start", startDate.dateFormatter())
+            }
+
+            if let targets = goal.target, !targets.isEmpty {
+                Divider().padding(.vertical, 4)
+                Text("Targets")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                ForEach(targets.indices, id: \.self) { index in
+                    let target = targets[index]
+                    if let measure = target.measure?.text ?? target.measure?.coding?.first?.display {
+                        HStack(alignment: .top, spacing: 6) {
+                            Text("•")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(measure)
+                                    .font(.caption)
+                                    .foregroundStyle(.primary)
+                                if let due = target.dueDate {
+                                    Text("Due: \(due.dateFormatter())")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func detailRow(_ label: String, _ value: String) -> some View {
+        HStack(alignment: .top, spacing: 6) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(width: 80, alignment: .trailing)
+            Text(value)
+                .font(.caption)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 

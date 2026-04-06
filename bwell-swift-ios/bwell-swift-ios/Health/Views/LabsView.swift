@@ -266,10 +266,10 @@ private struct LabResultRow: View {
 
                     VStack(alignment: .leading, spacing: 3) {
                         Text(testName)
-                            .font(.body)
+                            .font(.subheadline)
                             .fontWeight(.medium)
                             .foregroundStyle(.primary)
-                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
                             .multilineTextAlignment(.leading)
 
                         if let range = rangeText {

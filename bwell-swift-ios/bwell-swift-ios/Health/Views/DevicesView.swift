@@ -2,7 +2,7 @@
 //  DevicesView.swift
 //  bwell-swift-ios
 //
-//  Displays health devices using sdk.health.getDevices().
+//  Displays health devices with expandable detail rows.
 //
 
 import SwiftUI
@@ -13,10 +13,13 @@ struct DevicesView: View {
     @State private var devices: [BWell.Device] = []
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var expandedIds: Set<String> = []
 
     var body: some View {
         ZStack {
             if isLoading && devices.isEmpty {
+                ContentUnavailableView("Error", systemImage: "exclamationmark.triangle", description: Text(""))
+                    .hidden()
                 ProgressView("Loading devices...")
             } else if let error = errorMessage {
                 ContentUnavailableView("Error", systemImage: "exclamationmark.triangle", description: Text(error))
@@ -24,72 +27,20 @@ struct DevicesView: View {
                 ContentUnavailableView("No Devices", systemImage: "sensor", description: Text("No medical devices found."))
             } else {
                 List(devices, id: \.id) { device in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(deviceDisplayName(device))
-                            .font(.headline)
-
-                        if let status = device.status {
-                            Text(status)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(deviceStatusColor(status).opacity(0.15))
-                                .foregroundStyle(deviceStatusColor(status))
-                                .clipShape(Capsule())
-                        }
-
-                        if let type = device.type?.text ?? device.type?.coding?.first?.display {
-                            HStack(spacing: 4) {
-                                Text("Type:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(type)
-                                    .font(.caption)
+                    DeviceRow(
+                        device: device,
+                        isExpanded: expandedIds.contains(device.id ?? ""),
+                        onToggle: {
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                let id = device.id ?? ""
+                                if expandedIds.contains(id) {
+                                    expandedIds.remove(id)
+                                } else {
+                                    expandedIds.insert(id)
+                                }
                             }
                         }
-
-                        if let manufacturer = device.manufacturer {
-                            HStack(spacing: 4) {
-                                Text("Manufacturer:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(manufacturer)
-                                    .font(.caption)
-                            }
-                        }
-
-                        if let model = device.modelNumber {
-                            HStack(spacing: 4) {
-                                Text("Model:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(model)
-                                    .font(.caption)
-                            }
-                        }
-
-                        if let serial = device.serialNumber {
-                            HStack(spacing: 4) {
-                                Text("Serial:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(serial)
-                                    .font(.caption)
-                            }
-                        }
-
-                        if let lotNumber = device.lotNumber {
-                            HStack(spacing: 4) {
-                                Text("Lot:")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(lotNumber)
-                                    .font(.caption)
-                            }
-                        }
-                    }
-                    .padding(.vertical, 4)
+                    )
                 }
                 .listStyle(.plain)
             }
@@ -120,12 +71,79 @@ struct DevicesView: View {
         }
         isLoading = false
     }
+}
 
-    private func deviceDisplayName(_ device: BWell.Device) -> String {
+// MARK: - Device Row
+
+private struct DeviceRow: View {
+    let device: BWell.Device
+    let isExpanded: Bool
+    let onToggle: () -> Void
+
+    private var displayName: String {
         if let names = device.deviceName, let first = names.first {
             return first.name ?? "Device"
         }
         return device.type?.text ?? device.type?.coding?.first?.display ?? "Device"
+    }
+
+    private var typeText: String? {
+        // If name came from deviceName, show type separately
+        if let names = device.deviceName, names.first?.name != nil {
+            return device.type?.text ?? device.type?.coding?.first?.display
+        }
+        return nil
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Button(action: onToggle) {
+                HStack(alignment: .center, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(displayName)
+                            .font(.body)
+                            .fontWeight(.medium)
+                            .foregroundStyle(.primary)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+
+                        if let type = typeText {
+                            Text(type)
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+
+                    Spacer()
+
+                    if let status = device.status {
+                        Text(status)
+                            .font(.caption2)
+                            .fontWeight(.medium)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(deviceStatusColor(status).opacity(0.15))
+                            .foregroundStyle(deviceStatusColor(status))
+                            .clipShape(Capsule())
+                    }
+
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            .buttonStyle(.plain)
+
+            if isExpanded {
+                Divider().padding(.top, 8)
+                DeviceDetail(device: device)
+                    .padding(.top, 6)
+                    .padding(.leading, 20)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .padding(.vertical, 6)
     }
 
     private func deviceStatusColor(_ status: String) -> Color {
@@ -134,6 +152,75 @@ struct DevicesView: View {
         case "inactive": return .orange
         case "entered-in-error": return .red
         default: return .gray
+        }
+    }
+}
+
+// MARK: - Device Detail (Expanded)
+
+private struct DeviceDetail: View {
+    let device: BWell.Device
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if let type = device.type?.text ?? device.type?.coding?.first?.display {
+                detailRow("Type", type)
+            }
+
+            if let manufacturer = device.manufacturer {
+                detailRow("Manufacturer", manufacturer)
+            }
+
+            if let model = device.modelNumber {
+                detailRow("Model", model)
+            }
+
+            if let serial = device.serialNumber {
+                detailRow("Serial", serial)
+            }
+
+            if let lotNumber = device.lotNumber {
+                detailRow("Lot Number", lotNumber)
+            }
+
+            if let expirationDate = device.expirationDate {
+                detailRow("Expires", expirationDate.dateFormatter())
+            }
+
+            if let manufactureDate = device.manufactureDate {
+                detailRow("Manufactured", manufactureDate.dateFormatter())
+            }
+
+            // Device names (additional names beyond the primary)
+            if let names = device.deviceName, names.count > 1 {
+                Divider().padding(.vertical, 4)
+                Text("Names")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                ForEach(Array(names.dropFirst()).indices, id: \.self) { i in
+                    if let nameText = Array(names.dropFirst())[i].name {
+                        detailRow("Name", nameText)
+                    }
+                }
+            }
+
+        }
+    }
+
+    @ViewBuilder
+    private func detailRow(_ label: String, _ value: String?) -> some View {
+        if let value, !value.isEmpty {
+            HStack(alignment: .top, spacing: 6) {
+                Text(label)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(width: 80, alignment: .trailing)
+                Text(value)
+                    .font(.caption)
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 }

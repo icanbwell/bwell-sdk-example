@@ -189,6 +189,10 @@ private struct VitalSignGroupRow: View {
                         .clipShape(Capsule())
                 }
             }
+
+            Image(systemName: "chart.line.uptrend.xyaxis")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
         }
         .padding(.vertical, 4)
     }
