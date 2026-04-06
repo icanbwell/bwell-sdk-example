@@ -17,34 +17,17 @@ struct VitalSignsView: View {
     @State private var isLoading = false
     @State private var hasFetched = false
 
-    // FHIR vital signs panel LOINC codes — anything not in this set
-    // is metadata or supplemental and gets filtered to "Other"
-    private static let coreVitalCodes: Set<String> = [
-        "85354-9",  // Blood pressure panel
-        "8480-6",   // Systolic BP
-        "8462-4",   // Diastolic BP
-        "8867-4",   // Heart rate
-        "8310-5",   // Body temperature
-        "8331-1",   // Oral temperature
-        "9279-1",   // Respiratory rate
-        "2708-6",   // Oxygen saturation (SpO2)
-        "59408-5",  // Oxygen saturation (pulse ox)
-        "29463-7",  // Body weight
-        "3141-9",   // Body weight (measured)
-        "8302-2",   // Body height
-        "8306-3",   // Body height (lying)
-        "39156-5",  // BMI
-        "9843-4",   // Head circumference
-        "3140-1",   // Body surface area
-    ]
-
     private var displayGroups: [BWell.VitalSignGroups] {
-        // Filter to core vital LOINC codes; show others only if they have a value
         groups.filter { group in
-            if let code = group.coding?.code, VitalSignsView.coreVitalCodes.contains(code) {
+            // Filter out metadata observations (e.g., "Weight Measurement Time")
+            if FHIRObservationMetadata.isMetadata(name: group.name ?? group.coding?.display) {
+                return false
+            }
+            // Include if it's a core vital LOINC code
+            if let code = group.coding?.code, LoincVitalSign.allCodes.contains(code) {
                 return true
             }
-            // Include if it has an actual measured value (not metadata)
+            // Include if it has an actual measured value
             return group.value?.valueQuantity?.value != nil
                 || group.value?.valueString != nil
                 || (group.component?.isEmpty == false)
@@ -113,20 +96,16 @@ struct VitalSignsView: View {
 private struct VitalSignGroupRow: View {
     let group: BWell.VitalSignGroups
 
-    // Friendly name: prefer coding.display (LOINC standard),
-    // fall back to group name, with overrides for common cases
-    private var name: String {
-        let raw = group.coding?.display ?? group.name ?? "Vital Sign"
-        return Self.friendlyOverrides[raw.lowercased()] ?? raw
+    private var loincVital: LoincVitalSign? {
+        guard let code = group.coding?.code else { return nil }
+        return LoincVitalSign(rawValue: code)
     }
 
-    // Override LOINC display names that are overly clinical
-    private static let friendlyOverrides: [String: String] = [
-        "oxygen saturation in arterial blood by pulse oximetry": "Blood Oxygen",
-        "inhaled oxygen concentration": "Inhaled O₂",
-        "body mass index (bmi) [ratio]": "BMI",
-        "body height --lying": "Length (Lying)",
-    ]
+    private var name: String {
+        // Prefer LOINC-mapped friendly name, fall back to coding display
+        if let vital = loincVital { return vital.friendlyName }
+        return group.coding?.display ?? group.name ?? "Vital Sign"
+    }
 
     private var latestValue: String? {
         if let qty = group.value?.valueQuantity, let val = qty.value {
@@ -149,14 +128,13 @@ private struct VitalSignGroupRow: View {
         return nil
     }
 
+    private var interpretation: FHIRInterpretation? {
+        FHIRInterpretation(code: group.interpretation?.first?.coding?.first?.code)
+    }
+
     private var interpretationText: String? {
         group.interpretation?.first?.coding?.first?.display
             ?? group.interpretation?.first?.text
-    }
-
-    private var isAbnormal: Bool {
-        guard let code = group.interpretation?.first?.coding?.first?.code?.lowercased() else { return false }
-        return ["h", "hh", "l", "ll", "a", "aa", "high", "low"].contains(code)
     }
 
     private var dateText: String? {
@@ -164,41 +142,12 @@ private struct VitalSignGroupRow: View {
     }
 
     private var icon: String {
-        let code = group.coding?.code ?? ""
-        switch code {
-        case "85354-9", "8480-6", "8462-4": return "heart.fill"
-        case "8867-4": return "waveform.path.ecg"
-        case "8310-5", "8331-1": return "thermometer.medium"
-        case "9279-1": return "lungs.fill"
-        case "2708-6", "59408-5": return "o2.circle.fill"
-        case "29463-7", "3141-9": return "scalemass.fill"
-        case "8302-2", "8306-3": return "ruler.fill"
-        case "39156-5": return "figure.stand"
-        case "9843-4": return "brain.head.profile"
-        default:
-            // Fall back to name-based matching
-            let n = name.lowercased()
-            if n.contains("blood pressure") { return "heart.fill" }
-            if n.contains("heart") || n.contains("pulse") { return "waveform.path.ecg" }
-            if n.contains("temperature") { return "thermometer.medium" }
-            if n.contains("respiratory") { return "lungs.fill" }
-            if n.contains("oxygen") { return "o2.circle.fill" }
-            if n.contains("weight") { return "scalemass.fill" }
-            if n.contains("height") { return "ruler.fill" }
-            return "waveform.path.ecg.rectangle"
-        }
+        loincVital?.icon ?? "waveform.path.ecg.rectangle"
     }
 
     private var iconColor: Color {
-        if isAbnormal { return .red }
-        let code = group.coding?.code ?? ""
-        switch code {
-        case "85354-9", "8480-6", "8462-4", "8867-4": return .red
-        case "8310-5", "8331-1": return .orange
-        case "9279-1", "2708-6", "59408-5": return .blue
-        case "29463-7", "3141-9", "8302-2", "8306-3", "39156-5", "9843-4": return .purple
-        default: return .bwellPurple
-        }
+        if interpretation?.isAbnormal == true { return .red }
+        return loincVital?.color ?? .bwellPurple
     }
 
     var body: some View {
@@ -228,17 +177,17 @@ private struct VitalSignGroupRow: View {
                     Text(value)
                         .font(.title3)
                         .fontWeight(.semibold)
-                        .foregroundStyle(isAbnormal ? .red : .primary)
+                        .foregroundStyle(interpretation?.isAbnormal == true ? .red : .primary)
                 }
 
-                if let interp = interpretationText {
-                    Text(interp)
+                if let text = interpretationText, let interp = interpretation {
+                    Text(text)
                         .font(.caption2)
                         .fontWeight(.medium)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(interpColor.opacity(0.12))
-                        .foregroundStyle(interpColor)
+                        .background(interp.color.opacity(0.12))
+                        .foregroundStyle(interp.color)
                         .clipShape(Capsule())
                 }
             }
@@ -248,20 +197,6 @@ private struct VitalSignGroupRow: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, 4)
-    }
-
-    private var interpColor: Color {
-        guard let code = group.interpretation?.first?.coding?.first?.code?.lowercased() else { return .gray }
-        switch code {
-        case "n", "normal": return .green
-        case "h", "high": return .orange
-        case "hh": return .red
-        case "l", "low": return .blue
-        case "ll": return .red
-        case "a", "abnormal": return .orange
-        case "aa": return .red
-        default: return .gray
-        }
     }
 
     private func formatNumber(_ value: Double) -> String {

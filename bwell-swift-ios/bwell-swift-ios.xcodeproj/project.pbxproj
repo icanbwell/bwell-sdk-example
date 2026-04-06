@@ -52,6 +52,7 @@
 		55D5DF862EB9459800D71D99 /* MedicationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF852EB9459200D71D99 /* MedicationsView.swift */; };
 		55D5DF882EB945A300D71D99 /* ProceduresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF872EB9459E00D71D99 /* ProceduresView.swift */; };
 		55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF892EB945A700D71D99 /* VitalSignsView.swift */; };
+		A2FHIR0002000000000001 /* FHIRConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FHIR0001000000000001 /* FHIRConstants.swift */; };
 		55D5DF8C2EB9813700D71D99 /* EncountersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */; };
 		55DEF6072EC6FDA700C8DB85 /* HealthDataListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */; };
 		55DEF60E2EC7746300C8DB85 /* HealthDataViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */; };
@@ -159,6 +160,7 @@
 		55D5DF852EB9459200D71D99 /* MedicationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationsView.swift; sourceTree = "<group>"; };
 		55D5DF872EB9459E00D71D99 /* ProceduresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProceduresView.swift; sourceTree = "<group>"; };
 		55D5DF892EB945A700D71D99 /* VitalSignsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalSignsView.swift; sourceTree = "<group>"; };
+		A2FHIR0001000000000001 /* FHIRConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRConstants.swift; sourceTree = "<group>"; };
 		55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncountersView.swift; sourceTree = "<group>"; };
 		55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataListView.swift; sourceTree = "<group>"; };
 		55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataViewFactory.swift; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 				55D5DF852EB9459200D71D99 /* MedicationsView.swift */,
 				55D5DF872EB9459E00D71D99 /* ProceduresView.swift */,
 				55D5DF892EB945A700D71D99 /* VitalSignsView.swift */,
+				A2FHIR0001000000000001 /* FHIRConstants.swift */,
 				55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */,
 				1B003431C42F0D84098CCA90 /* ProviderResourcesView.swift */,
 				F383A9E34FD6FB51259FCF74 /* HealthJourneyView.swift */,
@@ -739,6 +742,7 @@
 				5522DCB12EB11FB500F9BCD7 /* ProfileView.swift in Sources */,
 				55E625782EB54376000D3783 /* BWellWrapper.swift in Sources */,
 				55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */,
+				A2FHIR0002000000000001 /* FHIRConstants.swift in Sources */,
 				5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */,
 				55E625722EB44B77000D3783 /* CarePlansView.swift in Sources */,
 				5551A3AA2EC390A200394D59 /* KeychainService.swift in Sources */,
