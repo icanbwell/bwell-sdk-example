@@ -20,7 +20,7 @@ class SDKViewModel: ObservableObject {
                 clientKey: clientKey
             )
 
-            let sdk = try BWellSDK(config: config)
+            let sdk = try BWellClient(config: config)
             try await sdk.initialize()
 
             self.sdk = sdk

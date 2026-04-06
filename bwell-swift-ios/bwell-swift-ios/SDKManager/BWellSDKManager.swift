@@ -34,7 +34,7 @@ final class BWellSDKManager: ObservableObject {
         do {
             let tokenStorage = KeychainTokenStorageAdapter()
             let config = BWell.SDKConfig(clientKey: apiKey, logLevel: .verbose,tokenStorage: tokenStorage)
-            let sdkInstance = try BWellSDK(config: config)
+            let sdkInstance = try BWellClient(config: config)
 
             try await sdkInstance.initialize()
             self.sdk = sdkInstance
