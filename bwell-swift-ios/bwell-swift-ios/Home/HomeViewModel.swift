@@ -213,7 +213,11 @@ final class HomeViewModel: ObservableObject {
             let request = BWell.TasksRequest(page: 0, pageSize: 10)
             let response = try await sdk.activity.getTasks(request)
             let allTasks = response.entry?.compactMap { $0.resource } ?? []
-            pendingTasks = allTasks.filter { $0.status?.lowercased() != "completed" }
+            let terminalStatuses: Set<String> = ["completed", "cancelled", "rejected", "entered-in-error", "failed"]
+            pendingTasks = allTasks.filter { task in
+                guard let status = task.status?.lowercased() else { return true }
+                return !terminalStatuses.contains(status)
+            }
         } catch {
             NSLog("[Home] getTasks error: %@", String(describing: error))
             pendingTasks = []
