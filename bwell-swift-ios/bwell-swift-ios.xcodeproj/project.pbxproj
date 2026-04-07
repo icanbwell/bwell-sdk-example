@@ -652,7 +652,7 @@
 			mainGroup = 5522DC4E2EAFE0FD00F9BCD7;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A264CBC42EE38945000D0AF7 /* XCLocalSwiftPackageReference "bwell-sdk-swift" */,
+				A264CBC42EE38945000D0AF7 /* XCRemoteSwiftPackageReference "bwell-sdk-swift-package" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5522DC582EAFE0FD00F9BCD7 /* Products */;
@@ -1149,15 +1149,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		A264CBC42EE38945000D0AF7 /* XCLocalSwiftPackageReference "bwell-sdk-swift" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../bwell-sdk/bwell-sdk-swift";
+		A264CBC42EE38945000D0AF7 /* XCRemoteSwiftPackageReference "bwell-sdk-swift-package" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/icanbwell/bwell-sdk-swift-package";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		A264CBC52EE38945000D0AF7 /* BWellSDK */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = A264CBC42EE38945000D0AF7 /* XCRemoteSwiftPackageReference "bwell-sdk-swift-package" */;
 			productName = BWellSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
