@@ -19,18 +19,34 @@ struct VitalSignsView: View {
 
     private var displayGroups: [BWell.VitalSignGroups] {
         groups.filter { group in
-            // Filter out metadata observations (e.g., "Weight Measurement Time")
             if FHIRObservationMetadata.isMetadata(name: group.name ?? group.coding?.display) {
                 return false
             }
-            // Include if it's a core vital LOINC code
             if let code = group.coding?.code, LoincVitalSign.allCodes.contains(code) {
                 return true
             }
-            // Include if it has an actual measured value
             return group.value?.valueQuantity?.value != nil
                 || group.value?.valueString != nil
                 || (group.component?.isEmpty == false)
+        }
+    }
+
+    // Group vitals by Apple Health-style categories using LOINC codes
+    private var categorizedGroups: [(category: VitalSignCategory, items: [BWell.VitalSignGroups])] {
+        var buckets: [VitalSignCategory: [BWell.VitalSignGroups]] = [:]
+        for group in displayGroups {
+            let cat: VitalSignCategory
+            if let code = group.coding?.code, let loinc = LoincVitalSign(rawValue: code) {
+                cat = loinc.category
+            } else {
+                cat = .otherVitals
+            }
+            buckets[cat, default: []].append(group)
+        }
+        // Return in Apple Health order, only categories that have data
+        return VitalSignCategory.allCases.compactMap { cat in
+            guard let items = buckets[cat], !items.isEmpty else { return nil }
+            return (category: cat, items: items)
         }
     }
 
@@ -46,21 +62,33 @@ struct VitalSignsView: View {
                     systemImage: "waveform.path.ecg",
                     description: Text("No vital sign records found."))
             } else {
-                ForEach(displayGroups, id: \.id) { group in
-                    if let id = group.id, let coding = group.coding {
-                        NavigationLink(value: AppView.healthGroupItems(
-                            category: .vitalSigns,
-                            groupCode: BWellHealthDataWrapper(id, coding)
-                        )) {
-                            VitalSignGroupRow(group: group)
+                ForEach(categorizedGroups, id: \.category) { section in
+                    Section {
+                        ForEach(section.items, id: \.id) { group in
+                            if let id = group.id, let coding = group.coding {
+                                NavigationLink(value: AppView.healthGroupItems(
+                                    category: .vitalSigns,
+                                    groupCode: BWellHealthDataWrapper(id, coding)
+                                )) {
+                                    VitalSignGroupRow(group: group)
+                                }
+                            } else {
+                                VitalSignGroupRow(group: group)
+                            }
                         }
-                    } else {
-                        VitalSignGroupRow(group: group)
+                    } header: {
+                        HStack(spacing: 6) {
+                            Image(systemName: section.category.icon)
+                                .foregroundStyle(section.category.color)
+                            Text(section.category.rawValue)
+                        }
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     }
                 }
             }
         }
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
         .navigationTitle("Vital Signs")
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbarBackgroundVisibility(.visible, for: .navigationBar)
