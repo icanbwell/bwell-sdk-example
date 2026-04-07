@@ -195,11 +195,27 @@ struct HealthDataFactoryView: View {
     }
 
     private func observationValueText(_ obs: BWell.Observation) -> String? {
+        // Direct value (most observations)
         if let qty = obs.valueQuantity, let value = qty.value {
             let unit = qty.unit ?? ""
-            return "\(value) \(unit)".trimmingCharacters(in: .whitespaces)
-        } else if let str = obs.valueString {
+            let formatted = value.truncatingRemainder(dividingBy: 1) == 0
+                ? String(format: "%.0f", value) : String(format: "%.1f", value)
+            return "\(formatted) \(unit)".trimmingCharacters(in: .whitespaces)
+        }
+        if let str = obs.valueString {
             return str
+        }
+        // Component values (e.g., Blood Pressure: systolic/diastolic)
+        if let components = obs.component, !components.isEmpty {
+            let parts = components.compactMap { comp -> String? in
+                guard let val = comp.valueQuantity?.value else { return nil }
+                return val.truncatingRemainder(dividingBy: 1) == 0
+                    ? String(format: "%.0f", val) : String(format: "%.1f", val)
+            }
+            if !parts.isEmpty {
+                let unit = components.first?.valueQuantity?.unit ?? ""
+                return parts.joined(separator: "/") + (unit.isEmpty ? "" : " \(unit)")
+            }
         }
         return nil
     }
@@ -515,17 +531,33 @@ struct VitalSignInlineDetail: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            // Value
+            // Direct value
             if let qty = vitalSign.valueQuantity, let value = qty.value {
-                DetailRow(label: "Value:", value: "\(value) \(qty.unit ?? "")".trimmingCharacters(in: .whitespaces))
+                let formatted = value.truncatingRemainder(dividingBy: 1) == 0
+                    ? String(format: "%.0f", value) : String(format: "%.1f", value)
+                DetailRow(label: "Value:", value: "\(formatted) \(qty.unit ?? "")".trimmingCharacters(in: .whitespaces))
             } else if let str = vitalSign.valueString {
                 DetailRow(label: "Value:", value: str)
             }
 
+            // Component values (e.g., Blood Pressure systolic/diastolic)
+            if let components = vitalSign.component, !components.isEmpty {
+                ForEach(components.indices, id: \.self) { i in
+                    let comp = components[i]
+                    let name = comp.code?.coding?.first?.display ?? comp.code?.text ?? "Component"
+                    if let val = comp.valueQuantity?.value {
+                        let formatted = val.truncatingRemainder(dividingBy: 1) == 0
+                            ? String(format: "%.0f", val) : String(format: "%.1f", val)
+                        let unit = comp.valueQuantity?.unit ?? ""
+                        DetailRow(label: "\(name):", value: "\(formatted) \(unit)".trimmingCharacters(in: .whitespaces))
+                    }
+                }
+            }
+
             // Reference Range
             if let refRange = vitalSign.referenceRange?.first {
-                let low = refRange.low?.value.map { "\($0)" } ?? ""
-                let high = refRange.high?.value.map { "\($0)" } ?? ""
+                let low = refRange.low?.value.map { String(format: "%.0f", $0) } ?? ""
+                let high = refRange.high?.value.map { String(format: "%.0f", $0) } ?? ""
                 let unit = refRange.low?.unit ?? refRange.high?.unit ?? ""
                 if !low.isEmpty || !high.isEmpty {
                     DetailRow(label: "Ref Range:", value: "\(low) - \(high) \(unit)".trimmingCharacters(in: .whitespaces))
