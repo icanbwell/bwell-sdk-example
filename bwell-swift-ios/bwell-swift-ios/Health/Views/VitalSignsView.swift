@@ -78,6 +78,14 @@ struct VitalSignsView: View {
             let request = BWell.HealthDataGroupRequest(page: 0)
             let result = try await sdk.health.getVitalSignGroups(request)
             let all = result.resources ?? []
+            for g in all {
+                NSLog("[VitalSigns] name=%@ code=%@ display=%@ value=%@ date=%@",
+                      g.name ?? "nil",
+                      g.coding?.code ?? "nil",
+                      g.coding?.display ?? "nil",
+                      g.value?.valueQuantity?.value.map { String($0) } ?? g.value?.valueString ?? "nil",
+                      g.effectiveDateTime ?? "nil")
+            }
             groups = all.sorted {
                 ($0.effectiveDateTime ?? "") > ($1.effectiveDateTime ?? "")
             }
