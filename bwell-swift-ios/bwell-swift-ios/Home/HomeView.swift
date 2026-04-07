@@ -277,6 +277,15 @@ private struct HomeTaskRow: View {
     }
 
     private func homeTaskTitle(_ task: BWell.Task) -> String {
+        // Check identifier with activityTitle system (hp-facade enrichment)
+        if let idents = task.identifier {
+            for ident in idents {
+                if let sys = ident.system, sys.contains("activityTitle"),
+                   let val = ident.value, !val.isEmpty {
+                    return val
+                }
+            }
+        }
         if let t = task.code?.text, !t.isEmpty { return t }
         if let d = task.code?.coding?.first?.display, !d.isEmpty { return d }
         if let d = task.description, !d.isEmpty { return d }

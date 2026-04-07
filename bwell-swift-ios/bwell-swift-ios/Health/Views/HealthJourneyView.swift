@@ -23,12 +23,23 @@ struct HealthJourneyView: View {
         case completed = "Completed"
     }
 
+    // FHIR Task terminal statuses — not actionable
+    private static let terminalStatuses: Set<String> = [
+        "completed", "cancelled", "rejected", "entered-in-error", "failed"
+    ]
+
     private var filteredTasks: [BWell.Task] {
         switch selectedFilter {
         case .toDo:
-            return tasks.filter { $0.status?.lowercased() != "completed" }
+            return tasks.filter { task in
+                guard let status = task.status?.lowercased() else { return true }
+                return !Self.terminalStatuses.contains(status)
+            }
         case .completed:
-            return tasks.filter { $0.status?.lowercased() == "completed" }
+            return tasks.filter { task in
+                guard let status = task.status?.lowercased() else { return false }
+                return Self.terminalStatuses.contains(status)
+            }
         }
     }
 
