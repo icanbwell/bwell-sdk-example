@@ -38,9 +38,11 @@ enum VitalSignCategory: String, CaseIterable {
 
 enum LoincVitalSign: String, CaseIterable {
     case bloodPressurePanel = "85354-9"
+    case bloodPressureSystolicDiastolic = "55284-4"
     case systolicBP = "8480-6"
     case diastolicBP = "8462-4"
     case heartRate = "8867-4"
+    case heartRateVariability = "80404-7"
     case bodyTemperature = "8310-5"
     case oralTemperature = "8331-1"
     case respiratoryRate = "9279-1"
@@ -58,7 +60,8 @@ enum LoincVitalSign: String, CaseIterable {
 
     var category: VitalSignCategory {
         switch self {
-        case .bloodPressurePanel, .systolicBP, .diastolicBP, .heartRate:
+        case .bloodPressurePanel, .bloodPressureSystolicDiastolic,
+             .systolicBP, .diastolicBP, .heartRate, .heartRateVariability:
             return .heart
         case .respiratoryRate, .oxygenSaturation, .oxygenSaturationPulseOx:
             return .respiratory
@@ -72,10 +75,11 @@ enum LoincVitalSign: String, CaseIterable {
 
     var friendlyName: String {
         switch self {
-        case .bloodPressurePanel: return "Blood Pressure"
+        case .bloodPressurePanel, .bloodPressureSystolicDiastolic: return "Blood Pressure"
         case .systolicBP: return "Systolic BP"
         case .diastolicBP: return "Diastolic BP"
         case .heartRate: return "Heart Rate"
+        case .heartRateVariability: return "Heart Rate Variability"
         case .bodyTemperature, .oralTemperature: return "Body Temperature"
         case .respiratoryRate: return "Respiratory Rate"
         case .oxygenSaturation, .oxygenSaturationPulseOx: return "Blood Oxygen"
@@ -90,8 +94,8 @@ enum LoincVitalSign: String, CaseIterable {
 
     var icon: String {
         switch self {
-        case .bloodPressurePanel, .systolicBP, .diastolicBP: return "heart.fill"
-        case .heartRate: return "waveform.path.ecg"
+        case .bloodPressurePanel, .bloodPressureSystolicDiastolic, .systolicBP, .diastolicBP: return "heart.fill"
+        case .heartRate, .heartRateVariability: return "waveform.path.ecg"
         case .bodyTemperature, .oralTemperature: return "thermometer.medium"
         case .respiratoryRate: return "lungs.fill"
         case .oxygenSaturation, .oxygenSaturationPulseOx: return "o2.circle.fill"
@@ -105,7 +109,7 @@ enum LoincVitalSign: String, CaseIterable {
 
     var color: Color {
         switch self {
-        case .bloodPressurePanel, .systolicBP, .diastolicBP, .heartRate: return .red
+        case .bloodPressurePanel, .bloodPressureSystolicDiastolic, .systolicBP, .diastolicBP, .heartRate, .heartRateVariability: return .red
         case .bodyTemperature, .oralTemperature: return .orange
         case .respiratoryRate, .oxygenSaturation, .oxygenSaturationPulseOx: return .blue
         case .bodyWeight, .bodyWeightMeasured, .bodyHeight, .bodyHeightLying, .bmi, .headCircumference, .bodySurfaceArea: return .purple

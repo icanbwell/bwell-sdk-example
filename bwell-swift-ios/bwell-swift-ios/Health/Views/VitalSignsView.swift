@@ -18,16 +18,12 @@ struct VitalSignsView: View {
     @State private var hasFetched = false
 
     private var displayGroups: [BWell.VitalSignGroups] {
+        // Only show observations with recognized vital sign LOINC codes.
+        // The API returns all observations (labs, social history, etc.) —
+        // we filter to the FHIR vital signs panel codes only.
         groups.filter { group in
-            if FHIRObservationMetadata.isMetadata(name: group.name ?? group.coding?.display) {
-                return false
-            }
-            if let code = group.coding?.code, LoincVitalSign.allCodes.contains(code) {
-                return true
-            }
-            return group.value?.valueQuantity?.value != nil
-                || group.value?.valueString != nil
-                || (group.component?.isEmpty == false)
+            guard let code = group.coding?.code else { return false }
+            return LoincVitalSign(rawValue: code) != nil
         }
     }
 
