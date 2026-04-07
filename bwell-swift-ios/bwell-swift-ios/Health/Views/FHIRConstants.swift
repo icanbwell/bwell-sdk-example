@@ -10,6 +10,32 @@ import SwiftUI
 
 // MARK: - LOINC Vital Signs Panel Codes
 
+// Apple Health-style vital sign categories
+enum VitalSignCategory: String, CaseIterable {
+    case heart = "Heart"
+    case respiratory = "Respiratory"
+    case bodyMeasurements = "Body Measurements"
+    case otherVitals = "Other Vitals"
+
+    var icon: String {
+        switch self {
+        case .heart: return "heart.fill"
+        case .respiratory: return "lungs.fill"
+        case .bodyMeasurements: return "figure.stand"
+        case .otherVitals: return "waveform.path.ecg.rectangle"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .heart: return .red
+        case .respiratory: return .blue
+        case .bodyMeasurements: return .purple
+        case .otherVitals: return .orange
+        }
+    }
+}
+
 enum LoincVitalSign: String, CaseIterable {
     case bloodPressurePanel = "85354-9"
     case systolicBP = "8480-6"
@@ -29,6 +55,20 @@ enum LoincVitalSign: String, CaseIterable {
     case bodySurfaceArea = "3140-1"
 
     static let allCodes: Set<String> = Set(allCases.map(\.rawValue))
+
+    var category: VitalSignCategory {
+        switch self {
+        case .bloodPressurePanel, .systolicBP, .diastolicBP, .heartRate:
+            return .heart
+        case .respiratoryRate, .oxygenSaturation, .oxygenSaturationPulseOx:
+            return .respiratory
+        case .bodyWeight, .bodyWeightMeasured, .bodyHeight, .bodyHeightLying,
+             .bmi, .headCircumference, .bodySurfaceArea:
+            return .bodyMeasurements
+        case .bodyTemperature, .oralTemperature:
+            return .otherVitals
+        }
+    }
 
     var friendlyName: String {
         switch self {
