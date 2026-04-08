@@ -28,7 +28,7 @@ final class ProviderSearchViewModel: ObservableObject {
     // Filter state
     @Published var includeProaOnly = true
     @Published var organizationType: OrganizationType = .all
-    @Published var useLocation = true
+    @Published var useLocation = false
     @Published var latitude: Double = 39.2848102
     @Published var longitude: Double = -76.702898
 
@@ -184,9 +184,9 @@ final class ProviderSearchViewModel: ObservableObject {
         ) : nil
 
         let orderBy: [BWell.SearchHealthResourcesRequest.OrderBy] = useLocation ? [
-            .init(field: .distance, order: .asc)
+            .init(field: .distance, order: .desc)
         ] : [
-            .init(field: .content, order: .asc)
+            .init(field: .relevance, order: .desc)
         ]
 
         let request = BWell.SearchHealthResourcesRequest(
