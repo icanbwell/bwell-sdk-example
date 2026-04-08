@@ -16,6 +16,7 @@ struct EncountersView: View {
     @State private var encounters: [BWell.Encounter] = []
     @State private var isLoading = false
     @State private var hasFetched = false
+    @State private var errorMessage: String?
 
     var body: some View {
         List {
@@ -23,6 +24,25 @@ struct EncountersView: View {
                 ForEach(0..<5, id: \.self) { _ in
                     SkeletonRow()
                 }
+                .listRowSeparator(.hidden)
+            } else if !isLoading && hasFetched && errorMessage != nil {
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundStyle(.orange)
+                    Text("Unable to Load Encounters")
+                        .font(.headline)
+                    Text(errorMessage ?? "An unknown error occurred.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                    Button("Retry") {
+                        Task { await fetchAll() }
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.top, 40)
                 .listRowSeparator(.hidden)
             } else if !isLoading && encounters.isEmpty && hasFetched {
                 ContentUnavailableView("No Encounters",
@@ -52,6 +72,7 @@ struct EncountersView: View {
     private func fetchAll() async {
         guard let sdk = sdkManager.sdk else { return }
         isLoading = true
+        errorMessage = nil
         do {
             let request = BWell.HealthDataRequest(page: 0, pageSize: 100)
             let response = try await sdk.health.getEncounters(request)
@@ -59,6 +80,7 @@ struct EncountersView: View {
             encounters = all.sorted { ($0.period?.start ?? "") > ($1.period?.start ?? "") }
         } catch {
             NSLog("[Encounters] Error: %@", error.localizedDescription)
+            errorMessage = error.localizedDescription
             encounters = []
         }
         isLoading = false
@@ -247,7 +269,7 @@ private struct EncounterRow: View {
                 EncounterDetailContent(encounter: encounter)
                     .padding(.top, 6)
                     .padding(.leading, 56)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .transition(.opacity)
             }
         }
         .padding(.vertical, 6)
