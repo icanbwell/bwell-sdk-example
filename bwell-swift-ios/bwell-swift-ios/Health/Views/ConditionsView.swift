@@ -17,6 +17,7 @@ struct ConditionsView: View {
     @State private var isLoading = false
     @State private var hasFetched = false
     @State private var expandedIds: Set<String> = []
+    @State private var errorMessage: String?
 
     private var activeConditions: [BWell.Condition] {
         conditions.filter { clinicalCode($0) == "active" || clinicalCode($0) == "recurrence" || clinicalCode($0) == "relapse" }
@@ -40,6 +41,25 @@ struct ConditionsView: View {
                 ForEach(0..<5, id: \.self) { _ in
                     SkeletonRow()
                 }
+                .listRowSeparator(.hidden)
+            } else if !isLoading && hasFetched && errorMessage != nil {
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.largeTitle)
+                        .foregroundStyle(.orange)
+                    Text("Unable to Load Conditions")
+                        .font(.headline)
+                    Text(errorMessage ?? "An unknown error occurred.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                    Button("Retry") {
+                        Task { await fetchAll() }
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.top, 40)
                 .listRowSeparator(.hidden)
             } else if !isLoading && conditions.isEmpty && hasFetched {
                 ContentUnavailableView("No Conditions",
@@ -101,6 +121,7 @@ struct ConditionsView: View {
     private func fetchAll() async {
         guard let sdk = sdkManager.sdk else { return }
         isLoading = true
+        errorMessage = nil
         do {
             let request = BWell.HealthDataRequest(page: 0, pageSize: 100)
             let response = try await sdk.health.getConditions(request)
@@ -113,7 +134,13 @@ struct ConditionsView: View {
                 return ($0.onsetDateTime ?? $0.recordedDate ?? "") > ($1.onsetDateTime ?? $1.recordedDate ?? "")
             }
         } catch {
-            NSLog("[Conditions] Error: %@", error.localizedDescription)
+            let mirror = Mirror(reflecting: error)
+            NSLog("[Conditions] Error type: %@", String(describing: type(of: error)))
+            NSLog("[Conditions] Error: %@", String(describing: error))
+            for child in mirror.children {
+                NSLog("[Conditions] Error child: %@ = %@", child.label ?? "?", String(describing: child.value))
+            }
+            errorMessage = String(describing: error)
             conditions = []
         }
         isLoading = false
@@ -215,7 +242,7 @@ private struct ConditionRow: View {
                 ConditionDetailContent(condition: condition)
                     .padding(.top, 6)
                     .padding(.leading, 38)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .transition(.opacity)
             }
         }
         .padding(.vertical, 6)
