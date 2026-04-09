@@ -246,7 +246,7 @@ struct CollapsibleHealthCard<DetailContent: View>: View {
 
                 detailContent()
                     .padding(.top, 8)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .transition(.opacity)
             }
         }
         .padding(.vertical, 4)

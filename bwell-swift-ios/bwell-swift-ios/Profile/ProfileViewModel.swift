@@ -99,7 +99,7 @@ final class ProfileViewModel: ObservableObject {
     func createVerificationURL(sdk: BWellClient) async {
         do {
             let json = """
-            {"callbackURL":"bwellexample://verification-callback","includeAttributeMatchingCheck":false}
+            {"callbackURL":"bwell://ial2-callback","includeAttributeMatchingCheck":true}
             """
             let request = try JSONDecoder().decode(
                 BWell.CreateVerificationURLRequest.self,
