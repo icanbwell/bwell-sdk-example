@@ -18,7 +18,8 @@ final class SearchConnectionsViewModel: ObservableObject {
 
         do {
             let filters: BWell.SearchHealthResourcesRequest.Filter = .init(includePopulatedProaOnly: true)
-            let orderBy: BWell.SearchHealthResourcesRequest.OrderBy = .init(field: .distance, order: .asc)
+            let orderBy: BWell.SearchHealthResourcesRequest.OrderBy = .init(field: .relevance, order: .desc)
+            
             let location: BWell.SearchHealthResourcesRequest.Location = .init(latitude: 39.2848102, longitude: -76.702898)
 
             let request = BWell.SearchHealthResourcesRequest(page: 0,

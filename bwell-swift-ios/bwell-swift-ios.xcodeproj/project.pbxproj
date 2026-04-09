@@ -1153,8 +1153,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/icanbwell/bwell-sdk-swift-package";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = exactVersion;
+				version = "1.0.0-beta";
 			};
 		};
 /* End XCLocalSwiftPackageReference section */
