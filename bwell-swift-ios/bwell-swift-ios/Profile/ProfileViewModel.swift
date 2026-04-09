@@ -60,6 +60,7 @@ final class ProfileViewModel: ObservableObject {
 
     func updateUserProfile(sdk: BWellClient) async {
         isLoading = true
+        errorMessage = nil
         do {
             print("new state: \(state)")
             let given: [String] = givenName.components(separatedBy: " ")
@@ -72,6 +73,10 @@ final class ProfileViewModel: ObservableObject {
                                                                              city: city,
                                                                              stateOrProvidence: state,
                                                                              postageOrZipCode: postalCode,
+                                                                             homePhone: homePhone.isEmpty ? nil : homePhone,
+                                                                             mobilePhone: mobilePhone.isEmpty ? nil : mobilePhone,
+                                                                             workPhone: workPhone.isEmpty ? nil : workPhone,
+                                                                             email: email.isEmpty ? nil : email,
                                                                              birthDate: birthdate,
                                                                              gender: gender,
                                                                              language: language)
@@ -80,6 +85,8 @@ final class ProfileViewModel: ObservableObject {
 
             isLoading = false
         } catch {
+            NSLog("[Profile] Update failed: %@", String(describing: error))
+            errorMessage = String(describing: error)
             isLoading = false
         }
     }

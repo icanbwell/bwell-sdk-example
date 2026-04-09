@@ -1148,7 +1148,7 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
+/* Begin XCRemoteSwiftPackageReference section */
 		A264CBC42EE38945000D0AF7 /* XCRemoteSwiftPackageReference "bwell-sdk-swift-package" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/icanbwell/bwell-sdk-swift-package";
@@ -1157,7 +1157,7 @@
 				version = "1.0.0-beta";
 			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		A264CBC52EE38945000D0AF7 /* BWellSDK */ = {

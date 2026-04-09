@@ -53,7 +53,7 @@ extension String {
         guard let date = fhirDate() else { return self }
 
         let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "MMMM dd, yyyy"
+        outputFormatter.dateFormat = "MMMM d, yyyy"
         outputFormatter.locale = Locale(identifier: "en_US_POSIX")
 
         return outputFormatter.string(from: date)
