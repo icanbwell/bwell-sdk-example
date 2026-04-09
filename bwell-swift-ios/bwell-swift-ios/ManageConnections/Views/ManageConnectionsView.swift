@@ -108,7 +108,7 @@ private struct ListItem: View {
 
                 Text(connection.status.description())
                     .padding(5)
-                    .background(.bwellGreen)
+                    .background(connection.status == .deleted || connection.syncStatus == .dataDeleted || connection.status == .error ? .red : .bwellGreen)
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
@@ -128,13 +128,15 @@ private struct ListItem: View {
             }
             Spacer()
 
-            Button {
-                showActionSheet = true
-            } label: {
-                Image(systemName: "ellipsis")
-                    .rotationEffect(Angle(degrees: 90))
-                    .font(.title3)
-                    .frame(width: 25)
+            if connection.status != .deleted && connection.syncStatus != .dataDeleted {
+                Button {
+                    showActionSheet = true
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .rotationEffect(Angle(degrees: 90))
+                        .font(.title3)
+                        .frame(width: 25)
+                }
             }
         }
         .listRowSeparator(.hidden, edges: .all)

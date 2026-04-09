@@ -328,8 +328,10 @@ private struct EncounterDetailContent: View {
             }
 
             // Location (if different from facility)
-            if let loc = encounter.location?.first?.location?.resource?.name,
-               loc != encounter.serviceProvider?.resource?.name {
+            if let loc = encounter.location?.first?.location?.resource?.name
+                          ?? encounter.location?.first?.location?.display,
+               loc != encounter.serviceProvider?.resource?.name,
+               loc != encounter.serviceProvider?.display {
                 detailRow("Location", loc)
             }
 
@@ -391,17 +393,26 @@ private struct EncounterDetailContent: View {
         var results: [ParticipantDetail] = []
         var seen = Set<String>()
         for p in encounter.participant ?? [] {
+            let role = p.type?.first?.coding?.first?.display?.capitalizingFirstLetter() ?? ""
+            var nameStr: String?
+
+            // Try resolved resource first
             if case .practitioner(let doc) = p.individual?.resource,
                let name = doc.name?.first {
                 let given = name.given?.joined(separator: " ") ?? ""
                 let family = name.family ?? ""
                 let prefix = name.prefix?.first ?? ""
-                let role = p.type?.first?.coding?.first?.display?.capitalizingFirstLetter() ?? ""
-                let nameStr = [prefix, given, family].filter { !$0.isEmpty }.joined(separator: " ")
-                if !nameStr.isEmpty && !seen.contains(nameStr) {
-                    seen.insert(nameStr)
-                    results.append(.init(label: role.isEmpty ? "Provider" : role, value: nameStr))
-                }
+                nameStr = [prefix, given, family].filter { !$0.isEmpty }.joined(separator: " ")
+            }
+
+            // Fall back to display on the reference
+            if (nameStr ?? "").isEmpty, let display = p.individual?.display, !display.isEmpty {
+                nameStr = display
+            }
+
+            if let nameStr, !nameStr.isEmpty, !seen.contains(nameStr) {
+                seen.insert(nameStr)
+                results.append(.init(label: role.isEmpty ? "Provider" : role, value: nameStr))
             }
         }
         return results

@@ -48,9 +48,12 @@ struct ProfileView: View {
                     language: $viewModel.language,
                     selectedBirthdate: Binding<Date>(
                         get: {
-                            return viewModel.birthdate.dateFormatter().toDate()
+                            return viewModel.birthdate.fhirDate() ?? Date()
                         }, set: { newDate in
-                            viewModel.birthdate = newDate.toString()
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "yyyy-MM-dd"
+                            formatter.locale = Locale(identifier: "en_US_POSIX")
+                            viewModel.birthdate = formatter.string(from: newDate)
                         }
                     ),
                     action: {
@@ -66,7 +69,6 @@ struct ProfileView: View {
                 }
             }
         }
-        .ignoresSafeArea(edges: .bottom)
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)
@@ -274,10 +276,9 @@ struct ProfileView: View {
     @ViewBuilder
     var readOnlyProfileView: some View {
         ScrollView {
-            Image("user-profile-picture")
-                .resizable()
-                .scaledToFill()
-                .clipShape(Circle())
+            Image(systemName: "person.crop.circle.fill")
+                .font(.system(size: 80))
+                .foregroundStyle(.gray.opacity(0.5))
                 .frame(width: 120, height: 120, alignment: .center)
                 .padding(.top, 20)
 
@@ -292,7 +293,7 @@ struct ProfileView: View {
                     .padding(.bottom, 10)
 
                 ListItem(icon: "person.text.rectangle", title: "Full name", text: fullName)
-                ListItem(icon: "calendar", title: "Birthdate", text: viewModel.birthdate)
+                ListItem(icon: "calendar", title: "Birthdate", text: viewModel.birthdate.dateFormatter())
                 ListItem(icon: "figure.stand.dress.line.vertical.figure", title: "Gender", text: viewModel.gender.description())
                 ListItem(icon: "house", title: "Address", text: address)
 
@@ -363,7 +364,7 @@ struct ProfileView: View {
                                               topTrailingRadius: 25))
 
         }
-        .ignoresSafeArea(edges: .bottom)
+        .padding(.bottom, 20)
     }
 }
 

@@ -529,14 +529,19 @@ struct ProcedureInlineDetail: View {
 struct VitalSignInlineDetail: View {
     let vitalSign: BWell.Observation
 
+    private var hasComponents: Bool {
+        guard let components = vitalSign.component, !components.isEmpty else { return false }
+        return components.contains { $0.valueQuantity?.value != nil }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            // Direct value
-            if let qty = vitalSign.valueQuantity, let value = qty.value {
+            // Direct value (skip when components exist to avoid BP duplication)
+            if !hasComponents, let qty = vitalSign.valueQuantity, let value = qty.value {
                 let formatted = value.truncatingRemainder(dividingBy: 1) == 0
                     ? String(format: "%.0f", value) : String(format: "%.1f", value)
                 DetailRow(label: "Value:", value: "\(formatted) \(qty.unit ?? "")".trimmingCharacters(in: .whitespaces))
-            } else if let str = vitalSign.valueString {
+            } else if !hasComponents, let str = vitalSign.valueString {
                 DetailRow(label: "Value:", value: str)
             }
 

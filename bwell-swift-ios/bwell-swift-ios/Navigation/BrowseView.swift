@@ -66,11 +66,13 @@ struct HealthRecordsBrowseView: View {
                 }
             }
 
+            #if DEBUG
             // MARK: - Developer
             Section("Developer") {
                 DeveloperStubRow(icon: "doc.zipper", title: "Get Binary", description: "getBinary — raw binary FHIR resource access")
                 DeveloperStubRow(icon: "chevron.left.forwardslash.chevron.right", title: "Get FHIR", description: "getFhir — raw FHIR resource access")
             }
+            #endif
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Health Records")

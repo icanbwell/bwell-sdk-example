@@ -64,28 +64,21 @@ final class HomeViewModel: ObservableObject {
         summaryResources = []
         healthSummaryCount = 0
         pendingTasks = []
+        isLoading = true
     }
 
-    func loadProfile(sdk: BWellClient) {
-        guard firstName.isEmpty else {
-            isLoading = false
-            return
-        }
-
-        isLoading = true
-
-        Task {
-            do {
-                let user = try await sdk.user.getProfile()
-                self.firstName = user?.name?.first?.given?.first ?? "User"
-            } catch {
-                self.firstName = "User"
-            }
-            self.isLoading = false
+    func loadProfile(sdk: BWellClient) async {
+        do {
+            let user = try await sdk.user.getProfile()
+            self.firstName = user?.name?.first?.given?.first ?? "User"
+        } catch {
+            self.firstName = "User"
         }
     }
 
     func loadHomeData(sdk: BWellClient) async {
+        defer { isLoading = false }
+        async let profileTask: Void = loadProfile(sdk: sdk)
         async let connectionsTask: Void = loadConnections(sdk: sdk)
         async let consentsTask: Void = loadConsents(sdk: sdk)
         async let summaryTask: Void = loadHealthSummary(sdk: sdk)
@@ -93,7 +86,7 @@ final class HomeViewModel: ObservableObject {
         async let labsTask: Void = loadRecentLabs(sdk: sdk)
         async let encountersTask: Void = loadRecentEncounters(sdk: sdk)
         async let tasksTask: Void = loadPendingTasks(sdk: sdk)
-        _ = await (connectionsTask, consentsTask, summaryTask, vitalsTask, labsTask, encountersTask, tasksTask)
+        _ = await (profileTask, connectionsTask, consentsTask, summaryTask, vitalsTask, labsTask, encountersTask, tasksTask)
     }
 
     private func loadConnections(sdk: BWellClient) async {

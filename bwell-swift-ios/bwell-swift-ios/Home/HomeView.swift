@@ -202,13 +202,11 @@ struct HomeView: View {
         .refreshable {
             if let sdk = sdkManager.sdk {
                 viewModel.reset()
-                viewModel.loadProfile(sdk: sdk)
                 await viewModel.loadHomeData(sdk: sdk)
             }
         }
         .task {
             if let sdk = sdkManager.sdk {
-                viewModel.loadProfile(sdk: sdk)
                 await viewModel.loadHomeData(sdk: sdk)
             }
         }
