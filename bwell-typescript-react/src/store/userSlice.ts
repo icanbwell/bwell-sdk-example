@@ -13,16 +13,16 @@ interface UserState {
 
 export const authenticate = createAsyncThunk<
   string,
-  { oauthCreds?: string; username?: string; password?: string },
+  { oauthCreds?: string; email?: string; password?: string },
   { rejectValue: string }
 >("user/authenticate", async (params, { rejectWithValue }) => {
   try {
     let authenticationOutcome;
     if (params.oauthCreds) {
       authenticationOutcome = await authenticateSdk(params.oauthCreds);
-    } else if (params.username && params.password) {
+    } else if (params.email && params.password) {
       authenticationOutcome = await authenticateSdk({
-        username: params.username,
+        email: params.email,
         password: params.password,
       });
     } else {
@@ -31,7 +31,7 @@ export const authenticate = createAsyncThunk<
     const success = authenticationOutcome.success();
     if (!success)
       return rejectWithValue(authenticationOutcome.error().message ?? "Unknown error");
-    return params.oauthCreds ?? params.username ?? "";
+    return params.oauthCreds ?? params.email ?? "";
   } catch (error) {
     if (error instanceof Error) {
       return rejectWithValue(error.message);
