@@ -17,7 +17,7 @@ const CenteredGridItem = ({ children }: { children: React.ReactNode }) => (
 const Initialize = () => {
   const [key, setKey] = useState<string>(DEFAULT_KEY);
   const [oauthCreds, setOauthCreds] = useState<string>(DEFAULT_OAUTH_CREDS);
-  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const dispatch = useDispatch<AppDispatch>();
@@ -30,7 +30,7 @@ const Initialize = () => {
 
   const loginWithProvidedOAuthCreds = () => dispatch(authenticate({ oauthCreds }));
 
-  const loginWithProvidedUsernamePassword = () => dispatch(authenticate({ username, password }));
+  const loginWithProvidedUsernamePassword = () => dispatch(authenticate({ email, password }));
 
   if (!isRehydrated)
     return <Box>Rehydrating...</Box>
@@ -97,13 +97,13 @@ const Initialize = () => {
               </Button>
             </CenteredGridItem>
             <CenteredGridItem>
-              <h2>Or Login with Username & Password</h2>
+              <h2>Or Login with Email & Password</h2>
               <TextField
-                aria-label="username"
+                aria-label="email"
                 id="txtUsername"
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
-                value={username}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                value={email}
                 fullWidth
                 style={{ minWidth: "80%", padding: "10px" }}
                 disabled={isLoggedIn}
@@ -124,10 +124,10 @@ const Initialize = () => {
               <Button
                 id="btnSubmitUsernamePassword"
                 variant="contained"
-                disabled={!(key && username && password) || isLoggedIn}
+                disabled={!(key && email && password) || isLoggedIn}
                 onClick={loginWithProvidedUsernamePassword}
               >
-                Login with Username & Password
+                Login with Email & Password
               </Button>
             </CenteredGridItem>
             {
