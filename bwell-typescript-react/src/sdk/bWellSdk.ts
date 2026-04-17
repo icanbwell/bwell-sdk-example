@@ -9,7 +9,20 @@ export const authenticateSdk = async (creds: string | { email: string; password:
     if (typeof creds === 'string') {
         return bWellSdk.authenticate({ token: creds });
     } else {
-        return bWellSdk.authenticate({ email: creds.email, password: creds.password });
+        // Some SDK versions validate username/password, others validate email/password.
+        // Try username first (matches current lockfile), then retry with email only
+        // when the SDK explicitly reports an invalid credentials-type shape.
+        const usernameAttempt = await bWellSdk.authenticate({
+            username: creds.email,
+            password: creds.password,
+        });
+        if (
+            !usernameAttempt.success() &&
+            usernameAttempt.error()?.message?.includes('Invalid credentials type provided')
+        ) {
+            return bWellSdk.authenticate({ email: creds.email, password: creds.password } as any);
+        }
+        return usernameAttempt;
     }
 }
 
