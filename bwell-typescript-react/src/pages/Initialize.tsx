@@ -30,7 +30,7 @@ const Initialize = () => {
 
   const loginWithProvidedOAuthCreds = () => dispatch(authenticate({ oauthCreds }));
 
-  const loginWithProvidedUsernamePassword = () => dispatch(authenticate({ email, password }));
+  const loginWithProvidedEmailPassword = () => dispatch(authenticate({ email, password }));
 
   if (!isRehydrated)
     return <Box>Rehydrating...</Box>
@@ -100,7 +100,7 @@ const Initialize = () => {
               <h2>Or Login with Email & Password</h2>
               <TextField
                 aria-label="email"
-                id="txtUsername"
+                id="txtEmail"
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 value={email}
@@ -122,10 +122,10 @@ const Initialize = () => {
             </CenteredGridItem>
             <CenteredGridItem>
               <Button
-                id="btnSubmitUsernamePassword"
+                id="btnSubmitEmailPassword"
                 variant="contained"
                 disabled={!(key && email && password) || isLoggedIn}
-                onClick={loginWithProvidedUsernamePassword}
+                onClick={loginWithProvidedEmailPassword}
               >
                 Login with Email & Password
               </Button>
