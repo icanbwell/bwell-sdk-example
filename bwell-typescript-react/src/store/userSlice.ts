@@ -11,8 +11,14 @@ interface UserState {
   error: string | null;
 }
 
+/** OAuth JWT only — persisted for rehydration. User/pass logins do not populate this. */
+export type AuthenticateFulfilledPayload = {
+  usedOAuth: boolean;
+  oauthToken?: string;
+};
+
 export const authenticate = createAsyncThunk<
-  string,
+  AuthenticateFulfilledPayload,
   { oauthCreds?: string; email?: string; password?: string },
   { rejectValue: string }
 >("user/authenticate", async (params, { rejectWithValue }) => {
@@ -31,7 +37,10 @@ export const authenticate = createAsyncThunk<
     const success = authenticationOutcome.success();
     if (!success)
       return rejectWithValue(authenticationOutcome.error().message ?? "Unknown error");
-    return params.oauthCreds ?? params.email ?? "";
+    if (params.oauthCreds) {
+      return { usedOAuth: true, oauthToken: params.oauthCreds };
+    }
+    return { usedOAuth: false };
   } catch (error) {
     if (error instanceof Error) {
       return rejectWithValue(error.message);
@@ -84,7 +93,9 @@ export const userSlice = createSlice({
         state.isLoggedIn = false;
       })
       .addCase(authenticate.fulfilled, (state, action) => {
-        state.oauthCreds = action.payload;
+        state.oauthCreds = action.payload.usedOAuth
+          ? action.payload.oauthToken
+          : undefined;
         state.isLoggedIn = true;
         state.loading = false;
         state.error = "";
