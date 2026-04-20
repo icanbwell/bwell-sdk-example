@@ -25,6 +25,7 @@ const sdkMiddleware = () => (next) => async (action) => {
         action.payload.user.clientKey = undefined;
         action.payload.user.oauthCreds = undefined;
 
+        // oauthCreds is OAuth JWT only (see userSlice). User/pass sessions are not rehydrated.
         // Only rehydrate if we have both clientKey AND credentials (oauthCreds)
         // This ensures we don't persist a half-initialized state
         if (clientKey && oauthCreds) {
