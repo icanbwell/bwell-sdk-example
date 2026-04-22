@@ -449,13 +449,46 @@ struct ImmunizationInlineDetail: View {
 struct LabInlineDetail: View {
     let lab: BWell.Observation
 
+    private var hasAnyDetail: Bool {
+        lab.valueQuantity?.value != nil
+        || lab.valueString != nil
+        || lab.component?.isEmpty == false
+        || lab.referenceRange?.first != nil
+        || lab.interpretation?.first != nil
+        || lab.status != nil
+        || lab.effectiveDateTime != nil
+        || lab.note?.isEmpty == false
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            // Value
+            if !hasAnyDetail {
+                Text("No additional details available")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+
+            // Direct value
             if let qty = lab.valueQuantity, let value = qty.value {
-                DetailRow(label: "Value:", value: "\(value) \(qty.unit ?? "")".trimmingCharacters(in: .whitespaces))
+                let formatted = value.truncatingRemainder(dividingBy: 1) == 0
+                    ? String(format: "%.0f", value) : String(format: "%.1f", value)
+                DetailRow(label: "Value:", value: "\(formatted) \(qty.unit ?? "")".trimmingCharacters(in: .whitespaces))
             } else if let str = lab.valueString {
                 DetailRow(label: "Value:", value: str)
+            }
+
+            // Component values (e.g., panels with multiple results)
+            if let components = lab.component, !components.isEmpty {
+                ForEach(components.indices, id: \.self) { i in
+                    let comp = components[i]
+                    let name = comp.code?.coding?.first?.display ?? comp.code?.text ?? "Component"
+                    if let val = comp.valueQuantity?.value {
+                        let formatted = val.truncatingRemainder(dividingBy: 1) == 0
+                            ? String(format: "%.0f", val) : String(format: "%.1f", val)
+                        let unit = comp.valueQuantity?.unit ?? ""
+                        DetailRow(label: "\(name):", value: "\(formatted) \(unit)".trimmingCharacters(in: .whitespaces))
+                    }
+                }
             }
 
             // Reference Range

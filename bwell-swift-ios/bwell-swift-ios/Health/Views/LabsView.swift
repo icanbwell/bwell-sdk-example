@@ -351,8 +351,28 @@ private struct LabResultDetail: View {
     let performerName: String?
     let trendGroupCode: (id: String, coding: BWell.Coding)?
 
+    private var hasAnyDetail: Bool {
+        lab.valueQuantity?.value != nil
+        || lab.valueString != nil
+        || lab.component?.isEmpty == false
+        || lab.referenceRange?.first != nil
+        || lab.interpretation?.first != nil
+        || performerName != nil
+        || lab.status != nil
+        || lab.effectiveDateTime != nil
+        || lab.issued != nil
+        || lab.note?.isEmpty == false
+        || lab.text?.div != nil
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
+            if !hasAnyDetail {
+                Text("No additional details available")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+
             if let qty = lab.valueQuantity ?? lab.component?.first?.valueQuantity, let value = qty.value {
                 detailRow("Value", "\(value) \(qty.unit ?? "")".trimmingCharacters(in: .whitespaces))
             } else if let str = lab.valueString {
