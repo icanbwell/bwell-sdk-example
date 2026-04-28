@@ -140,6 +140,13 @@ struct ProviderResultRow: View {
                 .fontWeight(.medium)
                 .foregroundStyle(.primary)
 
+            if let specialties = result.specialty, !specialties.isEmpty {
+                Text(specialties.compactMap { $0.display }.joined(separator: ", "))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
             if let location = result.location?.first, let address = location.address {
                 HStack(spacing: 4) {
                     if let city = address.city {
