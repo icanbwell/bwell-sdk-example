@@ -208,6 +208,7 @@
     <string name="data_connection_category_providers">Providers</string>
     <string name="data_connection_category_clinics">Clinics, Hospitals and Health Systems</string>
     <string name="data_connection_category_lab">Labs</string>
+    <string name="data_connection_category_health_resources">Health Resources</string>
     <string name="request_add_new_connection">Request that we add a new connection</string>
     <string name="request_connection">Request Connection</string>
     <string name="open">Open</string>
