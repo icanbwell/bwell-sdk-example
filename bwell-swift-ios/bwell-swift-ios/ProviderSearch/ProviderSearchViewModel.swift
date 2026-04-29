@@ -235,7 +235,7 @@ final class ProviderSearchViewModel: ObservableObject {
         ) : nil
 
         let orderBy: [BWell.SearchHealthResourcesRequest.OrderBy] = useLocation ? [
-            .init(field: .distance, order: .desc)
+            .init(field: .distance, order: .asc)
         ] : [
             .init(field: .relevance, order: .desc)
         ]
@@ -259,6 +259,7 @@ final class ProviderSearchViewModel: ObservableObject {
 
         let searchResults = try await sdk.search.searchHealthResources(request)
 
+        #if DEBUG
         print("=== SHR Response ===")
         print("Total items: \(searchResults.pagingInfo?.totalItems ?? 0)")
         print("Results count: \(searchResults.results?.count ?? 0)")
@@ -283,6 +284,7 @@ final class ProviderSearchViewModel: ObservableObject {
             }
         }
         print("====================")
+        #endif
 
         return searchResults.results ?? []
     }
