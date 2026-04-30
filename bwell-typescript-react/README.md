@@ -33,7 +33,7 @@ See also: https://playwright.dev/docs/docker
 ## Notes
 
 * On Health Data pages, clicking a row in a "Groups" grid will filter the rows shown in the second grid. For example, clicking "Cashew Nuts" under "Allergy Intolerance Groups" should filter the "Allergy Intolerances" grid to show only cashew-related incidents.
-* On Lab and Medication pages, it should be possible to view "Knowlege" associated with a given detail row. Clicking on a row under "Labs" or "Medications" (not their corresponding Groups) will cause the "Knowledge" associated with that row to be retrieved and displayed, if available.
+* On Lab and Medication pages, it should be possible to view "Knowledge" associated with a given detail row. Clicking on a row under "Labs" or "Medications" (not their corresponding Groups) will cause the "Knowledge" associated with that row to be retrieved and displayed, if available.
 * Command-clicking on a selected row in one of the grids will deselect it.
 * Global application state is automatically saved to local storage and rehydrated at the start of the session; this means the application will recall its state when you return to it, including page number and HTML/JSON toggle status for each grid.
 
