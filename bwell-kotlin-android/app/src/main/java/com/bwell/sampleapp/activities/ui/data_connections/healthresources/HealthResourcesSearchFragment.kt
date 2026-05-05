@@ -191,6 +191,15 @@ class HealthResourcesSearchFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchError.collect { error ->
+                if (error != null) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.statusText.text = error
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.filteredResults.collect { filteredList ->
                 if (filteredList != null && ::adapter.isInitialized) {
                     adapter.updateList(filteredList)
