@@ -234,9 +234,9 @@ class HealthResourcesSearchFragment : Fragment() {
                     logResourceDetails(resource)
                 }
                 adapter.onAddToCareTeamClicked = { resource ->
-                    val reference = resource.id?.let { "Practitioner/$it" } ?: return@let
-                    val display = resource.content
-                    viewModel.addCareTeamMember(reference, "Practitioner", display)
+                    val id = resource.id ?: return@onAddToCareTeamClicked
+                    val type = resource.type?.name ?: "Practitioner"
+                    viewModel.addCareTeamMember("$type/$id", type, resource.content)
                 }
                 binding.rvResults.layoutManager = LinearLayoutManager(requireContext())
                 binding.rvResults.adapter = adapter

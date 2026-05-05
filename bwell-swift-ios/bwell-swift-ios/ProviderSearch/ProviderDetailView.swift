@@ -262,10 +262,14 @@ struct ProviderDetailView: View {
 
     private func addToCareTeam() async {
         guard let sdk = sdkManager.sdk else { return }
+        guard let id = result.id else {
+            errorMessage = "Cannot add provider without an ID"
+            return
+        }
         isLoading = true
         errorMessage = nil
         do {
-            let reference = result.id.map { "Practitioner/\($0)" }
+            let reference = "Practitioner/\(id)"
             let participant = BWell.CareTeamParticipantInput(
                 member: BWell.ReferenceInput(
                     reference: reference,
