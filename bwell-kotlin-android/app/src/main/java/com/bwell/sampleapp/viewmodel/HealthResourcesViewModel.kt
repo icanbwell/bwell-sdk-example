@@ -23,6 +23,9 @@ class HealthResourcesViewModel(
     private val _searchResults = MutableStateFlow<BWellResult<HealthResource>?>(null)
     val searchResults: StateFlow<BWellResult<HealthResource>?> = _searchResults
 
+    private val _searchError = MutableStateFlow<String?>(null)
+    val searchError: StateFlow<String?> = _searchError
+
     private val _filteredResults = MutableStateFlow<List<HealthResource>?>(null)
     val filteredResults: StateFlow<List<HealthResource>?> = _filteredResults
 
@@ -37,12 +40,14 @@ class HealthResourcesViewModel(
 
     fun searchHealthResources(request: HealthResourceSearchRequest) {
         viewModelScope.launch {
+            _searchError.emit(null)
             try {
                 repository?.searchHealthResources(request)?.collect { searchResult ->
                     _searchResults.emit(searchResult)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Search failed", e)
+                _searchError.emit("Search failed: ${e.message}")
             }
         }
     }
