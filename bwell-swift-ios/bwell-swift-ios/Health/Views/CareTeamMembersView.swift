@@ -103,7 +103,7 @@ struct CareTeamMembersView: View {
     private var membersList: some View {
         List {
             Section {
-                ForEach(viewModel.members) { member in
+                ForEach(viewModel.members, id: \.id) { member in
                     CareTeamMemberRow(member: member)
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
