@@ -106,8 +106,21 @@
         android:textSize="11sp"
         android:textColor="#009688"
         tools:text="Virtual Care | Bookable"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnAddToCareTeam"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLocations" />
+
+    <Button
+        android:id="@+id/btnAddToCareTeam"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="4dp"
+        android:text="+ Care Team"
+        android:textSize="10sp"
+        android:minWidth="0dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLocations" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

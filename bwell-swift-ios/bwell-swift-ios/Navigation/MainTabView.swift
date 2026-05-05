@@ -91,6 +91,8 @@ struct MainTabView: View {
             HealthDataFactoryView(category, groupCode)
         case .careTeams:
             CareTeamsView()
+        case .careTeamMembers:
+            CareTeamMembersView()
         case .documentReferences:
             DocumentReferencesView()
         case .goals:
