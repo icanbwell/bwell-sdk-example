@@ -17,6 +17,7 @@ struct ProviderDetailView: View {
     @State private var errorMessage: String?
     @State private var showSubmitReview = false
     @State private var showConnectSuccess = false
+    @State private var showCareTeamSuccess = false
 
     // Submit for review form state
     @State private var institution: String = ""
@@ -95,6 +96,28 @@ struct ProviderDetailView: View {
 
                     Divider()
                 }
+
+                // Add to Care Team Button
+                VStack(spacing: 12) {
+                    Button {
+                        Task { await addToCareTeam() }
+                    } label: {
+                        HStack {
+                            Image(systemName: "person.badge.plus")
+                            Text("Add to Care Team")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.bwellPurple.opacity(0.1))
+                        .foregroundStyle(.bwellPurple)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .disabled(isLoading)
+                }
+                .padding(.horizontal)
+
+                Divider()
 
                 // Connect Button
                 if let connectionId = result.endpoint?.first?.name {
@@ -192,6 +215,11 @@ struct ProviderDetailView: View {
         } message: {
             Text("Provider submitted for review successfully.")
         }
+        .alert("Added to Care Team", isPresented: $showCareTeamSuccess) {
+            Button("OK") {}
+        } message: {
+            Text("\(result.content ?? "Provider") has been added to your care team.")
+        }
     }
 
     private var submitReviewSheet: some View {
@@ -230,6 +258,31 @@ struct ProviderDetailView: View {
                 }
             }
         }
+    }
+
+    private func addToCareTeam() async {
+        guard let sdk = sdkManager.sdk else { return }
+        isLoading = true
+        errorMessage = nil
+        do {
+            let reference = result.id.map { "Practitioner/\($0)" }
+            let participant = BWell.CareTeamParticipantInput(
+                member: BWell.ReferenceInput(
+                    reference: reference,
+                    type: "Practitioner",
+                    display: result.content
+                )
+            )
+            let request = BWell.AddCareTeamMemberRequest(participant: participant)
+            let mutationResult = try await sdk.health.addCareTeamMember(request)
+            #if DEBUG
+            print("addCareTeamMember success: id=\(mutationResult.id ?? "nil")")
+            #endif
+            showCareTeamSuccess = true
+        } catch {
+            errorMessage = "Failed to add to care team: \(error.localizedDescription)"
+        }
+        isLoading = false
     }
 
     private func connectToProvider(connectionId: String) async {

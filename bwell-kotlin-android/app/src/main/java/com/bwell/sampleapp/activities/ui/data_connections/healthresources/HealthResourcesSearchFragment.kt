@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bwell.common.models.domain.common.Coding
 import com.bwell.common.models.domain.common.enums.Gender
 import com.bwell.common.models.domain.common.enums.SortOrder
+import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeamMutationResult
 import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.domain.search.HealthResourceSearchFilters
 import com.bwell.common.models.domain.search.HealthResourceSearchLocation
@@ -51,10 +53,12 @@ class HealthResourcesSearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHealthResourcesSearchBinding.inflate(inflater, container, false)
-        val repository = (activity?.application as? BWellSampleApplication)?.healthResourcesRepository
+        val app = activity?.application as? BWellSampleApplication
+        val repository = app?.healthResourcesRepository
+        val careTeamRepository = app?.careTeamMembersRepository
         viewModel = ViewModelProvider(
             this,
-            HealthResourcesViewModelFactory(repository)
+            HealthResourcesViewModelFactory(repository, careTeamRepository)
         )[HealthResourcesViewModel::class.java]
 
         setupSpinners()
@@ -101,6 +105,24 @@ class HealthResourcesSearchFragment : Fragment() {
 
         binding.cbUseLocation.setOnCheckedChangeListener { _, isChecked ->
             binding.locationInputs.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
+        observeCareTeamMutation()
+    }
+
+    private fun observeCareTeamMutation() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.careTeamMutation.collect { result ->
+                if (result == null) return@collect
+                if (result.success()) {
+                    val data = (result as? BWellResult.SingleResource<CareTeamMutationResult>)?.data
+                    Toast.makeText(requireContext(), "Added to care team (ID: ${data?.id ?: "N/A"})", Toast.LENGTH_SHORT).show()
+                    Log.i(TAG, "Care team mutation success: id=${data?.id}")
+                } else {
+                    Toast.makeText(requireContext(), "Failed to add: ${result.error?.message()}", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "Care team mutation error: ${result.error?.message()}")
+                }
+            }
         }
     }
 
@@ -210,6 +232,11 @@ class HealthResourcesSearchFragment : Fragment() {
                 adapter = HealthResourcesListAdapter(resources)
                 adapter.onItemClicked = { resource ->
                     logResourceDetails(resource)
+                }
+                adapter.onAddToCareTeamClicked = { resource ->
+                    val reference = resource.id?.let { "Practitioner/$it" } ?: return@let
+                    val display = resource.content
+                    viewModel.addCareTeamMember(reference, "Practitioner", display)
                 }
                 binding.rvResults.layoutManager = LinearLayoutManager(requireContext())
                 binding.rvResults.adapter = adapter

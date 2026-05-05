@@ -53,6 +53,9 @@ struct HealthSummaryView: View {
                 NavigationLink(value: AppView.careTeams) {
                     HealthSummaryRow(icon: "person.3", title: "Care Teams", color: .teal)
                 }
+                NavigationLink(value: AppView.careTeamMembers) {
+                    HealthSummaryRow(icon: "person.badge.plus", title: "Care Team Members", color: .teal)
+                }
                 NavigationLink(value: AppView.documentReferences) {
                     HealthSummaryRow(icon: "doc.text", title: "Documents", color: .indigo)
                 }

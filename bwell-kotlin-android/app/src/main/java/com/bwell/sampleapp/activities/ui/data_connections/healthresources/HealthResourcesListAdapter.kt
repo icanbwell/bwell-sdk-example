@@ -13,6 +13,7 @@ class HealthResourcesListAdapter(private var items: List<HealthResource>?) :
     class ViewHolder(val binding: HealthResourceItemViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     var onItemClicked: ((HealthResource) -> Unit)? = null
+    var onAddToCareTeamClicked: ((HealthResource) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = HealthResourceItemViewBinding.inflate(
@@ -59,6 +60,7 @@ class HealthResourcesListAdapter(private var items: List<HealthResource>?) :
         if (resource.bookable?.phone == true) badges.add("Bookable Phone")
         b.tvBadges.text = badges.joinToString(" | ")
 
+        b.btnAddToCareTeam.setOnClickListener { onAddToCareTeamClicked?.invoke(resource) }
         b.root.setOnClickListener { onItemClicked?.invoke(resource) }
     }
 

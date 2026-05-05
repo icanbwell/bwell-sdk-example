@@ -8,6 +8,7 @@ import com.bwell.sampleapp.repository.HealthSummaryRepository
 import com.bwell.sampleapp.repository.HealthJourneyRepository
 import com.bwell.sampleapp.repository.MedicineRepository
 import com.bwell.sampleapp.repository.ProviderRepository
+import com.bwell.sampleapp.repository.CareTeamMembersRepository
 import com.bwell.sampleapp.repository.HealthResourcesRepository
 import com.bwell.sampleapp.repository.LabsRepository
 import com.bwell.sampleapp.repository.Repository
@@ -24,6 +25,7 @@ class BWellSampleApplication : Application() {
      lateinit var medicineRepository: MedicineRepository
      lateinit var healthJourneyRepository: HealthJourneyRepository
      lateinit var healthResourcesRepository: HealthResourcesRepository
+     lateinit var careTeamMembersRepository: CareTeamMembersRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -41,6 +43,7 @@ class BWellSampleApplication : Application() {
         healthSummaryRepository = HealthSummaryRepository( applicationContext)
         healthJourneyRepository = HealthJourneyRepository()
         healthResourcesRepository = HealthResourcesRepository()
+        careTeamMembersRepository = CareTeamMembersRepository()
 
     }
 }
