@@ -122,6 +122,7 @@ class HealthResourcesSearchFragment : Fragment() {
                     Toast.makeText(requireContext(), "Failed to add: ${result.error?.message()}", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Care team mutation error: ${result.error?.message()}")
                 }
+                viewModel.clearCareTeamMutationResult()
             }
         }
     }
