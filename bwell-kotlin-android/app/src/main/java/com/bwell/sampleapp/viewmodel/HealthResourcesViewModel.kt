@@ -115,6 +115,10 @@ class HealthResourcesViewModel(
         }
     }
 
+    fun clearCareTeamMutationResult() {
+        _careTeamMutation.value = null
+    }
+
     companion object {
         private const val TAG = "HealthResourcesVM"
     }
