@@ -2,24 +2,60 @@
 //  CareTeamMembersViewModel.swift
 //  bwell-swift-ios
 //
-//  ViewModel for care team member queries and mutations.
-//
 
 import Foundation
 import BWellSDK
 
+struct DisplayableCareTeamMember: Identifiable, Equatable {
+    let id: String
+    let display: String?
+    let reference: String?
+    let type: String?
+    let roles: [BWell.CodeableConcept]?
+
+    static func == (lhs: DisplayableCareTeamMember, rhs: DisplayableCareTeamMember) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    var displayName: String {
+        if let display, !display.isEmpty { return display }
+        if let reference, !reference.isEmpty {
+            let parts = reference.split(separator: "/")
+            if parts.count >= 2 {
+                return String(parts.last!)
+            }
+            return reference
+        }
+        return id
+    }
+
+    var isPCP: Bool {
+        guard let roles else { return false }
+        return roles.contains { concept in
+            if let text = concept.text, text.localizedCaseInsensitiveContains("pcp") { return true }
+            if let codings = concept.coding {
+                return codings.contains { coding in
+                    coding.code?.localizedCaseInsensitiveContains("pcp") == true ||
+                    coding.display?.localizedCaseInsensitiveContains("primary care") == true
+                }
+            }
+            return false
+        }
+    }
+
+    func toSearchResult() -> BWell.SearchHealthResourcesResults.Result {
+        let json: [String: Any] = ["id": id, "content": displayName]
+        let data = try! JSONSerialization.data(withJSONObject: json)
+        return try! JSONDecoder().decode(BWell.SearchHealthResourcesResults.Result.self, from: data)
+    }
+}
+
 @MainActor
 final class CareTeamMembersViewModel: ObservableObject {
-    @Published var members: [BWell.CareTeamMember] = []
+    @Published var members: [DisplayableCareTeamMember] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var mutationError: String?
-    @Published var showPlanIds = false
-    @Published var planIdsMessage = ""
-
-    @Published var newMemberReference = ""
-    @Published var newMemberType = ""
-    @Published var newMemberDisplay = ""
 
     private weak var sdk: BWellClient?
 
@@ -33,17 +69,38 @@ final class CareTeamMembersViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            let request = BWell.CareTeamMembersRequest(page: 0, pageSize: 20)
-            let response = try await sdk.health.getCareTeamMembers(request)
-            members = response.members ?? []
+            let request = BWell.CareTeamsRequest(page: 0)
+            let response = try await sdk.health.getCareTeams(request)
+            let careTeams = response.entry?.compactMap { $0.resource } ?? []
+
+            var seen = Set<String>()
+            var allMembers: [DisplayableCareTeamMember] = []
+            for team in careTeams {
+                guard let participants = team.participant else { continue }
+                for participant in participants {
+                    let memberId = Self.extractResourceId(from: participant.member)
+                    guard !seen.contains(memberId) else { continue }
+                    seen.insert(memberId)
+                    let memberType = participant.member?.type ?? Self.extractResourceType(from: participant.member?.reference)
+                    let member = DisplayableCareTeamMember(
+                        id: memberId,
+                        display: participant.member?.display,
+                        reference: participant.member?.reference,
+                        type: memberType,
+                        roles: participant.role
+                    )
+                    allMembers.append(member)
+                }
+            }
+            members = allMembers
 
             #if DEBUG
-            print("=== Care Team Members Response ===")
-            print("Total: \(response.pagingInfo?.totalItems ?? 0)")
-            for member in members {
-                print("  id=\(member.id ?? "nil"), roles=\(member.role?.compactMap { $0.text } ?? [])")
+            print("=== Care Team Members (from getCareTeams) ===")
+            print("Teams: \(careTeams.count), Total participants: \(allMembers.count)")
+            for member in allMembers {
+                print("  id=\(member.id), display=\(member.display ?? "nil"), type=\(member.type ?? "nil"), pcp=\(member.isPCP)")
             }
-            print("===================================")
+            print("===============================================")
             #endif
         } catch {
             errorMessage = "Failed to load care team members: \(error.localizedDescription)"
@@ -51,88 +108,58 @@ final class CareTeamMembersViewModel: ObservableObject {
         isLoading = false
     }
 
-    func addMember() async {
-        guard let sdk else { return }
-        let reference = newMemberReference.trimmingCharacters(in: .whitespaces)
-        guard !reference.isEmpty else { return }
-
-        let type = newMemberType.trimmingCharacters(in: .whitespaces)
-        let display = newMemberDisplay.trimmingCharacters(in: .whitespaces)
-
-        let participant = BWell.CareTeamParticipantInput(
-            member: BWell.ReferenceInput(
-                reference: reference,
-                type: type.isEmpty ? nil : type,
-                display: display.isEmpty ? nil : display
-            )
-        )
-
-        do {
-            let request = BWell.AddCareTeamMemberRequest(participant: participant)
-            let result = try await sdk.health.addCareTeamMember(request)
-            #if DEBUG
-            print("addCareTeamMember success: id=\(result.id ?? "nil")")
-            #endif
-            newMemberReference = ""
-            newMemberType = ""
-            newMemberDisplay = ""
-            await loadMembers()
-        } catch {
-            mutationError = "Failed to add member: \(error.localizedDescription)"
+    private static func extractResourceId(from member: BWell.CareTeam.Participant.MemberReference?) -> String {
+        if let reference = member?.reference {
+            let parts = reference.split(separator: "/")
+            if parts.count >= 2 {
+                return String(parts.last!)
+            }
+            return reference
         }
+        return member?.id ?? UUID().uuidString
     }
 
-    func removeMember(_ member: BWell.CareTeamMember) async {
-        guard let sdk, let memberId = member.id else { return }
+    private static func extractResourceType(from reference: String?) -> String? {
+        guard let reference else { return nil }
+        let parts = reference.split(separator: "/")
+        if parts.count >= 2 {
+            return String(parts.first!)
+        }
+        return nil
+    }
 
-        let participant = BWell.CareTeamParticipantInput(
-            member: BWell.ReferenceInput(reference: memberId)
-        )
+    func removeMember(_ member: DisplayableCareTeamMember) async {
+        guard let sdk else { return }
+
+        let memberType = Self.careTeamMemberType(from: member.type)
+        #if DEBUG
+        print("removeCareTeamMember attempting: id=\(member.id), type=\(member.type ?? "nil") → \(memberType)")
+        #endif
 
         do {
-            let request = BWell.RemoveCareTeamMemberRequest(participant: participant)
+            let request = BWell.RemoveCareTeamMemberRequest(id: member.id, type: memberType)
             let result = try await sdk.health.removeCareTeamMember(request)
             #if DEBUG
             print("removeCareTeamMember success: id=\(result.id ?? "nil")")
             #endif
-            await loadMembers()
+            members.removeAll { $0.id == member.id }
         } catch {
+            #if DEBUG
+            print("removeCareTeamMember FAILED: \(error)")
+            #endif
             mutationError = "Failed to remove member: \(error.localizedDescription)"
         }
     }
 
-    func updateMember(_ member: BWell.CareTeamMember, newDisplay: String) async {
-        guard let sdk, let memberId = member.id else { return }
-
-        let participant = BWell.CareTeamParticipantInput(
-            member: BWell.ReferenceInput(reference: memberId, display: newDisplay)
-        )
-
-        do {
-            let request = BWell.UpdateCareTeamMemberRequest(participant: participant)
-            let result = try await sdk.health.updateCareTeamMember(request)
-            #if DEBUG
-            print("updateCareTeamMember success: id=\(result.id ?? "nil")")
-            #endif
-            await loadMembers()
-        } catch {
-            mutationError = "Failed to update member: \(error.localizedDescription)"
-        }
-    }
-
-    func getMemberPlanIdentifiers() async {
-        guard let sdk else { return }
-
-        do {
-            let result = try await sdk.health.getMemberPlanIdentifiers()
-            let ids = result.identifiers?.compactMap { $0 } ?? []
-            planIdsMessage = ids.isEmpty ? "No plan identifiers found." : ids.joined(separator: "\n")
-            showPlanIds = true
-            #if DEBUG
-            print("getMemberPlanIdentifiers: \(ids)")
-            #endif
-        } catch {
-            mutationError = "Failed to get plan identifiers: \(error.localizedDescription)"
+    private static func careTeamMemberType(from type: String?) -> BWell.CareTeamMemberType {
+        guard let type else { return .Practitioner }
+        switch type.lowercased() {
+        case "practitioner": return .Practitioner
+        case "practitionerrole": return .PractitionerRole
+        case "organization": return .Organization
+        case "patient": return .Patient
+        case "relatedperson": return .RelatedPerson
+        default: return .Practitioner
         }
     }
 }

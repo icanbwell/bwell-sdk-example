@@ -2,8 +2,6 @@
 //  CareTeamMembersView.swift
 //  bwell-swift-ios
 //
-//  Displays care team members with add/remove/update mutation support.
-//
 
 import SwiftUI
 import BWellSDK
@@ -11,58 +9,53 @@ import BWellSDK
 struct CareTeamMembersView: View {
     @EnvironmentObject private var sdkManager: SDKManager
     @StateObject private var viewModel = CareTeamMembersViewModel()
+    @State private var selectedMember: DisplayableCareTeamMember?
 
     var body: some View {
         VStack(spacing: 0) {
             if viewModel.isLoading && viewModel.members.isEmpty {
-                ProgressView("Loading care team members...")
+                ProgressView("Loading care team...")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let error = viewModel.errorMessage {
-                VStack(spacing: 8) {
+                VStack(spacing: 12) {
                     Image(systemName: "exclamationmark.triangle")
-                        .font(.largeTitle)
+                        .font(.system(size: 40))
                         .foregroundStyle(.secondary)
                     Text(error)
+                        .font(.subheadline)
                         .foregroundStyle(.red)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if viewModel.members.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "person.3")
+                        .font(.system(size: 40))
+                        .foregroundStyle(.secondary)
+                    Text("No care team members")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    Text("Add providers to your care team from their profile page.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                addMemberSection
-                if !viewModel.members.isEmpty {
-                    membersList
-                } else {
-                    VStack(spacing: 8) {
-                        Image(systemName: "person.3")
-                            .font(.largeTitle)
-                            .foregroundStyle(.secondary)
-                        Text("No care team members found.")
-                            .foregroundStyle(.secondary)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
+                membersList
             }
         }
-        .navigationTitle("Care Team Members")
+        .navigationTitle("My Care Team")
         .navigationBarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button { Task { await viewModel.getMemberPlanIdentifiers() } } label: {
-                    Image(systemName: "creditcard")
-                }
-            }
-        }
-        .task {
+        .onAppear {
             guard let sdk = sdkManager.sdk else { return }
             viewModel.configure(sdk: sdk)
-            await viewModel.loadMembers()
-        }
-        .alert("Plan Identifiers", isPresented: $viewModel.showPlanIds) {
-            Button("OK") {}
-        } message: {
-            Text(viewModel.planIdsMessage)
+            Task { await viewModel.loadMembers() }
         }
         .alert("Error", isPresented: .constant(viewModel.mutationError != nil)) {
             Button("OK") { viewModel.mutationError = nil }
@@ -71,47 +64,32 @@ struct CareTeamMembersView: View {
                 Text(error)
             }
         }
-    }
-
-    private var addMemberSection: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 8) {
-                TextField("Reference (e.g. Practitioner/123)", text: $viewModel.newMemberReference)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.caption)
-                TextField("Display name", text: $viewModel.newMemberDisplay)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.caption)
-            }
-            HStack {
-                TextField("Type (e.g. Practitioner)", text: $viewModel.newMemberType)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.caption)
-                Button("Add Member") {
-                    Task { await viewModel.addMember() }
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.bwellPurple)
-                .font(.caption)
-                .disabled(viewModel.newMemberReference.isEmpty)
+        .sheet(item: $selectedMember) { member in
+            NavigationStack {
+                ProviderDetailView(result: member.toSearchResult())
+                    .environmentObject(sdkManager)
             }
         }
-        .padding()
-        .background(Color(.systemGray6))
+        .onChange(of: selectedMember) { oldValue, newValue in
+            if oldValue != nil && newValue == nil {
+                Task { await viewModel.loadMembers() }
+            }
+        }
     }
 
     private var membersList: some View {
         List {
             Section {
-                ForEach(viewModel.members, id: \.id) { member in
-                    CareTeamMemberRow(member: member)
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                Task { await viewModel.removeMember(member) }
-                            } label: {
-                                Label("Remove", systemImage: "trash")
-                            }
+                ForEach(viewModel.members) { member in
+                    CareTeamMemberRow(
+                        member: member,
+                        onTap: {
+                            selectedMember = member
+                        },
+                        onRemoveFromCareTeam: {
+                            Task { await viewModel.removeMember(member) }
                         }
+                    )
                 }
             } header: {
                 Text("\(viewModel.members.count) Member\(viewModel.members.count == 1 ? "" : "s")")
@@ -128,40 +106,80 @@ struct CareTeamMembersView: View {
 // MARK: - Member Row
 
 private struct CareTeamMemberRow: View {
-    let member: BWell.CareTeamMember
+    let member: DisplayableCareTeamMember
+    let onTap: () -> Void
+    let onRemoveFromCareTeam: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(member.id ?? "Unknown")
-                .font(.body)
-                .fontWeight(.medium)
-                .foregroundStyle(.primary)
+        HStack(spacing: 12) {
+            Circle()
+                .fill(Color.bwellPurple.opacity(0.15))
+                .frame(width: 44, height: 44)
+                .overlay {
+                    Image(systemName: memberIcon)
+                        .font(.title3)
+                        .foregroundStyle(.bwellPurple)
+                }
 
-            if let roles = member.role, !roles.isEmpty {
-                let roleText = roles.compactMap { $0.text ?? $0.coding?.first?.display }.joined(separator: ", ")
-                if !roleText.isEmpty {
-                    Text(roleText)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(member.displayName)
+                    .font(.body)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.primary)
+
+                HStack(spacing: 6) {
+                    Chip(text: "Care Team", color: .teal)
+
+                    if member.isPCP {
+                        Chip(text: "PCP", color: .orange)
+                    }
                 }
             }
 
-            if let period = member.period {
-                HStack(spacing: 4) {
-                    if let start = period.start {
-                        Text(start)
-                    }
-                    if period.start != nil && period.end != nil {
-                        Text("-")
-                    }
-                    if let end = period.end {
-                        Text(end)
-                    }
-                }
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
+            Spacer()
+
+            Button {
+                onRemoveFromCareTeam()
+            } label: {
+                Image(systemName: "person.badge.minus")
+                    .font(.body)
+                    .foregroundStyle(.red)
+                    .padding(8)
             }
+            .buttonStyle(.borderless)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTap()
+        }
+    }
+
+    private var memberIcon: String {
+        guard let type = member.type else { return "person.fill" }
+        switch type.lowercased() {
+        case "organization": return "building.2.fill"
+        case "practitionerrole", "practitioner": return "stethoscope"
+        case "relatedperson": return "person.2.fill"
+        default: return "person.fill"
+        }
+    }
+}
+
+// MARK: - Chip
+
+private struct Chip: View {
+    let text: String
+    let color: Color
+
+    var body: some View {
+        Text(text)
+            .font(.caption2)
+            .fontWeight(.medium)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(color.opacity(0.12))
+            .foregroundStyle(color)
+            .clipShape(Capsule())
     }
 }

@@ -42,6 +42,11 @@ struct ProviderSearchView: View {
         .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                NavigationLink(value: AppView.careTeams) {
+                    Image(systemName: "person.3.fill")
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button { viewModel.showFilters = true } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
