@@ -27,7 +27,11 @@ class HealthResourcesViewModel(private val repository: HealthResourcesRepository
             _searchError.emit(null)
             try {
                 repository?.searchHealthResources(request)?.collect { searchResult ->
-                    _searchResults.emit(searchResult)
+                    if (searchResult != null) {
+                        _searchResults.emit(searchResult)
+                    } else {
+                        _searchError.emit("Search failed: no response received")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("HealthResourcesVM", "Search failed", e)
