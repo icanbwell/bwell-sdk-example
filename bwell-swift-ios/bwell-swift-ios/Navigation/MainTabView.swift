@@ -90,7 +90,7 @@ struct MainTabView: View {
         case .healthGroupItems(let category, let groupCode):
             HealthDataFactoryView(category, groupCode)
         case .careTeams:
-            CareTeamsView()
+            CareTeamMembersView()
         case .careTeamMembers:
             CareTeamMembersView()
         case .documentReferences:
