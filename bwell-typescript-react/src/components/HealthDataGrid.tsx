@@ -95,13 +95,18 @@ const HealthDataGrid = ({
         }));
     }
     // flatten condition rows if selector is conditions
+    // (TIP-7048) The SDK's IdentifiedResourceEntry.id can be null even when
+    // resource.id is populated. MUI DataGrid silently drops rows with null
+    // or duplicate ids, which is why the Conditions table was rendering empty
+    // despite the backend returning data. Fall back to resource.id (and then
+    // a synthesized id) the same way carePlans / encounters / labs do.
     if (selector === 'conditions' && rows && rows.length > 0) {
-        rows = rows.map((row: any) => ({
-            id: row.id,
-            code: row.resource?.code?.coding?.[0]?.display ?? row.resource?.code?.text ?? '',
-            severity: row.resource?.severity?.text ?? '',
-            bodySite: row.resource?.bodySite?.[0]?.text ?? '',
-            recordedDate: row.resource?.recordedDate ? new Date(row.resource.recordedDate) : null,
+        rows = rows.map((row: any, idx: number) => ({
+            id: row?.id ?? row?.resource?.id ?? `condition-${idx}`,
+            code: row?.resource?.code?.coding?.[0]?.display ?? row?.resource?.code?.text ?? '',
+            severity: row?.resource?.severity?.text ?? '',
+            bodySite: row?.resource?.bodySite?.[0]?.text ?? '',
+            recordedDate: row?.resource?.recordedDate ? new Date(row.resource.recordedDate) : null,
         }));
     }
     // flatten immunization rows if selector is immunizations
