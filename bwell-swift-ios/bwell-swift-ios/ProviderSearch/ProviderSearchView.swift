@@ -10,6 +10,7 @@ struct ProviderSearchView: View {
     @EnvironmentObject private var sdkManager: SDKManager
     @StateObject private var viewModel = ProviderSearchViewModel()
     @State private var selectedResult: BWell.SearchHealthResourcesResults.Result?
+    @State private var showErrorAlert = false
 
     var body: some View {
         Group {
@@ -62,12 +63,15 @@ struct ProviderSearchView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
-        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+        .alert("Error", isPresented: $showErrorAlert) {
             Button("OK") { viewModel.errorMessage = nil }
         } message: {
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
             }
+        }
+        .onChange(of: viewModel.errorMessage) { _, newValue in
+            showErrorAlert = newValue != nil
         }
     }
 
@@ -139,6 +143,13 @@ struct ProviderResultRow: View {
                 .font(.body)
                 .fontWeight(.medium)
                 .foregroundStyle(.primary)
+
+            if let specialties = result.specialty, !specialties.isEmpty {
+                Text(specialties.compactMap { $0.display }.joined(separator: ", "))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
 
             if let location = result.location?.first, let address = location.address {
                 HStack(spacing: 4) {

@@ -26,9 +26,6 @@ struct HealthRecordsBrowseView: View {
 
             // MARK: - Care Management
             Section("Care Management") {
-                NavigationLink(value: AppView.careTeams) {
-                    BrowseRow(icon: "person.3", title: "Care Teams", color: .teal)
-                }
                 NavigationLink(value: AppView.goals) {
                     BrowseRow(icon: "target", title: "Goals", color: .mint)
                 }

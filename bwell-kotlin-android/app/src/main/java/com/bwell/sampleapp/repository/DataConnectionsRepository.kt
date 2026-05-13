@@ -177,6 +177,13 @@ class DataConnectionsRepository(private val applicationContext: Context) {
                 "View your lab results to track your numbers over time."
             )
         )
+        suggestionsList.add(
+            DataConnectionCategoriesListItems(
+                applicationContext.getString(R.string.data_connection_category_health_resources),
+                R.drawable.baseline_person_pin_24,
+                "Search health resources with advanced filters."
+            )
+        )
 
         val activityList = SuggestedDataConnectionsCategoriesList(suggestionsList)
         suggestedDataConnectionsCategoriesLiveData.postValue(activityList)

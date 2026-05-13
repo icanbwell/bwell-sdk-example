@@ -31,6 +31,7 @@ enum AppView: Hashable {
 
     // Additional health data views
     case careTeams
+    case careTeamMembers
     case documentReferences
     case goals
     case diagnosticReports
