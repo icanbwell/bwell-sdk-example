@@ -6,30 +6,35 @@
 import Foundation
 import BWellSDK
 
+extension Notification.Name {
+    static let careTeamMemberRemoved = Notification.Name("careTeamMemberRemoved")
+    static let careTeamUpdated = Notification.Name("careTeamUpdated")
+}
+
 struct DisplayableCareTeamMember: Identifiable, Equatable {
     let id: String
     let display: String?
     let reference: String?
     let type: String?
     let roles: [BWell.CodeableConcept]?
+    var pcpOverride: Bool?
 
     static func == (lhs: DisplayableCareTeamMember, rhs: DisplayableCareTeamMember) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id && lhs.pcpOverride == rhs.pcpOverride
     }
 
     var displayName: String {
         if let display, !display.isEmpty { return display }
         if let reference, !reference.isEmpty {
             let parts = reference.split(separator: "/")
-            if parts.count >= 2 {
-                return String(parts.last!)
-            }
+            if parts.count >= 2 { return String(parts.last!) }
             return reference
         }
         return id
     }
 
     var isPCP: Bool {
+        if let pcpOverride { return pcpOverride }
         guard let roles else { return false }
         return roles.contains { concept in
             if let text = concept.text, text.localizedCaseInsensitiveContains("pcp") { return true }
@@ -58,6 +63,8 @@ final class CareTeamMembersViewModel: ObservableObject {
     @Published var mutationError: String?
 
     private weak var sdk: BWellClient?
+    private var removedIds = Set<String>()
+    private var pcpOverrides: [String: Bool] = [:]
 
     func configure(sdk: BWellClient) {
         self.sdk = sdk
@@ -79,41 +86,58 @@ final class CareTeamMembersViewModel: ObservableObject {
                 guard let participants = team.participant else { continue }
                 for participant in participants {
                     let memberId = Self.extractResourceId(from: participant.member)
-                    guard !seen.contains(memberId) else { continue }
+                    guard !seen.contains(memberId), !removedIds.contains(memberId) else { continue }
                     seen.insert(memberId)
                     let memberType = participant.member?.type ?? Self.extractResourceType(from: participant.member?.reference)
-                    let member = DisplayableCareTeamMember(
+                    allMembers.append(DisplayableCareTeamMember(
                         id: memberId,
                         display: participant.member?.display,
                         reference: participant.member?.reference,
                         type: memberType,
-                        roles: participant.role
-                    )
-                    allMembers.append(member)
+                        roles: participant.role,
+                        pcpOverride: pcpOverrides[memberId]
+                    ))
                 }
             }
             members = allMembers
-
-            #if DEBUG
-            print("=== Care Team Members (from getCareTeams) ===")
-            print("Teams: \(careTeams.count), Total participants: \(allMembers.count)")
-            for member in allMembers {
-                print("  id=\(member.id), display=\(member.display ?? "nil"), type=\(member.type ?? "nil"), pcp=\(member.isPCP)")
-            }
-            print("===============================================")
-            #endif
         } catch {
             errorMessage = "Failed to load care team members: \(error.localizedDescription)"
         }
         isLoading = false
     }
 
+    func removeMember(_ member: DisplayableCareTeamMember) async {
+        guard let sdk else { return }
+        do {
+            let request = BWell.RemoveCareTeamMemberRequest(id: member.id, type: Self.careTeamMemberType(from: member.type))
+            _ = try await sdk.health.removeCareTeamMember(request)
+            removedIds.insert(member.id)
+            members.removeAll { $0.id == member.id }
+        } catch {
+            mutationError = "Failed to remove member: \(error.localizedDescription)"
+        }
+    }
+
+    func trackRemoval(id: String) {
+        removedIds.insert(id)
+        members.removeAll { $0.id == id }
+    }
+
+    func trackPCPUpdate(id: String, isPCP: Bool) {
+        pcpOverrides[id] = isPCP
+        if let index = members.firstIndex(where: { $0.id == id }) {
+            members[index].pcpOverride = isPCP
+        } else {
+            Task { await loadMembers() }
+        }
+    }
+
+    // MARK: - Helpers
+
     private static func extractResourceId(from member: BWell.CareTeam.Participant.MemberReference?) -> String {
         if let reference = member?.reference {
             let parts = reference.split(separator: "/")
-            if parts.count >= 2 {
-                return String(parts.last!)
-            }
+            if parts.count >= 2 { return String(parts.last!) }
             return reference
         }
         return member?.id ?? UUID().uuidString
@@ -122,33 +146,8 @@ final class CareTeamMembersViewModel: ObservableObject {
     private static func extractResourceType(from reference: String?) -> String? {
         guard let reference else { return nil }
         let parts = reference.split(separator: "/")
-        if parts.count >= 2 {
-            return String(parts.first!)
-        }
+        if parts.count >= 2 { return String(parts.first!) }
         return nil
-    }
-
-    func removeMember(_ member: DisplayableCareTeamMember) async {
-        guard let sdk else { return }
-
-        let memberType = Self.careTeamMemberType(from: member.type)
-        #if DEBUG
-        print("removeCareTeamMember attempting: id=\(member.id), type=\(member.type ?? "nil") → \(memberType)")
-        #endif
-
-        do {
-            let request = BWell.RemoveCareTeamMemberRequest(id: member.id, type: memberType)
-            let result = try await sdk.health.removeCareTeamMember(request)
-            #if DEBUG
-            print("removeCareTeamMember success: id=\(result.id ?? "nil")")
-            #endif
-            members.removeAll { $0.id == member.id }
-        } catch {
-            #if DEBUG
-            print("removeCareTeamMember FAILED: \(error)")
-            #endif
-            mutationError = "Failed to remove member: \(error.localizedDescription)"
-        }
     }
 
     private static func careTeamMemberType(from type: String?) -> BWell.CareTeamMemberType {

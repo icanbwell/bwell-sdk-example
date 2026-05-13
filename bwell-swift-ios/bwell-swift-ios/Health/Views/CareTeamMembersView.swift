@@ -57,6 +57,17 @@ struct CareTeamMembersView: View {
             viewModel.configure(sdk: sdk)
             Task { await viewModel.loadMembers() }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .careTeamUpdated)) { notification in
+            if let id = notification.userInfo?["id"] as? String,
+               let isPCP = notification.userInfo?["isPCP"] as? Bool {
+                viewModel.trackPCPUpdate(id: id, isPCP: isPCP)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .careTeamMemberRemoved)) { notification in
+            if let id = notification.userInfo?["id"] as? String {
+                viewModel.trackRemoval(id: id)
+            }
+        }
         .alert("Error", isPresented: .constant(viewModel.mutationError != nil)) {
             Button("OK") { viewModel.mutationError = nil }
         } message: {
@@ -66,13 +77,8 @@ struct CareTeamMembersView: View {
         }
         .sheet(item: $selectedMember) { member in
             NavigationStack {
-                ProviderDetailView(result: member.toSearchResult())
+                ProviderDetailView(result: member.toSearchResult(), isPCP: member.isPCP, isInCareTeam: true)
                     .environmentObject(sdkManager)
-            }
-        }
-        .onChange(of: selectedMember) { oldValue, newValue in
-            if oldValue != nil && newValue == nil {
-                Task { await viewModel.loadMembers() }
             }
         }
     }
@@ -81,15 +87,17 @@ struct CareTeamMembersView: View {
         List {
             Section {
                 ForEach(viewModel.members) { member in
-                    CareTeamMemberRow(
-                        member: member,
-                        onTap: {
-                            selectedMember = member
-                        },
-                        onRemoveFromCareTeam: {
-                            Task { await viewModel.removeMember(member) }
-                        }
-                    )
+                    Button {
+                        selectedMember = member
+                    } label: {
+                        CareTeamMemberRow(
+                            member: member,
+                            onRemoveFromCareTeam: {
+                                Task { await viewModel.removeMember(member) }
+                            }
+                        )
+                    }
+                    .buttonStyle(.plain)
                 }
             } header: {
                 Text("\(viewModel.members.count) Member\(viewModel.members.count == 1 ? "" : "s")")
@@ -107,7 +115,6 @@ struct CareTeamMembersView: View {
 
 private struct CareTeamMemberRow: View {
     let member: DisplayableCareTeamMember
-    let onTap: () -> Void
     let onRemoveFromCareTeam: () -> Void
 
     var body: some View {
@@ -149,10 +156,6 @@ private struct CareTeamMemberRow: View {
             .buttonStyle(.borderless)
         }
         .padding(.vertical, 6)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onTap()
-        }
     }
 
     private var memberIcon: String {

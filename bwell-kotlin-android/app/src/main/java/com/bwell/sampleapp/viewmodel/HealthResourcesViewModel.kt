@@ -8,6 +8,7 @@ import com.bwell.common.models.domain.healthdata.healthsummary.careteam.CareTeam
 import com.bwell.common.models.domain.healthdata.healthsummary.careteam.MemberPlanIdentifiersResult
 import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamMemberType
 import com.bwell.sampleapp.repository.CareTeamMembersRepository
 import com.bwell.sampleapp.repository.HealthResourcesRepository
 import com.bwell.search.requests.healthresource.HealthResourceSearchRequest
@@ -79,10 +80,10 @@ class HealthResourcesViewModel(
         }
     }
 
-    fun addCareTeamMember(reference: String, type: String?, display: String?) {
+    fun addCareTeamMember(id: String, type: CareTeamMemberType, role: List<String>) {
         viewModelScope.launch {
             try {
-                careTeamRepository?.addCareTeamMember(reference, type, display)?.collect { result ->
+                careTeamRepository?.addCareTeamMember(id, type, role)?.collect { result ->
                     _careTeamMutation.emit(result)
                 }
             } catch (e: Exception) {
@@ -91,14 +92,38 @@ class HealthResourcesViewModel(
         }
     }
 
-    fun removeCareTeamMember(reference: String) {
+    fun removeCareTeamMember(id: String, type: CareTeamMemberType) {
         viewModelScope.launch {
             try {
-                careTeamRepository?.removeCareTeamMember(reference)?.collect { result ->
+                careTeamRepository?.removeCareTeamMember(id, type)?.collect { result ->
                     _careTeamMutation.emit(result)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "removeCareTeamMember failed", e)
+            }
+        }
+    }
+
+    fun addCareTeamMemberAsPCP(id: String, type: CareTeamMemberType) {
+        viewModelScope.launch {
+            try {
+                careTeamRepository?.addCareTeamMemberAsPCP(id, type)?.collect { result ->
+                    _careTeamMutation.emit(result)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "addCareTeamMemberAsPCP failed", e)
+            }
+        }
+    }
+
+    fun updateCareTeamMember(id: String, type: CareTeamMemberType, role: List<String>?) {
+        viewModelScope.launch {
+            try {
+                careTeamRepository?.updateCareTeamMember(id, type, role)?.collect { result ->
+                    _careTeamMutation.emit(result)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "updateCareTeamMember failed", e)
             }
         }
     }
