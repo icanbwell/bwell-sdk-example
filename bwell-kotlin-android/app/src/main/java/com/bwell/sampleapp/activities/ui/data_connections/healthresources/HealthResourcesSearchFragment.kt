@@ -23,6 +23,7 @@ import com.bwell.common.models.domain.search.enums.DistanceUnit
 import com.bwell.common.models.domain.search.enums.FilterField
 import com.bwell.common.models.domain.search.enums.HealthResourceSortField
 import com.bwell.common.models.domain.search.enums.PatientAcceptance
+import com.bwell.common.models.domain.search.enums.SearchResultType
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
@@ -44,6 +45,12 @@ class HealthResourcesSearchFragment : Fragment() {
     private val sortOptions = listOf("Distance", "Relevance", "Name", "Next Available")
     private val genderOptions = listOf("Any", "Male", "Female")
     private val patientAcceptanceOptions = listOf("Any", "New Patients", "Existing Patients")
+    private val providerTypeOptions = listOf("All", "Practitioner", "Practice", "Insurance", "Laboratory", "Pharmacy")
+
+    private val languageOptions = mutableListOf("All")
+    private val specialtyOptions = mutableListOf("All")
+    private val languageCodes = mutableListOf<String?>(null)
+    private val specialtyCodes = mutableListOf<String?>(null)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,9 +66,44 @@ class HealthResourcesSearchFragment : Fragment() {
 
         setupSpinners()
         setupListeners()
+        setupCollectors()
         performSearch(null)
 
         return binding.root
+    }
+
+    private var hasSearched = false
+
+    private fun setupCollectors() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchResults.collect { result ->
+                if (!hasSearched) return@collect
+                binding.progressBar.visibility = View.GONE
+                if (result != null) {
+                    handleSearchResult(result)
+                } else {
+                    binding.statusText.text = "Search failed"
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.searchError.collect { error ->
+                if (error != null) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.statusText.text = error
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.filteredResults.collect { filteredList ->
+                if (filteredList != null && ::adapter.isInitialized) {
+                    adapter.updateList(filteredList)
+                    binding.statusText.text = "Filtered: ${filteredList.size} results"
+                }
+            }
+        }
     }
 
     private fun setupSpinners() {
@@ -74,6 +116,15 @@ class HealthResourcesSearchFragment : Fragment() {
 
         binding.spinnerPatientAcceptance.adapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, patientAcceptanceOptions)
         binding.spinnerPatientAcceptance.setSelection(0)
+
+        binding.spinnerProviderType.adapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, providerTypeOptions)
+        binding.spinnerProviderType.setSelection(0)
+
+        binding.spinnerLanguage.adapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, languageOptions)
+        binding.spinnerLanguage.setSelection(0)
+
+        binding.spinnerSpecialty.adapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, specialtyOptions)
+        binding.spinnerSpecialty.setSelection(0)
     }
 
     private fun setupListeners() {
@@ -155,58 +206,44 @@ class HealthResourcesSearchFragment : Fragment() {
             else -> null
         }
 
-        val specialtyCodes: List<Coding>? = binding.etSpecialty.text.toString().trim().let { text ->
-            if (text.isEmpty()) null
-            else text.split(",").map { code ->
-                Coding(system = "specialty", code = code.trim())
-            }
+        val providerType: List<SearchResultType>? = when (binding.spinnerProviderType.selectedItemPosition) {
+            1 -> listOf(SearchResultType.PRACTITIONER)
+            2 -> listOf(SearchResultType.PRACTICE)
+            3 -> listOf(SearchResultType.INSURANCE)
+            4 -> listOf(SearchResultType.LABORATORY)
+            5 -> listOf(SearchResultType.PHARMACY)
+            else -> null
+        }
+
+        val selectedSpecialtyCode = specialtyCodes.getOrNull(binding.spinnerSpecialty.selectedItemPosition)
+        val specialtyFilter: List<Coding>? = selectedSpecialtyCode?.let {
+            listOf(Coding(system = "specialty", code = it))
+        }
+
+        val selectedLanguageCode = languageCodes.getOrNull(binding.spinnerLanguage.selectedItemPosition)
+        val communicationFilter: List<Coding>? = selectedLanguageCode?.let {
+            listOf(Coding(system = "urn:ietf:bcp:47", code = it))
         }
 
         val searchFilters = HealthResourceSearchFilters(
+            type = providerType,
             gender = gender,
             includeInactive = if (binding.cbIncludeInactive.isChecked) true else null,
-            specialty = specialtyCodes,
+            specialty = specialtyFilter,
+            communication = communicationFilter,
             patientAcceptance = patientAcceptance
         )
         builder.filters(searchFilters)
 
         val requestedFilterValues = mutableListOf<FilterField>()
-        if (binding.cbFilterSpecialty.isChecked) requestedFilterValues.add(FilterField.SPECIALTY)
-        if (binding.cbFilterCommunication.isChecked) requestedFilterValues.add(FilterField.COMMUNICATION)
+        requestedFilterValues.add(FilterField.SPECIALTY)
+        requestedFilterValues.add(FilterField.COMMUNICATION)
         if (binding.cbFilterInsurance.isChecked) requestedFilterValues.add(FilterField.INSURANCE_PLAN)
-        if (requestedFilterValues.isNotEmpty()) {
-            builder.filterValues(requestedFilterValues)
-        }
+        builder.filterValues(requestedFilterValues)
 
         val request = builder.build()
+        hasSearched = true
         viewModel.searchHealthResources(request)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.searchResults.collect { result ->
-                if (result != null) {
-                    binding.progressBar.visibility = View.GONE
-                    handleSearchResult(result)
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.searchError.collect { error ->
-                if (error != null) {
-                    binding.progressBar.visibility = View.GONE
-                    binding.statusText.text = error
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.filteredResults.collect { filteredList ->
-                if (filteredList != null && ::adapter.isInitialized) {
-                    adapter.updateList(filteredList)
-                    binding.statusText.text = "Filtered: ${filteredList.size} results"
-                }
-            }
-        }
     }
 
     private fun handleSearchResult(result: BWellResult<HealthResource>) {
@@ -215,16 +252,27 @@ class HealthResourcesSearchFragment : Fragment() {
                 val resources = result.data
                 val total = resources?.size ?: 0
                 binding.statusText.text = "Results: $total"
+                updateFilterSpinners(result)
 
-                adapter = HealthResourcesListAdapter(resources)
-                adapter.onItemClicked = { resource ->
-                    logResourceDetails(resource)
+                if (::adapter.isInitialized) {
+                    adapter.updateList(resources)
+                } else {
+                    adapter = HealthResourcesListAdapter(resources)
+                    adapter.onItemClicked = { resource ->
+                        logResourceDetails(resource)
+                    }
+                    binding.rvResults.layoutManager = LinearLayoutManager(requireContext())
+                    binding.rvResults.adapter = adapter
                 }
-                binding.rvResults.layoutManager = LinearLayoutManager(requireContext())
-                binding.rvResults.adapter = adapter
 
                 Log.i(TAG, "=== SHR Response ===")
                 Log.i(TAG, "Total results: $total")
+                result.filterValues?.let { fv ->
+                    Log.i(TAG, "Filter values (${fv.size} fields):")
+                    fv.forEach { filter ->
+                        Log.i(TAG, "  ${filter.field}: ${filter.values?.take(5)?.joinToString { "${it.value}(${it.count})" }}")
+                    }
+                }
                 resources?.firstOrNull()?.let { first ->
                     Log.i(TAG, "First: id=${first.id}, content=${first.content}, type=${first.type}")
                     Log.i(TAG, "  specialty: ${first.specialty?.mapNotNull { it.display }}")
@@ -247,6 +295,43 @@ class HealthResourcesSearchFragment : Fragment() {
             }
             is BWellResult.ResourceCollection -> {
                 binding.statusText.text = "Collection returned"
+            }
+        }
+    }
+
+    private fun updateFilterSpinners(result: BWellResult.SearchResults<HealthResource>) {
+        val ctx = requireContext()
+        result.filterValues?.forEach { filter ->
+            when (filter.field?.rawValue) {
+                "communication" -> {
+                    languageOptions.clear()
+                    languageCodes.clear()
+                    languageOptions.add("All")
+                    languageCodes.add(null)
+                    filter.values?.forEach { fv ->
+                        val display = fv.value ?: return@forEach
+                        languageOptions.add("$display (${fv.count ?: 0})")
+                        languageCodes.add(fv.value)
+                    }
+                    binding.spinnerLanguage.adapter = ArrayAdapter(
+                        ctx, android.R.layout.simple_spinner_dropdown_item, languageOptions
+                    )
+                }
+                "specialty" -> {
+                    specialtyOptions.clear()
+                    specialtyCodes.clear()
+                    specialtyOptions.add("All")
+                    specialtyCodes.add(null)
+                    filter.values?.forEach { fv ->
+                        val display = fv.value ?: return@forEach
+                        specialtyOptions.add("$display (${fv.count ?: 0})")
+                        specialtyCodes.add(fv.value)
+                    }
+                    binding.spinnerSpecialty.adapter = ArrayAdapter(
+                        ctx, android.R.layout.simple_spinner_dropdown_item, specialtyOptions
+                    )
+                }
+                else -> {}
             }
         }
     }

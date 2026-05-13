@@ -130,33 +130,129 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/spinnerSort"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/spinnerGender"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sort By"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spinnerPatientAcceptance"
+                <Spinner
+                    android:id="@+id/spinnerSort"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gender"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerGender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accepting Patients"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerPatientAcceptance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Specialty input -->
-        <EditText
-            android:id="@+id/etSpecialty"
+        <!-- Provider Type filter -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Specialty codes (comma-separated)"
-            android:inputType="text"
-            android:textSize="12sp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Provider Type"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerProviderType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Language"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerLanguage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Specialty dropdown -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Specialty"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinnerSpecialty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <!-- Filter value toggles -->
         <LinearLayout
@@ -165,24 +261,10 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/cbFilterSpecialty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Specialty FV"
-                android:textSize="11sp" />
-
-            <CheckBox
-                android:id="@+id/cbFilterCommunication"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Comms FV"
-                android:textSize="11sp" />
-
-            <CheckBox
                 android:id="@+id/cbFilterInsurance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Insurance FV"
+                android:text="Include Insurance FV"
                 android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>
