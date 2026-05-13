@@ -71,9 +71,17 @@ export const connectionSlice = createSlice({
                 state.deletingConnectionIds = state.deletingConnectionIds.filter((id) => id !== deletedId);
                 const memberConnections: any = state.memberConnections;
                 if (memberConnections?.data && Array.isArray(memberConnections.data)) {
-                    memberConnections.data = memberConnections.data.filter(
-                        (conn: any) => conn?.id !== deletedId
-                    );
+                    // BWellQueryResult is a class instance and Immer treats class
+                    // instances as immutable leaves by default, so mutating
+                    // `memberConnections.data = ...` directly is silently ignored.
+                    // Replace the whole field with a plain object so Immer
+                    // registers the change and consumers re-render.
+                    state.memberConnections = {
+                        ...memberConnections,
+                        data: memberConnections.data.filter(
+                            (conn: any) => conn?.id !== deletedId
+                        ),
+                    };
                 }
             })
             .addCase(deleteConnection.rejected, (state, action) => {

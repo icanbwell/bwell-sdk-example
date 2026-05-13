@@ -28,6 +28,11 @@ const ManageConnections = () => {
     // @ts-ignore TODO: strong-type memberConnections
     const rawRows: any[] = Array.isArray(memberConnections.data) ? memberConnections.data : [];
     const visibleRows = rawRows.filter((conn: any) => conn?.status !== "DELETED");
+    // Mirror the table's filter in the JSON view so the toggle reflects what
+    // the user can actually act on, instead of dumping rows the table hides.
+    const visibleMemberConnections = memberConnections
+        ? { ...memberConnections, data: visibleRows }
+        : memberConnections;
 
     // @ts-ignore TODO: strong-type memberConnections
     const showTable = useSelector((state: RootState) => state.toggle["memberConnections"] ?? true) && Array.isArray(memberConnections.data);
@@ -74,7 +79,7 @@ const ManageConnections = () => {
             }
             {!showTable && memberConnections &&
                 <Box>
-                    <pre>{JSON.stringify(memberConnections, null, 2)}</pre>
+                    <pre>{JSON.stringify(visibleMemberConnections, null, 2)}</pre>
                 </Box>
             }
         </Container>
