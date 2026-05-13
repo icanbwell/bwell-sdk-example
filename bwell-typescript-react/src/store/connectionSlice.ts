@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
 import { createSlice } from "@reduxjs/toolkit";
+import { deleteConnection } from "@/store/deleteConnectionThunk";
 
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
@@ -15,6 +16,7 @@ const INITIAL_STATE = {
     dataSource: null,
     loading: false,
     error: null as string | null,
+    deletingConnectionIds: [] as string[],
 };
 
 export const connectionSlice = createSlice({
@@ -49,6 +51,36 @@ export const connectionSlice = createSlice({
                 } else {
                     state.error = action.error.message ?? "Unknown error";
                 }
+            })
+            // (TIP-7050) Wire the delete thunk into this slice so the UI updates
+            // optimistically. The previous flow awaited deleteConnection and
+            // then re-fetched getMemberConnections, but the read side is
+            // eventually-consistent: the refetch often returned the just-deleted
+            // connection still tagged CONNECTED, so the row never appeared to
+            // disappear. We now remove the row from local state the moment the
+            // delete mutation succeeds, and the UI does NOT trigger a refetch
+            // on success (a refetch would undo the optimistic remove until the
+            // backend caught up).
+            .addCase(deleteConnection.pending, (state, action) => {
+                if (!state.deletingConnectionIds.includes(action.meta.arg)) {
+                    state.deletingConnectionIds.push(action.meta.arg);
+                }
+            })
+            .addCase(deleteConnection.fulfilled, (state, action) => {
+                const deletedId = action.payload;
+                state.deletingConnectionIds = state.deletingConnectionIds.filter((id) => id !== deletedId);
+                const memberConnections: any = state.memberConnections;
+                if (memberConnections?.data && Array.isArray(memberConnections.data)) {
+                    memberConnections.data = memberConnections.data.filter(
+                        (conn: any) => conn?.id !== deletedId
+                    );
+                }
+            })
+            .addCase(deleteConnection.rejected, (state, action) => {
+                state.deletingConnectionIds = state.deletingConnectionIds.filter(
+                    (id) => id !== action.meta.arg
+                );
+                state.error = action.error.message ?? "Failed to delete connection";
             });
     }
 });

@@ -8,7 +8,7 @@ import { AppDispatch } from "@/store/store";
 import { DataGrid } from "@mui/x-data-grid";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
 import { getMemberConnections } from "@/store/connectionSlice";
-import { deleteConnectionById } from "@/sdk/deleteConnection";
+import { deleteConnection } from "@/store/deleteConnectionThunk";
 
 const ManageConnections = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +19,16 @@ const ManageConnections = () => {
 
     const slice = useSelector((state: RootState) => state.connections);
     const memberConnections = slice.memberConnections ?? { data: [] };
+    const deletingConnectionIds = slice.deletingConnectionIds ?? [];
+
+    // (TIP-7050) Hide connections the backend has already marked as DELETED
+    // so they don't reappear in the table after the read side catches up. The
+    // optimistic remove in the slice handles the "just deleted" case; this
+    // filter handles any stale DELETED rows that come back on the next fetch.
+    // @ts-ignore TODO: strong-type memberConnections
+    const rawRows: any[] = Array.isArray(memberConnections.data) ? memberConnections.data : [];
+    const visibleRows = rawRows.filter((conn: any) => conn?.status !== "DELETED");
+
     // @ts-ignore TODO: strong-type memberConnections
     const showTable = useSelector((state: RootState) => state.toggle["memberConnections"] ?? true) && Array.isArray(memberConnections.data);
 
@@ -29,19 +39,27 @@ const ManageConnections = () => {
             field: "delete",
             headerName: "Delete",
             width: 120,
-            renderCell: (params: any) => (
-                <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={async () => {
-                        await deleteConnectionById(params.row.id);
-                        dispatch(getMemberConnections());
-                    }}
-                >
-                    Delete
-                </Button>
-            )
+            renderCell: (params: any) => {
+                const isDeleting = deletingConnectionIds.includes(params.row.id);
+                return (
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        disabled={isDeleting}
+                        onClick={() => {
+                            // (TIP-7050) Dispatch the thunk; the slice's
+                            // extraReducers optimistically remove the row on
+                            // fulfilled. Do NOT refetch — an immediate refetch
+                            // races with the eventually-consistent read side
+                            // and undoes the optimistic remove.
+                            dispatch(deleteConnection(params.row.id));
+                        }}
+                    >
+                        {isDeleting ? "Deleting…" : "Delete"}
+                    </Button>
+                );
+            }
         }
     ];
 
@@ -52,8 +70,7 @@ const ManageConnections = () => {
                 <TableOrJsonToggle locator={"memberConnections"} />
             }
             {showTable && memberConnections &&
-                // @ts-ignore TODO: strong-typing here
-                <DataGrid rows={memberConnections.data} columns={columns} />
+                <DataGrid rows={visibleRows} columns={columns} />
             }
             {!showTable && memberConnections &&
                 <Box>
