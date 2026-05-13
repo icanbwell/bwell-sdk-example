@@ -10,6 +10,7 @@ struct ProviderSearchView: View {
     @EnvironmentObject private var sdkManager: SDKManager
     @StateObject private var viewModel = ProviderSearchViewModel()
     @State private var selectedResult: BWell.SearchHealthResourcesResults.Result?
+    @State private var showErrorAlert = false
 
     var body: some View {
         Group {
@@ -42,11 +43,6 @@ struct ProviderSearchView: View {
         .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                NavigationLink(value: AppView.careTeams) {
-                    Image(systemName: "person.3.fill")
-                }
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button { viewModel.showFilters = true } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
@@ -67,12 +63,15 @@ struct ProviderSearchView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
-        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+        .alert("Error", isPresented: $showErrorAlert) {
             Button("OK") { viewModel.errorMessage = nil }
         } message: {
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
             }
+        }
+        .onChange(of: viewModel.errorMessage) { _, newValue in
+            showErrorAlert = newValue != nil
         }
     }
 

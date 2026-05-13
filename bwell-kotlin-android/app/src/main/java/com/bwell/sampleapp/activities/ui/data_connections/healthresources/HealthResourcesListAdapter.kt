@@ -2,10 +2,17 @@ package com.bwell.sampleapp.activities.ui.data_connections.healthresources
 
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bwell.common.models.domain.search.HealthResource
+import com.bwell.common.models.domain.search.enums.SearchResultType
 import com.bwell.sampleapp.databinding.HealthResourceItemViewBinding
+
+data class HealthResourceState(
+    var isInCareTeam: Boolean = false,
+    var isPCP: Boolean = false
+)
 
 class HealthResourcesListAdapter(private var items: List<HealthResource>?) :
     RecyclerView.Adapter<HealthResourcesListAdapter.ViewHolder>() {
@@ -14,6 +21,10 @@ class HealthResourcesListAdapter(private var items: List<HealthResource>?) :
 
     var onItemClicked: ((HealthResource) -> Unit)? = null
     var onAddToCareTeamClicked: ((HealthResource) -> Unit)? = null
+    var onRemoveFromCareTeamClicked: ((HealthResource) -> Unit)? = null
+    var onPCPToggled: ((HealthResource, Boolean) -> Unit)? = null
+
+    private val stateMap = mutableMapOf<String, HealthResourceState>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = HealthResourceItemViewBinding.inflate(
@@ -27,6 +38,8 @@ class HealthResourcesListAdapter(private var items: List<HealthResource>?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val resource = items?.get(position) ?: return
         val b = holder.binding
+        val id = resource.id ?: ""
+        val state = stateMap.getOrPut(id) { HealthResourceState() }
 
         b.tvName.text = resource.content ?: resource.id ?: "Unknown"
         b.tvType.text = resource.type?.name ?: ""
@@ -60,8 +73,49 @@ class HealthResourcesListAdapter(private var items: List<HealthResource>?) :
         if (resource.bookable?.phone == true) badges.add("Bookable Phone")
         b.tvBadges.text = badges.joinToString(" | ")
 
-        b.btnAddToCareTeam.setOnClickListener { onAddToCareTeamClicked?.invoke(resource) }
+        val isPractitioner = resource.type == SearchResultType.PRACTITIONER
+
+        // Chips (only for practitioners)
+        b.chipCareTeam.visibility = if (isPractitioner && state.isInCareTeam) View.VISIBLE else View.GONE
+        b.chipPCP.visibility = if (isPractitioner && state.isPCP) View.VISIBLE else View.GONE
+
+        // Care team actions (only for practitioners)
+        b.careTeamActions.visibility = if (isPractitioner) View.VISIBLE else View.GONE
+
+        if (isPractitioner) {
+            if (state.isInCareTeam) {
+                b.btnCareTeam.text = "- Care Team"
+            } else {
+                b.btnCareTeam.text = "+ Care Team"
+            }
+
+            b.btnCareTeam.setOnClickListener {
+                if (state.isInCareTeam) {
+                    onRemoveFromCareTeamClicked?.invoke(resource)
+                } else {
+                    onAddToCareTeamClicked?.invoke(resource)
+                }
+            }
+
+            // PCP toggle
+            b.switchPCP.setOnCheckedChangeListener(null)
+            b.switchPCP.isChecked = state.isPCP
+            b.switchPCP.setOnCheckedChangeListener { _, isChecked ->
+                onPCPToggled?.invoke(resource, isChecked)
+            }
+        }
+
         b.root.setOnClickListener { onItemClicked?.invoke(resource) }
+    }
+
+    fun updateState(resourceId: String, isInCareTeam: Boolean, isPCP: Boolean) {
+        val state = stateMap.getOrPut(resourceId) { HealthResourceState() }
+        state.isInCareTeam = isInCareTeam
+        state.isPCP = isPCP
+        val index = items?.indexOfFirst { it.id == resourceId } ?: -1
+        if (index >= 0) {
+            notifyItemChanged(index)
+        }
     }
 
     fun updateList(newList: List<HealthResource>?) {

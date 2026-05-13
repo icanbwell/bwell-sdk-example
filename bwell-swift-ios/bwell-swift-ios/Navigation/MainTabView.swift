@@ -12,6 +12,7 @@ enum Tab: Int, Hashable {
     case home
     case healthRecords
     case findCare
+    case careTeam
     case profile
 }
 
@@ -25,6 +26,7 @@ struct MainTabView: View {
     @State private var homePath = NavigationPath()
     @State private var healthRecordsPath = NavigationPath()
     @State private var findCarePath = NavigationPath()
+    @State private var careTeamPath = NavigationPath()
     @State private var profilePath = NavigationPath()
 
     var body: some View {
@@ -64,6 +66,18 @@ struct MainTabView: View {
                 Label("Find Care", systemImage: "magnifyingglass")
             }
             .tag(Tab.findCare)
+
+            // MARK: - Care Team Tab
+            NavigationStack(path: $careTeamPath) {
+                CareTeamMembersView()
+                    .navigationDestination(for: AppView.self) { destination in
+                        destinationView(destination)
+                    }
+            }
+            .tabItem {
+                Label("Care Team", systemImage: "person.3.fill")
+            }
+            .tag(Tab.careTeam)
 
             // MARK: - Profile Tab
             NavigationStack(path: $profilePath) {

@@ -26,6 +26,7 @@ import com.bwell.common.models.domain.search.enums.FilterField
 import com.bwell.common.models.domain.search.enums.HealthResourceSortField
 import com.bwell.common.models.domain.search.enums.PatientAcceptance
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthdata.healthsummary.requests.careteam.CareTeamMemberType
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.data_connections.DataConnectionsFragment
@@ -116,10 +117,10 @@ class HealthResourcesSearchFragment : Fragment() {
                 if (result == null) return@collect
                 if (result.success()) {
                     val data = (result as? BWellResult.SingleResource<CareTeamMutationResult>)?.data
-                    Toast.makeText(requireContext(), "Added to care team (ID: ${data?.id ?: "N/A"})", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Care team updated (ID: ${data?.id ?: "N/A"})", Toast.LENGTH_SHORT).show()
                     Log.i(TAG, "Care team mutation success: id=${data?.id}")
                 } else {
-                    Toast.makeText(requireContext(), "Failed to add: ${result.error?.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed: ${result.error?.message()}", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Care team mutation error: ${result.error?.message()}")
                 }
                 viewModel.clearCareTeamMutationResult()
@@ -244,9 +245,27 @@ class HealthResourcesSearchFragment : Fragment() {
                     logResourceDetails(resource)
                 }
                 adapter.onAddToCareTeamClicked = { resource ->
-                    val id = resource.id ?: return@onAddToCareTeamClicked
-                    val type = resource.type?.name ?: "Practitioner"
-                    viewModel.addCareTeamMember("$type/$id", type, resource.content)
+                    resource.id?.let { id ->
+                        viewModel.addCareTeamMember(id, CareTeamMemberType.Practitioner, listOf("member"))
+                        adapter.updateState(id, isInCareTeam = true, isPCP = false)
+                    }
+                }
+                adapter.onRemoveFromCareTeamClicked = { resource ->
+                    resource.id?.let { id ->
+                        viewModel.removeCareTeamMember(id, CareTeamMemberType.Practitioner)
+                        adapter.updateState(id, isInCareTeam = false, isPCP = false)
+                    }
+                }
+                adapter.onPCPToggled = { resource, enabled ->
+                    resource.id?.let { id ->
+                        if (enabled) {
+                            viewModel.addCareTeamMemberAsPCP(id, CareTeamMemberType.Practitioner)
+                            adapter.updateState(id, isInCareTeam = true, isPCP = true)
+                        } else {
+                            viewModel.updateCareTeamMember(id, CareTeamMemberType.Practitioner, listOf("member"))
+                            adapter.updateState(id, isInCareTeam = true, isPCP = false)
+                        }
+                    }
                 }
                 binding.rvResults.layoutManager = LinearLayoutManager(requireContext())
                 binding.rvResults.adapter = adapter
