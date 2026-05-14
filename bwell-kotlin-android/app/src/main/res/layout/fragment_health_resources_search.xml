@@ -268,6 +268,7 @@
                 android:layout_weight="1"
                 android:hint="Insurance Owner"
                 android:inputType="text"
+                android:text="Aetna"
                 android:textSize="12sp" />
 
             <EditText
@@ -277,6 +278,7 @@
                 android:layout_weight="1"
                 android:hint="Insurance Plan"
                 android:inputType="text"
+                android:text="HMO Gold"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -294,6 +296,7 @@
                 android:layout_weight="1"
                 android:hint="Appt Type (e.g. new-patient)"
                 android:inputType="text"
+                android:text="new-patient"
                 android:textSize="12sp" />
 
             <EditText
@@ -303,6 +306,7 @@
                 android:layout_weight="1"
                 android:hint="Start (ISO date)"
                 android:inputType="text"
+                android:text="2026-05-14T00:00:00Z"
                 android:textSize="12sp" />
         </LinearLayout>
 
