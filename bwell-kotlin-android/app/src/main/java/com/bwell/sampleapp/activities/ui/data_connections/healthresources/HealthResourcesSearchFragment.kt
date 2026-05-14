@@ -19,6 +19,8 @@ import com.bwell.common.models.domain.common.enums.SortOrder
 import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.domain.search.HealthResourceSearchFilters
 import com.bwell.common.models.domain.search.HealthResourceSearchLocation
+import com.bwell.common.models.domain.search.InsurancePlanFilterInput
+import com.bwell.common.models.domain.search.NextAvailableSlotInput
 import com.bwell.common.models.domain.search.enums.DistanceUnit
 import com.bwell.common.models.domain.search.enums.FilterField
 import com.bwell.common.models.domain.search.enums.HealthResourceSortField
@@ -225,13 +227,35 @@ class HealthResourcesSearchFragment : Fragment() {
             listOf(Coding(system = "urn:ietf:bcp:47", code = it))
         }
 
+        val insuranceOwner = binding.etInsuranceOwner.text.toString().trim()
+        val insurancePlanId = binding.etInsurancePlan.text.toString().trim()
+        val insurancePlanFilter: List<InsurancePlanFilterInput>? =
+            if (insuranceOwner.isNotEmpty() || insurancePlanId.isNotEmpty()) {
+                listOf(InsurancePlanFilterInput(
+                    owner = insuranceOwner.ifEmpty { null },
+                    plan = insurancePlanId.ifEmpty { null }
+                ))
+            } else null
+
+        val nextAvailType = binding.etNextAvailableType.text.toString().trim()
+        val nextAvailStart = binding.etNextAvailableStart.text.toString().trim()
+        val nextAvailableSlotFilter: List<NextAvailableSlotInput>? =
+            if (nextAvailType.isNotEmpty() || nextAvailStart.isNotEmpty()) {
+                listOf(NextAvailableSlotInput(
+                    appointmentType = if (nextAvailType.isNotEmpty()) listOf(nextAvailType) else null,
+                    start = nextAvailStart.ifEmpty { null }
+                ))
+            } else null
+
         val searchFilters = HealthResourceSearchFilters(
             type = providerType,
             gender = gender,
             includeInactive = if (binding.cbIncludeInactive.isChecked) true else null,
             specialty = specialtyFilter,
             communication = communicationFilter,
-            patientAcceptance = patientAcceptance
+            patientAcceptance = patientAcceptance,
+            insurancePlan = insurancePlanFilter,
+            nextAvailableSlot = nextAvailableSlotFilter
         )
         builder.filters(searchFilters)
 
@@ -282,11 +306,24 @@ class HealthResourcesSearchFragment : Fragment() {
                     Log.i(TAG, "  bookable: ${first.bookable}")
                     Log.i(TAG, "  virtualCare: ${first.isVirtualCare}")
                     Log.i(TAG, "  communication: ${first.communication?.mapNotNull { it.text }}")
-                    Log.i(TAG, "  insurancePlan: ${first.insurancePlan}")
+                    Log.i(TAG, "  insurancePlan: ${first.insurancePlan?.map { "id=${it.id}, owner=${it.ownedByDisplay}" }}")
                     Log.i(TAG, "  partOf: ${first.partOf}")
                     Log.i(TAG, "  reviewScore: ${first.reviewScore}")
-                    Log.i(TAG, "  acceptedAgeRanges: ${first.acceptedAgeRanges}")
+                    Log.i(TAG, "  acceptedAgeRanges: ${first.acceptedAgeRanges?.map { "years=${it.years}, months=${it.months}" }}")
+                    Log.i(TAG, "  nextAvailableSlot: ${first.nextAvailableSlot?.map { "type=${it.appointmentType}, start=${it.start}" }}")
+                    Log.i(TAG, "  practitionerQualification: ${first.practitionerQualification?.map { it.code?.text }}")
                     Log.i(TAG, "  endpoint: ${first.endpoint?.mapNotNull { it.name }}")
+                    first.providerLocation?.firstOrNull()?.let { loc ->
+                        Log.i(TAG, "  loc[0].name: ${loc.name}")
+                        Log.i(TAG, "  loc[0].description: ${loc.description}")
+                        Log.i(TAG, "  loc[0].identifier: ${loc.identifier?.map { "${it.system}|${it.value}" }}")
+                        Log.i(TAG, "  loc[0].alias: ${loc.alias}")
+                        Log.i(TAG, "  loc[0].hoursOfOperation: ${loc.hoursOfOperation?.map { "${it.daysOfWeek} ${it.openingTime}-${it.closingTime}" }}")
+                        Log.i(TAG, "  loc[0].organizationName: ${loc.organizationName}")
+                        Log.i(TAG, "  loc[0].parkingInformation: ${loc.parkingInformation}")
+                        Log.i(TAG, "  loc[0].facilityId: ${loc.facilityId}")
+                        Log.i(TAG, "  loc[0].telecom: ${loc.telecom?.map { "${it.system}:${it.value}" }}")
+                    }
                 }
                 Log.i(TAG, "====================")
             }
@@ -348,16 +385,32 @@ class HealthResourcesSearchFragment : Fragment() {
         Log.i(TAG, "specialty: ${resource.specialty?.mapNotNull { it.display }}")
         Log.i(TAG, "communication: ${resource.communication?.mapNotNull { it.text }}")
         Log.i(TAG, "acceptingNew: ${resource.acceptingNewPatients}")
-        Log.i(TAG, "acceptedAgeRanges: ${resource.acceptedAgeRanges}")
+        Log.i(TAG, "acceptedAgeRanges: ${resource.acceptedAgeRanges?.map { "years=${it.years}, months=${it.months}" }}")
         Log.i(TAG, "bookable: ${resource.bookable}")
         Log.i(TAG, "virtualCare: ${resource.isVirtualCare}")
-        Log.i(TAG, "insurancePlan: ${resource.insurancePlan}")
+        Log.i(TAG, "insurancePlan: ${resource.insurancePlan?.map { "id=${it.id}, owner=${it.ownedByDisplay}" }}")
         Log.i(TAG, "partOf: ${resource.partOf}")
         Log.i(TAG, "reviewScore: ${resource.reviewScore}")
-        Log.i(TAG, "nextAvailableSlot: ${resource.nextAvailableSlot}")
+        Log.i(TAG, "nextAvailableSlot: ${resource.nextAvailableSlot?.map { "type=${it.appointmentType}, start=${it.start}" }}")
         Log.i(TAG, "organizations: ${resource.organization?.size ?: 0}")
-        Log.i(TAG, "locations: ${resource.providerLocation?.size ?: 0}")
+        Log.i(TAG, "practitionerQualification: ${resource.practitionerQualification?.map { it.code?.text ?: it.code?.coding?.firstOrNull()?.display }}")
         Log.i(TAG, "endpoints: ${resource.endpoint?.mapNotNull { it.name }}")
+        Log.i(TAG, "--- Locations (${resource.providerLocation?.size ?: 0}) ---")
+        resource.providerLocation?.forEachIndexed { i, loc ->
+            Log.i(TAG, "  [$i] name: ${loc.name}")
+            Log.i(TAG, "  [$i] description: ${loc.description}")
+            Log.i(TAG, "  [$i] identifier: ${loc.identifier?.map { "${it.system}|${it.value}" }}")
+            Log.i(TAG, "  [$i] alias: ${loc.alias}")
+            Log.i(TAG, "  [$i] address: ${loc.address}")
+            Log.i(TAG, "  [$i] distanceInMiles: ${loc.distanceInMiles}")
+            Log.i(TAG, "  [$i] telecom: ${loc.telecom?.map { "${it.system}:${it.value}" }}")
+            Log.i(TAG, "  [$i] hoursOfOperation: ${loc.hoursOfOperation?.map { "${it.daysOfWeek} ${it.openingTime}-${it.closingTime}" }}")
+            Log.i(TAG, "  [$i] organizationName: ${loc.organizationName}")
+            Log.i(TAG, "  [$i] parkingInformation: ${loc.parkingInformation}")
+            Log.i(TAG, "  [$i] facilityId: ${loc.facilityId}")
+            Log.i(TAG, "  [$i] nextAvailableSlot: ${loc.nextAvailableSlot?.map { "type=${it.appointmentType}, start=${it.start}" }}")
+            Log.i(TAG, "  [$i] scheduling: id=${loc.scheduling?.identifier?.mapNotNull { it?.let { id -> "${id.system}|${id.value}" } }}, bookable=${loc.scheduling?.bookable}")
+        }
         Log.i(TAG, "-------------------------")
     }
 
