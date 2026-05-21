@@ -438,6 +438,14 @@ class LoginFragment : Fragment() {
             val result = BWellSdk.health.getFhir(request)
             println(result.toString())
 
+            val docRefRequest = FhirRequest.Builder()
+                .resourceType(ResourceType.DOCUMENT_REFERENCE)
+                .page(0)
+                .pageSize(5)
+                .build()
+            val docRefResult = BWellSdk.health.getFhir(docRefRequest)
+            Log.i(TAG, "DocumentReference getFhir result: $docRefResult")
+
             Log.i(TAG, "Finished initializing SDK")
 
             findNavController().navigate(R.id.nav_home)
