@@ -215,14 +215,6 @@ final class ProviderSearchViewModel: ObservableObject {
             }
         }()
 
-        let insurancePlanFilter: [BWell.SearchHealthResourcesRequest.InsurancePlanFilterInput] = [
-            .init(owner: "Aetna", plan: "HMO Gold")
-        ]
-
-        let nextAvailableSlotFilter: [BWell.SearchHealthResourcesRequest.NextAvailableSlotFilterInput] = [
-            .init(appointmentType: ["new-patient"], start: "2026-05-14T00:00:00Z")
-        ]
-
         let filter = BWell.SearchHealthResourcesRequest.Filter(
             type: organizationType.filterValue,
             id: nil,
@@ -230,8 +222,8 @@ final class ProviderSearchViewModel: ObservableObject {
             gender: genderFilter.sdkValue,
             includeInactive: includeInactive,
             specialty: specialtyCodes,
-            insurancePlan: insurancePlanFilter,
-            nextAvailableSlot: nextAvailableSlotFilter,
+            insurancePlan: nil,
+            nextAvailableSlot: nil,
             patientAcceptance: patientAcceptance.sdkValue
         )
 

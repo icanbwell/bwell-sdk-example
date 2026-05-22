@@ -17,20 +17,8 @@ final class SearchConnectionsViewModel: ObservableObject {
         isLoading = true
 
         do {
-            let insurancePlanFilter = BWell.SearchHealthResourcesRequest.InsurancePlanFilterInput(
-                owner: "Aetna",
-                plan: "HMO Gold"
-            )
-
-            let nextAvailableSlotFilter = BWell.SearchHealthResourcesRequest.NextAvailableSlotFilterInput(
-                appointmentType: ["new-patient"],
-                start: "2026-05-14T00:00:00Z"
-            )
-
             let filters: BWell.SearchHealthResourcesRequest.Filter = .init(
-                includePopulatedProaOnly: true,
-                insurancePlan: [insurancePlanFilter],
-                nextAvailableSlot: [nextAvailableSlotFilter]
+                includePopulatedProaOnly: true
             )
             let orderBy: BWell.SearchHealthResourcesRequest.OrderBy = .init(field: .relevance, order: .desc)
 

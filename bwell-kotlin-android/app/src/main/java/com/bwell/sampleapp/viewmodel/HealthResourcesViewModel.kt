@@ -7,6 +7,7 @@ import com.bwell.common.models.domain.search.HealthResource
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.HealthResourcesRepository
 import com.bwell.search.requests.healthresource.HealthResourceSearchRequest
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,6 +34,8 @@ class HealthResourcesViewModel(private val repository: HealthResourcesRepository
                         _searchError.emit("Search failed: no response received")
                     }
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log.e("HealthResourcesVM", "Search failed", e)
                 _searchError.emit("Search failed: ${e.message}")

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -183,13 +184,20 @@ class HealthResourcesSearchFragment : Fragment() {
         builder.sortBy(sortField, SortOrder.ASC)
 
         if (binding.cbUseLocation.isChecked) {
-            val lat = binding.etLatitude.text.toString().toDoubleOrNull() ?: 39.2848102
-            val lon = binding.etLongitude.text.toString().toDoubleOrNull() ?: -76.702898
+            val latText = binding.etLatitude.text.toString()
+            val lonText = binding.etLongitude.text.toString()
+            val lat = latText.toDoubleOrNull()
+            val lon = lonText.toDoubleOrNull()
+
+            if (lat == null && latText.isNotEmpty() || lon == null && lonText.isNotEmpty()) {
+                Toast.makeText(requireContext(), "Invalid coordinates — using default location", Toast.LENGTH_SHORT).show()
+            }
+
             val radius = binding.etRadius.text.toString().toDoubleOrNull()
 
             val loc = HealthResourceSearchLocation(
-                lat = lat,
-                lon = lon,
+                lat = lat ?: 39.2848102,
+                lon = lon ?: -76.702898,
                 radius = radius,
                 radiusUnit = if (radius != null) DistanceUnit.MILES else null
             )
