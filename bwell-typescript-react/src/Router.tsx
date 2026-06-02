@@ -14,6 +14,10 @@ import Procedures from "./pages/Procedures";
 import VitalSigns from "./pages/VitalSigns";
 import ProfilePage from "./pages/Profile";
 import SearchPage from "./pages/Search";
+import ConsentSdkTest from "./pages/ConsentSdkTest";
+import TosConsentSdkTest from "./pages/TosConsentSdkTest";
+import CreateTosConsentSdkTest from "./pages/CreateTosConsentSdkTest";
+import CreateProaConsentSdkTest from "./pages/CreateProaConsentSdkTest";
 
 const makePageRoute = (path: string, element: JSX.Element) => ({
   path,
@@ -35,7 +39,11 @@ const Router = createBrowserRouter([
   makePageRoute("/labs", <Labs />),
   makePageRoute("/medications", <Medications />),
   makePageRoute("/procedures", <Procedures />),
-  makePageRoute("/vitalSigns", <VitalSigns />)
+  makePageRoute("/vitalSigns", <VitalSigns />),
+  makePageRoute("/consentSdkTest", <ConsentSdkTest />),
+  makePageRoute("/tosConsentSdkTest", <TosConsentSdkTest />),
+  makePageRoute("/createTosConsentSdkTest", <CreateTosConsentSdkTest />),
+  makePageRoute("/createProaConsentSdkTest", <CreateProaConsentSdkTest />)
 ]);
 
 export default Router;

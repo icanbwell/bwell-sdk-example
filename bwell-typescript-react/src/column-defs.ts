@@ -29,12 +29,6 @@ const joinActivity = (activity: any[]) => {
     return activity.map(a => a.detail?.code?.text).join(', ');
 }
 
-const joinCoding = (coding: any[]) => {
-    if (!coding?.length) return '';
-
-    return coding.map(c => c.coding[0].display).join(', ');
-}
-
 const formatValue = (value: any) => `${value?.valueQuantity?.value ?? ''} ${value?.valueQuantity?.unit ?? ''}`;
 
 export const CONNECTION_COLUMNS: GridColDef[] = [

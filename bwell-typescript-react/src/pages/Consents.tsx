@@ -83,7 +83,7 @@ const Consents = () => {
     const [rawResponse, setRawResponse] = useState<any>(null);
     const [category, setCategory] = useState<CategoryCode>("TOS");
     const [provision, setProvision] = useState<ConsentProvisionType>("PERMIT");
-    const [organizationId, setOrganizationId] = useState("");
+    const [organizationId] = useState("");
 
     const columns = useMemo<GridColDef<ConsentRow>[]>(
         () => [
