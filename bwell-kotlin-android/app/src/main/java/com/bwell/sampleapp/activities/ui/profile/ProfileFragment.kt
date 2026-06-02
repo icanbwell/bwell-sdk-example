@@ -141,13 +141,13 @@ class ProfileFragment : Fragment() {
         //create state Spinner
         val stateSpinner: Spinner = binding.includeEditProfile.stateSpinner
         val stateAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.states, android.R.layout.simple_spinner_item)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // Apply the adapter to the spinner
         stateSpinner.adapter = stateAdapter
         // Set the on item selected listener
         stateSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                selectedState = spinner.selectedItem.toString()
+                selectedState = stateSpinner.selectedItem.toString()
 
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
