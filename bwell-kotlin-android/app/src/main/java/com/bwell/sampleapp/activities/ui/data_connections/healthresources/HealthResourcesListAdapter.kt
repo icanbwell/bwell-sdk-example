@@ -1,6 +1,5 @@
 package com.bwell.sampleapp.activities.ui.data_connections.healthresources
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -33,28 +32,10 @@ class HealthResourcesListAdapter(private var items: List<HealthResource>?) :
         val specialties = resource.specialty?.mapNotNull { it.display }?.joinToString(", ")
         b.tvSpecialty.text = specialties ?: ""
 
-        b.tvScore.text = resource.score?.let { "Score: %.2f".format(it) } ?: ""
-
-        val acceptingText = when (resource.acceptingNewPatients) {
-            true -> "Accepting New"
-            false -> "Not Accepting"
-            null -> ""
-        }
-        b.tvAcceptingNew.text = acceptingText
-        if (resource.acceptingNewPatients == true) {
-            b.tvAcceptingNew.setTextColor(Color.parseColor("#4CAF50"))
-        } else {
-            b.tvAcceptingNew.setTextColor(Color.parseColor("#888888"))
-        }
-
         val locationCount = resource.providerLocation?.size ?: resource.location?.size ?: 0
         b.tvLocations.text = if (locationCount > 0) "$locationCount locations" else ""
 
-        val languages = resource.communication?.mapNotNull { it.text }?.joinToString(", ")
-        b.tvCommunication.text = languages ?: ""
-
         val badges = mutableListOf<String>()
-        if (resource.isVirtualCare == true) badges.add("Virtual Care")
         if (resource.bookable?.online == true) badges.add("Bookable Online")
         if (resource.bookable?.phone == true) badges.add("Bookable Phone")
         b.tvBadges.text = badges.joinToString(" | ")
