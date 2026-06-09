@@ -3,11 +3,13 @@
 ## Prerequisites
 
 - Xcode with iOS Simulator
-- Node.js with `jsonwebtoken` available (for dev JWT generation)
+- Node.js, plus the `jsonwebtoken` package on Node's module path for the JWT
+  step, e.g.: `npm install -g jsonwebtoken && export NODE_PATH="$(npm root -g)"`
 - A local EC (ES256) signing key for dev JWTs, obtained from the
   `bwell-identity-gateway` maintainers and stored **outside** this repo. Never
   commit the key.
-- A `.env` file: copy `bwell-swift-ios/.env.example` → `.env` and fill in your
+- A `.env` file: copy `bwell-swift-ios/bwell-swift-ios/.env.example` →
+  `bwell-swift-ios/bwell-swift-ios/.env` (same directory) and fill in your
   values. `.env` is gitignored and must never be committed.
 
 ## Simulator Setup
@@ -38,17 +40,19 @@ xcrun simctl launch "0C084754-DF2E-4CC9-960C-44EB0B7C1629" "com.bwell.sdkSampleA
 
 ## Authentication
 
-> All credentials come from your local, gitignored `.env` (copy
-> `bwell-swift-ios/.env.example` → `.env` first). **Never** hardcode client keys,
-> signing keys, or tokens in this repo — they are real and must stay local.
+> All credentials come from your local, gitignored `.env` at
+> `bwell-swift-ios/bwell-swift-ios/.env` (copy it from `.env.example` in that
+> directory first). **Never** hardcode client keys, signing keys, or tokens in
+> this repo — they are real and must stay local. The commands below locate the
+> repo with `git rev-parse`, so they work from any directory inside it.
 > See `.env.example` for the variables referenced below.
 
 ### Step 1: Paste the Client Key
 
 Copy your client key to the **simulator** clipboard:
 ```bash
-# Load your local credentials
-set -a; source bwell-swift-ios/.env; set +a
+# Load your local credentials (works from anywhere inside the repo)
+set -a; source "$(git rev-parse --show-toplevel)/bwell-swift-ios/bwell-swift-ios/.env"; set +a
 
 echo -n "$BWELL_CLIENT_KEY" | xcrun simctl pbcopy "0C084754-DF2E-4CC9-960C-44EB0B7C1629"
 ```
@@ -61,7 +65,7 @@ Generate a fresh JWT (valid 24 hours) signed with your **local** dev key and cop
 it to the **simulator** clipboard. The signing key is read from a path on your
 machine (`BWELL_DEV_SIGNING_KEY_PATH`); it is never stored in this repo:
 ```bash
-set -a; source bwell-swift-ios/.env; set +a
+set -a; source "$(git rev-parse --show-toplevel)/bwell-swift-ios/bwell-swift-ios/.env"; set +a
 
 node -e "
 const jwt = require('jsonwebtoken');
@@ -83,7 +87,7 @@ Tap the JWT Token field in the app → Paste → Tap **Login**.
 
 ```bash
 # Loads your local .env, then copies the client key to the simulator clipboard
-set -a; source bwell-swift-ios/.env; set +a
+set -a; source "$(git rev-parse --show-toplevel)/bwell-swift-ios/bwell-swift-ios/.env"; set +a
 echo -n "$BWELL_CLIENT_KEY" | xcrun simctl pbcopy "0C084754-DF2E-4CC9-960C-44EB0B7C1629"
 
 # After submitting the client key, generate + copy a JWT, then paste and tap Login
