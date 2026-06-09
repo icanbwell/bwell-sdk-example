@@ -28,6 +28,7 @@ import com.bwell.sampleapp.activities.ui.data_connections.proa.WebFragment
 import com.bwell.sampleapp.databinding.FragmentDataConnectionsParentBinding
 import com.bwell.sampleapp.model.DataConnectionCategoriesListItems
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModel
+import com.bwell.sampleapp.activities.ui.data_connections.healthresources.HealthResourcesSearchFragment
 import com.bwell.sampleapp.activities.ui.data_connections.providers.ProviderSearchFragment
 import com.bwell.sampleapp.viewmodel.DataConnectionsViewModelFactory
 import kotlinx.coroutines.flow.StateFlow
@@ -225,6 +226,17 @@ class DataConnectionsFragment : Fragment(), View.OnClickListener,
                     val transaction = childFragmentManager.beginTransaction()
                     binding.containerLayout.visibility = View.VISIBLE
                     transaction.replace(R.id.container_layout, labsSearchFragment)
+                    transaction.addToBackStack(null)
+                    transaction.commit()
+                }
+
+                resources.getString(R.string.data_connection_category_health_resources) -> {
+                    binding.includeDataConnectionCategory.dataConnectionFragment.visibility =
+                        View.GONE
+                    val healthResourcesFragment = HealthResourcesSearchFragment()
+                    val transaction = childFragmentManager.beginTransaction()
+                    binding.containerLayout.visibility = View.VISIBLE
+                    transaction.replace(R.id.container_layout, healthResourcesFragment)
                     transaction.addToBackStack(null)
                     transaction.commit()
                 }

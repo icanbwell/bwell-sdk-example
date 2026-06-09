@@ -276,6 +276,7 @@ struct ProviderDetailView: View {
         case .unknown(let value): return value.capitalized
         }
     }
+
 }
 
 // MARK: - Location Card
