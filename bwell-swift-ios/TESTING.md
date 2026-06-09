@@ -20,7 +20,7 @@ Device UDID: 0C084754-DF2E-4CC9-960C-44EB0B7C1629
 ## Build & Install
 
 ```bash
-cd /Users/billfield/dev/bwell-sdk-example/bwell-swift-ios
+cd bwell-swift-ios   # from the bwell-sdk-example repo root
 
 # Build
 xcodebuild build -scheme bwell-swift-ios -sdk iphonesimulator \
