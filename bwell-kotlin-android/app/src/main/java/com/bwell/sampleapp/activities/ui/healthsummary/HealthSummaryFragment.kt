@@ -32,6 +32,7 @@ import com.bwell.healthdata.healthsummary.requests.vitalsign.VitalSignGroupsRequ
 import com.bwell.healthdata.requests.binary.BinaryRequest
 import com.bwell.provider.requests.organization.OrganizationRequest
 import com.bwell.provider.requests.practitioner.PractitionerRequest
+import com.bwell.provider.requests.practitionerrole.PractitionerRoleRequest
 import com.bwell.sampleapp.BWellSampleApplication
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.activities.ui.medicines.MedicineDetailFragment
@@ -86,6 +87,11 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
 
         val organizationRequest = OrganizationRequest.Builder().id("00000107-21f8-57a3-b59e-96f2e1e01775").build()
         healthSummaryViewModel.getOrganizations(organizationRequest)
+
+        val practitionerRoleRequest = PractitionerRoleRequest.Builder()
+            .id("00000590-d9c2-551f-9c5a-f3abb73aad4c")
+            .build()
+        healthSummaryViewModel.getPractitionerRoles(practitionerRoleRequest)
 
         viewLifecycleOwner.lifecycleScope.launch {
             launch {
@@ -148,6 +154,20 @@ class HealthSummaryFragment : Fragment(), View.OnClickListener {
                         }
                         else -> {
                             Log.w("getOrganizations", "Unexpected result type: ${result?.javaClass?.simpleName}")
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                healthSummaryViewModel.practitionerRoleResults.collect { result ->
+                    when(result) {
+                        is BWellResult.ResourceCollection -> {
+                            Log.i("getPractitionerRoles", result.toString())
+                        } else -> {
+                            Log.w("getPractitionerRoles", "Unexpected result type: ${result?.javaClass?.simpleName}")
                         }
                     }
                 }
