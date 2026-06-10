@@ -399,3 +399,66 @@ export const COVERAGE_COLUMNS: GridColDef[] = [
     width: 200,
   },
 ];
+
+export const EXPLANATION_OF_BENEFITS_COLUMNS: GridColDef[] = [
+  { field: "id", headerName: "ID", width: 300 },
+  { field: "status", headerName: "Status", width: 100 },
+  {
+    field: "type",
+    headerName: "Type",
+    valueGetter: (type: any) =>
+      type?.coding?.[0]?.display || type?.text || "N/A",
+    width: 200,
+  },
+  {
+    field: "use",
+    headerName: "Use",
+    width: 100,
+  },
+  {
+    field: "patient",
+    headerName: "Patient",
+    valueGetter: (patient: any) =>
+      patient?.display || patient?.reference || "N/A",
+    width: 200,
+  },
+  {
+    field: "created",
+    headerName: "Created",
+    valueGetter: (params) => monthDayYear(params),
+    width: 150,
+  },
+  {
+    field: "insurer",
+    headerName: "Insurer",
+    valueGetter: (insurer: any) =>
+      insurer?.display || insurer?.reference || "N/A",
+    width: 200,
+  },
+  {
+    field: "provider",
+    headerName: "Provider",
+    valueGetter: (provider: any) =>
+      provider?.display || provider?.reference || "N/A",
+    width: 200,
+  },
+  {
+    field: "outcome",
+    headerName: "Outcome",
+    width: 100,
+  },
+  {
+    field: "total",
+    headerName: "Total Amount",
+    valueGetter: (total: any) => {
+      if (!total?.length) return "N/A";
+      const totalAmount = total.find(
+        (t: any) => t.category?.coding?.[0]?.code === "total"
+      );
+      return totalAmount?.amount?.value
+        ? `${totalAmount.amount.currency || "$"}${totalAmount.amount.value}`
+        : "N/A";
+    },
+    width: 150,
+  },
+];
