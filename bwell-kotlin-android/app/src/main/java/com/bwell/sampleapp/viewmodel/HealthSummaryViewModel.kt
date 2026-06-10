@@ -9,6 +9,7 @@ import com.bwell.common.models.domain.healthdata.healthsummary.healthsummary.enu
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.healthdata.healthsummary.requests.documentReference.DocumentReferencesRequest
 import com.bwell.healthdata.requests.binary.BinaryRequest
+import com.bwell.provider.requests.organization.OrganizationRequest
 import com.bwell.provider.requests.practitioner.PractitionerRequest
 import com.bwell.sampleapp.model.HealthSummaryList
 import com.bwell.sampleapp.repository.HealthSummaryRepository
@@ -83,6 +84,20 @@ class HealthSummaryViewModel (
             try {
                 providerResourcesRepository?.getPractitioners(practitionerRequest)?.collect { result ->
                     _practitionersResults.emit(result)
+                }
+            } catch (e: Exception){
+                // Handle Exceptions, if any
+            }
+        }
+    }
+
+    private val _organizationsResults = MutableStateFlow<BWellResult<Any>?>(null)
+    val organizationsResults: StateFlow<BWellResult<Any>?> = _organizationsResults
+    fun getOrganizations(organizationRequest: OrganizationRequest) {
+        viewModelScope.launch {
+            try {
+                providerResourcesRepository?.getOrganizations(organizationRequest)?.collect { result ->
+                    _organizationsResults.emit(result)
                 }
             } catch (e: Exception){
                 // Handle Exceptions, if any
