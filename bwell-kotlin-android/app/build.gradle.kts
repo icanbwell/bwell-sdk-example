@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     // Firebase notifications - uncomment to enable push notifications
     // Requires google-services.json file to be configured
     // id("com.google.gms.google-services")
@@ -47,9 +48,6 @@ android {
         viewBinding = true
         dataBinding = true
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
     }
     packaging {
         resources {
