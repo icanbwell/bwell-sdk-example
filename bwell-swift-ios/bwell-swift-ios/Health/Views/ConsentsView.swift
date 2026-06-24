@@ -90,10 +90,9 @@ struct ConsentsView: View {
                     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
                     .padding(.bottom, 20)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                            withAnimation { toastMessage = nil }
-                        }
+                    .task(id: toastMessage) {
+                        try? await Task.sleep(for: .seconds(2.5))
+                        withAnimation { toastMessage = nil }
                     }
             }
         }
