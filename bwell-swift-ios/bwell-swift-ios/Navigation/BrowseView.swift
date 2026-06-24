@@ -66,6 +66,13 @@ struct HealthRecordsBrowseView: View {
                 }
             }
 
+            // MARK: - Privacy & Consent
+            Section("Privacy & Consent") {
+                NavigationLink(value: AppView.consents) {
+                    BrowseRow(icon: "hand.raised", title: "Consents", color: .bwellPurple)
+                }
+            }
+
             // MARK: - Developer
             Section("Developer") {
                 DeveloperStubRow(icon: "doc.zipper", title: "Get Binary", description: "getBinary — raw binary FHIR resource access")
