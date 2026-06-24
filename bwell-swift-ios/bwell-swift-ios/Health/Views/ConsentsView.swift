@@ -52,7 +52,7 @@ private let allCategories: [ConsentCategoryInfo] = [
           displayName: "PROA Attestation",
           icon: "checkmark.seal",
           description: "Patient-requested online access attestation."),
-.init(id: .healthCircleAdolescent,
+    .init(id: .healthCircleAdolescent,
           displayName: "Health Circle (Adolescent)",
           icon: "person.2",
           description: "Health circle access for adolescent users."),
@@ -74,8 +74,8 @@ struct ConsentsView: View {
     /// Category currently being submitted (to show per-row spinner).
     @State private var submitting: Set<String> = []
     @State private var toastMessage: String?
-    /// Optimistic provision overrides — updated immediately on successful createConsent
-    /// since getConsents is unavailable in the pre-v1.4.3 binary (DCON-4083).
+    /// Optimistic provision overrides — applied immediately after createConsent
+    /// while the background getConsents refresh is in-flight.
     @State private var localProvisions: [String: String] = [:]
 
     var body: some View {
@@ -101,9 +101,7 @@ struct ConsentsView: View {
         .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .task {
-            // getConsents leaks its continuation in the pre-v1.4.3 SDK binary (DCON-4083).
-            // Skip the load so the screen is usable; createConsent still works for QA.
-            isLoading = false
+            await loadConsents()
         }
     }
 
@@ -123,11 +121,6 @@ struct ConsentsView: View {
             }
         } else {
             List {
-                Section {
-                    Label("Current consent status unavailable — getConsents requires SDK v1.4.3 (DCON-4083). Permit/Deny still works for QA.", systemImage: "exclamationmark.triangle")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
-                }
                 ForEach(allCategories) { info in
                     consentRow(info)
                 }
@@ -254,17 +247,14 @@ struct ConsentsView: View {
 
     // MARK: - Data Loading
 
-    private func loadConsents() async {
+    private func loadConsents(showLoading: Bool = true) async {
         guard let sdk = sdkManager.sdk else { return }
-        isLoading = true
-        errorMessage = nil
+        if showLoading {
+            isLoading = true
+            errorMessage = nil
+        }
         do {
-            // getConsents(nil) leaks its continuation in the pre-v1.4.3 SDK binary,
-            // causing an infinite hang. Race it against a timeout so we fail fast.
-            // TODO: remove timeout wrapper once swift-sdk-v1.4.3 is linked.
-            let result = try await withTimeout(seconds: 8) {
-                try await sdk.user.getConsents(nil)
-            }
+            let result = try await sdk.user.getConsents(nil)
             var map: [String: BWell.GetConsentBundleEntry.GetConsentResource] = [:]
             for entry in result?.entry ?? [] {
                 guard let resource = entry.resource else { continue }
@@ -273,29 +263,11 @@ struct ConsentsView: View {
                 }
             }
             consentsByCategory = map
-        } catch is SDKTimeoutError {
-            errorMessage = "Consent data unavailable — SDK binary must be updated to v1.4.3 to fix this. (DCON-4083)"
+            localProvisions = [:]  // clear optimistic cache once server data arrives
         } catch {
-            errorMessage = "Failed to load consents."
+            if showLoading { errorMessage = "Failed to load consents." }
         }
-        isLoading = false
-    }
-
-    /// Races `operation` against a deadline. Throws `SDKTimeoutError` if the deadline fires first.
-    private func withTimeout<T: Sendable>(
-        seconds: Double,
-        operation: @Sendable @escaping () async throws -> T
-    ) async throws -> T {
-        try await withThrowingTaskGroup(of: T.self) { group in
-            group.addTask { try await operation() }
-            group.addTask {
-                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
-                throw SDKTimeoutError()
-            }
-            let result = try await group.next()!
-            group.cancelAll()
-            return result
-        }
+        if showLoading { isLoading = false }
     }
 
     // MARK: - Consent Submission
@@ -315,11 +287,13 @@ struct ConsentsView: View {
                 category: category
             )
             _ = try await sdk.user.createConsent(request)
-            // Optimistically update local state — getConsents hangs in pre-v1.4.3 binary (DCON-4083)
+            // Optimistic update while background refresh is in-flight
             localProvisions[key] = type == .permit ? "permit" : "deny"
             withAnimation {
                 toastMessage = "\(type == .permit ? "✓ Permitted" : "✗ Denied"): \(displayName(for: category))"
             }
+            // Refresh from server to get authoritative state
+            Task { await loadConsents(showLoading: false) }
         } catch {
             withAnimation {
                 toastMessage = "Failed to update consent."
@@ -329,20 +303,21 @@ struct ConsentsView: View {
 
     // MARK: - Helpers
 
-    /// Maps a CategoryCode to the wire string the SDK sends (mirrors SDK's description() / rawValue logic).
+    /// Maps a CategoryCode to the wire string the SDK sends.
     private func categoryKey(_ code: BWell.CategoryCode) -> String {
         switch code {
-        case .tos:                          return "TOS"
-        case .healthMatch:                  return "healthMatch"
-        case .iasImportRecords:             return "ias:import:records"
-        case .communicationPreferencesPHI:  return "communicationPreferences:includePHI"
-        case .dataSharing:                  return "dataSharing"
-        case .personalizedHealthOffersAndADS: return "personalizedHealthOffersAndAds"
-        case .mobileCommunicationPreferences: return "mobileCommunicationPreferences"
-        case .proaAttestation:              return "proaAttestation"
-case .healthCircleAdolescent:       return "healthCircleAdolescent"
-        case .healthCircleMinor:            return "healthCircleMinor"
-        case .unknown:                      return "unknown"
+        case .tos:                             return "TOS"
+        case .healthMatch:                     return "healthMatch"
+        case .iasImportRecords:                return "ias:import:records"
+        case .communicationPreferencesPHI:     return "communicationPreferences:includePHI"
+        case .dataSharing:                     return "dataSharing"
+        case .personalizedHealthOffersAndADS:  return "personalizedHealthOffersAndAds"
+        case .mobileCommunicationPreferences:  return "mobileCommunicationPreferences"
+        case .proaAttestation:                 return "proaAttestation"
+        case .healthCircleAdolescent:          return "healthCircleAdolescent"
+        case .healthCircleMinor:               return "healthCircleMinor"
+        case .unknown:                         return "unknown"
+        @unknown default:                      return "unknown"
         }
     }
 
@@ -350,5 +325,3 @@ case .healthCircleAdolescent:       return "healthCircleAdolescent"
         allCategories.first { $0.id == code }?.displayName ?? "\(code)"
     }
 }
-
-private struct SDKTimeoutError: Error {}
