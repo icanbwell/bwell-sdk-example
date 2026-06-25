@@ -98,7 +98,6 @@ struct ConsentsView: View {
         }
         .navigationTitle("Consents")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .task {
             // getConsents leaks its continuation in the pre-v1.4.3 SDK binary (DCON-4083).
@@ -343,6 +342,7 @@ struct ConsentsView: View {
 case .healthCircleAdolescent:       return "healthCircleAdolescent"
         case .healthCircleMinor:            return "healthCircleMinor"
         case .unknown:                      return "unknown"
+        @unknown default:                   return "unknown"
         }
     }
 
