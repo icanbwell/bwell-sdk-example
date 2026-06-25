@@ -125,6 +125,8 @@ struct MainTabView: View {
             QuestionnaireResponsesView()
         case .providerResources:
             ProviderResourcesView()
+        case .consents:
+            ConsentsView()
         }
     }
 }

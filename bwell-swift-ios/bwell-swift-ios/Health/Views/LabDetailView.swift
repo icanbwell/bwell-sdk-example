@@ -29,7 +29,6 @@ struct LabDetailView: View {
         }
         .navigationTitle(lab.code?.coding?.first?.display ?? lab.code?.text ?? "Lab Detail")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
     }
 

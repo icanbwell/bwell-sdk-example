@@ -47,6 +47,9 @@ enum AppView: Hashable {
 
     // Provider Resources
     case providerResources
+
+    // Consents (DCON-4083)
+    case consents
 }
 
 @MainActor
