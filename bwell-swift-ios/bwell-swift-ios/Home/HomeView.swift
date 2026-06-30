@@ -197,7 +197,6 @@ struct HomeView: View {
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             if let sdk = sdkManager.sdk {

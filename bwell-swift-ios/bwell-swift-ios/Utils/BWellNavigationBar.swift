@@ -21,7 +21,6 @@ struct BWellNavigationBar<TrailingItem: View>: ViewModifier {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar(showMenu ? .hidden: .visible, for: .navigationBar)
             .toolbarBackground(.bwellPurple, for: .navigationBar)
-            .toolbarBackgroundVisibility(.visible, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {

@@ -67,7 +67,6 @@ struct LabsView: View {
         .listStyle(.plain)
         .navigationTitle("Labs")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable { await fetchAll() }
         .task {
