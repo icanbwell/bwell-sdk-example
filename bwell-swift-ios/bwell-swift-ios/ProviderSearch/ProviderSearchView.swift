@@ -39,7 +39,6 @@ struct ProviderSearchView: View {
         .navigationTitle("Find Providers")
         .navigationBarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)
-
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -187,7 +186,6 @@ struct ProviderResultRow: View {
         case .laboratory: return "Laboratory"
         case .pharmacy: return "Pharmacy"
         case .unknown(let value): return value.capitalized
-        @unknown default: return "Unknown"
         }
     }
 }

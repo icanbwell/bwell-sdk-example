@@ -153,7 +153,6 @@ struct ProviderDetailView: View {
         .navigationTitle("Provider Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -274,7 +273,6 @@ struct ProviderDetailView: View {
         case .laboratory: return "Laboratory"
         case .pharmacy: return "Pharmacy"
         case .unknown(let value): return value.capitalized
-        @unknown default: return "Unknown"
         }
     }
 }

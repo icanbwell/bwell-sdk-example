@@ -37,7 +37,6 @@ struct SearchConnectionsView: View {
             }
         }
         .toolbarColorScheme(.dark, for: .navigationBar)
-
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(connection.title))

@@ -67,7 +67,6 @@ struct LabsView: View {
         .listStyle(.plain)
         .navigationTitle("Labs")
         .toolbarColorScheme(.dark, for: .navigationBar)
-
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable { await fetchAll() }
         .task {
@@ -79,15 +78,19 @@ struct LabsView: View {
         guard let sdk = sdkManager.sdk else { return }
         isLoading = true
         do {
-            let request = BWell.HealthDataRequest(page: 0, pageSize: 100)
-            let response = try await sdk.health.getLabs(request)
-            labs = (response.entry?.compactMap { $0.resource } ?? [])
-                .sorted { ($0.effectiveDateTime ?? "") > ($1.effectiveDateTime ?? "") }
+            // Fetch labs and groups in parallel
+            async let labsFetch: Void = {
+                let request = BWell.HealthDataRequest(page: 0, pageSize: 100)
+                let response = try await sdk.health.getLabs(request)
+                let all = response.entry?.compactMap { $0.resource } ?? []
+                self.labs = all.sorted { ($0.effectiveDateTime ?? "") > ($1.effectiveDateTime ?? "") }
+            }()
+            async let groupsFetch: Void = viewModel.getLabGroups(sdk: sdk)
+            _ = try await (labsFetch, groupsFetch)
         } catch {
             NSLog("[Labs] Error: %@", error.localizedDescription)
             labs = []
         }
-        await viewModel.getLabGroups(sdk: sdk)
         isLoading = false
         hasFetched = true
     }

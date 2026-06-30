@@ -21,7 +21,6 @@ struct ConnectionsView: View {
             .scrollDisabled(true)
         }
         .toolbarColorScheme(.dark, for: .navigationBar)
-
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .principal) {

@@ -61,7 +61,6 @@ extension BWell.DataConnectionStatus {
         case .accessEnded: "ACCESS ENDED"
         case .error: "ERROR"
         case .unknown: "UNKNOWN"
-        @unknown default: "UNKNOWN"
         }
     }
 }

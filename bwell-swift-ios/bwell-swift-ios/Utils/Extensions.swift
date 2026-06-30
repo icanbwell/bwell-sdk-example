@@ -9,6 +9,12 @@ import Foundation
 import SwiftUI
 import BWellSDK
 
+// BWellClient is not declared Sendable in the SDK. This conformance is safe
+// for the sample app because BWellClient is only created once on the main actor
+// and its internal state is not mutated concurrently. Remove when the SDK
+// adds its own Sendable conformance.
+extension BWellClient: @unchecked Sendable {}
+
 extension Date {
     func toString() -> String {
         let dateFormatter = DateFormatter()
@@ -125,7 +131,6 @@ extension BWell.HealthSummary.Resource.Category {
         case .medications: return "Medications"
         case .procedure: return "Procedures"
         case .vitalSigns: return "Vitals"
-        @unknown default: return "Unknown"
         }
     }
 
@@ -140,7 +145,6 @@ extension BWell.HealthSummary.Resource.Category {
         case .medications: return "pills"
         case .procedure: return "ivfluid.bag"
         case .vitalSigns: return "waveform.path.ecg.rectangle"
-        @unknown default: return "questionmark.circle"
         }
     }
 
@@ -155,7 +159,6 @@ extension BWell.HealthSummary.Resource.Category {
         case .medications: return .bwellPurple
         case .procedure: return .cyan
         case .vitalSigns: return .pink
-        @unknown default: return .secondary
         }
     }
 }

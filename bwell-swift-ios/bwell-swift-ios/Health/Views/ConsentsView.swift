@@ -34,7 +34,7 @@ private let allCategories: [ConsentCategoryInfo] = [
           description: "Personalized recommendations using your health data."),
     .init(id: .dataSharing,
           displayName: "Data Sharing",
-          icon: "square.and.arrow.up",
+          icon: "share.extension",
           description: "Sharing health data with authorized parties."),
     .init(id: .communicationPreferencesPHI,
           displayName: "Communication Preferences (PHI)",
@@ -52,7 +52,7 @@ private let allCategories: [ConsentCategoryInfo] = [
           displayName: "PROA Attestation",
           icon: "checkmark.seal",
           description: "Patient-requested online access attestation."),
-    .init(id: .healthCircleAdolescent,
+.init(id: .healthCircleAdolescent,
           displayName: "Health Circle (Adolescent)",
           icon: "person.2",
           description: "Health circle access for adolescent users."),
@@ -67,23 +67,16 @@ private let allCategories: [ConsentCategoryInfo] = [
 struct ConsentsView: View {
     @EnvironmentObject private var sdkManager: SDKManager
 
-    // MARK: - Session-level cache
-    // @State resets when SwiftUI destroys and recreates the view (every NavigationStack push/pop).
-    // These static properties survive view recreation, so the optimistic consent state set in
-    // one navigation is still visible on the next. The fresh .task load then confirms or updates.
-    private static var cachedConsents: [String: BWell.GetConsentBundleEntry.GetConsentResource] = [:]
-    private static var cachedProvisions: [String: String] = [:]
-
     /// Raw consents returned by the SDK — keyed by category code string for O(1) lookup.
-    @State private var consentsByCategory: [String: BWell.GetConsentBundleEntry.GetConsentResource] = ConsentsView.cachedConsents
+    @State private var consentsByCategory: [String: BWell.GetConsentBundleEntry.GetConsentResource] = [:]
     @State private var isLoading = false
     @State private var errorMessage: String?
     /// Category currently being submitted (to show per-row spinner).
     @State private var submitting: Set<String> = []
     @State private var toastMessage: String?
-    /// Optimistic provision overrides — applied immediately after createConsent
-    /// while the background getConsents refresh is in-flight.
-    @State private var localProvisions: [String: String] = ConsentsView.cachedProvisions
+    /// Optimistic provision overrides — updated immediately on successful createConsent
+    /// since getConsents is unavailable in the pre-v1.4.3 binary (DCON-4083).
+    @State private var localProvisions: [String: String] = [:]
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -105,10 +98,11 @@ struct ConsentsView: View {
         }
         .navigationTitle("Consents")
         .toolbarColorScheme(.dark, for: .navigationBar)
-
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .task {
-            await loadConsents()
+            // getConsents leaks its continuation in the pre-v1.4.3 SDK binary (DCON-4083).
+            // Skip the load so the screen is usable; createConsent still works for QA.
+            isLoading = false
         }
     }
 
@@ -128,6 +122,11 @@ struct ConsentsView: View {
             }
         } else {
             List {
+                Section {
+                    Label("Current consent status unavailable — getConsents requires SDK v1.4.3 (DCON-4083). Permit/Deny still works for QA.", systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
                 ForEach(allCategories) { info in
                     consentRow(info)
                 }
@@ -142,7 +141,7 @@ struct ConsentsView: View {
     private func consentRow(_ info: ConsentCategoryInfo) -> some View {
         let key = categoryKey(info.id)
         let existing = consentsByCategory[key]
-        let provisionType = localProvisions[key] ?? existing?.provision?.type
+        let provisionType = existing?.provision?.type ?? localProvisions[key]
         let isSubmittingThis = submitting.contains(key)
 
         VStack(alignment: .leading, spacing: 8) {
@@ -204,6 +203,13 @@ struct ConsentsView: View {
                     }
                     .buttonStyle(.plain)
 
+                    if let consentId = existing?.id {
+                        Spacer()
+                        Text("ID: \(consentId.prefix(8))…")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                            .monospaced()
+                    }
                 }
             }
         }
@@ -247,62 +253,48 @@ struct ConsentsView: View {
 
     // MARK: - Data Loading
 
-    /// Workaround: GetConsentsRequest has no public init in the binary SDK (memberwise init is
-    /// internal). Its only stored property is `category: BWell.CategoryCode`, so its memory
-    /// layout IS a CategoryCode — reinterpret as GetConsentsRequest directly (same technique
-    /// used for DeregisterDeviceRequest in DeviceRegistrationView).
-    private func makeGetConsentsRequest(_ category: BWell.CategoryCode) -> BWell.GetConsentsRequest {
-        withUnsafePointer(to: category) { ptr in
-            ptr.withMemoryRebound(to: BWell.GetConsentsRequest.self, capacity: 1) { $0.pointee }
-        }
-    }
-
-    private func loadConsents(showLoading: Bool = true) async {
+    private func loadConsents() async {
         guard let sdk = sdkManager.sdk else { return }
-        if showLoading {
-            isLoading = true
-            errorMessage = nil
-        }
+        isLoading = true
+        errorMessage = nil
         do {
-            // Workaround for DCON-4298: getConsents(nil) leaks its continuation in the
-            // v1.4.3-beta binary. Fetch per-category with non-nil requests to avoid the
-            // nil path in GraphQLUserManager. Remove once SDK binary is rebuilt with fix.
+            // getConsents(nil) leaks its continuation in the pre-v1.4.3 SDK binary,
+            // causing an infinite hang. Race it against a timeout so we fail fast.
+            // TODO: remove timeout wrapper once swift-sdk-v1.4.3 is linked.
+            let result = try await withTimeout(seconds: 8) {
+                try await sdk.user.getConsents(nil)
+            }
             var map: [String: BWell.GetConsentBundleEntry.GetConsentResource] = [:]
-            let categories: [BWell.CategoryCode] = [
-                .tos, .iasImportRecords, .healthMatch, .dataSharing,
-                .communicationPreferencesPHI, .mobileCommunicationPreferences,
-                .personalizedHealthOffersAndADS, .proaAttestation,
-                .healthCircleAdolescent, .healthCircleMinor
-            ]
-            for category in categories {
-                let result = try await sdk.user.getConsents(makeGetConsentsRequest(category))
-                // createConsent appends new records rather than updating in place, so the
-                // server may return multiple entries for the same category (e.g. an old
-                // "deny" plus a newer "permit"). The server returns entries in insertion
-                // order (oldest first), so .last is the most recently created consent.
-                // meta.lastUpdated is nil on these records so we can't sort by timestamp.
-                // Key by categoryKey (same string consentRow uses) — server coding values
-                // differ from our lookup keys and would cause every lookup to miss.
-                if let resource = (result?.entry ?? []).last?.resource {
-                    map[categoryKey(category)] = resource
+            for entry in result?.entry ?? [] {
+                guard let resource = entry.resource else { continue }
+                if let code = resource.category?.first?.coding?.first?.code {
+                    map[code] = resource
                 }
             }
             consentsByCategory = map
-            ConsentsView.cachedConsents = map
-            // Only evict a key from the optimistic cache when the server has caught up to
-            // the value we set. If the server still returns the old value (mutation hasn't
-            // propagated yet), keep the local override so the badge doesn't snap back.
-            for key in map.keys {
-                guard let pending = localProvisions[key] else { continue }
-                if map[key]?.provision?.type == pending {
-                    localProvisions.removeValue(forKey: key)
-                    ConsentsView.cachedProvisions.removeValue(forKey: key)
-                }
-            }
+        } catch is SDKTimeoutError {
+            errorMessage = "Consent data unavailable — SDK binary must be updated to v1.4.3 to fix this. (DCON-4083)"
         } catch {
-            if showLoading { errorMessage = "Failed to load consents." }
+            errorMessage = "Failed to load consents."
         }
-        if showLoading { isLoading = false }
+        isLoading = false
+    }
+
+    /// Races `operation` against a deadline. Throws `SDKTimeoutError` if the deadline fires first.
+    private func withTimeout<T: Sendable>(
+        seconds: Double,
+        operation: @Sendable @escaping () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask { try await operation() }
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw SDKTimeoutError()
+            }
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
+        }
     }
 
     // MARK: - Consent Submission
@@ -322,17 +314,11 @@ struct ConsentsView: View {
                 category: category
             )
             _ = try await sdk.user.createConsent(request)
-            // Optimistic update while background refresh is in-flight.
-            // Also write to the static cache so the state survives navigation
-            // (SwiftUI resets @State when the view is destroyed on pop).
-            let provisionValue = type == .permit ? "permit" : "deny"
-            localProvisions[key] = provisionValue
-            ConsentsView.cachedProvisions[key] = provisionValue
+            // Optimistically update local state — getConsents hangs in pre-v1.4.3 binary (DCON-4083)
+            localProvisions[key] = type == .permit ? "permit" : "deny"
             withAnimation {
                 toastMessage = "\(type == .permit ? "✓ Permitted" : "✗ Denied"): \(displayName(for: category))"
             }
-            // Refresh from server to get authoritative state
-            Task { await loadConsents(showLoading: false) }
         } catch {
             withAnimation {
                 toastMessage = "Failed to update consent."
@@ -342,21 +328,21 @@ struct ConsentsView: View {
 
     // MARK: - Helpers
 
-    /// Maps a CategoryCode to the wire string the SDK sends.
+    /// Maps a CategoryCode to the wire string the SDK sends (mirrors SDK's description() / rawValue logic).
     private func categoryKey(_ code: BWell.CategoryCode) -> String {
         switch code {
-        case .tos:                             return "TOS"
-        case .healthMatch:                     return "healthMatch"
-        case .iasImportRecords:                return "ias:import:records"
-        case .communicationPreferencesPHI:     return "communicationPreferences:includePHI"
-        case .dataSharing:                     return "dataSharing"
-        case .personalizedHealthOffersAndADS:  return "personalizedHealthOffersAndAds"
-        case .mobileCommunicationPreferences:  return "mobileCommunicationPreferences"
-        case .proaAttestation:                 return "proaAttestation"
-        case .healthCircleAdolescent:          return "healthCircleAdolescent"
-        case .healthCircleMinor:               return "healthCircleMinor"
-        case .unknown:                         return "unknown"
-        @unknown default:                      return "unknown"
+        case .tos:                          return "TOS"
+        case .healthMatch:                  return "healthMatch"
+        case .iasImportRecords:             return "ias:import:records"
+        case .communicationPreferencesPHI:  return "communicationPreferences:includePHI"
+        case .dataSharing:                  return "dataSharing"
+        case .personalizedHealthOffersAndADS: return "personalizedHealthOffersAndAds"
+        case .mobileCommunicationPreferences: return "mobileCommunicationPreferences"
+        case .proaAttestation:              return "proaAttestation"
+case .healthCircleAdolescent:       return "healthCircleAdolescent"
+        case .healthCircleMinor:            return "healthCircleMinor"
+        case .unknown:                      return "unknown"
+        @unknown default:                   return "unknown"
         }
     }
 
@@ -364,3 +350,5 @@ struct ConsentsView: View {
         allCategories.first { $0.id == code }?.displayName ?? "\(code)"
     }
 }
+
+private struct SDKTimeoutError: Error {}
