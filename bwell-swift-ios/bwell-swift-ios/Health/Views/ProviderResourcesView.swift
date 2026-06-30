@@ -75,7 +75,7 @@ struct ProviderResourcesView: View {
         .navigationTitle("Provider Resources")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

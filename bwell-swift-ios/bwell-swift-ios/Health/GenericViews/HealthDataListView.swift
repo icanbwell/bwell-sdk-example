@@ -65,7 +65,7 @@ struct HealthDataGroupListView<Group, ID: Hashable>: View {
         }
         .listStyle(.plain)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             await fetchData()
@@ -203,7 +203,7 @@ struct HealthDataGroupItemsView<Entry, ID: Hashable, Detail: View>: View {
         }
         .listStyle(.plain)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             expandedItems.removeAll()
@@ -431,7 +431,7 @@ struct ObservationChartItemsView<ID: Hashable, Detail: View>: View {
         }
         .listStyle(.plain)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             expandedItems.removeAll()

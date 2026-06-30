@@ -71,7 +71,7 @@ struct FinancialView: View {
         .navigationTitle("Insurance")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .task {
             if let sdk = sdkManager.sdk {

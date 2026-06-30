@@ -38,7 +38,7 @@ struct GoalsView: View {
         }
         .navigationTitle("Goals")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             await loadGoals()

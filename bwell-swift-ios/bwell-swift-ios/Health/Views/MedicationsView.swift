@@ -83,7 +83,7 @@ struct MedicationsView: View {
         .listStyle(.plain)
         .navigationTitle("Medications")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable { await fetchAll() }
         .task {

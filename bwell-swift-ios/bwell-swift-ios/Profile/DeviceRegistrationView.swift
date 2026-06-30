@@ -110,7 +110,6 @@ struct DeviceRegistrationView: View {
         .navigationTitle("Push Notifications")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .task {
             await checkNotificationStatus()

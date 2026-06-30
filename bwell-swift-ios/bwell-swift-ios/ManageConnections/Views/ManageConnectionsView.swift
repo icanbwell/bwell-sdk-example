@@ -69,7 +69,7 @@ struct ManageConnectionsView: View {
         .navigationTitle("Manage Connections")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

@@ -57,7 +57,7 @@ struct CareTeamsView: View {
         }
         .navigationTitle("Care Teams")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .task {
             guard careTeams.isEmpty else { return }

@@ -87,7 +87,7 @@ struct VitalSignsView: View {
         .listStyle(.insetGrouped)
         .navigationTitle("Vital Signs")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable { await fetchAll() }
         .task {

@@ -47,7 +47,7 @@ struct DevicesView: View {
         }
         .navigationTitle("Devices")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             await loadDevices()

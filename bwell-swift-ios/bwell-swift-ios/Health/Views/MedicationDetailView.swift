@@ -42,7 +42,7 @@ struct MedicationDetailView: View {
         }
         .navigationTitle(medication.medicationCodeableConcept?.coding?.first?.display ?? medication.medicationCodeableConcept?.text ?? "Medication Detail")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
     }
 

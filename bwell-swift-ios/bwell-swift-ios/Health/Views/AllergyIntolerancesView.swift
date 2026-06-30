@@ -53,7 +53,7 @@ struct AllergyIntolerancesView: View {
         .listStyle(.plain)
         .navigationTitle("Allergies")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable { await fetchAll() }
         .task {

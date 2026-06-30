@@ -38,7 +38,7 @@ struct DiagnosticReportsView: View {
         }
         .navigationTitle("Diagnostic Reports")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             await loadReports()

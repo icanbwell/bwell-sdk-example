@@ -64,7 +64,7 @@ struct ImmunizationsView: View {
         .listStyle(.plain)
         .navigationTitle("Immunizations")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable { await fetchAll() }
         .task {

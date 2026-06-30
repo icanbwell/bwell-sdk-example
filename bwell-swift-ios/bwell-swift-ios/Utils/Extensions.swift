@@ -125,6 +125,7 @@ extension BWell.HealthSummary.Resource.Category {
         case .medications: return "Medications"
         case .procedure: return "Procedures"
         case .vitalSigns: return "Vitals"
+        @unknown default: return "Unknown"
         }
     }
 
@@ -139,6 +140,7 @@ extension BWell.HealthSummary.Resource.Category {
         case .medications: return "pills"
         case .procedure: return "ivfluid.bag"
         case .vitalSigns: return "waveform.path.ecg.rectangle"
+        @unknown default: return "questionmark.circle"
         }
     }
 
@@ -153,6 +155,7 @@ extension BWell.HealthSummary.Resource.Category {
         case .medications: return .bwellPurple
         case .procedure: return .cyan
         case .vitalSigns: return .pink
+        @unknown default: return .secondary
         }
     }
 }

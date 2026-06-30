@@ -83,7 +83,6 @@ struct HealthRecordsBrowseView: View {
         .navigationTitle("Health Records")
         .navigationBarTitleDisplayMode(.large)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
     }
 }

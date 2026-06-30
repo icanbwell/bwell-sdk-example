@@ -57,7 +57,7 @@ struct DocumentReferencesView: View {
         }
         .navigationTitle("Documents")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .task {
             guard documents.isEmpty else { return }
