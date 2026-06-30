@@ -1,27 +1,29 @@
 # Dockerfile
-# Use the official Node.js 21 image.
-# https://hub.docker.com/_/node
-FROM node:21
+# Use root.io hardened Node.js 22 Alpine image from bwell's internal AWS ECR mirror.
+# Migrated from node:21 (public Docker Hub) per b.well Root.io/JFrog Migration Guide:
+# https://icanbwell.atlassian.net/wiki/spaces/CIE/pages/6195544074
+# Node.js-specific guide:
+# https://icanbwell.atlassian.net/wiki/spaces/CIE/pages/6336446496
+FROM 856965016623.dkr.ecr.us-east-1.amazonaws.com/root-mirror/node:22-alpine
 
 # Create and change to the app directory.
 WORKDIR /usr/src/app
 
-# Install production dependencies.
-RUN apt-get update && apt-get install -y \
-  wget \
-  unzip \
-  libxss1 \
-  libappindicator1 \
-  libindicator7 \
-  libasound2 \
-  libnss3 \
-  libxtst6 \
-  xauth \
+# Install Chromium and system dependencies for Playwright on Alpine.
+# Replaces the previous apt-get + Google Chrome .deb installation (Debian-only).
+RUN apk add --no-cache \
+  chromium \
+  nss \
+  freetype \
+  harfbuzz \
+  ca-certificates \
+  ttf-freefont \
   xvfb \
-  libgbm-dev \
-  --no-install-recommends \
-  && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-  && dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
+  udev
 
-# Install Playwright and its dependencies
-RUN npx playwright install && npx playwright install-deps
+# Tell Playwright to use the system Chromium instead of downloading its own binary.
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Install Playwright
+RUN npx playwright install
