@@ -9,6 +9,12 @@ import Foundation
 import SwiftUI
 import BWellSDK
 
+// BWellClient is not declared Sendable in the SDK. This conformance is safe
+// for the sample app because BWellClient is only created once on the main actor
+// and its internal state is not mutated concurrently. Remove when the SDK
+// adds its own Sendable conformance.
+extension BWellClient: @unchecked Sendable {}
+
 extension Date {
     func toString() -> String {
         let dateFormatter = DateFormatter()

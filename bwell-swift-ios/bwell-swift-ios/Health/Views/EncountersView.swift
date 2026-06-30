@@ -61,7 +61,6 @@ struct EncountersView: View {
         .listStyle(.plain)
         .navigationTitle("Encounters")
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable { await fetchAll() }
         .task {

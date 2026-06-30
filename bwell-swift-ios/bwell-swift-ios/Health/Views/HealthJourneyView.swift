@@ -118,7 +118,6 @@ struct HealthJourneyView: View {
         .navigationTitle("Health Journey")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             expandedTaskIds.removeAll()

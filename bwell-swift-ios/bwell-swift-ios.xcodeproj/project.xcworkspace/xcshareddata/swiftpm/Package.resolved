@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/icanbwell/bwell-sdk-swift-package",
       "state" : {
-        "revision" : "2abcc642e5572314259e5bb827f25719575e39cb",
-        "version" : "1.0.0-beta"
+        "revision" : "07bec8329bd8e577f862e3a56d139fcfa90409e2",
+        "version" : "1.4.3-beta"
       }
     }
   ],
