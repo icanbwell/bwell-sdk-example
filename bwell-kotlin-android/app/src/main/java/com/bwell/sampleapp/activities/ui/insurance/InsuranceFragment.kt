@@ -65,8 +65,10 @@ class InsuranceFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             insuranceViewModel.coverages.collect { result ->
-                if (result !is BWellResult.ResourceCollection) return@collect
-                val coverages = result.data.orEmpty()
+                // Anything that isn't a non-empty coverage collection (loading, error,
+                // or genuinely no coverage) falls back to the connect prompt, so the
+                // screen always has a recovery path instead of going blank.
+                val coverages = (result as? BWellResult.ResourceCollection)?.data.orEmpty()
                 if (coverages.isEmpty()) showConnectState() else showDataState(coverages)
             }
         }
