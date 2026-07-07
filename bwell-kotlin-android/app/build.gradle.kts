@@ -69,6 +69,9 @@ android {
 dependencies {
 
     // BWell SDK Usage
+    // TODO(PAY-2379): the insurance coverage-filter demo needs the SDK build that adds
+    // ExplanationOfBenefitRequest.coverage(); bump this to that released version once
+    // https://github.com/icanbwell/bwell-sdk/pull/899 is merged and published.
     implementation("com.bwell:bwell-sdk-kotlin:1.12.3-20251216.141014-15")
 
     implementation("androidx.core:core-ktx:1.12.0")
