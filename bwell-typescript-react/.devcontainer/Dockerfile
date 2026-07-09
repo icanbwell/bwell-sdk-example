@@ -22,8 +22,7 @@ RUN apk add --no-cache \
   udev
 
 # Tell Playwright to use the system Chromium instead of downloading its own binary.
+# The actual executable path is wired up via launchOptions.executablePath in
+# playwright.config.ts, since Playwright does not read a
+# PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH env var.
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
-
-# Install Playwright
-RUN npx playwright install
