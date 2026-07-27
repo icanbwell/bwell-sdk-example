@@ -1,12 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getSdk } from "@/sdk/bWellSdk";
 import { createSlice } from "@reduxjs/toolkit";
+import { DataSourceRequest } from "@icanbwell/bwell-sdk-ts";
 
 export const getMemberConnections = createAsyncThunk(
     "connections/memberConnections",
     async () => {
         const bWellSdk = getSdk();
         return bWellSdk?.connection.getMemberConnections();
+    }
+);
+
+export const getDataSource = createAsyncThunk(
+    "connections/getDataSource",
+    async (connectionId: string) => {
+        const bWellSdk = getSdk();
+        return bWellSdk?.connection.getDataSource(new DataSourceRequest({ connectionId }));
     }
 );
 
@@ -49,6 +58,21 @@ export const connectionSlice = createSlice({
                 } else {
                     state.error = action.error.message ?? "Unknown error";
                 }
+            })
+            .addCase(getDataSource.pending, (state) => {
+                state.error = null;
+                state.dataSource = null;
+            })
+            .addCase(getDataSource.fulfilled, (state, action) => {
+                if (action?.payload?.error) {
+                    state.error = action.payload.error.message ?? "Unknown error";
+                } else {
+                    // @ts-ignore TODO: strong-type this
+                    state.dataSource = action.payload?.data ?? null;
+                }
+            })
+            .addCase(getDataSource.rejected, (state, action) => {
+                state.error = action.error.message ?? "Unknown error";
             });
     }
 });
