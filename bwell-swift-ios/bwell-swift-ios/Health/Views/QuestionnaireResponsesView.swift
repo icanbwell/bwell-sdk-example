@@ -38,7 +38,6 @@ struct QuestionnaireResponsesView: View {
         .navigationTitle("Questionnaires")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .refreshable {
             await loadResponses()

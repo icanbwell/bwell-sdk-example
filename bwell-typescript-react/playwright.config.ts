@@ -17,6 +17,9 @@ const config: PlaywrightTestConfig = {
       headless: true,
       // Configure Playwright to run in slow mo
       slowMo: 50,
+      // Use the system Chromium installed via apk in the devcontainer
+      // (see .devcontainer/Dockerfile) instead of a Playwright-managed binary.
+      executablePath: "/usr/bin/chromium-browser",
     },
   },
   webServer: {

@@ -10,16 +10,17 @@
 		007AB91BF22B28E7CA43AA10 /* CareTeamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC27C845D6DF30A787C2078 /* CareTeamsView.swift */; };
 		0123C6216FE92376304BE48A /* FinancialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B2758CC8B45BAD2893B948 /* FinancialView.swift */; };
 		02812FBF19F133A6092AD74B /* LabTrendChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ED2B0C72E76A416E565C5F /* LabTrendChartView.swift */; };
-		050446AE11054CF68CF8890C /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		050446AE11054CF68CF8890C /* (null) in Sources */ = {isa = PBXBuildFile; };
 		0697D7299976D4285D482B7B /* ProviderDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1BA41ABEE6C0C0775564CE /* ProviderDetailView.swift */; };
 		0815711A62C826FCB6442771 /* VitalSignChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78CF31C1130DC555784AA32 /* VitalSignChartView.swift */; };
 		0B1E6577F61FA55933F7EDDC /* .env in Resources */ = {isa = PBXBuildFile; fileRef = 8C255C3E0751A1B703689C47 /* .env */; };
 		15F57C22DA3AFA1124319D05 /* HealthJourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383A9E34FD6FB51259FCF74 /* HealthJourneyView.swift */; };
 		164E13299D57403692A3B174 /* DevicesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD6F3B0E19212BBD0574994 /* DevicesView.swift */; };
 		1F3F3DDA0BC9AD0FB1DC7EB5 /* ProviderResourcesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B003431C42F0D84098CCA90 /* ProviderResourcesView.swift */; };
+		3EC1088A5B124F56AEFE710C /* ConsentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EA67683B0D4AA3BFAC7385 /* ConsentsView.swift */; };
 		3F1A88B75738459053BF3FE7 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F1B23C90A1F928F5BE323 /* GoalsView.swift */; };
 		41A6F7F25B5AF8214BF07C58 /* LabDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663EFC82D174C4B0345A9A73 /* LabDetailView.swift */; };
-		4F20F2A007AD4BAA86E1D156 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		4F20F2A007AD4BAA86E1D156 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		519018CFDBBB7FFF7E8E35D3 /* ChartModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A285021D04AC9C727234E87 /* ChartModels.swift */; };
 		5506C1FC2EBD0FC7005842A6 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5506C1FB2EBD0FC7005842A6 /* Localizable.xcstrings */; };
 		5506C1FE2EBD147E005842A6 /* ConnectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5506C1FD2EBD1479005842A6 /* ConnectionsView.swift */; };
@@ -52,7 +53,6 @@
 		55D5DF862EB9459800D71D99 /* MedicationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF852EB9459200D71D99 /* MedicationsView.swift */; };
 		55D5DF882EB945A300D71D99 /* ProceduresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF872EB9459E00D71D99 /* ProceduresView.swift */; };
 		55D5DF8A2EB945AC00D71D99 /* VitalSignsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF892EB945A700D71D99 /* VitalSignsView.swift */; };
-		A2FHIR0002000000000001 /* FHIRConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FHIR0001000000000001 /* FHIRConstants.swift */; };
 		55D5DF8C2EB9813700D71D99 /* EncountersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */; };
 		55DEF6072EC6FDA700C8DB85 /* HealthDataListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */; };
 		55DEF60E2EC7746300C8DB85 /* HealthDataViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */; };
@@ -73,11 +73,12 @@
 		703BA93EAB9D436E0CD71408 /* EnvConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDBC4B1D547AF11E02932452 /* EnvConfig.swift */; };
 		862BE85E6AFD765FBFEEAE82 /* ProviderSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A311AB64720714A008E73A76 /* ProviderSearchViewModel.swift */; };
 		8C8AAC843C19C94F2075130D /* ProviderFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C360596043BA7301F2E09D31 /* ProviderFilterView.swift */; };
-		8FB0A27645154D8AB6C45A42 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		8FB0A27645154D8AB6C45A42 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		93A3D25B00846891FCB7B5D3 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30D940D3989D26EFEE5CB05 /* CustomTextField.swift */; };
 		96E4019877665E4494C6CAC4 /* DocumentReferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A575CBC327F1E1F216F4 /* DocumentReferencesView.swift */; };
 		A14E2445C15960E7C125D08E /* DiagnosticReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D06B19D99FC9884D7F966D9 /* DiagnosticReportsView.swift */; };
-		A264CBC62EE38945000D0AF7 /* BWell in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWellSDK */; };
+		A264CBC62EE38945000D0AF7 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWellSDK */; };
+		A2FHIR0002000000000001 /* FHIRConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FHIR0001000000000001 /* FHIRConstants.swift */; };
 		B3DF89A32F7704DE0016498B /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF899E2F7704DE0016498B /* Router.swift */; };
 		B3DF89A42F7704DE0016498B /* SDKManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89992F7704DE0016498B /* SDKManaging.swift */; };
 		B3DF89A52F7704DE0016498B /* SDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89A02F7704DE0016498B /* SDKManager.swift */; };
@@ -91,7 +92,7 @@
 		C04A31EEA2FC61E97382A7BE /* HTMLContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D7841617AB4FA1EA47DD7E /* HTMLContentView.swift */; };
 		C1A2394CB4E1BF66EC0FC182 /* TabSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748950E69DC68A16810A0E0 /* TabSelectorView.swift */; };
 		C82BC283BF6703C96282872E /* ProviderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC51A1447ABDF75EFD98618 /* ProviderSearchView.swift */; };
-		E2FF8ACA03774829A3BA4705 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		E2FF8ACA03774829A3BA4705 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		EAF8AFB635A852A8E02B1A1F /* MedicationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE85E8F93559E78277D9CB2 /* MedicationDetailView.swift */; };
 		EF9E10575C1C84F6B2168278 /* QuestionnaireResponsesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC8578413D28A06CCBDE11B /* QuestionnaireResponsesView.swift */; };
 		FD811D05ACF80E0C78E72407 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34F42E4526447564D806A05 /* MainTabView.swift */; };
@@ -119,6 +120,7 @@
 		06ED2B0C72E76A416E565C5F /* LabTrendChartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LabTrendChartView.swift; sourceTree = "<group>"; };
 		15D7841617AB4FA1EA47DD7E /* HTMLContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLContentView.swift; sourceTree = "<group>"; };
 		1B003431C42F0D84098CCA90 /* ProviderResourcesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProviderResourcesView.swift; sourceTree = "<group>"; };
+		D4EA67683B0D4AA3BFAC7385 /* ConsentsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConsentsView.swift; sourceTree = "<group>"; };
 		1D7F1B23C90A1F928F5BE323 /* GoalsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 		2BC3CFA6C2FDCDF1CC7DBEF6 /* BrowseView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BrowseView.swift; sourceTree = "<group>"; };
 		2BD6F3B0E19212BBD0574994 /* DevicesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DevicesView.swift; sourceTree = "<group>"; };
@@ -160,7 +162,6 @@
 		55D5DF852EB9459200D71D99 /* MedicationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationsView.swift; sourceTree = "<group>"; };
 		55D5DF872EB9459E00D71D99 /* ProceduresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProceduresView.swift; sourceTree = "<group>"; };
 		55D5DF892EB945A700D71D99 /* VitalSignsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VitalSignsView.swift; sourceTree = "<group>"; };
-		A2FHIR0001000000000001 /* FHIRConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRConstants.swift; sourceTree = "<group>"; };
 		55D5DF8B2EB9812F00D71D99 /* EncountersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncountersView.swift; sourceTree = "<group>"; };
 		55DEF6062EC6FD8100C8DB85 /* HealthDataListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataListView.swift; sourceTree = "<group>"; };
 		55DEF60D2EC7744D00C8DB85 /* HealthDataViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataViewFactory.swift; sourceTree = "<group>"; };
@@ -182,6 +183,7 @@
 		6E88E6BAF20D73A477C34C68 /* HealthMatchConsentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthMatchConsentView.swift; sourceTree = "<group>"; };
 		737013751605CA366D7EECA8 /* DeviceRegistrationView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeviceRegistrationView.swift; sourceTree = "<group>"; };
 		8C255C3E0751A1B703689C47 /* .env */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = .env; sourceTree = "<group>"; };
+		A2FHIR0001000000000001 /* FHIRConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHIRConstants.swift; sourceTree = "<group>"; };
 		A30D940D3989D26EFEE5CB05 /* CustomTextField.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		A311AB64720714A008E73A76 /* ProviderSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderSearchViewModel.swift; sourceTree = "<group>"; };
 		A78CF31C1130DC555784AA32 /* VitalSignChartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VitalSignChartView.swift; sourceTree = "<group>"; };
@@ -210,7 +212,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A264CBC62EE38945000D0AF7 /* BWell in Frameworks */,
+				A264CBC62EE38945000D0AF7 /* BWellSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +239,6 @@
 				E34F42E4526447564D806A05 /* MainTabView.swift */,
 				2BC3CFA6C2FDCDF1CC7DBEF6 /* BrowseView.swift */,
 			);
-			name = Navigation;
 			path = Navigation;
 			sourceTree = "<group>";
 		};
@@ -466,6 +467,7 @@
 				F383A9E34FD6FB51259FCF74 /* HealthJourneyView.swift */,
 				5D06B19D99FC9884D7F966D9 /* DiagnosticReportsView.swift */,
 				1D7F1B23C90A1F928F5BE323 /* GoalsView.swift */,
+				D4EA67683B0D4AA3BFAC7385 /* ConsentsView.swift */,
 				2FC8578413D28A06CCBDE11B /* QuestionnaireResponsesView.swift */,
 				2BD6F3B0E19212BBD0574994 /* DevicesView.swift */,
 			);
@@ -517,7 +519,6 @@
 				06ED2B0C72E76A416E565C5F /* LabTrendChartView.swift */,
 				A78CF31C1130DC555784AA32 /* VitalSignChartView.swift */,
 			);
-			name = Charts;
 			path = Charts;
 			sourceTree = "<group>";
 		};
@@ -556,7 +557,6 @@
 			isa = PBXGroup;
 			children = (
 			);
-			name = Views;
 			path = Views;
 			sourceTree = "<group>";
 		};
@@ -718,10 +718,10 @@
 				5522DCB32EB1314300F9BCD7 /* AuthenticationTextField.swift in Sources */,
 				55E625672EB34903000D3783 /* EditableProfileView.swift in Sources */,
 				B3DF89A32F7704DE0016498B /* Router.swift in Sources */,
-				4F20F2A007AD4BAA86E1D156 /* BuildFile in Sources */,
-				8FB0A27645154D8AB6C45A42 /* BuildFile in Sources */,
-				E2FF8ACA03774829A3BA4705 /* BuildFile in Sources */,
-				050446AE11054CF68CF8890C /* BuildFile in Sources */,
+				4F20F2A007AD4BAA86E1D156 /* (null) in Sources */,
+				8FB0A27645154D8AB6C45A42 /* (null) in Sources */,
+				E2FF8ACA03774829A3BA4705 /* (null) in Sources */,
+				050446AE11054CF68CF8890C /* (null) in Sources */,
 				B3DF89A42F7704DE0016498B /* SDKManaging.swift in Sources */,
 				B3DF89A52F7704DE0016498B /* SDKManager.swift in Sources */,
 				B3DF89A62F7704DE0016498B /* TokenStorage.swift in Sources */,
@@ -775,6 +775,7 @@
 				15F57C22DA3AFA1124319D05 /* HealthJourneyView.swift in Sources */,
 				A14E2445C15960E7C125D08E /* DiagnosticReportsView.swift in Sources */,
 				3F1A88B75738459053BF3FE7 /* GoalsView.swift in Sources */,
+				3EC1088A5B124F56AEFE710C /* ConsentsView.swift in Sources */,
 				EF9E10575C1C84F6B2168278 /* QuestionnaireResponsesView.swift in Sources */,
 				164E13299D57403692A3B174 /* DevicesView.swift in Sources */,
 				FD811D05ACF80E0C78E72407 /* MainTabView.swift in Sources */,
@@ -959,7 +960,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -1000,7 +1001,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -1025,7 +1026,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosTests";
@@ -1048,7 +1049,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosTests";
@@ -1070,7 +1071,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosUITests";
@@ -1092,7 +1093,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.bwell.bwell-swift-iosUITests";
@@ -1148,16 +1149,16 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
+/* Begin XCRemoteSwiftPackageReference section */
 		A264CBC42EE38945000D0AF7 /* XCRemoteSwiftPackageReference "bwell-sdk-swift-package" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/icanbwell/bwell-sdk-swift-package";
 			requirement = {
 				kind = exactVersion;
-				version = "1.0.0-beta";
+				version = "1.4.3-beta";
 			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		A264CBC52EE38945000D0AF7 /* BWellSDK */ = {

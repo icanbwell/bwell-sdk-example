@@ -153,7 +153,6 @@ struct ProviderDetailView: View {
         .navigationTitle("Provider Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
         .toolbarBackground(.bwellPurple, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
