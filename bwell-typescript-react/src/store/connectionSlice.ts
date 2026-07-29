@@ -22,6 +22,7 @@ export const getDataSource = createAsyncThunk(
 const INITIAL_STATE = {
     memberConnections: null,
     dataSource: null,
+    dataSourceConnectionId: null as string | null,
     loading: false,
     error: null as string | null,
 };
@@ -59,11 +60,15 @@ export const connectionSlice = createSlice({
                     state.error = action.error.message ?? "Unknown error";
                 }
             })
-            .addCase(getDataSource.pending, (state) => {
+            .addCase(getDataSource.pending, (state, action) => {
                 state.error = null;
                 state.dataSource = null;
+                state.dataSourceConnectionId = action.meta.arg;
             })
             .addCase(getDataSource.fulfilled, (state, action) => {
+                // Ignore responses for a connection that's no longer the one currently selected,
+                // so an out-of-order response from a prior click can't overwrite a newer one.
+                if (action.meta.arg !== state.dataSourceConnectionId) return;
                 if (action?.payload?.error) {
                     state.error = action.payload.error.message ?? "Unknown error";
                 } else {
@@ -72,6 +77,7 @@ export const connectionSlice = createSlice({
                 }
             })
             .addCase(getDataSource.rejected, (state, action) => {
+                if (action.meta.arg !== state.dataSourceConnectionId) return;
                 state.error = action.error.message ?? "Unknown error";
             });
     }

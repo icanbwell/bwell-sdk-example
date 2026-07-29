@@ -7,13 +7,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { DataGrid } from "@mui/x-data-grid";
 import TableOrJsonToggle from "@/components/TableOrJsonToggle";
-import { getMemberConnections, getDataSource } from "@/store/connectionSlice";
+import { getMemberConnections, getDataSource, connectionSlice } from "@/store/connectionSlice";
 import { deleteConnectionById } from "@/sdk/deleteConnection";
 
 const ManageConnections = () => {
     const dispatch = useDispatch<AppDispatch>();
-    // Fetch member connections on every page load
+    // Fetch member connections on every page load, and clear any stale data source
+    // from a previous session (redux-persist rehydrates this slice on load).
     React.useEffect(() => {
+        dispatch(connectionSlice.actions.resetState());
         dispatch(getMemberConnections());
     }, [dispatch]);
 
@@ -21,6 +23,7 @@ const ManageConnections = () => {
     const memberConnections = slice.memberConnections ?? { data: [] };
     // @ts-ignore TODO: strong-type memberConnections
     const dataSource = slice.dataSource;
+    const dataSourceConnectionId = slice.dataSourceConnectionId;
     // @ts-ignore TODO: strong-type memberConnections
     const showTable = useSelector((state: RootState) => state.toggle["memberConnections"] ?? true) && Array.isArray(memberConnections.data);
 
@@ -78,7 +81,7 @@ const ManageConnections = () => {
             }
             {dataSource &&
                 <Box mt={4}>
-                    <h2>Data Source</h2>
+                    <h2>Data Source: {dataSourceConnectionId}</h2>
                     <pre>{JSON.stringify(dataSource, null, 2)}</pre>
                 </Box>
             }
