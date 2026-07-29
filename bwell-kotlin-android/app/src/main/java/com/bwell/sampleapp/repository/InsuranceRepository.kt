@@ -19,7 +19,8 @@ class InsuranceRepository(private val applicationContext: Context) {
 
     suspend fun getCoverages(): Flow<BWellResult<Coverage>?> = flow {
         try {
-            emit(BWellSdk.financials.getCoverages(null))
+            val coveragesResult = BWellSdk.financials.getCoverages(null)
+            emit(coveragesResult)
         } catch (e: Exception) {
             emit(null)
         }
@@ -31,7 +32,8 @@ class InsuranceRepository(private val applicationContext: Context) {
             val request = ExplanationOfBenefitRequest.Builder()
                 .apply { if (!coverageId.isNullOrBlank()) coverage(coverageId) }
                 .build()
-            emit(BWellSdk.financials.getExplanationOfBenefits(request))
+            val claimsResult = BWellSdk.financials.getExplanationOfBenefits(request)
+            emit(claimsResult)
         } catch (e: Exception) {
             emit(null)
         }
