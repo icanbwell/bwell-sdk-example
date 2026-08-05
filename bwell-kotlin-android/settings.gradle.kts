@@ -15,9 +15,6 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://artifacts.icanbwell.com/repository/bwell-public/")
         }
-        maven {
-            url = uri("https://artifacts.icanbwell.com/repository/bwell-sdk-snapshot/")
-        }
     }
 }
 
