@@ -13,6 +13,9 @@ dependencyResolutionManagement {
         // BWell SDK Usage
         // mavenLocal() //uncomment after running `./gradlew publishToMavenLocal` in the SDK for testing
         maven {
+            url = uri("https://artifacts.icanbwell.com/repository/bwell-public/")
+        }
+        maven {
             url = uri("https://artifacts.icanbwell.com/repository/bwell-sdk-snapshot/")
         }
     }
