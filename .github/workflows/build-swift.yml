@@ -1,0 +1,37 @@
+name: Swift CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "bwell-swift-ios/**"
+      - ".github/workflows/build-swift.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "bwell-swift-ios/**"
+      - ".github/workflows/build-swift.yml"
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    # Hard ceiling - a hung package resolution must fail fast.
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pin Xcode itself (not a standalone Swift toolchain) so the compiler
+      # and SDK stay a matched pair - same pattern bwell-sdk's Swift CI uses.
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.5.app/Contents/Developer
+
+      - name: Build
+        run: |
+          xcodebuild build \
+            -project bwell-swift-ios/bwell-swift-ios.xcodeproj \
+            -scheme bwell-swift-ios \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            CODE_SIGNING_ALLOWED=NO

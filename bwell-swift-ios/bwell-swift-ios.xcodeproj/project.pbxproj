@@ -78,6 +78,19 @@
 		96E4019877665E4494C6CAC4 /* DocumentReferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441A575CBC327F1E1F216F4 /* DocumentReferencesView.swift */; };
 		A14E2445C15960E7C125D08E /* DiagnosticReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D06B19D99FC9884D7F966D9 /* DiagnosticReportsView.swift */; };
 		A264CBC62EE38945000D0AF7 /* BWellSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A264CBC52EE38945000D0AF7 /* BWellSDK */; };
+		461F1E4E4D9B4754E44DF3FE /* BWellHealthSync in Frameworks */ = {isa = PBXBuildFile; productRef = 248AC685A3BED42A723DD14A /* BWellHealthSync */; };
+		A5A98235657F3993CE40740D /* PlaygroundEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA82C6527358CD6EBB3FE08 /* PlaygroundEndpoint.swift */; };
+		584256111A9D16C4022C3858 /* PlaygroundCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDBCE8978541F1464F4816B /* PlaygroundCard.swift */; };
+		6BC2BEB7C70FE0B739F03F82 /* PlaygroundStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5243F50054805CA724DE255 /* PlaygroundStyles.swift */; };
+		24DFDC24AF0F827CA035C636 /* PlaygroundFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECD9E4DE4C980384BE66F54 /* PlaygroundFeature.swift */; };
+		7E04EBEA2CD331C2D83CB710 /* HealthSyncPlaygroundRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096A7A41A7E60392C307ADEF /* HealthSyncPlaygroundRootView.swift */; };
+		E191DDC59046843B028817EA /* HealthSyncSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4904A0FFEA49EB150AC67D0 /* HealthSyncSetupView.swift */; };
+		786EE84B3650E55E8F29F287 /* HealthSyncReauthenticateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941414EB5EAA81B957BB09CA /* HealthSyncReauthenticateView.swift */; };
+		8EFC0317EC8D3FFBC49CE5B4 /* SyncUiState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BA7050A9A3785A8E78F28 /* SyncUiState.swift */; };
+		FEC8A3982A8FC0ACD9AE1E6C /* HealthSyncPlaygroundEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75484CB70A9A0DEA38609A10 /* HealthSyncPlaygroundEndpoint.swift */; };
+		250FC4A5298CAD065F249AA9 /* HealthSyncPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91A2DDA1C9C47FB8904205 /* HealthSyncPlaygroundView.swift */; };
+		C6B34728333C2A75E7CD6990 /* HealthSyncPlaygroundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1470AAC72BD76598F3A3CA1 /* HealthSyncPlaygroundViewModel.swift */; };
+		CBCAFE04662F1022E6B5B76D /* HealthSyncPlaygroundFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DEE2C22B611972F113A0C6 /* HealthSyncPlaygroundFeature.swift */; };
 		A2FHIR0002000000000001 /* FHIRConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FHIR0001000000000001 /* FHIRConstants.swift */; };
 		B3DF89A32F7704DE0016498B /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF899E2F7704DE0016498B /* Router.swift */; };
 		B3DF89A42F7704DE0016498B /* SDKManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DF89992F7704DE0016498B /* SDKManaging.swift */; };
@@ -205,6 +218,18 @@
 		F0B2758CC8B45BAD2893B948 /* FinancialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialView.swift; sourceTree = "<group>"; };
 		F383A9E34FD6FB51259FCF74 /* HealthJourneyView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthJourneyView.swift; sourceTree = "<group>"; };
 		FD1BA41ABEE6C0C0775564CE /* ProviderDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDetailView.swift; sourceTree = "<group>"; };
+		ECA82C6527358CD6EBB3FE08 /* PlaygroundEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundEndpoint.swift; sourceTree = "<group>"; };
+		FBDBCE8978541F1464F4816B /* PlaygroundCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundCard.swift; sourceTree = "<group>"; };
+		D5243F50054805CA724DE255 /* PlaygroundStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundStyles.swift; sourceTree = "<group>"; };
+		9ECD9E4DE4C980384BE66F54 /* PlaygroundFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundFeature.swift; sourceTree = "<group>"; };
+		096A7A41A7E60392C307ADEF /* HealthSyncPlaygroundRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundRootView.swift; sourceTree = "<group>"; };
+		D4904A0FFEA49EB150AC67D0 /* HealthSyncSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncSetupView.swift; sourceTree = "<group>"; };
+		941414EB5EAA81B957BB09CA /* HealthSyncReauthenticateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncReauthenticateView.swift; sourceTree = "<group>"; };
+		5F2BA7050A9A3785A8E78F28 /* SyncUiState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUiState.swift; sourceTree = "<group>"; };
+		75484CB70A9A0DEA38609A10 /* HealthSyncPlaygroundEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundEndpoint.swift; sourceTree = "<group>"; };
+		2A91A2DDA1C9C47FB8904205 /* HealthSyncPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundView.swift; sourceTree = "<group>"; };
+		D1470AAC72BD76598F3A3CA1 /* HealthSyncPlaygroundViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundViewModel.swift; sourceTree = "<group>"; };
+		D5DEE2C22B611972F113A0C6 /* HealthSyncPlaygroundFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundFeature.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A264CBC62EE38945000D0AF7 /* BWellSDK in Frameworks */,
+				461F1E4E4D9B4754E44DF3FE /* BWellHealthSync in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +266,32 @@
 				2BC3CFA6C2FDCDF1CC7DBEF6 /* BrowseView.swift */,
 			);
 			path = Navigation;
+			sourceTree = "<group>";
+		};
+		A7E24AB0542D7212277B87E4 /* Playground */ = {
+			isa = PBXGroup;
+			children = (
+				ECA82C6527358CD6EBB3FE08 /* PlaygroundEndpoint.swift */,
+				FBDBCE8978541F1464F4816B /* PlaygroundCard.swift */,
+				D5243F50054805CA724DE255 /* PlaygroundStyles.swift */,
+				9ECD9E4DE4C980384BE66F54 /* PlaygroundFeature.swift */,
+			);
+			path = Playground;
+			sourceTree = "<group>";
+		};
+		9D0064C31DB586DCCEA724D6 /* HealthSync */ = {
+			isa = PBXGroup;
+			children = (
+				096A7A41A7E60392C307ADEF /* HealthSyncPlaygroundRootView.swift */,
+				D4904A0FFEA49EB150AC67D0 /* HealthSyncSetupView.swift */,
+				941414EB5EAA81B957BB09CA /* HealthSyncReauthenticateView.swift */,
+				5F2BA7050A9A3785A8E78F28 /* SyncUiState.swift */,
+				75484CB70A9A0DEA38609A10 /* HealthSyncPlaygroundEndpoint.swift */,
+				2A91A2DDA1C9C47FB8904205 /* HealthSyncPlaygroundView.swift */,
+				D1470AAC72BD76598F3A3CA1 /* HealthSyncPlaygroundViewModel.swift */,
+				D5DEE2C22B611972F113A0C6 /* HealthSyncPlaygroundFeature.swift */,
+			);
+			path = HealthSync;
 			sourceTree = "<group>";
 		};
 		551538712EB25C6A001174F9 /* Profile */ = {
@@ -293,6 +345,8 @@
 				5522DC832EAFE10C00F9BCD7 /* bwell_swift_ios.entitlements */,
 				B09A394862D861F54FE5C1CB /* Charts */,
 				19B4A74F8A7E7DE17424C4E6 /* Navigation */,
+				A7E24AB0542D7212277B87E4 /* Playground */,
+				9D0064C31DB586DCCEA724D6 /* HealthSync */,
 				CED71E630AA3942A347C7633 /* Views */,
 				8C255C3E0751A1B703689C47 /* .env */,
 			);
@@ -578,6 +632,7 @@
 			name = "bwell-swift-ios";
 			packageProductDependencies = (
 				A264CBC52EE38945000D0AF7 /* BWellSDK */,
+				248AC685A3BED42A723DD14A /* BWellHealthSync */,
 			);
 			productName = "bwell-swift-ios";
 			productReference = 5522DC572EAFE0FD00F9BCD7 /* bwell-swift-ios.app */;
@@ -783,6 +838,18 @@
 				93A3D25B00846891FCB7B5D3 /* CustomTextField.swift in Sources */,
 				6154222D6E6347FDB139A55B /* AccountSettingsView.swift in Sources */,
 				BA6B38F73B772488794DA501 /* DeviceRegistrationView.swift in Sources */,
+				A5A98235657F3993CE40740D /* PlaygroundEndpoint.swift in Sources */,
+				584256111A9D16C4022C3858 /* PlaygroundCard.swift in Sources */,
+				6BC2BEB7C70FE0B739F03F82 /* PlaygroundStyles.swift in Sources */,
+				24DFDC24AF0F827CA035C636 /* PlaygroundFeature.swift in Sources */,
+				7E04EBEA2CD331C2D83CB710 /* HealthSyncPlaygroundRootView.swift in Sources */,
+				E191DDC59046843B028817EA /* HealthSyncSetupView.swift in Sources */,
+				786EE84B3650E55E8F29F287 /* HealthSyncReauthenticateView.swift in Sources */,
+				8EFC0317EC8D3FFBC49CE5B4 /* SyncUiState.swift in Sources */,
+				FEC8A3982A8FC0ACD9AE1E6C /* HealthSyncPlaygroundEndpoint.swift in Sources */,
+				250FC4A5298CAD065F249AA9 /* HealthSyncPlaygroundView.swift in Sources */,
+				C6B34728333C2A75E7CD6990 /* HealthSyncPlaygroundViewModel.swift in Sources */,
+				CBCAFE04662F1022E6B5B76D /* HealthSyncPlaygroundFeature.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1154,8 +1221,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/icanbwell/bwell-sdk-swift-package";
 			requirement = {
-				kind = exactVersion;
-				version = "1.4.3-beta";
+				kind = upToNextMajorVersion;
+				minimumVersion = "1.7.0";
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1165,6 +1232,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A264CBC42EE38945000D0AF7 /* XCRemoteSwiftPackageReference "bwell-sdk-swift-package" */;
 			productName = BWellSDK;
+		};
+		248AC685A3BED42A723DD14A /* BWellHealthSync */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A264CBC42EE38945000D0AF7 /* XCRemoteSwiftPackageReference "bwell-sdk-swift-package" */;
+			productName = BWellHealthSync;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
