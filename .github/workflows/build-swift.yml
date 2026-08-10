@@ -28,6 +28,12 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_26.5.app/Contents/Developer
 
+      # .env is gitignored (never committed - real credentials only) but the
+      # app target's Copy Bundle Resources phase requires the file to exist,
+      # even empty, or the build fails on a clean checkout like this one.
+      - name: Create placeholder .env
+        run: touch bwell-swift-ios/bwell-swift-ios/.env
+
       - name: Build
         run: |
           xcodebuild build \
