@@ -107,6 +107,31 @@ extension Color {
     static let playgroundHeading = Color(red: 0.12, green: 0.12, blue: 0.16)
 }
 
+/// Bordered container for a group of Playground cards - a visible rounded
+/// outline + label, distinct from the plain system GroupBox look.
+struct PlaygroundGroupBoxStyle: GroupBoxStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            configuration.label
+            configuration.content
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color(.secondarySystemGroupedBackground))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.accentColor.opacity(0.25), lineWidth: 1.5)
+        )
+    }
+}
+
+extension GroupBoxStyle where Self == PlaygroundGroupBoxStyle {
+    static var playground: PlaygroundGroupBoxStyle { PlaygroundGroupBoxStyle() }
+}
+
 /// Shared vertically-centered, width-capped form shell used by any
 /// single-card Playground screen (e.g. a feature's own Setup/Reauthenticate).
 struct PlaygroundCenteredForm<Content: View>: View {

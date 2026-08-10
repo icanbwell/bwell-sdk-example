@@ -57,6 +57,15 @@ struct HealthRecordsBrowseView: View {
                 NavigationLink(value: AppView.manageConnections) {
                     BrowseRow(icon: "rectangle.connected.to.line.below", title: "Connections", color: .bwellBlue)
                 }
+
+                // Feature playgrounds (DCON-4879) - data-driven from
+                // PlaygroundRegistry, see Playground/PlaygroundFeature.swift.
+                // A future new playground needs no new row here.
+                ForEach(PlaygroundRegistry.all) { feature in
+                    NavigationLink(value: AppView.playground(feature.id)) {
+                        BrowseRow(icon: feature.icon, title: feature.title, color: .bwellBlue)
+                    }
+                }
             }
 
             // MARK: - Financial
@@ -77,15 +86,6 @@ struct HealthRecordsBrowseView: View {
             Section("Developer") {
                 DeveloperStubRow(icon: "doc.zipper", title: "Get Binary", description: "getBinary — raw binary FHIR resource access")
                 DeveloperStubRow(icon: "chevron.left.forwardslash.chevron.right", title: "Get FHIR", description: "getFhir — raw FHIR resource access")
-
-                // Feature playgrounds (DCON-4879) - data-driven from
-                // PlaygroundRegistry, see Playground/PlaygroundFeature.swift.
-                // A future new playground needs no new row here.
-                ForEach(PlaygroundRegistry.all) { feature in
-                    NavigationLink(value: AppView.playground(feature.id)) {
-                        BrowseRow(icon: feature.icon, title: feature.title, color: .bwellPurple)
-                    }
-                }
             }
         }
         .listStyle(.insetGrouped)

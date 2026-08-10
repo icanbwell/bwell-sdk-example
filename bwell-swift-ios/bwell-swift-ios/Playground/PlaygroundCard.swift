@@ -18,10 +18,25 @@ struct PlaygroundCard<Endpoint: PlaygroundEndpoint, Input: View>: View {
     let onRun: () -> Void
     @ViewBuilder var input: () -> Input
 
+    @State private var showingInfo = false
+
+    private var hasInfo: Bool {
+        endpoint.documentationURL != nil || endpoint.parameterInfo != nil
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(endpoint.title).font(.headline).foregroundStyle(Color.playgroundHeading)
+                if hasInfo {
+                    Button {
+                        showingInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
                 if endpoint.isBlocked {
                     Text("blocked").font(.caption2).padding(4)
                         .background(.orange.opacity(0.2)).clipShape(Capsule())
@@ -47,6 +62,9 @@ struct PlaygroundCard<Endpoint: PlaygroundEndpoint, Input: View>: View {
             resultView(for: state)
         }
         .playgroundCardStyle()
+        .sheet(isPresented: $showingInfo) {
+            PlaygroundEndpointInfoSheet(endpoint: endpoint)
+        }
     }
 
     @ViewBuilder

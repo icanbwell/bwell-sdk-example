@@ -2,70 +2,31 @@
 //  HealthSyncPlaygroundRootView.swift
 //  bwell-swift-ios
 //
-//  Ported from bwell-sdk-swift/Examples/HealthSyncSampleApp/Sources/ContentView.swift.
-//  Routes this demo's own state machine to its matching screen. This flow
-//  owns a completely separate BWellClient from the main app's SDKManager —
-//  opening it from the Developer section will prompt for a client key +
-//  OAuth token even if you're already logged into the main app elsewhere.
-//  That's expected: this is a faithful, self-contained port of the internal
-//  standalone sample, not a merge into the main app's session. Confirmed
-//  safe: BWellClient.initialize() is a plain instance method with no
-//  process-wide singleton constraint (only BWellHealthSyncType.configure()
-//  has one, and it's never called in this build — see
-//  HealthSyncPlaygroundViewModel.swift).
+//  Adapted from bwell-sdk-swift/Examples/HealthSyncSampleApp/Sources/ContentView.swift.
+//  Unlike the internal sample, this demo has no own login/logout - whether
+//  the visitor is the current logged-in user is the app's own concern,
+//  already resolved before this screen is reachable (it's only reachable
+//  from inside the authenticated tab flow). This view just attaches the
+//  Playground to the existing session from SDKManager.
 //
 
 import SwiftUI
 
 struct HealthSyncPlaygroundRootView: View {
+    @EnvironmentObject private var sdkManager: SDKManager
     @StateObject private var viewModel = HealthSyncPlaygroundViewModel()
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
-
-            Group {
-                switch viewModel.state {
-                case .setup(let error):
-                    HealthSyncSetupView(viewModel: viewModel, error: error)
-                case .playground:
-                    HealthSyncPlaygroundView(viewModel: viewModel)
-                case .reauthenticate(let error):
-                    HealthSyncReauthenticateView(viewModel: viewModel, error: error)
-                }
+        Group {
+            if let client = sdkManager.sdk {
+                HealthSyncPlaygroundView(viewModel: viewModel)
+                    .onAppear { viewModel.attach(client: client) }
+            } else {
+                Text("Log in to use Health Sync.")
+                    .foregroundStyle(.secondary)
             }
         }
-        .preferredColorScheme(.light)
-    }
-
-    private var header: some View {
-        ZStack {
-            Text("b.well Health Sync SDK")
-                .font(.headline)
-                .foregroundStyle(Color.playgroundHeading)
-
-            if let backAction {
-                HStack {
-                    Button(action: backAction) {
-                        Image(systemName: "chevron.left")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(Color.accentColor)
-                    }
-                    .accessibilityLabel("Back")
-                    Spacer()
-                }
-            }
-        }
-        .padding()
-        .background(Color(.systemBackground))
-    }
-
-    private var backAction: (() -> Void)? {
-        switch viewModel.state {
-        case .reauthenticate:
-            return viewModel.backToPlayground
-        default:
-            return nil
-        }
+        .navigationTitle("Health Sync")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

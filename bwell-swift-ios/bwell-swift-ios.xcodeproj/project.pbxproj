@@ -83,10 +83,10 @@
 		584256111A9D16C4022C3858 /* PlaygroundCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDBCE8978541F1464F4816B /* PlaygroundCard.swift */; };
 		6BC2BEB7C70FE0B739F03F82 /* PlaygroundStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5243F50054805CA724DE255 /* PlaygroundStyles.swift */; };
 		24DFDC24AF0F827CA035C636 /* PlaygroundFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECD9E4DE4C980384BE66F54 /* PlaygroundFeature.swift */; };
+		FBE321A1DC5126DF8068AF43 /* PlaygroundEndpointInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1E5998A8B005BF2694B8FB /* PlaygroundEndpointInfoSheet.swift */; };
+		C3C9EA3220B782AF87205571 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E3E4418CC4F647EEAEF0C5 /* SafariView.swift */; };
+		F72E753BC1AAEB6E4BD879CD /* PlaygroundNoteBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D28588EF5AB8B59D279E2AB /* PlaygroundNoteBanner.swift */; };
 		7E04EBEA2CD331C2D83CB710 /* HealthSyncPlaygroundRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096A7A41A7E60392C307ADEF /* HealthSyncPlaygroundRootView.swift */; };
-		E191DDC59046843B028817EA /* HealthSyncSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4904A0FFEA49EB150AC67D0 /* HealthSyncSetupView.swift */; };
-		786EE84B3650E55E8F29F287 /* HealthSyncReauthenticateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941414EB5EAA81B957BB09CA /* HealthSyncReauthenticateView.swift */; };
-		8EFC0317EC8D3FFBC49CE5B4 /* SyncUiState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BA7050A9A3785A8E78F28 /* SyncUiState.swift */; };
 		FEC8A3982A8FC0ACD9AE1E6C /* HealthSyncPlaygroundEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75484CB70A9A0DEA38609A10 /* HealthSyncPlaygroundEndpoint.swift */; };
 		250FC4A5298CAD065F249AA9 /* HealthSyncPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A91A2DDA1C9C47FB8904205 /* HealthSyncPlaygroundView.swift */; };
 		C6B34728333C2A75E7CD6990 /* HealthSyncPlaygroundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1470AAC72BD76598F3A3CA1 /* HealthSyncPlaygroundViewModel.swift */; };
@@ -222,10 +222,10 @@
 		FBDBCE8978541F1464F4816B /* PlaygroundCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundCard.swift; sourceTree = "<group>"; };
 		D5243F50054805CA724DE255 /* PlaygroundStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundStyles.swift; sourceTree = "<group>"; };
 		9ECD9E4DE4C980384BE66F54 /* PlaygroundFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundFeature.swift; sourceTree = "<group>"; };
+		8D1E5998A8B005BF2694B8FB /* PlaygroundEndpointInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundEndpointInfoSheet.swift; sourceTree = "<group>"; };
+		F6E3E4418CC4F647EEAEF0C5 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+		1D28588EF5AB8B59D279E2AB /* PlaygroundNoteBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaygroundNoteBanner.swift; sourceTree = "<group>"; };
 		096A7A41A7E60392C307ADEF /* HealthSyncPlaygroundRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundRootView.swift; sourceTree = "<group>"; };
-		D4904A0FFEA49EB150AC67D0 /* HealthSyncSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncSetupView.swift; sourceTree = "<group>"; };
-		941414EB5EAA81B957BB09CA /* HealthSyncReauthenticateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncReauthenticateView.swift; sourceTree = "<group>"; };
-		5F2BA7050A9A3785A8E78F28 /* SyncUiState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncUiState.swift; sourceTree = "<group>"; };
 		75484CB70A9A0DEA38609A10 /* HealthSyncPlaygroundEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundEndpoint.swift; sourceTree = "<group>"; };
 		2A91A2DDA1C9C47FB8904205 /* HealthSyncPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundView.swift; sourceTree = "<group>"; };
 		D1470AAC72BD76598F3A3CA1 /* HealthSyncPlaygroundViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthSyncPlaygroundViewModel.swift; sourceTree = "<group>"; };
@@ -275,6 +275,9 @@
 				FBDBCE8978541F1464F4816B /* PlaygroundCard.swift */,
 				D5243F50054805CA724DE255 /* PlaygroundStyles.swift */,
 				9ECD9E4DE4C980384BE66F54 /* PlaygroundFeature.swift */,
+				8D1E5998A8B005BF2694B8FB /* PlaygroundEndpointInfoSheet.swift */,
+				F6E3E4418CC4F647EEAEF0C5 /* SafariView.swift */,
+				1D28588EF5AB8B59D279E2AB /* PlaygroundNoteBanner.swift */,
 			);
 			path = Playground;
 			sourceTree = "<group>";
@@ -283,9 +286,6 @@
 			isa = PBXGroup;
 			children = (
 				096A7A41A7E60392C307ADEF /* HealthSyncPlaygroundRootView.swift */,
-				D4904A0FFEA49EB150AC67D0 /* HealthSyncSetupView.swift */,
-				941414EB5EAA81B957BB09CA /* HealthSyncReauthenticateView.swift */,
-				5F2BA7050A9A3785A8E78F28 /* SyncUiState.swift */,
 				75484CB70A9A0DEA38609A10 /* HealthSyncPlaygroundEndpoint.swift */,
 				2A91A2DDA1C9C47FB8904205 /* HealthSyncPlaygroundView.swift */,
 				D1470AAC72BD76598F3A3CA1 /* HealthSyncPlaygroundViewModel.swift */,
@@ -842,10 +842,10 @@
 				584256111A9D16C4022C3858 /* PlaygroundCard.swift in Sources */,
 				6BC2BEB7C70FE0B739F03F82 /* PlaygroundStyles.swift in Sources */,
 				24DFDC24AF0F827CA035C636 /* PlaygroundFeature.swift in Sources */,
+				FBE321A1DC5126DF8068AF43 /* PlaygroundEndpointInfoSheet.swift in Sources */,
+				C3C9EA3220B782AF87205571 /* SafariView.swift in Sources */,
+				F72E753BC1AAEB6E4BD879CD /* PlaygroundNoteBanner.swift in Sources */,
 				7E04EBEA2CD331C2D83CB710 /* HealthSyncPlaygroundRootView.swift in Sources */,
-				E191DDC59046843B028817EA /* HealthSyncSetupView.swift in Sources */,
-				786EE84B3650E55E8F29F287 /* HealthSyncReauthenticateView.swift in Sources */,
-				8EFC0317EC8D3FFBC49CE5B4 /* SyncUiState.swift in Sources */,
 				FEC8A3982A8FC0ACD9AE1E6C /* HealthSyncPlaygroundEndpoint.swift in Sources */,
 				250FC4A5298CAD065F249AA9 /* HealthSyncPlaygroundView.swift in Sources */,
 				C6B34728333C2A75E7CD6990 /* HealthSyncPlaygroundViewModel.swift in Sources */,

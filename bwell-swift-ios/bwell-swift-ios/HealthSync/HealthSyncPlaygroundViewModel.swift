@@ -2,10 +2,12 @@
 //  HealthSyncPlaygroundViewModel.swift
 //  bwell-swift-ios
 //
-//  Ported from bwell-sdk-swift/Examples/HealthSyncSampleApp/Sources/HealthSyncViewModel.swift.
-//  Drives this demo's self-contained Setup/Playground/Reauthenticate flow —
-//  intentionally independent of the main app's SDKManager/session (see
-//  HealthSyncPlaygroundRootView.swift), a faithful port of a standalone tool.
+//  Adapted from bwell-sdk-swift/Examples/HealthSyncSampleApp/Sources/HealthSyncViewModel.swift.
+//  Unlike the internal sample, this demo does not own its own BWellClient or
+//  login flow - it attaches to the app's existing SDKManager session (see
+//  HealthSyncPlaygroundRootView.swift). Whether the visitor is the current
+//  logged-in user is the app's own concern, decided before this screen is
+//  ever reachable, not something re-checked here.
 //
 //  Vendor-neutrality: `AggregatorHealthSource` (the on-device health source
 //  implementation) lives in a package that pulls a third-party vendor SDK
@@ -29,16 +31,11 @@ import Foundation
 
 @MainActor
 final class HealthSyncPlaygroundViewModel: ObservableObject {
-    @Published var state: SyncUiState = .setup()
-
-    @Published var clientKeyInput = ""
-    @Published var tokenInput = ""
-    @Published var reauthTokenInput = ""
-
     @Published var playgroundResults: [HealthSyncPlaygroundEndpoint: PlaygroundCardState] = [:]
     @Published var deviceProviderOptions: [BWell.DeviceProvider] = []
     @Published var selectedDeviceProvider: BWell.DeviceProvider?
     @Published var connectionIdInput = playgroundConnectionId
+    @Published var bodySystemIdInput = "cardiovascular"
 
     private var client: BWellClient?
 
@@ -47,103 +44,27 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
     // demonstrates this one source (AggregatorHealthSource.sourceId = "apple-health").
     static let playgroundConnectionId = "apple_health"
 
-    // MARK: - Setup
-
-    /// One-time base-SDK setup: the client key + OAuth token currently held in
-    /// `clientKeyInput`/`tokenInput`. Owns its own `BWellClient`, independent
-    /// of the main app's `SDKManager` — see HealthSyncPlaygroundRootView.swift
-    /// for why that's intentional. Lands directly on the Playground - it's
-    /// this demo's one primary screen.
-    func setup() {
-        let clientKey = clientKeyInput.trimmed
-        let token = tokenInput.trimmed
-        Task {
-            do {
-                let client = try BWellClient(config: BWell.SDKConfig(clientKey: clientKey))
-                try await client.initialize()
-                try await client.authenticate(credentials: .oauth(token: token))
-
-                #if canImport(BWellHealthSyncAdapterAggregator)
-                if !BWellHealthSyncType.isConfigured {
-                    try BWellHealthSyncType.configure(AggregatorHealthSource())
-                }
-                #endif
-
-                self.client = client
-                state = .playground
-                loadPlaygroundDropdownOptions()
-            } catch {
-                state = .setup(error: "\(error)")
-            }
-        }
-    }
-
     // How far back to read on-device records for the demo `sync()` card — a
     // demo-app choice (not an SDK default), picked to reliably surface
     // something to show on real devices without a huge upload.
     private static let syncWindowDays = 30
     private static let secondsPerDay: TimeInterval = 86400
 
-    // MARK: - Account switching
+    /// Attaches the app's already-authenticated client - called once from
+    /// HealthSyncPlaygroundRootView, which owns the actual session. Also
+    /// where the on-device health source gets configured, when the adapter
+    /// package is present (see file header).
+    func attach(client: BWellClient) {
+        guard self.client == nil else { return }
+        self.client = client
 
-    /// The "Switch account" action (in Playground's own footer).
-    func openSwitchAccount() {
-        state = .reauthenticate()
-    }
-
-    /// The "Log Out" action — full logout, back to the Setup screen (client
-    /// key + token), not just a new-token reauth. Different from "Switch
-    /// account", which keeps the same client/init and only swaps the token.
-    func logOut() {
-        Task {
-            do {
-                try await client?.healthSync.disconnect()
-            } catch {
-                print("disconnect() during logOut() failed: \(error)")
-            }
-            client = nil
-            clientKeyInput = ""
-            tokenInput = ""
-            resetPlaygroundState()
-            state = .setup()
+        #if canImport(BWellHealthSyncAdapterAggregator)
+        if !BWellHealthSyncType.isConfigured {
+            try? BWellHealthSyncType.configure(AggregatorHealthSource())
         }
-    }
+        #endif
 
-    /// Re-authenticates as a different b.well user. Calls only
-    /// `authenticate()`, not `initialize()` — the latter is one-shot per
-    /// client instance and the client key doesn't change when switching users.
-    ///
-    /// Ends the previous user's on-device session first (best-effort, same
-    /// as `logOut()`'s teardown) — the on-device HealthSync session lives in
-    /// a process-wide singleton independent of the base client's OAuth
-    /// token, so re-authenticating alone leaves the old session active.
-    /// `endSession()`, not the full `disconnect()`: switching accounts
-    /// shouldn't delete the previous user's backend connection, only logOut()
-    /// should do that.
-    func reauthenticate() {
-        let token = reauthTokenInput.trimmed
-        Task {
-            do {
-                try await client?.healthSync.endSession()
-            } catch {
-                print("endSession() during reauthenticate() failed: \(error)")
-            }
-            do {
-                try await client?.authenticate(credentials: .oauth(token: token))
-                resetPlaygroundState()
-                reauthTokenInput = ""
-                state = .playground
-                loadPlaygroundDropdownOptions()
-            } catch {
-                state = .reauthenticate(error: "\(error)")
-            }
-        }
-    }
-
-    /// The header back-arrow from Reauthenticate — Playground is this demo's
-    /// only other screen, so it's the one place "back" can mean.
-    func backToPlayground() {
-        state = .playground
+        loadPlaygroundDropdownOptions()
     }
 
     // MARK: - Playground
@@ -262,9 +183,25 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
             let result = try await client.connection.deleteConnection(.init(connectionId: connectionId))
             return prettyJSON(result)
 
-        case .getDeviceMetrics, .getDeviceMetricGroups, .getHealthScore, .getBodySystemScore:
-            // Unreachable — guarded by endpoint.blockedReason above.
-            throw PlaygroundInputError.missingInput(endpoint.blockedReason ?? "blocked")
+        case .getDeviceMetrics:
+            let result = try await client.health.getDeviceMetrics(.init(page: 0))
+            return prettyJSON(result)
+
+        case .getHealthScore:
+            let result = try await client.health.getHealthScore()
+            return prettyJSON(result)
+
+        case .getBodySystemScore:
+            let bodySystemId = bodySystemIdInput.trimmed
+            guard !bodySystemId.isEmpty else {
+                throw PlaygroundInputError.missingInput("Enter a body system id first")
+            }
+            let result = try await client.health.getBodySystemScore(.init(bodySystemId: bodySystemId))
+            return prettyJSON(result)
+
+        case .getDeviceMetricsGroups:
+            let result = try await client.health.getDeviceMetricsGroups(.init(page: 0))
+            return prettyJSON(result)
         }
     }
 
@@ -285,15 +222,6 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
         // containing literal backslash-escaped slashes - purely cosmetic for
         // this display-only view, so unescape for readability.
         return json.replacingOccurrences(of: "\\/", with: "/")
-    }
-
-    /// Clears every Playground result, dropdown option, and selection - all
-    /// of it is scoped to whichever user was authenticated when it was
-    /// fetched, so it goes stale the moment the account switches.
-    private func resetPlaygroundState() {
-        playgroundResults = [:]
-        deviceProviderOptions = []
-        selectedDeviceProvider = nil
     }
 }
 

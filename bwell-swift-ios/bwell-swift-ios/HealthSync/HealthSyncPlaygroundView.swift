@@ -19,42 +19,46 @@ struct HealthSyncPlaygroundView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text("API Playground").font(.title2.bold())
-                .foregroundStyle(Color.playgroundHeading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding([.horizontal, .top])
-            Text("Test bench — run any endpoint independently, raw response shown per card.")
-                .font(.footnote).foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
+            VStack(spacing: 6) {
+                Text("API Playground").font(.title2.bold())
+                    .foregroundStyle(Color.playgroundHeading)
+                Text("Test bench — run any endpoint independently, raw response shown per card.")
+                    .font(.footnote).foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 20)
 
             ScrollView {
-                LazyVStack(spacing: 12) {
-                    ForEach(HealthSyncPlaygroundEndpoint.allCases) { endpoint in
-                        card(for: endpoint)
+                LazyVStack(spacing: 20) {
+                    ForEach(HealthSyncPlaygroundGroup.allCases, id: \.self) { group in
+                        GroupBox(label: header(for: group)) {
+                            VStack(spacing: 12) {
+                                if group == .readData {
+                                    PlaygroundNoteBanner(text: "Run connect, requestPermissions, and sync first (Mobile Sync group above) — Read Data reflects whatever was last synced. Data appears within 5 min.")
+                                }
+                                ForEach(HealthSyncPlaygroundEndpoint.allCases.filter { $0.group == group }) { endpoint in
+                                    card(for: endpoint)
+                                }
+                            }
+                            .padding(.top, 8)
+                        }
+                        .groupBoxStyle(.playground)
                     }
                 }
                 .padding()
             }
-
-            accountActions
         }
         .background(Color(.systemGroupedBackground))
     }
 
-    // MARK: - Account actions (no separate dashboard screen)
+    // MARK: - Group header
 
-    private var accountActions: some View {
-        HStack {
-            Button("Switch account") { viewModel.openSwitchAccount() }
-                .font(.footnote.weight(.medium))
-            Spacer()
-            Button("Log out") { viewModel.logOut() }
-                .font(.footnote.weight(.medium))
-                .foregroundStyle(.red)
-        }
-        .padding()
-        .background(Color(.systemBackground))
+    private func header(for group: HealthSyncPlaygroundGroup) -> some View {
+        Text(group.rawValue.uppercased())
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.secondary)
     }
 
     // MARK: - Provider dropdown (embedded in the cards that need it)
@@ -89,6 +93,11 @@ struct HealthSyncPlaygroundView: View {
                         if let provider { viewModel.connectionIdInput = provider.slug }
                     }
                 TextField("connectionId", text: $viewModel.connectionIdInput)
+                    .textFieldStyle(.plain)
+                    .playgroundFieldStyle()
+                    .autocorrectionDisabled().textInputAutocapitalization(.never)
+            case .getBodySystemScore:
+                TextField("bodySystemId", text: $viewModel.bodySystemIdInput)
                     .textFieldStyle(.plain)
                     .playgroundFieldStyle()
                     .autocorrectionDisabled().textInputAutocapitalization(.never)

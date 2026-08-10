@@ -11,7 +11,7 @@ Native iOS application demonstrating the b.well Swift SDK across all supported A
 - **Protocol-oriented DI** with no singletons
 - **Feature playgrounds** — a scrollable, per-endpoint test bench for exercising an SDK
   module method-by-method (see [Playgrounds](#playgrounds) below). Health Sync is the first
-  one, reachable from Health Records → Developer.
+  one, reachable from Health Records → Providers & Devices.
 
 ## Setup
 
@@ -42,7 +42,7 @@ import BWellSDK
 
 A "Playground" is a self-contained demo screen for one SDK module: a scrollable list of
 independent cards, one per endpoint, each with its own Run button, plain-language
-explanation, and inline result. Reached from Health Records → Developer.
+explanation, and inline result. Reached from Health Records → Providers & Devices.
 
 The pattern lives in `bwell-swift-ios/Playground/` and is meant to be reused, not
 re-implemented, per feature:
