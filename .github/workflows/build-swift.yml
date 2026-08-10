@@ -25,8 +25,16 @@ jobs:
 
       # Pin Xcode itself (not a standalone Swift toolchain) so the compiler
       # and SDK stay a matched pair - same pattern bwell-sdk's Swift CI uses.
+      # Via setup-xcode rather than a hardcoded /Applications path: the exact
+      # app-bundle name/set of pre-installed versions on macos-latest shifts
+      # between runner-image updates (already hit this once with the
+      # simulator device list going stale) - this resolves against whatever
+      # versions are actually present and fails clearly if 26.5 is gone,
+      # instead of a silent path-not-found.
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_26.5.app/Contents/Developer
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.5'
 
       # .env is gitignored (never committed - real credentials only) but the
       # app target's Copy Bundle Resources phase requires the file to exist,
