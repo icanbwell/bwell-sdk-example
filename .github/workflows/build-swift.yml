@@ -33,5 +33,5 @@ jobs:
           xcodebuild build \
             -project bwell-swift-ios/bwell-swift-ios.xcodeproj \
             -scheme bwell-swift-ios \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=iPhone 17' \
             CODE_SIGNING_ALLOWED=NO

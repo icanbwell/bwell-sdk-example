@@ -36,6 +36,7 @@ struct PlaygroundCard<Endpoint: PlaygroundEndpoint, Input: View>: View {
                             .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("More info about \(endpoint.title)")
                 }
                 if endpoint.isBlocked {
                     Text("blocked").font(.caption2).padding(4)

@@ -63,7 +63,7 @@ struct HealthRecordsBrowseView: View {
                 // A future new playground needs no new row here.
                 ForEach(PlaygroundRegistry.all) { feature in
                     NavigationLink(value: AppView.playground(feature.id)) {
-                        BrowseRow(icon: feature.icon, title: feature.title, color: .bwellBlue)
+                        BrowseRow(icon: feature.icon, title: feature.title, description: feature.description, color: .bwellBlue)
                     }
                 }
             }
@@ -122,6 +122,7 @@ private struct DeveloperStubRow: View {
 private struct BrowseRow: View {
     let icon: String
     let title: String
+    var description: String? = nil
     let color: Color
 
     var body: some View {
@@ -130,8 +131,15 @@ private struct BrowseRow: View {
                 .font(.title3)
                 .foregroundStyle(color)
                 .frame(width: 32, alignment: .center)
-            Text(title)
-                .font(.body)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.body)
+                if let description {
+                    Text(description)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
         .padding(.vertical, 4)
     }
