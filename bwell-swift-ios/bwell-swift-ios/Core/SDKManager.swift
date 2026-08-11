@@ -14,6 +14,19 @@ final class SDKManager: ObservableObject {
     @Published private(set) var state: SDKState = .uninitialized
     private(set) var sdk: BWellClient?
 
+    /// SDK log level, chosen by build configuration.
+    ///
+    /// `.verbose` must never reach a release build: NSLog output persists in the
+    /// unified system log and is collected by sysdiagnose, so verbose SDK logging
+    /// puts request/response detail on the device indefinitely.
+    private static var configuredLogLevel: BWell.LogLevel {
+        #if DEBUG
+        return .verbose
+        #else
+        return .error
+        #endif
+    }
+
     func initialize(_ clientKey: String) async throws {
         guard sdk == nil else {
             state = .initialized
@@ -26,7 +39,7 @@ final class SDKManager: ObservableObject {
             let keychainAdapter = KeychainTokenStorageAdapter()
             let config = BWell.SDKConfig(
                 clientKey: clientKey.trimmingCharacters(in: .whitespacesAndNewlines),
-                logLevel: .verbose,
+                logLevel: Self.configuredLogLevel,
                 tokenStorage: keychainAdapter
             )
             let sdkInstance = try BWellClient(config: config)
