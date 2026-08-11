@@ -11,14 +11,21 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct PlaygroundCard<Endpoint: PlaygroundEndpoint, Input: View>: View {
     let endpoint: Endpoint
     let state: PlaygroundCardState
+    /// True when this card's Run button has nothing usable to call with —
+    /// e.g. a dropdown sourced live from another endpoint's response came
+    /// back empty. The "why" belongs in the endpoint's parameterInfo (info
+    /// sheet), not inline text on the card itself.
+    var runDisabled: Bool = false
     let onRun: () -> Void
     @ViewBuilder var input: () -> Input
 
     @State private var showingInfo = false
+    @State private var didCopyOutput = false
 
     private var hasInfo: Bool {
         endpoint.documentationURL != nil || endpoint.parameterInfo != nil
@@ -43,12 +50,27 @@ struct PlaygroundCard<Endpoint: PlaygroundEndpoint, Input: View>: View {
                         .background(.orange.opacity(0.2)).clipShape(Capsule())
                 }
                 Spacer()
+                if case .success(let text) = state {
+                    Button {
+                        UIPasteboard.general.string = text
+                        didCopyOutput = true
+                        Task {
+                            try? await Task.sleep(for: .seconds(1.2))
+                            didCopyOutput = false
+                        }
+                    } label: {
+                        Image(systemName: didCopyOutput ? "checkmark" : "doc.on.doc")
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Copy output")
+                }
                 if case .loading = state {
                     ProgressView()
                 } else {
                     Button(endpoint.isBlocked ? "Blocked" : "Run", action: onRun)
                         .buttonStyle(.playgroundCompact)
-                        .disabled(endpoint.isBlocked)
+                        .disabled(endpoint.isBlocked || runDisabled)
                 }
             }
 

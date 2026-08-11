@@ -29,13 +29,28 @@ import BWellHealthSyncAdapterAggregator
 import BWellSDK
 import Foundation
 
+/// A dynamically-fetched dropdown option identified by a code, with an
+/// optional human-readable meaning (e.g. code "vital-signs", display "Vital
+/// Signs"). Shared shape for both the getDeviceMetrics code picker and the
+/// getBodySystemScore body-system picker - both are "code - meaning" pairs
+/// sourced live from another endpoint's response, not hardcoded.
+struct PlaygroundCodeOption: Identifiable, Hashable {
+    let code: String
+    let display: String?
+    var id: String { code }
+    var label: String { display.map { "\(code) - \($0)" } ?? code }
+}
+
 @MainActor
 final class HealthSyncPlaygroundViewModel: ObservableObject {
     @Published var playgroundResults: [HealthSyncPlaygroundEndpoint: PlaygroundCardState] = [:]
     @Published var deviceProviderOptions: [BWell.DeviceProvider] = []
     @Published var selectedDeviceProvider: BWell.DeviceProvider?
     @Published var connectionIdInput = playgroundConnectionId
-    @Published var bodySystemIdInput = "cardiovascular"
+    @Published var deviceMetricsCodeOptions: [PlaygroundCodeOption] = []
+    @Published var selectedDeviceMetricsCode: String?
+    @Published var bodySystemOptions: [PlaygroundCodeOption] = []
+    @Published var selectedBodySystemId: String?
 
     private var client: BWellClient?
 
@@ -83,6 +98,58 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
                 }
             } catch {
                 print("getDeviceProviders() dropdown prefetch failed: \(error)")
+            }
+        }
+    }
+
+    /// (Re-)populates the getDeviceMetrics code dropdown from
+    /// getDeviceMetricsGroups() - called each time that card appears, since
+    /// which codes exist depends on what's been synced (Mobile Sync group
+    /// above), which can change after this screen's initial load.
+    func loadDeviceMetricsCodeOptions() {
+        Task {
+            do {
+                guard let result = try await client?.health.getDeviceMetricsGroups(nil) else { return }
+                var seen = Set<String>()
+                let options = (result.resources ?? []).compactMap { group -> PlaygroundCodeOption? in
+                    guard let code = group.coding?.code, seen.insert(code).inserted else { return nil }
+                    return PlaygroundCodeOption(code: code, display: group.coding?.display)
+                }.sorted { $0.code < $1.code }
+                deviceMetricsCodeOptions = options
+                if let selectedDeviceMetricsCode, !options.contains(where: { $0.code == selectedDeviceMetricsCode }) {
+                    self.selectedDeviceMetricsCode = nil
+                }
+            } catch {
+                print("getDeviceMetricsGroups() dropdown prefetch failed: \(error)")
+            }
+        }
+    }
+
+    /// (Re-)populates the getBodySystemScore body-system dropdown from
+    /// getHealthScore()'s contributing body systems - called each time that
+    /// card appears, since which body systems have a score depends on how
+    /// much has been synced, which can change after this screen's initial load.
+    func loadBodySystemOptions() {
+        Task {
+            do {
+                guard let result = try await client?.health.getHealthScore() else { return }
+                var seen = Set<String>()
+                let options = (result.resource?.bodySystems ?? []).compactMap { summary -> PlaygroundCodeOption? in
+                    guard let id = summary.bodySystemId, seen.insert(id).inserted else { return nil }
+                    return PlaygroundCodeOption(code: id, display: summary.title)
+                }.sorted { $0.code < $1.code }
+                bodySystemOptions = options
+                if let selectedBodySystemId, !options.contains(where: { $0.code == selectedBodySystemId }) {
+                    self.selectedBodySystemId = nil
+                }
+                // Unlike the device-metrics code picker, there's no "All"
+                // option here - getBodySystemScore always needs exactly one
+                // id, so default to the first one once options load.
+                if selectedBodySystemId == nil {
+                    selectedBodySystemId = options.first?.code
+                }
+            } catch {
+                print("getHealthScore() dropdown prefetch failed: \(error)")
             }
         }
     }
@@ -184,7 +251,8 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
             return prettyJSON(result)
 
         case .getDeviceMetrics:
-            let result = try await client.health.getDeviceMetrics(.init(page: 0))
+            let groupCode = selectedDeviceMetricsCode.map { BWell.SearchToken(value: .init(code: $0)) }
+            let result = try await client.health.getDeviceMetrics(.init(page: 0, groupCode: groupCode))
             return prettyJSON(result)
 
         case .getHealthScore:
@@ -192,9 +260,8 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
             return prettyJSON(result)
 
         case .getBodySystemScore:
-            let bodySystemId = bodySystemIdInput.trimmed
-            guard !bodySystemId.isEmpty else {
-                throw PlaygroundInputError.missingInput("Enter a body system id first")
+            guard let bodySystemId = selectedBodySystemId else {
+                throw PlaygroundInputError.missingInput("Select a body system first")
             }
             let result = try await client.health.getBodySystemScore(.init(bodySystemId: bodySystemId))
             return prettyJSON(result)

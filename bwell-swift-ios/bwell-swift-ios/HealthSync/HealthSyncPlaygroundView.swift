@@ -72,15 +72,65 @@ struct HealthSyncPlaygroundView: View {
         .pickerStyle(.menu)
         .frame(maxWidth: .infinity, alignment: .leading)
         .playgroundFieldStyle()
+        .contentShape(Rectangle())
+    }
+
+    // MARK: - Device metrics code dropdown
+
+    private var deviceMetricsCodePicker: some View {
+        Picker("Code", selection: $viewModel.selectedDeviceMetricsCode) {
+            Text("All").tag(Optional<String>.none)
+            ForEach(viewModel.deviceMetricsCodeOptions) { option in
+                Text(option.label).tag(Optional(option.code))
+            }
+        }
+        .pickerStyle(.menu)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .playgroundFieldStyle()
+        .contentShape(Rectangle())
+        .task { viewModel.loadDeviceMetricsCodeOptions() }
+    }
+
+    // MARK: - Body system dropdown
+
+    private var bodySystemPicker: some View {
+        Picker("Body system", selection: $viewModel.selectedBodySystemId) {
+            // Just the human-readable title here - the code itself (e.g.
+            // "cardiovascular") barely differs from its title
+            // ("Cardiovascular"), so "code - title" reads as redundant noise
+            // for this one, unlike the device-metrics code picker.
+            ForEach(viewModel.bodySystemOptions) { option in
+                Text(option.display ?? option.code).tag(Optional(option.code))
+            }
+        }
+        .pickerStyle(.menu)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .playgroundFieldStyle()
+        .contentShape(Rectangle())
+        .task { viewModel.loadBodySystemOptions() }
     }
 
     // MARK: - Endpoint card
+
+    /// Endpoints whose only usable options come from another endpoint's live
+    /// response (not hardcoded) - disabled rather than left to fail/confirm
+    /// with nothing to select, until at least one option is available. The
+    /// "why" lives in each endpoint's parameterInfo (the info sheet), not
+    /// inline text here.
+    private func isRunDisabled(for endpoint: HealthSyncPlaygroundEndpoint) -> Bool {
+        switch endpoint {
+        case .getDeviceMetrics: return viewModel.deviceMetricsCodeOptions.isEmpty
+        case .getBodySystemScore: return viewModel.bodySystemOptions.isEmpty
+        default: return false
+        }
+    }
 
     @ViewBuilder
     private func card(for endpoint: HealthSyncPlaygroundEndpoint) -> some View {
         PlaygroundCard(
             endpoint: endpoint,
             state: viewModel.playgroundResults[endpoint] ?? .idle,
+            runDisabled: isRunDisabled(for: endpoint),
             onRun: { viewModel.runPlaygroundEndpoint(endpoint) }
         ) {
             // Each card embeds only the picker(s)/input it actually needs.
@@ -97,10 +147,9 @@ struct HealthSyncPlaygroundView: View {
                     .playgroundFieldStyle()
                     .autocorrectionDisabled().textInputAutocapitalization(.never)
             case .getBodySystemScore:
-                TextField("bodySystemId", text: $viewModel.bodySystemIdInput)
-                    .textFieldStyle(.plain)
-                    .playgroundFieldStyle()
-                    .autocorrectionDisabled().textInputAutocapitalization(.never)
+                bodySystemPicker
+            case .getDeviceMetrics:
+                deviceMetricsCodePicker
             default:
                 EmptyView()
             }

@@ -119,8 +119,10 @@ enum HealthSyncPlaygroundEndpoint: String, PlaygroundEndpoint {
             return "Provider - pick a cloud health provider from the dropdown."
         case .deleteConnection:
             return "Provider - pick a provider to prefill the connection id.\nconnectionId - the connection to permanently delete."
+        case .getDeviceMetrics:
+            return "Code - which metric type to filter by. Populated automatically by calling getDeviceMetricsGroups() each time this card appears. Disabled until at least one code comes back - sync some data first (Mobile Sync group above)."
         case .getBodySystemScore:
-            return "bodySystemId - which body system to score (e.g. cardiovascular, sleep, respiratory, musculoskeletal)."
+            return "Body system - which body system to score. Populated automatically by calling getHealthScore() each time this card appears, from its contributing body systems. Disabled until at least one comes back - that requires enough synced data for a health score to be computed."
         default:
             return nil
         }
