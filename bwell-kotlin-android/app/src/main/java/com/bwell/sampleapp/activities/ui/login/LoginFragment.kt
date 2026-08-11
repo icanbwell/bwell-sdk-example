@@ -33,6 +33,7 @@ import com.bwell.healthdata.requests.fhir.FhirRequest
 import com.bwell.healthdata.requests.fhir.GetFhirSearchDate
 import com.bwell.healthdata.requests.fhir.enums.ResourceType
 import com.bwell.sampleapp.BWellSampleApplication
+import com.bwell.sampleapp.BuildConfig
 import com.bwell.sampleapp.R
 import com.bwell.sampleapp.singletons.BWellSdk
 import com.bwell.user.requests.consents.ConsentCreateRequest
@@ -74,6 +75,16 @@ class LoginFragment : Fragment() {
     private val bootstrapApiURL = "https://api-gateway.client-sandbox.icanbwell.com/identity" // NOTE: Defaults to bwell `client-sandbox` environment
     private var clientKey: String? = null
     private var oAuthCredentials: String? = null
+
+    /**
+     * SDK log level, chosen by build type.
+     *
+     * DEBUG must never reach a release build: this module sets
+     * `isMinifyEnabled = false` and ships no ProGuard log-stripping rule, so
+     * anything the SDK logs at DEBUG is present in a release APK.
+     */
+    private val sdkLogLevel: LogLevel
+        get() = if (BuildConfig.DEBUG) LogLevel.DEBUG else LogLevel.ERROR
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -373,7 +384,7 @@ class LoginFragment : Fragment() {
 
             val config: BWellConfig = BWellConfig.Builder()
                 .clientKey(clientKey)
-                .logLevel(LogLevel.DEBUG)
+                .logLevel(sdkLogLevel)
                 .timeout(20000)
                 .retryPolicy(
                     RetryPolicy.Builder()
