@@ -1,0 +1,30 @@
+// Health Sync on-device adapter - LOCAL TEST OVERLAY (app half).
+//
+// This is a TEMPLATE. To use it:
+//   1. cp healthsync-local.app.gradle.kts.example healthsync-local.app.gradle.kts
+//   2. cp -r app/src/healthSyncNeutral app/src/healthSyncLocal
+//      then, in the copy, replace HealthSyncAdapterBridge's no-op bodies
+//      with real calls into
+//      com.bwell.healthsync.adapter.aggregator.AggregatorHealthSource (see
+//      bwell-sdk-kotlin's healthsync-sample MainActivity.kt for the full
+//      pattern, including its permission-launcher wiring), and replace
+//      AndroidManifest.xml with the adapter's real manifest requirements
+//      (Health Connect <queries>, permissions-rationale intent-filter).
+//   3. Pair with healthsync-local.settings.gradle.kts (see its .example).
+//
+// Both halves are gitignored - `app/build.gradle.kts` only applies this
+// file, and only compiles/merges `src/healthSyncLocal`, if they exist. A
+// fresh clone with neither present builds with zero vendor dependencies.
+//
+// This file only needs the dependency line: the source-set and manifest
+// swap already live in the committed app/build.gradle.kts, since scripts
+// applied via apply(from=...) don't get AGP's precompiled `android { }`
+// type-safe accessors.
+
+dependencies {
+    // The published adapter - resolvable once healthsync-local.settings.gradle.kts's
+    // two repositories are also in place. Pin to whatever version you're
+    // testing against; keep it in sync with the bwell-sdk-kotlin-healthsync
+    // version declared in the committed app/build.gradle.kts.
+    "implementation"("com.bwell:bwell-sdk-kotlin-healthsync-adapter-aggregator:1.20.0")
+}

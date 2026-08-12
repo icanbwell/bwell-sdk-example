@@ -1,0 +1,59 @@
+// Health Sync on-device adapter - LOCAL TEST OVERLAY (settings half).
+//
+// This is a TEMPLATE. To use it:
+//   cp healthsync-local.settings.gradle.kts.example healthsync-local.settings.gradle.kts
+// then fill in real credentials below. The real file is gitignored -
+// `settings.gradle.kts` only applies it if it exists, so a fresh clone with
+// no local overlay never sees a vendor or gated repository at all.
+//
+// Pair this with healthsync-local.app.gradle.kts (see its own .example) -
+// that half adds the actual adapter dependency; this half adds the two
+// repositories needed to resolve it and its vendor transitive dependencies.
+//
+// Simulates exactly how a real paying customer integrates the adapter -
+// nothing here is b.well-internal tooling.
+
+import org.gradle.api.credentials.HttpHeaderCredentials
+import org.gradle.authentication.http.HttpHeaderAuthentication
+
+dependencyResolutionManagement {
+    repositories {
+        // The adapter's own artifact. Published separately from the rest of
+        // the SDK (a different JFrog org than bwell-sdk-kotlin/-healthsync,
+        // which live on Nexus) - confirmed via the adapter's own published
+        // POM, anonymous 200.
+        maven {
+            name = "bwellPublicMavenReleases"
+            url = uri("https://artifacts.bwell.com/artifactory/public-maven-releases")
+        }
+
+        // The gated vendor repo the adapter's POM declares its
+        // com.validic.mobile:* runtime dependencies against (confirmed 401
+        // anonymous - credentials are mandatory, not optional). Routed
+        // through b.well's own Artifactory proxy (CIE-8240), content-filtered
+        // so it is NEVER consulted for anything outside these two groups.
+        //
+        // JFROG_READ_TOKEN is a JFrog reference/identity token, not a
+        // username+password pair - confirmed by testing both ways against
+        // the live server: Basic Auth (username + token as password) gets a
+        // 401 even with a valid token, Bearer auth gets 200. A real external
+        // consumer copying the *username+password*-shaped snippet from
+        // b.well's own internal docs/monorepo would hit this exact 401 with
+        // an otherwise-valid token - use header auth instead.
+        maven {
+            name = "validic"
+            url = uri("https://artifacts.bwell.com/artifactory/virtual-maven")
+            credentials(HttpHeaderCredentials::class) {
+                name = "Authorization"
+                value = "Bearer ${System.getenv("JFROG_READ_TOKEN") ?: "REPLACE_ME"}"
+            }
+            authentication {
+                create<HttpHeaderAuthentication>("header")
+            }
+            content {
+                includeGroup("com.validic.mobile")
+                includeGroup("com.validic")
+            }
+        }
+    }
+}
