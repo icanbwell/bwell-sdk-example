@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.data.DeviceProvider
@@ -42,6 +43,8 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
         // Playground hardcodes "apple_health" for setupMobileSync/
         // getDeviceUserStatus - it is not a user-editable field.
         const val PLAYGROUND_CONNECTION_ID = "health_connect"
+
+        private const val TAG = "HealthSyncPlayground"
     }
 
     private val _results = MutableStateFlow<Map<HealthSyncPlaygroundEndpoint, PlaygroundCardState>>(emptyMap())
@@ -108,12 +111,14 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
             // Reachable before login (SDK not yet initialized) - BaseSdk's
             // accessors throw synchronously in that case, not a BWellResult
             // error, so this needs its own catch rather than relying on
-            // BWellResult.success(). Failures are logged silently here, same
-            // as Swift's attach() - the provider picker just stays empty and
-            // its dependent cards stay disabled (see isRunDisabled).
+            // BWellResult.success(). The provider picker just stays empty and
+            // its dependent cards stay disabled (see isRunDisabled) - but the
+            // exception itself is still logged, so a genuine misconfiguration
+            // is distinguishable from the expected pre-login case.
             val result = try {
                 repository.getDeviceProviders()
             } catch (e: Exception) {
+                Log.w(TAG, "loadDeviceProviderOptions failed", e)
                 return@launch
             }
             if (result is BWellResult.SingleResource && result.success()) {
@@ -132,6 +137,7 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
             val result = try {
                 repository.getDeviceMetricsGroups()
             } catch (e: Exception) {
+                Log.w(TAG, "loadDeviceMetricsCodeOptions failed", e)
                 return@launch
             }
             if (result is BWellResult.ResourceCollection && result.success()) {
@@ -153,6 +159,7 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
             val result = try {
                 repository.getHealthScore()
             } catch (e: Exception) {
+                Log.w(TAG, "loadBodySystemOptions failed", e)
                 return@launch
             }
             if (result is BWellResult.SingleResource && result.success()) {

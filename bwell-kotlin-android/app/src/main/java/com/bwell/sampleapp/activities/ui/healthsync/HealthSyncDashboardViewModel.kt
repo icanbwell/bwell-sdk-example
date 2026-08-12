@@ -1,5 +1,6 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.healthsummary.devicemetrics.DeviceMetricsGroup
@@ -46,6 +47,8 @@ class HealthSyncDashboardViewModel(private val repository: HealthSyncRepository)
         // a single re-fetch, but give up rather than polling forever.
         const val POLL_INTERVAL_MS = 10_000L
         const val MAX_POLL_ATTEMPTS = 30
+
+        const val TAG = "HealthSyncDashboard"
     }
 
     private val _metricsState = MutableStateFlow<SyncGatedState<List<DeviceMetricsGroup>>>(SyncGatedState.Loading)
@@ -99,16 +102,20 @@ class HealthSyncDashboardViewModel(private val repository: HealthSyncRepository)
 
     // Reachable before login (SDK not yet initialized) - BaseSdk's accessors
     // throw synchronously in that case, not a BWellResult error, so both
-    // fetchers treat that the same as "no data yet" rather than crashing.
+    // fetchers treat that the same as "no data yet" rather than crashing -
+    // the exception is still logged, so a genuine misconfiguration is
+    // distinguishable from the expected pre-login case.
     private suspend fun fetchMetrics(): List<DeviceMetricsGroup> = try {
         (repository.getDeviceMetricsGroups() as? BWellResult.ResourceCollection)?.data.orEmpty()
     } catch (e: Exception) {
+        Log.w(TAG, "fetchMetrics failed", e)
         emptyList()
     }
 
     private suspend fun fetchBodyScore(): HealthScore? = try {
         (repository.getHealthScore() as? BWellResult.SingleResource)?.data?.resource
     } catch (e: Exception) {
+        Log.w(TAG, "fetchBodyScore failed", e)
         null
     }
 
