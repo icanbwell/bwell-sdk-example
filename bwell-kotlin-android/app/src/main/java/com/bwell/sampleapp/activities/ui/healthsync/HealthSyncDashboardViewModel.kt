@@ -1,6 +1,5 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.healthsummary.devicemetrics.DeviceMetricsGroup
@@ -100,24 +99,17 @@ class HealthSyncDashboardViewModel(private val repository: HealthSyncRepository)
         }
     }
 
-    // Reachable before login (SDK not yet initialized) - BaseSdk's accessors
-    // throw synchronously in that case, not a BWellResult error, so both
-    // fetchers treat that the same as "no data yet" rather than crashing -
-    // the exception is still logged, so a genuine misconfiguration is
-    // distinguishable from the expected pre-login case.
-    private suspend fun fetchMetrics(): List<DeviceMetricsGroup> = try {
-        (repository.getDeviceMetricsGroups() as? BWellResult.ResourceCollection)?.data.orEmpty()
-    } catch (e: Exception) {
-        Log.w(TAG, "fetchMetrics failed", e)
-        emptyList()
-    }
+    // Reachable before login - see guardedCall's doc. Both fetchers treat a
+    // throw the same as "no data yet" rather than crashing.
+    private suspend fun fetchMetrics(): List<DeviceMetricsGroup> =
+        guardedCall(TAG, "fetchMetrics", emptyList()) {
+            (repository.getDeviceMetricsGroups() as? BWellResult.ResourceCollection)?.data.orEmpty()
+        }
 
-    private suspend fun fetchBodyScore(): HealthScore? = try {
-        (repository.getHealthScore() as? BWellResult.SingleResource)?.data?.resource
-    } catch (e: Exception) {
-        Log.w(TAG, "fetchBodyScore failed", e)
-        null
-    }
+    private suspend fun fetchBodyScore(): HealthScore? =
+        guardedCall(TAG, "fetchBodyScore", null) {
+            (repository.getHealthScore() as? BWellResult.SingleResource)?.data?.resource
+        }
 
     private sealed interface PollOutcome<out Value> {
         data class Found<Value>(val value: Value) : PollOutcome<Value>
@@ -166,7 +158,10 @@ class HealthSyncDashboardViewModel(private val repository: HealthSyncRepository)
             onProgress(progress)
             val value = fetch()
             if (!isEmpty(value)) return PollOutcome.Found(value)
-            kotlinx.coroutines.delay(POLL_INTERVAL_MS)
+            // Skip the pacing delay after the last attempt - there's no next
+            // attempt to pace towards, so it was just a dead 10s wait
+            // immediately before the give-up message.
+            if (index < MAX_POLL_ATTEMPTS - 1) kotlinx.coroutines.delay(POLL_INTERVAL_MS)
         }
 
         val stillEmptyMessage = if ((progress.recordsSynced ?: 0) == 0) {

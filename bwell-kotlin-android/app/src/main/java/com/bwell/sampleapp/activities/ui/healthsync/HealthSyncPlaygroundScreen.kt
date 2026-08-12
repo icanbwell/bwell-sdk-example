@@ -103,7 +103,8 @@ fun HealthSyncPlaygroundScreen(viewModel: HealthSyncPlaygroundViewModel, modifie
                         endpoint = endpoint,
                         deviceProviderOptions = deviceProviderOptions,
                         selectedDeviceProvider = selectedDeviceProvider,
-                        onSelectDeviceProvider = viewModel::onSelectDeviceProvider,
+                        onSelectDeviceProviderForLookup = viewModel::onSelectDeviceProviderForLookup,
+                        onSelectDeviceProviderForDelete = viewModel::onSelectDeviceProviderForDelete,
                         deleteConnectionIdInput = deleteConnectionIdInput,
                         onDeleteConnectionIdInputChanged = viewModel::onDeleteConnectionIdInputChanged,
                         deviceMetricsCodeOptions = deviceMetricsCodeOptions,
@@ -124,7 +125,8 @@ private fun EndpointInputs(
     endpoint: HealthSyncPlaygroundEndpoint,
     deviceProviderOptions: List<com.bwell.common.models.domain.data.DeviceProvider>,
     selectedDeviceProvider: com.bwell.common.models.domain.data.DeviceProvider?,
-    onSelectDeviceProvider: (com.bwell.common.models.domain.data.DeviceProvider) -> Unit,
+    onSelectDeviceProviderForLookup: (com.bwell.common.models.domain.data.DeviceProvider) -> Unit,
+    onSelectDeviceProviderForDelete: (com.bwell.common.models.domain.data.DeviceProvider) -> Unit,
     deleteConnectionIdInput: String,
     onDeleteConnectionIdInputChanged: (String) -> Unit,
     deviceMetricsCodeOptions: List<PlaygroundCodeOption>,
@@ -143,7 +145,7 @@ private fun EndpointInputs(
                 options = deviceProviderOptions,
                 selectedLabel = selectedDeviceProvider?.name,
                 displayText = { it.name },
-                onSelect = onSelectDeviceProvider,
+                onSelect = onSelectDeviceProviderForLookup,
             )
         }
         HealthSyncPlaygroundEndpoint.DELETE_CONNECTION -> {
@@ -152,7 +154,7 @@ private fun EndpointInputs(
                 options = deviceProviderOptions,
                 selectedLabel = selectedDeviceProvider?.name,
                 displayText = { it.name },
-                onSelect = onSelectDeviceProvider,
+                onSelect = onSelectDeviceProviderForDelete,
             )
             OutlinedTextField(
                 value = deleteConnectionIdInput,

@@ -1,9 +1,11 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.data.DeviceProvider
+import com.bwell.common.models.domain.data.DeviceProviderList
+import com.bwell.common.models.domain.healthdata.healthsummary.devicemetrics.DeviceMetricsGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.healthscore.HealthScoreResult
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.HealthSyncRepository
 import com.google.gson.GsonBuilder
@@ -89,7 +91,20 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
         loadBodySystemOptions()
     }
 
-    fun onSelectDeviceProvider(provider: DeviceProvider) {
+    /** For GET_OAUTH_URL/GET_DEVICE_PROVIDER_STATUS - selection only, never touches deleteConnectionIdInput. */
+    fun onSelectDeviceProviderForLookup(provider: DeviceProvider) {
+        _selectedDeviceProvider.value = provider
+    }
+
+    /**
+     * For DELETE_CONNECTION only - prefills the id field from the selected
+     * provider's slug. Kept separate from [onSelectDeviceProviderForLookup]:
+     * all 3 provider dropdowns previously shared one callback that always
+     * overwrote deleteConnectionIdInput, silently discarding a manually
+     * edited value whenever a provider was (re-)selected on either of the
+     * two unrelated lookup cards.
+     */
+    fun onSelectDeviceProviderForDelete(provider: DeviceProvider) {
         _selectedDeviceProvider.value = provider
         _deleteConnectionIdInput.value = provider.slug
     }
@@ -108,24 +123,17 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
 
     private fun loadDeviceProviderOptions() {
         viewModelScope.launch {
-            // Reachable before login (SDK not yet initialized) - BaseSdk's
-            // accessors throw synchronously in that case, not a BWellResult
-            // error, so this needs its own catch rather than relying on
-            // BWellResult.success(). The provider picker just stays empty and
-            // its dependent cards stay disabled (see isRunDisabled) - but the
-            // exception itself is still logged, so a genuine misconfiguration
-            // is distinguishable from the expected pre-login case.
-            val result = try {
+            // Reachable before login - see guardedCall's doc. The provider
+            // picker just stays empty and its dependent cards stay disabled
+            // (see isRunDisabled) on failure.
+            val result = guardedCall<BWellResult<DeviceProviderList>?>(TAG, "loadDeviceProviderOptions", null) {
                 repository.getDeviceProviders()
-            } catch (e: Exception) {
-                Log.w(TAG, "loadDeviceProviderOptions failed", e)
-                return@launch
-            }
+            } ?: return@launch
             if (result is BWellResult.SingleResource && result.success()) {
                 val providers = result.data?.providers.orEmpty()
                 _deviceProviderOptions.value = providers
                 if (_selectedDeviceProvider.value == null) {
-                    providers.firstOrNull()?.let(::onSelectDeviceProvider)
+                    providers.firstOrNull()?.let(::onSelectDeviceProviderForDelete)
                 }
             }
         }
@@ -134,12 +142,9 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
     /** Dedupes getDeviceMetricsGroups() results by coding.code, sorted - mirrors Swift's loadDeviceMetricsCodeOptions. */
     private fun loadDeviceMetricsCodeOptions() {
         viewModelScope.launch {
-            val result = try {
+            val result = guardedCall<BWellResult<DeviceMetricsGroup>?>(TAG, "loadDeviceMetricsCodeOptions", null) {
                 repository.getDeviceMetricsGroups()
-            } catch (e: Exception) {
-                Log.w(TAG, "loadDeviceMetricsCodeOptions failed", e)
-                return@launch
-            }
+            } ?: return@launch
             if (result is BWellResult.ResourceCollection && result.success()) {
                 val options = result.data.orEmpty()
                     .mapNotNull { it.coding?.code?.let { code -> PlaygroundCodeOption(code, it.coding?.display) } }
@@ -156,12 +161,9 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
     /** Sourced from getHealthScore()'s contributing body systems - mirrors Swift's loadBodySystemOptions. */
     private fun loadBodySystemOptions() {
         viewModelScope.launch {
-            val result = try {
+            val result = guardedCall<BWellResult<HealthScoreResult>?>(TAG, "loadBodySystemOptions", null) {
                 repository.getHealthScore()
-            } catch (e: Exception) {
-                Log.w(TAG, "loadBodySystemOptions failed", e)
-                return@launch
-            }
+            } ?: return@launch
             if (result is BWellResult.SingleResource && result.success()) {
                 val options = result.data?.resource?.bodySystems.orEmpty()
                     .mapNotNull { it.bodySystemId?.let { id -> BodySystemOption(id, it.title) } }
@@ -187,6 +189,15 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
                 PlaygroundCardState.Error(e.message ?: "Unexpected exception")
             }
             _results.value = _results.value + (endpoint to cardState)
+
+            // GET_DEVICE_METRICS/GET_BODY_SYSTEM_SCORE's own copy promises
+            // their dropdowns populate "each time this card appears" - a
+            // successful sync is the actual real-world trigger for that data
+            // existing, so refresh both here rather than only once at attach().
+            if (endpoint == HealthSyncPlaygroundEndpoint.SYNC && cardState is PlaygroundCardState.Success) {
+                loadDeviceMetricsCodeOptions()
+                loadBodySystemOptions()
+            }
         }
     }
 
