@@ -141,39 +141,17 @@ import com.bwell.sampleapp.singletons.BWellSdk
 val helloStr = BWellSdk.hello()
 ```
 
-## Optional: Health Sync On-Device Adapter (Local Testing Only)
+## Health Sync
 
-The Health Sync feature (drawer item "Health Sync") works out of the box using
-only `com.bwell:bwell-sdk-kotlin-healthsync` - the vendor-neutral module. No
-on-device adapter, vendor dependency, or gated Maven repository is declared
-anywhere in this repo, so a fresh clone always builds without credentials.
-With no adapter configured, Health Sync shows the raw API Playground, with
-the 5 endpoints that need an on-device session ("Blocked").
+The Health Sync feature (drawer item "Health Sync") demonstrates the b.well
+Health Sync SDK: an API Playground to try each endpoint independently, and a
+Dashboard that visualizes synced Metrics and Body Score data.
 
-To test against a real on-device adapter (e.g. to record a demo), plug it in
-**locally** without touching any committed file:
-
-1. Copy the two templates and fill in your own JFrog credentials:
-   ```bash
-   cp healthsync-local.settings.gradle.kts.example healthsync-local.settings.gradle.kts
-   cp healthsync-local.app.gradle.kts.example healthsync-local.app.gradle.kts
-   ```
-2. Copy the neutral bridge and replace its no-op bodies with real calls into
-   the adapter (see `bwell-sdk-kotlin`'s `healthsync-sample/MainActivity.kt`
-   for the full pattern), and give it a real Health Connect manifest fragment:
-   ```bash
-   cp -r app/src/healthSyncNeutral app/src/healthSyncLocal
-   ```
-
-Both `healthsync-local.*.gradle.kts` files and `app/src/healthSyncLocal/` are
-gitignored - `app/build.gradle.kts`/`settings.gradle.kts` only pick them up if
-they exist, and a source-set swap chooses between the neutral and local
-`HealthSyncAdapterBridge` implementation at build-configuration time (the
-Gradle analogue of Swift's `#if canImport(...)`). Once the overlay is in
-place and the adapter registers successfully (which requires the SDK to
-already be initialized - i.e. logged in), the Health Sync screen becomes the
-full Dashboard (Metrics/Body Score/Playground tabs) instead of the raw
-Playground.
+Reading and writing health data, connecting cloud providers, and viewing
+synced results all work out of the box with just this repo. Full on-device
+sync (connecting a phone/wearable's local health store) requires a dedicated
+adapter package and credentials provided by b.well - contact b.well for
+access.
 
 ## Project Structure
 [AndroidManifest.xml](bwell-kotlin-android/app/src/main/java/com/bwell/sampleapp/activities/ui) is the main config.  This specifies the main activity.

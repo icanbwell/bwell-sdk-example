@@ -33,22 +33,34 @@ dependencyResolutionManagement {
         // through b.well's own Artifactory proxy (CIE-8240), content-filtered
         // so it is NEVER consulted for anything outside these two groups.
         //
-        // JFROG_READ_TOKEN is a JFrog reference/identity token, not a
-        // username+password pair - confirmed by testing both ways against
-        // the live server: Basic Auth (username + token as password) gets a
-        // 401 even with a valid token, Bearer auth gets 200. A real external
-        // consumer copying the *username+password*-shaped snippet from
-        // b.well's own internal docs/monorepo would hit this exact 401 with
-        // an otherwise-valid token - use header auth instead.
+        // Supports two credential shapes, picked by whether JFROG_READ_USER
+        // is set:
+        //   - JFROG_READ_TOKEN alone -> Bearer auth, no username. This is
+        //     the confirmed-working path: tested directly against the live
+        //     server, Basic Auth (username + token as password) got a 401
+        //     even with a valid token, Bearer got 200.
+        //   - JFROG_READ_USER + JFROG_READ_TOKEN -> standard Basic auth
+        //     (username/password), for cases where the credentials you were
+        //     issued really are a username+token pair. If this 401s, drop
+        //     JFROG_READ_USER and rely on the token alone (the path above).
         maven {
             name = "validic"
             url = uri("https://artifacts.bwell.com/artifactory/virtual-maven")
-            credentials(HttpHeaderCredentials::class) {
-                name = "Authorization"
-                value = "Bearer ${System.getenv("JFROG_READ_TOKEN") ?: "REPLACE_ME"}"
-            }
-            authentication {
-                create<HttpHeaderAuthentication>("header")
+            val jfrogUser = System.getenv("JFROG_READ_USER")
+            val jfrogToken = System.getenv("JFROG_READ_TOKEN") ?: "REPLACE_ME"
+            if (jfrogUser != null) {
+                credentials {
+                    username = jfrogUser
+                    password = jfrogToken
+                }
+            } else {
+                credentials(HttpHeaderCredentials::class) {
+                    name = "Authorization"
+                    value = "Bearer $jfrogToken"
+                }
+                authentication {
+                    create<HttpHeaderAuthentication>("header")
+                }
             }
             content {
                 includeGroup("com.validic.mobile")
