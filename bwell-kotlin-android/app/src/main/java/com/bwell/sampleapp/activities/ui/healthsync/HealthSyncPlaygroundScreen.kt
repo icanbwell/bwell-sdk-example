@@ -34,7 +34,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
  */
 @Composable
 fun HealthSyncPlaygroundScreen(viewModel: HealthSyncPlaygroundViewModel, modifier: Modifier = Modifier) {
-    LaunchedEffect(Unit) { viewModel.attach() }
+    // attach() only does its one-time setup on the first-ever mount; the
+    // refresh runs every time this screen re-enters composition (e.g.
+    // switching Dashboard tabs back to Playground) since data can arrive
+    // via a sync the Dashboard triggered, which this ViewModel otherwise
+    // has no way to observe.
+    LaunchedEffect(Unit) {
+        viewModel.attach()
+        viewModel.refreshDeviceDataOptions()
+    }
 
     val results by viewModel.results.collectAsStateWithLifecycle()
     val configured by viewModel.configured.collectAsStateWithLifecycle()

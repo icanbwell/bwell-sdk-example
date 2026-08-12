@@ -1,5 +1,10 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
+import com.bwell.common.models.domain.common.Coding
+import com.bwell.common.models.domain.healthdata.healthsummary.devicemetrics.DeviceMetricsGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.healthscore.BodySystemSummary
+import com.bwell.common.models.domain.healthdata.healthsummary.healthscore.HealthScore
+import com.bwell.common.models.domain.healthdata.healthsummary.healthscore.HealthScoreResult
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.common.models.responses.error.BWellError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -78,5 +83,94 @@ class HealthSyncPlaygroundViewModelTest {
         dispatcher.scheduler.advanceUntilIdle()
 
         assertTrue(viewModel.results.value[HealthSyncPlaygroundEndpoint.GET_DEVICE_PROVIDERS] is PlaygroundCardState.Error)
+    }
+
+    private fun deviceMetricsGroup(code: String, display: String?) = DeviceMetricsGroup(
+        id = null,
+        name = null,
+        source = null,
+        sourceDisplay = null,
+        category = null,
+        coding = Coding(code = code, display = display),
+        effectiveDateTime = null,
+        value = null,
+        interpretation = null,
+        referenceRange = null,
+        component = null,
+        references = null,
+    )
+
+    private fun healthScore(bodySystems: List<BodySystemSummary>) = HealthScore(
+        id = null,
+        overallScore = null,
+        overallGrade = null,
+        trendDirection = null,
+        trendRate = null,
+        calculationDate = null,
+        periodStart = null,
+        periodEnd = null,
+        bodySystems = bodySystems,
+        dailyScores = null,
+        quality = null,
+        recommendations = null,
+        bioAge = null,
+        actualAge = null,
+        bioAgeOffset = null,
+    )
+
+    /**
+     * Regression test for a real bug: after syncing via the Dashboard's
+     * "Sync with b.well" button (a separate ViewModel entirely), switching
+     * back to the Playground tab still showed GET_DEVICE_METRICS/
+     * GET_BODY_SYSTEM_SCORE as disabled, because attach()'s one-time gate
+     * meant their dropdowns never re-fetched. refreshDeviceDataOptions()
+     * must re-hit the repository - and reflect new data - every time it's
+     * called, unlike attach().
+     */
+    @Test
+    fun `refreshDeviceDataOptions re-fetches and reflects newly synced data on every call`() = runTest(dispatcher) {
+        val repository = FakeHealthSyncRepository(configured = true)
+        val viewModel = HealthSyncPlaygroundViewModel(repository)
+
+        viewModel.refreshDeviceDataOptions()
+        dispatcher.scheduler.advanceUntilIdle()
+        assertEquals(1, repository.getDeviceMetricsGroupsCallCount)
+        assertEquals(1, repository.getHealthScoreCallCount)
+        assertTrue(viewModel.deviceMetricsCodeOptions.value.isEmpty())
+        assertTrue(viewModel.bodySystemOptions.value.isEmpty())
+
+        // Simulate data now existing because a sync ran via the Dashboard's
+        // own ViewModel - this ViewModel has no other way to learn that.
+        repository.deviceMetricsGroupsResult = BWellResult.ResourceCollection(
+            data = listOf(deviceMetricsGroup(code = "steps", display = "Steps")),
+            pagingInfo = null,
+            error = null,
+        )
+        repository.healthScoreResult = BWellResult.SingleResource(
+            data = HealthScoreResult(resource = healthScore(listOf(BodySystemSummary("cardio", "Cardiovascular", null, "A")))),
+            error = null,
+        )
+
+        viewModel.refreshDeviceDataOptions()
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(2, repository.getDeviceMetricsGroupsCallCount)
+        assertEquals(2, repository.getHealthScoreCallCount)
+        assertEquals(listOf("steps"), viewModel.deviceMetricsCodeOptions.value.map { it.code })
+        assertEquals(listOf("cardio"), viewModel.bodySystemOptions.value.map { it.bodySystemId })
+    }
+
+    @Test
+    fun `attach only loads device data options once, even called repeatedly`() = runTest(dispatcher) {
+        val repository = FakeHealthSyncRepository(configured = true)
+        val viewModel = HealthSyncPlaygroundViewModel(repository)
+
+        viewModel.attach()
+        viewModel.attach()
+        dispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(1, repository.getDeviceProvidersCallCount)
+        assertEquals(0, repository.getDeviceMetricsGroupsCallCount)
+        assertEquals(0, repository.getHealthScoreCallCount)
     }
 }

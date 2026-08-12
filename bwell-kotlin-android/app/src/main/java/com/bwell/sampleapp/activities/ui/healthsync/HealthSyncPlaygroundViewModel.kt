@@ -81,12 +81,29 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
     private var attached = false
     private val playgroundJson = GsonBuilder().setPrettyPrinting().create()
 
-    /** Idempotent - safe to call from every screen that hosts the Playground (direct or Dashboard tab). */
+    /**
+     * One-time setup, idempotent - safe to call from every screen that hosts
+     * the Playground (direct or Dashboard tab). Callers must also call
+     * [refreshDeviceDataOptions] right after - it is not included here (see
+     * its doc).
+     */
     fun attach() {
         if (attached) return
         attached = true
         _configured.value = repository.isHealthSyncConfigured()
         loadDeviceProviderOptions()
+    }
+
+    /**
+     * Not gated like [attach] - call every time the Playground screen
+     * (re-)enters composition, e.g. on each Dashboard tab switch back to
+     * Playground. GET_DEVICE_METRICS/GET_BODY_SYSTEM_SCORE's own copy
+     * promises their dropdowns populate "each time this card appears," and
+     * a sync triggered from the Dashboard's "Sync with b.well" button runs
+     * through [HealthSyncDashboardViewModel] entirely - this ViewModel has
+     * no other way to learn that data now exists.
+     */
+    fun refreshDeviceDataOptions() {
         loadDeviceMetricsCodeOptions()
         loadBodySystemOptions()
     }
@@ -190,13 +207,8 @@ class HealthSyncPlaygroundViewModel(private val repository: HealthSyncRepository
             }
             _results.value = _results.value + (endpoint to cardState)
 
-            // GET_DEVICE_METRICS/GET_BODY_SYSTEM_SCORE's own copy promises
-            // their dropdowns populate "each time this card appears" - a
-            // successful sync is the actual real-world trigger for that data
-            // existing, so refresh both here rather than only once at attach().
             if (endpoint == HealthSyncPlaygroundEndpoint.SYNC && cardState is PlaygroundCardState.Success) {
-                loadDeviceMetricsCodeOptions()
-                loadBodySystemOptions()
+                refreshDeviceDataOptions()
             }
         }
     }

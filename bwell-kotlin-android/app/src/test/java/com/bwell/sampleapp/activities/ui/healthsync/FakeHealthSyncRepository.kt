@@ -1,6 +1,8 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
 import com.bwell.common.models.domain.data.DeviceProviderList
+import com.bwell.common.models.domain.healthdata.healthsummary.devicemetrics.DeviceMetricsGroup
+import com.bwell.common.models.domain.healthdata.healthsummary.healthscore.HealthScoreResult
 import com.bwell.common.models.responses.BWellResult
 import com.bwell.sampleapp.repository.HealthSyncRepository
 
@@ -20,6 +22,13 @@ class FakeHealthSyncRepository(
     var deviceProvidersResult: BWellResult<DeviceProviderList> =
         BWellResult.SingleResource(data = DeviceProviderList(providers = emptyList()), error = null)
 
+    var getDeviceMetricsGroupsCallCount = 0
+    var deviceMetricsGroupsResult: BWellResult<DeviceMetricsGroup> =
+        BWellResult.ResourceCollection(data = emptyList(), pagingInfo = null, error = null)
+
+    var getHealthScoreCallCount = 0
+    var healthScoreResult: BWellResult<HealthScoreResult> = BWellResult.SingleResource(data = null, error = null)
+
     override fun isHealthSyncConfigured(): Boolean = configured
 
     override suspend fun connect(): BWellResult<Unit> {
@@ -30,5 +39,15 @@ class FakeHealthSyncRepository(
     override suspend fun getDeviceProviders(): BWellResult<DeviceProviderList> {
         getDeviceProvidersCallCount++
         return deviceProvidersResult
+    }
+
+    override suspend fun getDeviceMetricsGroups(): BWellResult<DeviceMetricsGroup> {
+        getDeviceMetricsGroupsCallCount++
+        return deviceMetricsGroupsResult
+    }
+
+    override suspend fun getHealthScore(): BWellResult<HealthScoreResult> {
+        getHealthScoreCallCount++
+        return healthScoreResult
     }
 }
