@@ -20,8 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -59,16 +61,22 @@ fun HealthSyncPlaygroundScreen(viewModel: HealthSyncPlaygroundViewModel, modifie
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         item {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Text(
                     "API Playground",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
                 )
                 Text(
                     "Test bench — run any endpoint independently, raw response shown per card.",
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                 )
             }
         }
@@ -171,7 +179,6 @@ private fun EndpointInputs(
                 selectedLabel = deviceMetricsCodeOptions.firstOrNull { it.code == selectedDeviceMetricsCode }?.label,
                 displayText = { it.label },
                 onSelect = { onSelectDeviceMetricsCode(it.code) },
-                emptyHintText = "No codes available yet — sync some data first (Mobile Sync group above)",
             )
         }
         HealthSyncPlaygroundEndpoint.GET_BODY_SYSTEM_SCORE -> {
@@ -181,14 +188,18 @@ private fun EndpointInputs(
                 selectedLabel = bodySystemOptions.firstOrNull { it.bodySystemId == selectedBodySystemId }?.label,
                 displayText = { it.label },
                 onSelect = { onSelectBodySystem(it.bodySystemId) },
-                emptyHintText = "No body systems available yet — a health score must be computed first",
             )
         }
         else -> Unit
     }
 }
 
-/** A read-only dropdown backed by a live options list - ported from healthsync-sample's SmartDropdown. */
+/**
+ * A read-only dropdown backed by a live options list - ported from
+ * healthsync-sample's SmartDropdown. Renders nothing at all while
+ * [options] is empty (no "Loading…"/"No X yet" placeholder row) - the
+ * select only ever appears once there's real data to choose from.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun <T> LabeledDropdown(
@@ -197,8 +208,9 @@ private fun <T> LabeledDropdown(
     selectedLabel: String?,
     displayText: (T) -> String,
     onSelect: (T) -> Unit,
-    emptyHintText: String = "Loading options…",
 ) {
+    if (options.isEmpty()) return
+
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -206,7 +218,7 @@ private fun <T> LabeledDropdown(
         modifier = Modifier.padding(top = 8.dp),
     ) {
         OutlinedTextField(
-            value = selectedLabel ?: if (options.isEmpty()) emptyHintText else "Select…",
+            value = selectedLabel ?: "Select…",
             onValueChange = {},
             readOnly = true,
             label = { Text(label) },

@@ -5,18 +5,21 @@ import androidx.lifecycle.viewModelScope
 import com.bwell.common.models.domain.healthdata.healthsummary.devicemetrics.DeviceMetricsGroup
 import com.bwell.common.models.domain.healthdata.healthsummary.healthscore.HealthScore
 import com.bwell.common.models.responses.BWellResult
+import com.bwell.healthsync.model.SyncCounts
 import com.bwell.sampleapp.repository.HealthSyncRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/** Live progress while a sync-then-poll is in flight - ported from Swift's SyncProgress. */
-data class SyncProgress(
-    val recordsSynced: Int? = null,
-    val attempt: Int = 0,
-    val maxAttempts: Int,
-)
+/**
+ * Live progress while a sync-then-poll is in flight. `processingData` is
+ * null only in the brief window before sync() itself has returned (we don't
+ * know per-type record counts yet) - once set, the UI ticks its own
+ * simulated-processing clock against it (see HealthSyncProcessing) rather
+ * than this class carrying a live percent itself.
+ */
+data class SyncProgress(val processingData: ProcessingData? = null)
 
 /** Ported from Swift's SyncGatedState<Value>. */
 sealed interface SyncGatedState<out Value> {
@@ -117,20 +120,21 @@ class HealthSyncDashboardViewModel(private val repository: HealthSyncRepository)
     }
 
     /**
-     * Triggers a real sync() over the standard window, reports its actual
-     * record count via [onProgress] immediately, then polls [fetch] -
-     * reporting each attempt - until it returns a non-empty value or
-     * [MAX_POLL_ATTEMPTS] is reached. A sync() failure is terminal (surfaced,
-     * not silently swallowed) rather than polling blind against a call that
-     * never ran.
+     * Triggers a real sync() over the standard window, captures its actual
+     * per-type record counts as [ProcessingData] and reports it via
+     * [onProgress] immediately, then polls [fetch] - real completion
+     * detection, independent of the simulated processing clock the UI ticks
+     * against - until it returns a non-empty value or [MAX_POLL_ATTEMPTS] is
+     * reached. A sync() failure is terminal (surfaced, not silently
+     * swallowed) rather than polling blind against a call that never ran.
      */
     private suspend fun <Value> triggerSyncThenPoll(
         fetch: suspend () -> Value,
         isEmpty: (Value) -> Boolean,
         onProgress: (SyncProgress) -> Unit,
     ): PollOutcome<Value> {
-        var progress = SyncProgress(maxAttempts = MAX_POLL_ATTEMPTS)
-        onProgress(progress)
+        onProgress(SyncProgress())
+        var recordsSynced = 0
 
         try {
             reconcileSessionIfNeeded()
@@ -147,15 +151,13 @@ class HealthSyncDashboardViewModel(private val repository: HealthSyncRepository)
                 return PollOutcome.GaveUp("Sync failed: ${syncResult.error?.message()}")
             }
             val counts = (syncResult as? BWellResult.SingleResource)?.data
-            progress = progress.copy(recordsSynced = counts?.total ?: 0)
-            onProgress(progress)
+            recordsSynced = counts?.total ?: 0
+            onProgress(SyncProgress(processingData = counts?.toProcessingData()))
         } catch (e: Exception) {
             return PollOutcome.GaveUp("Sync failed: ${e.message}")
         }
 
         repeat(MAX_POLL_ATTEMPTS) { index ->
-            progress = progress.copy(attempt = index + 1)
-            onProgress(progress)
             val value = fetch()
             if (!isEmpty(value)) return PollOutcome.Found(value)
             // Skip the pacing delay after the last attempt - there's no next
@@ -164,12 +166,21 @@ class HealthSyncDashboardViewModel(private val repository: HealthSyncRepository)
             if (index < MAX_POLL_ATTEMPTS - 1) kotlinx.coroutines.delay(POLL_INTERVAL_MS)
         }
 
-        val stillEmptyMessage = if ((progress.recordsSynced ?: 0) == 0) {
+        val stillEmptyMessage = if (recordsSynced == 0) {
             "Synced 0 records from your device - nothing to process. Check connect/requestPermissions ran first."
         } else {
-            "Synced ${progress.recordsSynced} records, but b.well hasn't finished processing them yet. Try again shortly."
+            "Synced $recordsSynced records, but b.well hasn't finished processing them yet. Try again shortly."
         }
         return PollOutcome.GaveUp(stillEmptyMessage)
+    }
+
+    /** Only resource types with records synced feed the processing animation. */
+    private fun SyncCounts.toProcessingData(): ProcessingData? {
+        val resources = perType
+            .filter { (_, count) -> count > 0 }
+            .map { (type, count) -> ProcessingResource(HealthSyncProcessing.formatResourceLabel(type.name), count) }
+        if (resources.isEmpty()) return null
+        return ProcessingData(total = resources.sumOf { it.count }, resources = resources, startedAtMs = System.currentTimeMillis())
     }
 
     /**

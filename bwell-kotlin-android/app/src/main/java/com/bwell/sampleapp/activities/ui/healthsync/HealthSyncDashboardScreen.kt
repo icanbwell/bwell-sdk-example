@@ -1,20 +1,30 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -23,18 +33,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bwell.common.models.domain.common.Quantity
+import kotlinx.coroutines.delay
 
 private enum class DashboardTab(val title: String) {
     METRICS("Metrics"),
     BODY_SCORE("Body Score"),
     PLAYGROUND("Playground"),
 }
+
+/** Shared with the "processed" checkmark tint so the two always match. */
+private val ProcessingGreen = Color(0xFF12B76A)
+private val ProcessingGreenLight = Color(0xFFD1FADF)
+private val ProcessingGreenDark = Color(0xFF067647)
+private val ProcessingGaugeBackground = Color(0xFFEEF3F1)
 
 /**
  * Shown instead of the raw Playground when an on-device adapter is
@@ -81,13 +110,22 @@ private fun MetricsTab(viewModel: HealthSyncDashboardViewModel) {
         is SyncGatedState.Loaded -> LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(current.value) { group ->
                 Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp)) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text(
-                            group.coding?.display ?: group.name ?: "Metric",
-                            style = MaterialTheme.typography.titleSmall,
-                        )
-                        group.sourceDisplay?.firstOrNull()?.let {
-                            Text(it, style = MaterialTheme.typography.bodySmall)
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                group.coding?.display ?: group.name ?: "Metric",
+                                style = MaterialTheme.typography.titleSmall,
+                            )
+                            group.sourceDisplay?.firstOrNull()?.let {
+                                Text(it, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                        formattedQuantity(group.value?.valueQuantity)?.let {
+                            Text(it, style = MaterialTheme.typography.titleMedium)
                         }
                     }
                 }
@@ -141,61 +179,159 @@ private fun CenteredProgress() {
 }
 
 /**
- * `progress` non-null means actively syncing - shows the real record count
- * sync() returned, plus a numeric attempt counter, not just a spinner with
- * no way to tell if it's stuck. Ported from Swift's SyncPromptView.
+ * `progress` non-null means actively syncing. Ported from Swift's
+ * SyncPromptView, redesigned to match ui-platform's DeviceProcessingState:
+ * once sync() returns real per-type record counts, a simulated processing
+ * gauge ticks (record-weighted across resource types, see
+ * HealthSyncProcessing) instead of a bare "Checking (n/30)" counter - only
+ * real data arrival (the poll this view doesn't own) ever actually
+ * completes the wait.
  */
 @Composable
 private fun SyncPromptView(progress: SyncProgress?, errorMessage: String?, onSync: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier.align(Alignment.Center).padding(24.dp),
+            modifier = Modifier.align(Alignment.Center).fillMaxWidth().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Icon(Icons.Filled.Sync, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-
             if (progress != null) {
-                Text("Syncing with b.well…", style = MaterialTheme.typography.titleMedium)
-                val recordsSynced = progress.recordsSynced
-                if (recordsSynced != null) {
+                val processingData = progress.processingData
+                if (processingData == null) {
+                    Icon(Icons.Filled.Sync, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(
-                        "Synced $recordsSynced record${if (recordsSynced == 1) "" else "s"} from your device. " +
-                            "Waiting for b.well to process ${if (recordsSynced == 0) "" else "them"}…",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        "Syncing with b.well…",
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                } else {
                     Text(
                         "Reading from your device…",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                }
-                if (progress.attempt > 0) {
-                    LinearProgressIndicator(
-                        progress = progress.attempt.toFloat() / progress.maxAttempts,
-                        modifier = Modifier.width(200.dp).padding(top = 12.dp),
-                    )
-                    Text(
-                        "Checking (${progress.attempt}/${progress.maxAttempts})",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                } else {
                     CircularProgressIndicator(modifier = Modifier.padding(top = 12.dp))
+                } else {
+                    var tick by remember { mutableLongStateOf(System.currentTimeMillis()) }
+                    LaunchedEffect(processingData) {
+                        while (true) {
+                            tick = System.currentTimeMillis()
+                            delay(500)
+                        }
+                    }
+                    val computed = remember(processingData, tick) {
+                        HealthSyncProcessing.computeProgress(processingData, tick)
+                    }
+                    Text(
+                        "Syncing with b.well…",
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    when (computed) {
+                        is ProcessingProgress.Active -> {
+                            ProcessingFillGauge(percent = computed.percent, total = computed.total)
+                            Spacer(Modifier.height(16.dp))
+                            val isDone = computed.currentState == ProcessingResourceState.PROCESSED
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    "${computed.currentLabel} ${if (isDone) "processed" else "processing"}${if (isDone) "" else "…"}",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                if (isDone) {
+                                    Spacer(Modifier.width(6.dp))
+                                    Icon(
+                                        Icons.Filled.Check,
+                                        contentDescription = null,
+                                        tint = ProcessingGreen,
+                                        modifier = Modifier.size(16.dp),
+                                    )
+                                }
+                            }
+                        }
+                        is ProcessingProgress.Inactive -> {
+                            Text(
+                                "Waiting for b.well to process your data…",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                            CircularProgressIndicator(modifier = Modifier.padding(top = 12.dp))
+                        }
+                    }
                 }
             } else {
+                Icon(Icons.Filled.Sync, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(
                     if (errorMessage != null) "Sync incomplete" else "No data yet",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 errorMessage?.let {
-                    Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                    )
                 }
-                Button(onClick = onSync, modifier = Modifier.padding(top = 12.dp)) {
+                Button(onClick = onSync, modifier = Modifier.padding(top = 16.dp)) {
                     Text("Sync with b.well")
                 }
             }
         }
     }
+}
+
+/**
+ * The "filling circle" gauge: a soft circle that fills bottom-up with green
+ * as [percent] rises, with [total] centered - ported from ui-platform's
+ * ProcessingFillGauge (the animated wave crest is simplified away; the
+ * record-weighted timing logic it visualizes is the part that matters here).
+ */
+@Composable
+private fun ProcessingFillGauge(percent: Int, total: Int) {
+    val animatedFraction by animateFloatAsState(
+        targetValue = percent / 100f,
+        animationSpec = tween(700),
+        label = "processingFill",
+    )
+    Box(
+        modifier = Modifier
+            .size(120.dp)
+            .clip(CircleShape)
+            .background(Brush.radialGradient(listOf(Color.White, ProcessingGaugeBackground)))
+            .semantics {
+                progressBarRangeInfo = ProgressBarRangeInfo(current = percent.toFloat(), range = 0f..100f)
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        Canvas(modifier = Modifier.matchParentSize()) {
+            val fillHeight = size.height * animatedFraction
+            drawRect(
+                brush = Brush.verticalGradient(listOf(ProcessingGreen, ProcessingGreenLight)),
+                topLeft = Offset(0f, size.height - fillHeight),
+                size = Size(size.width, fillHeight),
+            )
+        }
+        Text(
+            "$total",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = ProcessingGreenDark,
+        )
+    }
+}
+
+/** Internal, not private, so [HealthSyncDashboardScreenTest] can exercise its formatting branches directly. */
+internal fun formattedQuantity(quantity: Quantity?): String? {
+    val value = quantity?.value ?: return null
+    val formatted = if (value % 1.0 == 0.0) "%.0f".format(value) else "%.1f".format(value)
+    return "$formatted ${quantity.unit ?: ""}".trim()
 }
