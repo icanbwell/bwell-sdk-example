@@ -110,10 +110,16 @@ fun HealthSyncDashboardScreen(
             }
         }
 
-        when (DashboardTab.entries[selectedTab]) {
-            DashboardTab.METRICS -> MetricsTab(dashboardViewModel)
-            DashboardTab.BODY_SCORE -> BodyScoreTab(dashboardViewModel)
-            DashboardTab.PLAYGROUND -> HealthSyncPlaygroundScreen(playgroundViewModel)
+        // weight(1f), not left unweighted - otherwise each tab body measures
+        // fillMaxSize() against the Column's full height rather than what's
+        // actually left below the TabRow, throwing off SyncPromptView's
+        // vertical centering by roughly half the TabRow's height.
+        Box(modifier = Modifier.weight(1f)) {
+            when (DashboardTab.entries[selectedTab]) {
+                DashboardTab.METRICS -> MetricsTab(dashboardViewModel)
+                DashboardTab.BODY_SCORE -> BodyScoreTab(dashboardViewModel)
+                DashboardTab.PLAYGROUND -> HealthSyncPlaygroundScreen(playgroundViewModel)
+            }
         }
     }
 }
