@@ -1,7 +1,7 @@
 package com.bwell.sampleapp.activities.ui.healthsync
 
-import android.content.Intent
 import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -165,7 +165,7 @@ fun PlaygroundCard(
                 endpoint.documentationUrl?.let { url ->
                     Spacer(Modifier.height(16.dp))
                     OutlinedButton(
-                        onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) },
+                        onClick = { CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(url)) },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text("More info on the doc page")

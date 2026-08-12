@@ -7,10 +7,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,12 +20,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
@@ -64,6 +68,20 @@ private val ProcessingGreen = Color(0xFF12B76A)
 private val ProcessingGreenLight = Color(0xFFD1FADF)
 private val ProcessingGreenDark = Color(0xFF067647)
 private val ProcessingGaugeBackground = Color(0xFFEEF3F1)
+
+/** Shared look for every Metrics/Body Score data card - white on the app's tinted background, softly rounded, lightly elevated. */
+private val DashboardCardShape = RoundedCornerShape(20.dp)
+
+@Composable
+private fun DashboardCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    ElevatedCard(
+        modifier = modifier,
+        shape = DashboardCardShape,
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
+        content = content,
+    )
+}
 
 /**
  * Shown instead of the raw Playground when an on-device adapter is
@@ -107,11 +125,15 @@ private fun MetricsTab(viewModel: HealthSyncDashboardViewModel) {
         is SyncGatedState.Loading -> CenteredProgress()
         is SyncGatedState.Empty -> SyncPromptView(progress = null, errorMessage = current.errorMessage, onSync = viewModel::syncMetrics)
         is SyncGatedState.Syncing -> SyncPromptView(progress = current.progress, errorMessage = null, onSync = viewModel::syncMetrics)
-        is SyncGatedState.Loaded -> LazyColumn(modifier = Modifier.fillMaxSize()) {
+        is SyncGatedState.Loaded -> LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
             items(current.value) { group ->
-                Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp)) {
+                DashboardCard(modifier = Modifier.fillMaxWidth()) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(12.dp),
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -121,11 +143,16 @@ private fun MetricsTab(viewModel: HealthSyncDashboardViewModel) {
                                 style = MaterialTheme.typography.titleSmall,
                             )
                             group.sourceDisplay?.firstOrNull()?.let {
-                                Text(it, style = MaterialTheme.typography.bodySmall)
+                                Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                         formattedQuantity(group.value?.valueQuantity)?.let {
-                            Text(it, style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                it,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
                         }
                     }
                 }
@@ -143,26 +170,53 @@ private fun BodyScoreTab(viewModel: HealthSyncDashboardViewModel) {
         is SyncGatedState.Syncing -> SyncPromptView(progress = current.progress, errorMessage = null, onSync = viewModel::syncBodyScore)
         is SyncGatedState.Loaded -> {
             val score = current.value
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            val bodySystems = score.bodySystems.orEmpty()
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
                 item {
-                    Card(modifier = Modifier.fillMaxWidth()) {
+                    DashboardCard(modifier = Modifier.fillMaxWidth()) {
                         Column(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Text("Biological Age", style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                "Biological Age",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
                             Text(
                                 score.bioAge?.let { "%.0f".format(it) } ?: "—",
                                 style = MaterialTheme.typography.displaySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary,
                             )
                         }
                     }
                 }
-                items(score.bodySystems.orEmpty()) { system ->
-                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(system.title ?: system.bodySystemId ?: "Body system")
-                            system.grade?.let { Text("Grade $it", style = MaterialTheme.typography.bodySmall) }
+                if (bodySystems.isNotEmpty()) {
+                    item {
+                        Text(
+                            "BODY SYSTEMS",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 6.dp),
+                        )
+                    }
+                }
+                items(bodySystems) { system ->
+                    DashboardCard(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(system.title ?: system.bodySystemId ?: "Body system", style = MaterialTheme.typography.titleSmall)
+                            system.grade?.let {
+                                Text(
+                                    "Grade $it",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                         }
                     }
                 }

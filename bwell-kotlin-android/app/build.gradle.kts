@@ -140,6 +140,10 @@ dependencies {
     // visibility while testing - not exposed as SDK surface anywhere.
     // Matches the internal healthsync-sample's own use of the same library.
     implementation("com.google.code.gson:gson:2.10.1")
+    // Playground info sheet: opens doc links in an in-app Custom Tab instead
+    // of handing off to a full external browser - the Android analogue of
+    // the Swift app's SafariView wrapper.
+    implementation("androidx.browser:browser:1.8.0")
     implementation ("androidx.core:core-ktx:1.12.0")
     implementation ("androidx.appcompat:appcompat:1.6.1")
     implementation ("com.google.android.material:material:1.11.0")
