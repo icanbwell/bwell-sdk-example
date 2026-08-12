@@ -156,10 +156,9 @@ private val HEALTH_SYNC_GATED_ENDPOINTS = setOf(
 
 /** Locked copy - must match Swift's HealthSyncPlaygroundViewModel verbatim. */
 const val HEALTH_SYNC_NOT_CONFIGURED_MESSAGE =
-    "Health Sync on-device sync: some endpoints require a third-party health-data provider " +
-        "integration. Credential provisioning for this integration is currently under " +
-        "consideration — these endpoints will show a 'Health Sync Credentials Required' " +
-        "state until that's finalized."
+    "These endpoints require the on-device Health Sync adapter, which isn't included in " +
+        "this public sample app. Reach out to your b.well account manager to get it " +
+        "configured."
 
 /**
  * Pre-emptive card-level gating: unlike Swift (which still lets a tap

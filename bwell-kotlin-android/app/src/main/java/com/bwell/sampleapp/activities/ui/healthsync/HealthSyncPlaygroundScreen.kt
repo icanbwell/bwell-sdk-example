@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -92,44 +91,39 @@ fun HealthSyncPlaygroundScreen(viewModel: HealthSyncPlaygroundViewModel, modifie
         for (group in HealthSyncPlaygroundGroup.entries) {
             val endpoints = HealthSyncPlaygroundEndpoint.entries.filter { it.group == group }
             item {
-                Text(
-                    group.title.uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-            if (group == HealthSyncPlaygroundGroup.READ_DATA) {
-                item {
-                    PlaygroundNoteBanner(
-                        "Run connect, requestPermissions, and sync first (Mobile Sync group above) — " +
-                            "Read Data reflects whatever was last synced. Data appears within 5 min.",
-                    )
-                }
-            }
-            items(endpoints) { endpoint ->
-                PlaygroundCard(
-                    endpoint = endpoint,
-                    state = results[endpoint] ?: PlaygroundCardState.Idle,
-                    isBlocked = HealthSyncGating.isBlocked(endpoint, configured),
-                    blockedReason = HealthSyncGating.blockedReason(endpoint, configured),
-                    runDisabled = isRunDisabled(endpoint),
-                    onRun = { viewModel.run(endpoint) },
-                ) {
-                    EndpointInputs(
-                        endpoint = endpoint,
-                        deviceProviderOptions = deviceProviderOptions,
-                        selectedDeviceProvider = selectedDeviceProvider,
-                        onSelectDeviceProviderForLookup = viewModel::onSelectDeviceProviderForLookup,
-                        onSelectDeviceProviderForDelete = viewModel::onSelectDeviceProviderForDelete,
-                        deleteConnectionIdInput = deleteConnectionIdInput,
-                        onDeleteConnectionIdInputChanged = viewModel::onDeleteConnectionIdInputChanged,
-                        deviceMetricsCodeOptions = deviceMetricsCodeOptions,
-                        selectedDeviceMetricsCode = selectedDeviceMetricsCode,
-                        onSelectDeviceMetricsCode = viewModel::onSelectDeviceMetricsCode,
-                        bodySystemOptions = bodySystemOptions,
-                        selectedBodySystemId = selectedBodySystemId,
-                        onSelectBodySystem = viewModel::onSelectBodySystem,
-                    )
+                PlaygroundGroupBox(title = group.title) {
+                    if (group == HealthSyncPlaygroundGroup.READ_DATA) {
+                        PlaygroundNoteBanner(
+                            "Run connect, requestPermissions, and sync first (Mobile Sync group above) — " +
+                                "Read Data reflects whatever was last synced. Data appears within 5 min.",
+                        )
+                    }
+                    endpoints.forEach { endpoint ->
+                        PlaygroundCard(
+                            endpoint = endpoint,
+                            state = results[endpoint] ?: PlaygroundCardState.Idle,
+                            isBlocked = HealthSyncGating.isBlocked(endpoint, configured),
+                            blockedReason = HealthSyncGating.blockedReason(endpoint, configured),
+                            runDisabled = isRunDisabled(endpoint),
+                            onRun = { viewModel.run(endpoint) },
+                        ) {
+                            EndpointInputs(
+                                endpoint = endpoint,
+                                deviceProviderOptions = deviceProviderOptions,
+                                selectedDeviceProvider = selectedDeviceProvider,
+                                onSelectDeviceProviderForLookup = viewModel::onSelectDeviceProviderForLookup,
+                                onSelectDeviceProviderForDelete = viewModel::onSelectDeviceProviderForDelete,
+                                deleteConnectionIdInput = deleteConnectionIdInput,
+                                onDeleteConnectionIdInputChanged = viewModel::onDeleteConnectionIdInputChanged,
+                                deviceMetricsCodeOptions = deviceMetricsCodeOptions,
+                                selectedDeviceMetricsCode = selectedDeviceMetricsCode,
+                                onSelectDeviceMetricsCode = viewModel::onSelectDeviceMetricsCode,
+                                bodySystemOptions = bodySystemOptions,
+                                selectedBodySystemId = selectedBodySystemId,
+                                onSelectBodySystem = viewModel::onSelectBodySystem,
+                            )
+                        }
+                    }
                 }
             }
         }
