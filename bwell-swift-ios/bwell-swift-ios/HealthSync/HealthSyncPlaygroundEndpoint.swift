@@ -13,6 +13,7 @@
 //  endpoints remain in this set.
 //
 
+import BWellHealthSync
 import Foundation
 
 enum HealthSyncPlaygroundGroup: String, CaseIterable {
@@ -26,6 +27,7 @@ enum HealthSyncPlaygroundEndpoint: String, PlaygroundEndpoint {
     case disconnect
     case requestPermissions
     case sync
+    case getCurrentUser
     case getOauthUrl
     case setupMobileSync
     case getDeviceUserStatus
@@ -41,13 +43,37 @@ enum HealthSyncPlaygroundEndpoint: String, PlaygroundEndpoint {
 
     var title: String { rawValue }
 
-    var isBlocked: Bool { false }
+    /// The 5 endpoints that call `client.healthSync` directly and so
+    /// require an on-device adapter to be linked (see
+    /// HealthSyncPlaygroundViewModel.swift's file header) - everything else
+    /// (setupMobileSync/getDeviceUserStatus, Cloud Providers, Read Data)
+    /// calls core SDK managers that work in a credential-less build once
+    /// logged in. Mirrors Kotlin's HEALTH_SYNC_GATED_ENDPOINTS.
+    private static let gatedEndpoints: Set<HealthSyncPlaygroundEndpoint> = [
+        .connect, .disconnect, .requestPermissions, .sync, .getCurrentUser,
+    ]
 
-    var blockedReason: String? { nil }
+    /// Locked copy - must match Kotlin's HealthSyncPlaygroundEndpoint.kt verbatim.
+    static let notConfiguredMessage =
+        "These endpoints require the on-device Health Sync adapter, which isn't included " +
+        "in this public sample app. Reach out to your b.well account manager to get it " +
+        "configured."
+
+    /// Pre-emptive card-level gating: when no adapter is linked,
+    /// `BWellHealthSyncType.isConfigured` stays permanently false (the
+    /// `#if canImport` in HealthSyncPlaygroundViewModel.attach() compiles
+    /// `configure()` out entirely), so this disables the 5 gated endpoints'
+    /// Run buttons outright rather than letting the tap happen and catching
+    /// the resulting `HealthSyncError.notConfigured`.
+    var isBlocked: Bool {
+        !BWellHealthSyncType.isConfigured && Self.gatedEndpoints.contains(self)
+    }
+
+    var blockedReason: String? { isBlocked ? Self.notConfiguredMessage : nil }
 
     var group: HealthSyncPlaygroundGroup {
         switch self {
-        case .setupMobileSync, .getDeviceUserStatus, .requestPermissions, .connect, .sync, .disconnect:
+        case .setupMobileSync, .getDeviceUserStatus, .requestPermissions, .connect, .sync, .disconnect, .getCurrentUser:
             return .mobileSync
         case .getDeviceProviders, .getOauthUrl, .getDeviceProviderStatus, .deleteConnection:
             return .cloudProviders
@@ -67,6 +93,7 @@ enum HealthSyncPlaygroundEndpoint: String, PlaygroundEndpoint {
         case .disconnect: path = "disconnect-mobile-sync"
         case .requestPermissions: path = "request-permissions"
         case .sync: path = "sync-health-data"
+        case .getCurrentUser: path = nil
         case .setupMobileSync: path = "setup-mobile-sync"
         case .getDeviceUserStatus: path = "get-device-user-status"
         case .getDeviceProviderStatus: path = "get-device-provider-status"
@@ -88,6 +115,8 @@ enum HealthSyncPlaygroundEndpoint: String, PlaygroundEndpoint {
             return "The connect method in the b.well SDK establishes an on-device health sync session for a given source, composing the underlying provisioning steps automatically. This is the recommended entry point for connecting an on-device health source — prefer it over calling setupMobileSync directly."
         case .disconnect:
             return "The disconnect method in the b.well SDK ends an on-device health sync session and removes the underlying connection."
+        case .getCurrentUser:
+            return "The currentUser method in the b.well SDK returns the user (deviceUserId + organizationId) of your active on-device session, or nil if no session is active. Useful for checking whether a stale session belongs to a different b.well user before starting a new one."
         case .requestPermissions:
             return "The requestPermissions method in the b.well SDK requests user authorization for the specified health data types from the connected on-device health source."
         case .sync:
@@ -137,6 +166,8 @@ enum HealthSyncPlaygroundEndpoint: String, PlaygroundEndpoint {
             return "Starts syncing your health data with b.well. Calls setupMobileSync, then starts your on-device session."
         case .disconnect:
             return "Stops syncing and removes your connection from b.well. Ends your on-device session, then calls deleteConnection."
+        case .getCurrentUser:
+            return "Shows the user of your active on-device session, if any. Calls currentUser."
         case .requestPermissions:
             return "Asks your device for permission to read your health data. Calls requestPermissions."
         case .sync:

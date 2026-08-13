@@ -102,6 +102,16 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
         }
     }
 
+    /// Re-populates both dropdowns sourced from another endpoint's live
+    /// response - called right after a successful `sync` (see
+    /// runPlaygroundEndpoint) so newly-synced data shows up on this same
+    /// screen without waiting for the picker's own `.task` to remount.
+    /// Mirrors Kotlin's HealthSyncPlaygroundViewModel.refreshDeviceDataOptions().
+    func refreshDeviceDataOptions() {
+        loadDeviceMetricsCodeOptions()
+        loadBodySystemOptions()
+    }
+
     /// (Re-)populates the getDeviceMetrics code dropdown from
     /// getDeviceMetricsGroups() - called each time that card appears, since
     /// which codes exist depends on what's been synced (Mobile Sync group
@@ -170,14 +180,17 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
             do {
                 let description = try await run(endpoint, client: client)
                 playgroundResults[endpoint] = .success(description)
+                if endpoint == .sync {
+                    refreshDeviceDataOptions()
+                }
             } catch PlaygroundInputError.missingInput(let message) {
                 playgroundResults[endpoint] = .error(message)
             } catch HealthSyncError.notConfigured {
-                // No on-device health source is linked in this build (see
-                // file header) - vendor-neutral by design, not a bug.
-                playgroundResults[endpoint] = .error(
-                    "Health Sync on-device sync: some endpoints require a third-party health-data provider integration. Credential provisioning for this integration is currently under consideration - these endpoints will show a 'Health Sync Credentials Required' state until that's finalized."
-                )
+                // Shouldn't be reachable - the 5 gated endpoints' Run
+                // buttons are pre-emptively disabled via isBlocked/
+                // blockedReason above. Kept as a defensive fallback, same
+                // copy as that locked-state message.
+                playgroundResults[endpoint] = .error(HealthSyncPlaygroundEndpoint.notConfiguredMessage)
             } catch {
                 playgroundResults[endpoint] = .error("\(error)")
             }
@@ -191,12 +204,19 @@ final class HealthSyncPlaygroundViewModel: ObservableObject {
     private func run(_ endpoint: HealthSyncPlaygroundEndpoint, client: BWellClient) async throws -> String {
         switch endpoint {
         case .connect:
+            try await reconcileHealthSyncSessionIfNeeded(client: client, connectionId: Self.playgroundConnectionId)
             try await client.healthSync.connect()
             return "connect() completed successfully."
 
         case .disconnect:
             try await client.healthSync.disconnect()
             return "disconnect() completed successfully."
+
+        case .getCurrentUser:
+            guard let user = try await client.healthSync.currentUser() else {
+                return "No active session."
+            }
+            return "userId: \(user.userId)\norganizationId: \(user.organizationId)"
 
         case .requestPermissions:
             try await client.healthSync.requestPermissions(Set(HealthDataType.allCases))

@@ -7,8 +7,10 @@
 //  PlaygroundCard (see Playground/PlaygroundCard.swift). Covers the
 //  composition primitives (`connect`/`disconnect`), the HealthSync port's
 //  own primitives (`requestPermissions`/`sync`), and the 9 DCON-4451
-//  endpoints `ui-platform` uses; the 4 blocked ones render disabled rather
-//  than being omitted, so the gaps stay visible instead of silently missing.
+//  endpoints `ui-platform` uses; the 5 endpoints that need an on-device
+//  adapter render disabled (not omitted) when none is linked, so the gaps
+//  stay visible instead of silently missing (see
+//  HealthSyncPlaygroundEndpoint.isBlocked).
 //
 
 import BWellSDK
@@ -51,6 +53,13 @@ struct HealthSyncPlaygroundView: View {
             }
         }
         .background(Color(.systemGroupedBackground))
+        // Re-checks for newly-synced data every time this screen (re-)appears -
+        // e.g. jumping back to the Playground tab after syncing from the
+        // Dashboard's Metrics/Body Score tabs, which this ViewModel has no
+        // other way to observe. Mirrors Kotlin's HealthSyncPlaygroundScreen,
+        // which calls the equivalent refresh from a screen-level
+        // LaunchedEffect(Unit) rather than from the individual pickers.
+        .onAppear { viewModel.refreshDeviceDataOptions() }
     }
 
     // MARK: - Group header
@@ -63,51 +72,64 @@ struct HealthSyncPlaygroundView: View {
 
     // MARK: - Provider dropdown (embedded in the cards that need it)
 
+    @ViewBuilder
     private var providerPicker: some View {
-        Picker("Provider", selection: $viewModel.selectedDeviceProvider) {
-            ForEach(viewModel.deviceProviderOptions, id: \.slug) { provider in
-                Text(provider.name).tag(Optional(provider))
+        if !viewModel.deviceProviderOptions.isEmpty {
+            Picker("Provider", selection: $viewModel.selectedDeviceProvider) {
+                ForEach(viewModel.deviceProviderOptions, id: \.slug) { provider in
+                    Text(provider.name).tag(Optional(provider))
+                }
             }
+            .pickerStyle(.menu)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .playgroundFieldStyle()
+            .contentShape(Rectangle())
         }
-        .pickerStyle(.menu)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .playgroundFieldStyle()
-        .contentShape(Rectangle())
     }
 
     // MARK: - Device metrics code dropdown
 
+    /// Renders nothing at all while there are no options yet (no "All"
+    /// placeholder) - matches Kotlin's LabeledDropdown, which only ever
+    /// appears once there's real data to choose from. Fetching itself lives
+    /// in HealthSyncPlaygroundView.body's screen-level `.onAppear`, not here.
+    @ViewBuilder
     private var deviceMetricsCodePicker: some View {
-        Picker("Code", selection: $viewModel.selectedDeviceMetricsCode) {
-            Text("All").tag(Optional<String>.none)
-            ForEach(viewModel.deviceMetricsCodeOptions) { option in
-                Text(option.label).tag(Optional(option.code))
+        if !viewModel.deviceMetricsCodeOptions.isEmpty {
+            Picker("Code", selection: $viewModel.selectedDeviceMetricsCode) {
+                Text("All").tag(Optional<String>.none)
+                ForEach(viewModel.deviceMetricsCodeOptions) { option in
+                    Text(option.label).tag(Optional(option.code))
+                }
             }
+            .pickerStyle(.menu)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .playgroundFieldStyle()
+            .contentShape(Rectangle())
         }
-        .pickerStyle(.menu)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .playgroundFieldStyle()
-        .contentShape(Rectangle())
-        .task { viewModel.loadDeviceMetricsCodeOptions() }
     }
 
     // MARK: - Body system dropdown
 
+    /// Same "nothing until options exist" rule as deviceMetricsCodePicker above.
+    @ViewBuilder
     private var bodySystemPicker: some View {
-        Picker("Body system", selection: $viewModel.selectedBodySystemId) {
-            // Just the human-readable title here - the code itself (e.g.
-            // "cardiovascular") barely differs from its title
-            // ("Cardiovascular"), so "code - title" reads as redundant noise
-            // for this one, unlike the device-metrics code picker.
-            ForEach(viewModel.bodySystemOptions) { option in
-                Text(option.display ?? option.code).tag(Optional(option.code))
+        if !viewModel.bodySystemOptions.isEmpty {
+            Picker("Body system", selection: $viewModel.selectedBodySystemId) {
+                // Just the human-readable title here - the code itself
+                // (e.g. "cardiovascular") barely differs from its title
+                // ("Cardiovascular"), so "code - title" reads as
+                // redundant noise for this one, unlike the
+                // device-metrics code picker.
+                ForEach(viewModel.bodySystemOptions) { option in
+                    Text(option.display ?? option.code).tag(Optional(option.code))
+                }
             }
+            .pickerStyle(.menu)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .playgroundFieldStyle()
+            .contentShape(Rectangle())
         }
-        .pickerStyle(.menu)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .playgroundFieldStyle()
-        .contentShape(Rectangle())
-        .task { viewModel.loadBodySystemOptions() }
     }
 
     // MARK: - Endpoint card

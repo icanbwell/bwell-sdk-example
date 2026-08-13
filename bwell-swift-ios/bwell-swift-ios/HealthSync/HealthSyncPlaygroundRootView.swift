@@ -9,18 +9,39 @@
 //  from inside the authenticated tab flow). This view just attaches the
 //  Playground to the existing session from SDKManager.
 //
+//  With an on-device adapter configured (BWellHealthSyncType.isConfigured),
+//  this shows the polished HealthSyncDashboardView (Metrics/Body Score/
+//  Playground tabs) instead of the raw Playground directly - with no
+//  adapter, behavior is unchanged from before: just the Playground.
+//
 
+import BWellHealthSync
 import SwiftUI
 
 struct HealthSyncPlaygroundRootView: View {
     @EnvironmentObject private var sdkManager: SDKManager
     @StateObject private var viewModel = HealthSyncPlaygroundViewModel()
 
+    // BWellHealthSyncType.isConfigured is a plain static SDK property, not
+    // something SwiftUI observes - reading it directly in `body` means the
+    // very first render (before attach() below has run) permanently decides
+    // this branch, even once configure() succeeds moments later. Mirroring
+    // it into @State and updating that after attach() runs is what actually
+    // triggers the re-render into the Dashboard branch.
+    @State private var isAdapterConfigured = BWellHealthSyncType.isConfigured
+
     var body: some View {
         Group {
             if let client = sdkManager.sdk {
-                HealthSyncPlaygroundView(viewModel: viewModel)
-                    .onAppear { viewModel.attach(client: client) }
+                if isAdapterConfigured {
+                    HealthSyncDashboardView(client: client)
+                } else {
+                    HealthSyncPlaygroundView(viewModel: viewModel)
+                        .onAppear {
+                            viewModel.attach(client: client)
+                            isAdapterConfigured = BWellHealthSyncType.isConfigured
+                        }
+                }
             } else {
                 Text("Log in to use Health Sync.")
                     .foregroundStyle(.secondary)
