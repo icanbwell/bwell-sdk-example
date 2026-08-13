@@ -46,9 +46,20 @@ struct HealthSyncDashboardView: View {
                 HealthSyncPlaygroundView(viewModel: playgroundViewModel)
             }
         }
+        // One consistent background behind the picker and every tab's
+        // content - without this, the picker's padding sits on the default
+        // white background while each tab's own .systemGroupedBackground
+        // starts right below it, showing as a thin seam at the boundary.
+        .background(Color(.systemGroupedBackground))
         .onAppear {
             dashboardViewModel.attach(client: client)
             playgroundViewModel.attach(client: client)
+        }
+        .navigationDestination(for: MetricDetailRoute.self) { route in
+            MetricDetailView(route: route)
+        }
+        .navigationDestination(for: BodySystemDetailRoute.self) { route in
+            BodySystemDetailView(route: route)
         }
     }
 }
@@ -67,22 +78,42 @@ private struct HealthMetricsTabView: View {
         case .syncing(let progress):
             SyncPromptView(progress: progress, errorMessage: nil, action: viewModel.syncMetrics)
         case .loaded(let groups):
-            // DeviceMetricsGroup.id is optional (server-provided FHIR id, not
-            // guaranteed) - index-based identity is fine for a read-only list.
-            List(Array(groups.enumerated()), id: \.offset) { _, group in
-                HealthCardRow(content: rowContent(for: group))
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 24) {
+                    ForEach(groupMetricsByCategory(groups)) { category in
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(category.label)
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                            MetricCardGrid(items: category.items) { item in
+                                NavigationLink(value: MetricDetailRoute(
+                                    title: title(for: item.group),
+                                    groupCode: item.group.coding?.code
+                                )) {
+                                    card(for: item.group)
+                                }
+                                .buttonStyle(CardPressButtonStyle())
+                            }
+                        }
+                    }
+                }
+                .padding()
             }
-            .listStyle(.plain)
             .refreshable { await viewModel.refreshMetrics() }
         }
     }
 
-    private func rowContent(for group: BWell.DeviceMetricsGroup) -> HealthDataRowContent {
-        HealthDataRowContent(
-            title: group.coding?.display ?? group.name ?? "Metric",
-            subtitle: group.sourceDisplay?.first,
-            date: group.effectiveDateTime,
-            value: formattedQuantity(group.value?.valueQuantity)
+    private func title(for group: BWell.DeviceMetricsGroup) -> String {
+        group.coding?.display ?? group.name ?? "Metric"
+    }
+
+    private func card(for group: BWell.DeviceMetricsGroup) -> some View {
+        let parts = formattedQuantityParts(group.value?.valueQuantity)
+        return MetricCardView(
+            title: title(for: group),
+            value: parts?.value,
+            unit: parts?.unit,
+            footer: group.effectiveDateTime.map { "Updated on \($0.dateFormatter())" }
         )
     }
 }
@@ -102,18 +133,39 @@ private struct HealthBodyScoreTabView: View {
             SyncPromptView(progress: progress, errorMessage: nil, action: viewModel.syncBodyScore)
         case .loaded(let score):
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Health Score").font(.title2).fontWeight(.bold)
+
                     bioAgeCard(score)
-                    ForEach(Array((score.bodySystems ?? []).enumerated()), id: \.offset) { _, system in
-                        HealthCardRow(content: HealthDataRowContent(
-                            title: system.title ?? system.bodySystemId ?? "Body system",
-                            subtitle: system.grade.map { "Grade \($0)" },
-                            value: system.score.map { String(format: "%.0f", $0) }
-                        ))
-                        .padding()
-                        .background(Color(.secondarySystemGroupedBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                    if let trendDirection = score.trendDirection {
+                        HealthTrendAlertCard(
+                            label: "health",
+                            trendDirection: trendDirection,
+                            trendRate: score.trendRate,
+                            periodStart: score.periodStart
+                        )
                     }
+
+                    Text("Body Systems").font(.headline)
+
+                    VStack(spacing: 12) {
+                        ForEach(bodySystemItems(score)) { item in
+                            NavigationLink(value: BodySystemDetailRoute(
+                                bodySystemId: item.system.bodySystemId ?? "",
+                                title: item.system.title ?? "Body system"
+                            )) {
+                                bodySystemRow(item.system)
+                            }
+                            .buttonStyle(CardPressButtonStyle())
+                        }
+                    }
+
+                    PeriodMetadataView(
+                        calculationDate: score.calculationDate,
+                        periodStart: score.periodStart,
+                        periodEnd: score.periodEnd
+                    )
                 }
                 .padding()
             }
@@ -121,20 +173,61 @@ private struct HealthBodyScoreTabView: View {
         }
     }
 
+    private func bodySystemItems(_ score: BWell.HealthScore) -> [BodySystemGridItem] {
+        (score.bodySystems ?? []).enumerated().map { index, system in
+            BodySystemGridItem(id: system.bodySystemId ?? "\(index)", system: system)
+        }
+    }
+
     private func bioAgeCard(_ score: BWell.HealthScore) -> some View {
-        VStack(spacing: 8) {
-            Text("Biological Age").font(.subheadline).foregroundStyle(.secondary)
-            Text(score.bioAge.map { String(format: "%.0f", $0) } ?? "—")
-                .font(.system(size: 44, weight: .bold))
-            if let actualAge = score.actualAge, let bioAge = score.bioAge {
-                Text(bioAge <= actualAge ? "Younger than actual age (\(Int(actualAge)))" : "Older than actual age (\(Int(actualAge)))")
-                    .font(.caption).foregroundStyle(.secondary)
+        let grade = score.overallScore.map(HealthGrade.from)
+        return HStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Biological Age").font(.subheadline).foregroundStyle(.secondary)
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text(score.bioAge.map { String(format: "%.0f", $0) } ?? "—")
+                        .font(.system(size: 40, weight: .bold))
+                    Text("years old").font(.caption).foregroundStyle(.secondary)
+                }
+                if let grade {
+                    HealthGradeBadge(grade: grade)
+                }
+            }
+            Spacer()
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color(.separator), lineWidth: 1)
+        )
+    }
+
+    private func bodySystemRow(_ system: BWell.BodySystemSummary) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: HealthMetricIcon.symbolName(for: system.title))
+                    .font(.footnote)
+                    .frame(width: 32, height: 32)
+                    .background(Color(.systemGray5))
+                    .foregroundStyle(.primary)
+                    .clipShape(Circle())
+                Text(system.title ?? system.bodySystemId ?? "Body system")
+                    .font(.subheadline).fontWeight(.semibold)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(.tertiary)
+            }
+            if let score = system.score {
+                HealthBarView(score: score)
             }
         }
-        .frame(maxWidth: .infinity)
         .padding()
+        .frame(maxWidth: .infinity)
         .background(Color(.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .healthCardBorderStyle()
     }
 }
 
@@ -154,17 +247,18 @@ private struct SyncPromptView: View {
     var body: some View {
         VStack(spacing: 16) {
             if let progress {
+                // "Syncing with b.well…" and the gauge container appear the
+                // instant sync starts - only the gauge's own content morphs
+                // from an indeterminate spinner to the numbered fill once
+                // sync() actually returns real per-type counts, instead of
+                // swapping to a visually distinct "reading" screen first.
+                Text("Syncing with b.well…").font(.headline)
                 if let processingData = progress.processingData {
-                    Text("Syncing with b.well…").font(.headline)
                     ProcessingGaugeView(data: processingData)
                 } else {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                        .font(.largeTitle)
-                        .foregroundStyle(.secondary)
-                    Text("Syncing with b.well…").font(.headline)
+                    IndeterminateGaugeView()
                     Text("Reading from your device…")
                         .font(.subheadline).foregroundStyle(.secondary)
-                    ProgressView()
                 }
             } else {
                 Image(systemName: "arrow.triangle.2.circlepath")
@@ -261,15 +355,46 @@ private struct FillGauge: View {
         }
         .frame(width: 120, height: 120)
         .clipShape(Circle())
+        .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 8)
+    }
+}
+
+/// Same size/shape/shadow as FillGauge above, shown before sync() has
+/// returned real per-type counts - keeps the sync screen's layout
+/// continuous (title + circle + subtext) instead of jump-cutting to a
+/// visually distinct "reading from device" screen.
+private struct IndeterminateGaugeView: View {
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [.white, Color(red: 0.93, green: 0.95, blue: 0.94)],
+                        center: .top, startRadius: 1, endRadius: 90
+                    )
+                )
+            ProgressView()
+        }
+        .frame(width: 120, height: 120)
+        .clipShape(Circle())
+        .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 8)
     }
 }
 
 // MARK: - Formatting
 
-private func formattedQuantity(_ quantity: BWell.Quantity?) -> String? {
+/// Shared by the Metrics/Body Score tabs and their detail pages.
+func formattedQuantity(_ quantity: BWell.Quantity?) -> String? {
+    guard let parts = formattedQuantityParts(quantity) else { return nil }
+    return "\(parts.value) \(parts.unit)".trimmingCharacters(in: .whitespaces)
+}
+
+/// Same rounding rule as formattedQuantity, but value/unit kept separate -
+/// the Metrics grid card renders the unit smaller, below the value.
+func formattedQuantityParts(_ quantity: BWell.Quantity?) -> (value: String, unit: String)? {
     guard let quantity, let value = quantity.value else { return nil }
     let formatted = value.truncatingRemainder(dividingBy: 1) == 0
         ? String(format: "%.0f", value)
         : String(format: "%.1f", value)
-    return "\(formatted) \(quantity.unit ?? "")".trimmingCharacters(in: .whitespaces)
+    return (value: formatted, unit: quantity.unit ?? "")
 }

@@ -31,6 +31,61 @@ enum SyncGatedState<Value> {
     case loaded(Value)
 }
 
+/// One card's worth of grid data - `DeviceMetricsGroup.id` is optional (a
+/// server-provided FHIR id, not guaranteed), so identity is index-qualified
+/// rather than relying on it directly, same rationale as the old List view.
+struct MetricGridItem: Identifiable {
+    let id: String
+    let group: BWell.DeviceMetricsGroup
+}
+
+/// `BodySystemSummary` has no `id` of its own - `bodySystemId` stands in,
+/// with an index fallback in the unlikely case it's missing.
+struct BodySystemGridItem: Identifiable {
+    let id: String
+    let system: BWell.BodySystemSummary
+}
+
+/// One category section in the Metrics grid.
+struct MetricCategoryGroup: Identifiable {
+    let id: String
+    let label: String
+    let items: [MetricGridItem]
+}
+
+/// Groups device-metrics cards by their FHIR `category` coding whose system
+/// is b.well's display-group system - ported from ui-platform's mfe-devices
+/// groupMetricsByDisplayGroup (lib/metrics/utils.ts). Anything with no
+/// matching coding falls into a single "Other" bucket rather than being
+/// dropped, mirroring that same fallback.
+private let displayGroupSystem = "https://www.icanbwell.com/display-group"
+
+func groupMetricsByCategory(_ groups: [BWell.DeviceMetricsGroup]) -> [MetricCategoryGroup] {
+    var order: [String] = []
+    var labels: [String: String] = [:]
+    var items: [String: [MetricGridItem]] = [:]
+
+    for (index, group) in groups.enumerated() {
+        let coding = group.category?
+            .flatMap { $0.coding ?? [] }
+            .first { $0.system == displayGroupSystem }
+        let code = coding?.code ?? "other"
+        let item = MetricGridItem(id: "\(code)-\(index)", group: group)
+
+        if items[code] != nil {
+            items[code]?.append(item)
+        } else {
+            order.append(code)
+            labels[code] = coding?.display ?? "Other"
+            items[code] = [item]
+        }
+    }
+
+    return order.map { code in
+        MetricCategoryGroup(id: code, label: labels[code] ?? "Other", items: items[code] ?? [])
+    }
+}
+
 @MainActor
 final class HealthSyncDashboardViewModel: ObservableObject {
     @Published var metricsState: SyncGatedState<[BWell.DeviceMetricsGroup]> = .loading
