@@ -42,7 +42,7 @@ class HealthSyncPlaygroundFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 MyTestAppTheme {
-                    HealthSyncRootScreen(playgroundViewModel, dashboardViewModel)
+                    HealthSyncRootScreen(playgroundViewModel, dashboardViewModel, repository)
                 }
             }
         }

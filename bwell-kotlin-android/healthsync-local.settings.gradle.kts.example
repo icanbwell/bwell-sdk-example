@@ -1,8 +1,10 @@
 // Health Sync on-device adapter - LOCAL TEST OVERLAY (settings half).
 //
-// This is a TEMPLATE. To use it:
+// This is a TEMPLATE. To use it (or just run ./enable-local-adapter.sh,
+// which does this for you):
 //   cp healthsync-local.settings.gradle.kts.example healthsync-local.settings.gradle.kts
-// then fill in real credentials below. The real file is gitignored -
+// Credentials are NOT filled in here - they live in healthsync-local.properties
+// (see its own .example), read below. The real file is gitignored -
 // `settings.gradle.kts` only applies it if it exists, so a fresh clone with
 // no local overlay never sees a vendor or gated repository at all.
 //
@@ -15,6 +17,19 @@
 
 import org.gradle.api.credentials.HttpHeaderCredentials
 import org.gradle.authentication.http.HttpHeaderAuthentication
+import java.util.Properties
+
+// Credentials come from healthsync-local.properties if present, falling
+// back to the JFROG_READ_TOKEN/JFROG_READ_USER environment variables
+// otherwise. The properties file is what makes this work from Android
+// Studio's Run button: its embedded Gradle daemon doesn't reliably inherit
+// variables `export`-ed in a terminal, but it always reads files on disk
+// the same way a CLI build does.
+val healthSyncLocalProps = Properties().apply {
+    file("healthsync-local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+}
+fun healthSyncLocalCredential(key: String): String? =
+    healthSyncLocalProps.getProperty(key)?.takeIf { it.isNotBlank() } ?: System.getenv(key)
 
 dependencyResolutionManagement {
     repositories {
@@ -46,8 +61,8 @@ dependencyResolutionManagement {
         maven {
             name = "validic"
             url = uri("https://artifacts.bwell.com/artifactory/virtual-maven")
-            val jfrogUser = System.getenv("JFROG_READ_USER")
-            val jfrogToken = System.getenv("JFROG_READ_TOKEN") ?: "REPLACE_ME"
+            val jfrogUser = healthSyncLocalCredential("JFROG_READ_USER")
+            val jfrogToken = healthSyncLocalCredential("JFROG_READ_TOKEN") ?: "REPLACE_ME"
             if (jfrogUser != null) {
                 credentials {
                     username = jfrogUser

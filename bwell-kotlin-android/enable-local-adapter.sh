@@ -2,11 +2,12 @@
 # Health Sync on-device adapter - LOCAL TEST OVERLAY, fully automated.
 #
 # Materializes the gitignored overlay (healthsync-local.settings.gradle.kts,
-# healthsync-local.app.gradle.kts, app/src/healthSyncLocal/) from the
-# committed .example templates, so Health Sync builds against the real
-# on-device adapter instead of the vendor-neutral no-op - with zero manual
-# copy-pasting or hand-editing. Never touches any committed file; nothing
-# this script writes can end up in git (see .gitignore).
+# healthsync-local.app.gradle.kts, healthsync-local.properties,
+# app/src/healthSyncLocal/) from the committed .example templates, so
+# Health Sync builds against the real on-device adapter instead of the
+# vendor-neutral no-op - with zero manual copy-pasting or hand-editing.
+# Never touches any committed file; nothing this script writes can end up
+# in git (see .gitignore).
 #
 # Run with -h/--help for usage.
 set -euo pipefail
@@ -14,75 +15,91 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-DEFAULT_COORDINATE="com.bwell:bwell-sdk-kotlin-healthsync-adapter-aggregator:1.20.0"
+APPLICATION_ID="com.bwell.sampleapp"
 
 usage() {
   cat <<EOF
-Usage: ./enable-local-adapter.sh [coordinate...]
+Usage: ./enable-local-adapter.sh [-r|--run] coordinate...
 
 Materializes the gitignored local-adapter overlay so Health Sync builds
 against the real on-device adapter instead of the vendor-neutral no-op.
-Safe to re-run - existing files are left alone except
-healthsync-local.app.gradle.kts, which is regenerated every run to match
-whatever coordinates you pass this time.
+Safe to re-run - everything is regenerated every run EXCEPT
+healthsync-local.properties, which is left alone once it exists so your
+real JFROG_READ_TOKEN is never overwritten back to a placeholder. Run
+./remove-local-adapter.sh first if you want a fully clean slate instead.
+
+  -r, --run    After materializing the overlay, also build the debug APK,
+               install it (adb install -r) on the currently connected
+               device/emulator, and launch the app. Requires
+               healthsync-local.properties to already have a real
+               JFROG_READ_TOKEN (or the equivalent environment variable
+               exported) - see that file's own .example.
 
   coordinate   group:artifact:version, or artifact:version (com.bwell: is
-               assumed if you omit the group id). Repeatable - pass several
-               to add more than one adapter dependency.
+               assumed if you omit the group id). Required - no default is
+               assumed, so you always know exactly which version you're
+               building against. Repeatable - pass several to add more
+               than one adapter dependency.
 
 Examples:
-  ./enable-local-adapter.sh
-    -> $DEFAULT_COORDINATE (default, no args)
-  ./enable-local-adapter.sh bwell-sdk-kotlin-healthsync-adapter-aggregator:1.20.1
-    -> com.bwell:bwell-sdk-kotlin-healthsync-adapter-aggregator:1.20.1
-  ./enable-local-adapter.sh com.bwell:bwell-sdk-kotlin-healthsync-adapter-aggregator:1.20.0 com.other:extra-lib:2.0.0
+  ./enable-local-adapter.sh my-artifact:1.0.0
+    -> com.bwell:my-artifact:1.0.0
+  ./enable-local-adapter.sh --run my-artifact:1.0.1
+    -> com.bwell:my-artifact:1.0.1, then build + install + launch
+  ./enable-local-adapter.sh com.bwell:my-artifact:1.0.0 com.other:extra-lib:2.0.0
     -> two implementation(...) lines, one per coordinate
 
-After running, set credentials and build:
-  export JFROG_READ_TOKEN=...   # required - a Bearer/reference token
-  export JFROG_READ_USER=...    # optional - only if you were issued a username too
-  ./gradlew :app:assembleDebug
+Credentials: fill in healthsync-local.properties (materialized below on
+first run) with a real JFROG_READ_TOKEN, or export it as an environment
+variable instead - either works, the properties file just also covers
+Android Studio's Run button, whose embedded Gradle daemon doesn't reliably
+inherit a terminal's exported variables.
 EOF
 }
 
-for arg in "$@"; do
-  if [[ "$arg" == "-h" || "$arg" == "--help" ]]; then
-    usage
-    exit 0
-  fi
-done
-
+run_after=0
 coordinates=()
-if [[ $# -eq 0 ]]; then
-  coordinates=("$DEFAULT_COORDINATE")
-else
-  for arg in "$@"; do
-    colon_count=$(grep -o ":" <<< "$arg" | wc -l | tr -d ' ')
-    case "$colon_count" in
-      1) coordinates+=("com.bwell:$arg") ;;
-      2) coordinates+=("$arg") ;;
-      *)
-        echo "error: invalid coordinate '$arg' - expected group:artifact:version or artifact:version" >&2
-        echo >&2
-        usage >&2
-        exit 1
-        ;;
-    esac
-  done
+for arg in "$@"; do
+  case "$arg" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -r|--run)
+      run_after=1
+      ;;
+    *)
+      colon_count=$(grep -o ":" <<< "$arg" | wc -l | tr -d ' ')
+      case "$colon_count" in
+        1) coordinates+=("com.bwell:$arg") ;;
+        2) coordinates+=("$arg") ;;
+        *)
+          echo "error: invalid coordinate '$arg' - expected group:artifact:version or artifact:version" >&2
+          echo >&2
+          usage >&2
+          exit 1
+          ;;
+      esac
+      ;;
+  esac
+done
+if [[ ${#coordinates[@]} -eq 0 ]]; then
+  echo "error: no coordinate given - pass at least one, e.g. my-artifact:1.0.0" >&2
+  echo >&2
+  usage >&2
+  exit 1
 fi
 
 echo "Adapter coordinate(s):"
 for c in "${coordinates[@]}"; do echo "  - $c"; done
 echo
 
-# 1. Settings overlay - static, skip if it already exists (don't clobber
-#    any credential-adjacent edits a developer may have made).
-if [[ -f healthsync-local.settings.gradle.kts ]]; then
-  echo "skip: healthsync-local.settings.gradle.kts already exists"
-else
-  cp healthsync-local.settings.gradle.kts.example healthsync-local.settings.gradle.kts
-  echo "created: healthsync-local.settings.gradle.kts"
-fi
+# 1. Settings overlay - pure boilerplate (credentials live in
+#    healthsync-local.properties, not here), so always regenerate rather
+#    than skip. Run ./remove-local-adapter.sh first if you want a clean
+#    slate instead of a refresh.
+cp healthsync-local.settings.gradle.kts.example healthsync-local.settings.gradle.kts
+echo "wrote: healthsync-local.settings.gradle.kts"
 
 # 2. App overlay - regenerated every run, since its content is a direct
 #    function of the coordinates passed this time.
@@ -101,28 +118,62 @@ fi
 } > healthsync-local.app.gradle.kts
 echo "wrote: healthsync-local.app.gradle.kts (${#coordinates[@]} coordinate(s))"
 
-# 3. Real bridge source - static, skip if it already exists.
+# 3. Credentials file - static, skip if it already exists (never overwrite
+#    real credentials a developer already filled in).
+if [[ -f healthsync-local.properties ]]; then
+  echo "skip: healthsync-local.properties already exists"
+else
+  cp healthsync-local.properties.example healthsync-local.properties
+  echo "created: healthsync-local.properties - fill in JFROG_READ_TOKEN before building"
+fi
+
+# 4. Real bridge source - pure boilerplate, always regenerate.
 bridge_dir="app/src/healthSyncLocal/java/com/bwell/sampleapp/healthsync"
 bridge_file="$bridge_dir/HealthSyncAdapterBridge.kt"
 mkdir -p "$bridge_dir"
-if [[ -f "$bridge_file" ]]; then
-  echo "skip: $bridge_file already exists"
-else
-  cp healthsync-local.HealthSyncAdapterBridge.kt.example "$bridge_file"
-  echo "created: $bridge_file"
-fi
+cp healthsync-local.HealthSyncAdapterBridge.kt.example "$bridge_file"
+echo "wrote: $bridge_file"
 
-# 4. Real manifest fragment - static, skip if it already exists.
+# 5. Real manifest fragment - pure boilerplate, always regenerate.
 manifest_file="app/src/healthSyncLocal/AndroidManifest.xml"
-if [[ -f "$manifest_file" ]]; then
-  echo "skip: $manifest_file already exists"
-else
-  cp healthsync-local.AndroidManifest.xml.example "$manifest_file"
-  echo "created: $manifest_file"
-fi
+cp healthsync-local.AndroidManifest.xml.example "$manifest_file"
+echo "wrote: $manifest_file"
 
 echo
-echo "Done. Next steps:"
-echo "  export JFROG_READ_TOKEN=...   # required - a Bearer/reference token"
-echo "  export JFROG_READ_USER=...    # optional - only if you were issued a username too"
-echo "  ./gradlew --stop && ./gradlew :app:assembleDebug"
+if [[ "$run_after" -eq 0 ]]; then
+  echo "Done. Next steps:"
+  echo "  1. Fill in JFROG_READ_TOKEN in healthsync-local.properties (or export it instead)"
+  echo "  2. ./gradlew --stop && ./gradlew :app:assembleDebug"
+  echo "  (or re-run this script with --run to do steps 2+ automatically, plus install+launch)"
+  exit 0
+fi
+
+echo "Building, installing, and launching (--run)..."
+echo
+
+./gradlew --stop
+./gradlew :app:assembleDebug
+
+apk="$(find app/build/outputs/apk/debug -iname '*.apk' ! -iname '*androidTest*' | head -1)"
+if [[ -z "$apk" ]]; then
+  echo "error: build succeeded but no debug APK was found under app/build/outputs/apk/debug" >&2
+  exit 1
+fi
+
+if ! command -v adb >/dev/null 2>&1; then
+  echo "error: adb not found on PATH - build succeeded, but can't install/launch automatically" >&2
+  echo "APK is at: $apk"
+  exit 1
+fi
+
+if [[ -z "$(adb devices | awk 'NR>1 && $2=="device" {print}')" ]]; then
+  echo "error: no connected device/emulator (adb devices) - build succeeded, but can't install/launch" >&2
+  echo "APK is at: $apk"
+  exit 1
+fi
+
+adb install -r "$apk"
+adb shell monkey -p "$APPLICATION_ID" -c android.intent.category.LAUNCHER 1 &>/dev/null
+
+echo
+echo "Done - $APPLICATION_ID installed and launched with the real on-device adapter."

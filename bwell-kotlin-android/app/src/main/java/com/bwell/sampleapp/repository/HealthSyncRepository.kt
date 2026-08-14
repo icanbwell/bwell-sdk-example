@@ -81,10 +81,15 @@ open class HealthSyncRepository {
     open suspend fun deleteConnection(connectionId: String): OperationOutcome =
         BWellSdk.connections.deleteConnection(connectionId)
 
-    open suspend fun getDeviceMetrics(groupCode: String?): BWellResult<Observation> =
+    // pageSize defaults to the SDK's own default (20) so the existing
+    // Playground call site is unaffected - the Metric Detail screen passes
+    // a larger one explicitly (see its ViewModel) since it has no
+    // pagination UI of its own.
+    open suspend fun getDeviceMetrics(groupCode: String?, pageSize: Int = 20): BWellResult<Observation> =
         BWellSdk.health.getDeviceMetrics(
             DeviceMetricsQueryRequest.Builder()
                 .apply { groupCode?.let { groupCode(listOf(Coding(code = it))) } }
+                .pageSize(pageSize)
                 .build(),
         )
 

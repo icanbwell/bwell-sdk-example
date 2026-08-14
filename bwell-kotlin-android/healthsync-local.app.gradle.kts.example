@@ -1,10 +1,11 @@
 // Health Sync on-device adapter - LOCAL TEST OVERLAY (app half).
 //
-// Easiest path: run `./enable-local-adapter.sh` from the repo root - it
-// generates the real healthsync-local.app.gradle.kts (with one
-// implementation(...) line per adapter coordinate you pass, or today's
-// default if you pass none), copies the other 3 overlay files, and needs
-// no hand-editing. Run `./enable-local-adapter.sh -h` for its usage.
+// Easiest path: run `./enable-local-adapter.sh <coordinate>` from the repo
+// root - it generates the real healthsync-local.app.gradle.kts (with one
+// implementation(...) line per adapter coordinate you pass - there's no
+// default, you always say exactly which version), copies the other 3
+// overlay files, and needs no hand-editing. Run `./enable-local-adapter.sh -h`
+// for its usage.
 //
 // This file is what the script generates - kept here as human-facing
 // documentation of the shape, for anyone reading templates instead of
@@ -31,6 +32,8 @@ dependencies {
     // The published adapter - resolvable once healthsync-local.settings.gradle.kts's
     // two repositories are also in place. Pin to whatever version you're
     // testing against; keep it in sync with the bwell-sdk-kotlin-healthsync
-    // version declared in the committed app/build.gradle.kts.
-    "implementation"("com.bwell:bwell-sdk-kotlin-healthsync-adapter-aggregator:1.20.0")
+    // version declared in the committed app/build.gradle.kts. Deliberately
+    // not written out here - the real coordinate is an argument you pass
+    // to ./enable-local-adapter.sh, never a string committed to this repo.
+    "implementation"("<group>:<artifact>:<version>")
 }

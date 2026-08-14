@@ -30,6 +30,51 @@ sealed interface SyncGatedState<out Value> {
 }
 
 /**
+ * One card's worth of grid data - [DeviceMetricsGroup.id] is optional (a
+ * server-provided FHIR id, not guaranteed), so identity is index-qualified
+ * rather than relying on it directly.
+ */
+data class MetricGridItem(val id: String, val group: DeviceMetricsGroup)
+
+/** One category section in the Metrics grid. */
+data class MetricCategoryGroup(val id: String, val label: String, val items: List<MetricGridItem>)
+
+private const val DISPLAY_GROUP_SYSTEM = "https://www.icanbwell.com/display-group"
+
+/**
+ * Groups device-metrics cards by their FHIR `category` coding whose system
+ * is b.well's display-group system - ported from Swift's
+ * groupMetricsByCategory (itself ported from ui-platform's mfe-devices
+ * groupMetricsByDisplayGroup). Anything with no matching coding falls into
+ * a single "Other" bucket rather than being dropped, mirroring that same
+ * fallback.
+ */
+fun groupMetricsByCategory(groups: List<DeviceMetricsGroup>): List<MetricCategoryGroup> {
+    val order = mutableListOf<String>()
+    val labels = mutableMapOf<String, String>()
+    val items = mutableMapOf<String, MutableList<MetricGridItem>>()
+
+    groups.forEachIndexed { index, group ->
+        val coding = group.category
+            ?.flatMap { it.coding.orEmpty() }
+            ?.firstOrNull { it.system == DISPLAY_GROUP_SYSTEM }
+        val code = coding?.code ?: "other"
+        val item = MetricGridItem(id = "$code-$index", group = group)
+
+        val existing = items[code]
+        if (existing != null) {
+            existing.add(item)
+        } else {
+            order.add(code)
+            labels[code] = coding?.display ?: "Other"
+            items[code] = mutableListOf(item)
+        }
+    }
+
+    return order.map { code -> MetricCategoryGroup(id = code, label = labels[code] ?: "Other", items = items[code].orEmpty()) }
+}
+
+/**
  * Backs [HealthSyncDashboardScreen] (the Metrics/Body Score tabs shown when
  * an on-device adapter is configured) - ported from Swift's
  * HealthSyncDashboardViewModel. Shares the same "fetch, and if empty let the

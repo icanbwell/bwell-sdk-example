@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.bwell.sampleapp.repository.HealthSyncRepository
 
 /**
  * Single entry point for the Health Sync feature - ported from Swift's
@@ -18,11 +19,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun HealthSyncRootScreen(
     playgroundViewModel: HealthSyncPlaygroundViewModel,
     dashboardViewModel: HealthSyncDashboardViewModel,
+    repository: HealthSyncRepository,
     modifier: Modifier = Modifier,
 ) {
     val configured by playgroundViewModel.configured.collectAsStateWithLifecycle()
     if (configured) {
-        HealthSyncDashboardScreen(dashboardViewModel, playgroundViewModel, modifier.fillMaxSize())
+        HealthSyncDashboardScreen(dashboardViewModel, playgroundViewModel, repository, modifier.fillMaxSize())
     } else {
         HealthSyncPlaygroundScreen(playgroundViewModel, modifier.fillMaxSize())
     }
