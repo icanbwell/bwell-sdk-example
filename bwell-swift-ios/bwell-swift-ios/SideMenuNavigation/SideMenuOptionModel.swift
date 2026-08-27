@@ -10,17 +10,20 @@ import Foundation
 enum SideMenuOptionModel: Int, CaseIterable {
     case home
     case profile
-    case manageConnections
     case healthSummary
+    case providerSearch
+    case manageConnections
+    case financial
     case logout
-
 
     var title: String {
         switch self {
             case .home: "Home"
             case .profile: "Profile"
-            case .manageConnections: "Manage Connections"
             case .healthSummary: "Health Summary"
+            case .providerSearch: "Find Providers"
+            case .manageConnections: "Manage Connections"
+            case .financial: "Insurance"
             case .logout: "Logout"
         }
     }
@@ -29,8 +32,10 @@ enum SideMenuOptionModel: Int, CaseIterable {
         switch self {
             case .home: "house"
             case .profile: "person"
-            case .manageConnections: "rectangle.connected.to.line.below"
             case .healthSummary: "heart.text.clipboard"
+            case .providerSearch: "magnifyingglass"
+            case .manageConnections: "rectangle.connected.to.line.below"
+            case .financial: "creditcard"
             case .logout: "arrow.right.square"
         }
     }
@@ -39,8 +44,10 @@ enum SideMenuOptionModel: Int, CaseIterable {
         switch self {
             case .home: .home
             case .profile: .profile
-            case .manageConnections: .manageConnections
             case .healthSummary: .healthSummary
+            case .providerSearch: .providerSearch
+            case .manageConnections: .manageConnections
+            case .financial: .financial
             case .logout: .home
         }
     }
@@ -52,32 +59,27 @@ extension SideMenuOptionModel: Identifiable {
     }
 }
 
-@MainActor 
+@MainActor
 final class SideMenuOptionViewModel: ObservableObject {
     private var router: NavigationRouter?
-    private var sdkManager: BWellSDKManager?
     @Published var optionSelected: SideMenuOptionModel?
 
-    init() {
-        self.sdkManager = .shared
-    }
-
-    func setup(router: NavigationRouter) {
+    func setup(router: NavigationRouter) {
         self.router = router
     }
 
-    func navigate(to optionSelected: SideMenuOptionModel) {
+    func navigate(to optionSelected: SideMenuOptionModel, sdkManager: SDKManager) {
         guard let router = router else { return }
-        
+
         // Handle logout separately
         if optionSelected == .logout {
-            sdkManager?.logout()
+            sdkManager.logout()
             return
         }
-        
+
         // Update the selected option
         self.optionSelected = optionSelected
-        
+
         // For other navigation, navigate and replace the current stack
         router.navigateAndReplace(to: optionSelected.destination)
     }

@@ -52,7 +52,9 @@ export const CONNECTION_COLUMNS: GridColDef[] = [
 export const ALLERGY_INTOLERANCE_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
-    { field: 'criticality', headerName: 'Criticality', width: 150 },
+    // criticality on AllergyIntoleranceGroup is a Coding object ({ id, system, display, code }),
+    // not a plain string. Render the human-readable display, falling back to code (TIP-7049).
+    { field: 'criticality', headerName: 'Criticality', width: 150, valueGetter: (criticality: any) => criticality?.display ?? criticality?.code ?? '' },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (params) => monthDayYearTime(params), width: 175 },
     { field: 'sourceDisplay', headerName: 'Source', width: 200 },
 ];

@@ -12,11 +12,16 @@ configurations.all {
 
 android {
     namespace = "com.bwell.sampleapp"
-    compileSdk = 34
+    // 36 is required by the Health Sync on-device adapter's AndroidX Health
+    // Connect dependency (confirmed via its AAR metadata: minCompileSdk=36).
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.bwell.sampleapp"
-        minSdk = 26
+        // 29 is required by the Health Sync adapter AAR's own manifest
+        // (uses-sdk minSdkVersion=29) - this is an app-wide floor, not
+        // scoped to the Health Sync feature alone.
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -37,11 +42,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
+        // The Health Sync / adapter AARs ship Kotlin 1.9 metadata; without
+        // this the compiler refuses to read them.
+        freeCompilerArgs += "-Xskip-metadata-version-check"
     }
     buildFeatures {
         viewBinding = true
@@ -49,7 +57,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -69,12 +77,12 @@ android {
 dependencies {
 
     // BWell SDK Usage
-    implementation("com.bwell:bwell-sdk-kotlin:1.9.0")
+    implementation("com.bwell:bwell-sdk-kotlin:1.20.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -106,7 +114,7 @@ dependencies {
     testImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

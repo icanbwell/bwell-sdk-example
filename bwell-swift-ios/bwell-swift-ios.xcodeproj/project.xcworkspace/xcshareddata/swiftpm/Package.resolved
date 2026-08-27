@@ -1,13 +1,13 @@
 {
-  "originHash" : "8161077a4b764b4acf8e86d5f3a855c8fa90b41108315cb6d578bd0dafdc099c",
+  "originHash" : "707eb85f243f7672ad65d9bfadede793ae34b978a8d90b45d2460039154b7ad1",
   "pins" : [
     {
-      "identity" : "apollo-ios",
+      "identity" : "bwell-sdk-swift-package",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apollographql/apollo-ios.git",
+      "location" : "https://github.com/icanbwell/bwell-sdk-swift-package",
       "state" : {
-        "revision" : "23904fc264bf01539dd031a2f8d6692e1bd14ff0",
-        "version" : "1.25.2"
+        "revision" : "07bec8329bd8e577f862e3a56d139fcfa90409e2",
+        "version" : "1.4.3-beta"
       }
     }
   ],

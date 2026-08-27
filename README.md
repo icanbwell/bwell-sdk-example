@@ -28,6 +28,19 @@ A modern web application built with React, Redux Toolkit, and Vite that showcase
 - Health data visualization with data grids
 - Playwright E2E testing
 
+### 🍎 [Swift/iOS Example](./bwell-swift-ios/)
+A native iOS application built with SwiftUI that demonstrates b.well SDK integration using modern Swift patterns.
+
+**Dependencies:**
+- [`BWellSDK`](https://github.com/icanbwell/bwell-sdk-swift-package) Swift Package
+
+**Features:**
+- Native SwiftUI with TabView navigation
+- All 65 SDK methods exercised across 9 managers
+- SwiftUI Charts for vitals and labs
+- Protocol-oriented dependency injection
+- Auto-login from .env for debug builds
+
 ### 📲 [React Native/Expo Example](./bwell-react-native/)
 A cross-platform mobile application built with React Native and Expo that demonstrates b.well SDK integration for iOS and Android.
 

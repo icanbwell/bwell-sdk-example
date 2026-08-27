@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 
 struct LaunchView: View {
+    @EnvironmentObject var sdkManager: SDKManager
     @StateObject private var viewModel = LaunchViewModel()
     @StateObject private var sideMenuViewModel = SideMenuOptionViewModel()
 
@@ -30,7 +31,7 @@ struct LaunchView: View {
             }
         }.onAppear {
             Task {
-                await viewModel.checkSession()
+                await viewModel.checkSession(sdkManager: sdkManager)
             }
         }
     }
@@ -40,37 +41,21 @@ struct LaunchView: View {
 final class LaunchViewModel: ObservableObject {
     @Published var isCheckingSession: Bool = true
 
-    func checkSession() async {
+    func checkSession(sdkManager: SDKManager) async {
         guard let apiKey = APIKeyService.shared.getAPIKey() else {
-            BWellSDKManager.shared.state = .uninitialized
             isCheckingSession = false
             return
         }
 
         do {
-            // 1) Initialize the SDK.
-            try await BWellSDKManager.shared.initilize(apiKey)
-
-            // 2) Attempt to authenticate from storage (rehydrate tokens).
-            do {
-                try await BWellSDKManager.shared.login(credentials: .storage)
-                // 3) If storage auth succeeded, validate the session.
-                await BWellSDKManager.shared.validateSession()
-            } catch {
-                // Storage auth failed - no valid tokens exist.
-                // Clear the stored API key so user can enter fresh credentials.
-                print("LaunchViewModel: Storage authentication failed: \(error)")
-                APIKeyService.shared.clear()
-                BWellSDKManager.shared.reset()
-            }
+            try await sdkManager.initialize(apiKey)
+            try await sdkManager.checkSession()
         } catch {
-            // SDK initialization failed - clear stored key and reset.
             print("LaunchViewModel: SDK initialization failed: \(error)")
             APIKeyService.shared.clear()
-            BWellSDKManager.shared.reset()
+            sdkManager.reset()
         }
 
-        // 4) Show RootView after session check completes so RootView can react to the final state.
         isCheckingSession = false
     }
 }
