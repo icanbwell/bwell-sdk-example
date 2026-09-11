@@ -141,6 +141,18 @@ import com.bwell.sampleapp.singletons.BWellSdk
 val helloStr = BWellSdk.hello()
 ```
 
+## Health Sync
+
+The Health Sync feature (drawer item "Health Sync") demonstrates the b.well
+Health Sync SDK: an API Playground to try each endpoint independently, and a
+Dashboard that visualizes synced Metrics and Body Score data.
+
+Reading and writing health data, connecting cloud providers, and viewing
+synced results all work out of the box with just this repo. Full on-device
+sync (connecting a phone/wearable's local health store) requires a dedicated
+adapter package and credentials provided by b.well - contact b.well for
+access.
+
 ## Project Structure
 [AndroidManifest.xml](bwell-kotlin-android/app/src/main/java/com/bwell/sampleapp/activities/ui) is the main config.  This specifies the main activity.
 

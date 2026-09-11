@@ -1,0 +1,39 @@
+// Health Sync on-device adapter - LOCAL TEST OVERLAY (app half).
+//
+// Easiest path: run `./enable-local-adapter.sh <coordinate>` from the repo
+// root - it generates the real healthsync-local.app.gradle.kts (with one
+// implementation(...) line per adapter coordinate you pass - there's no
+// default, you always say exactly which version), copies the other 3
+// overlay files, and needs no hand-editing. Run `./enable-local-adapter.sh -h`
+// for its usage.
+//
+// This file is what the script generates - kept here as human-facing
+// documentation of the shape, for anyone reading templates instead of
+// running the script. To do it by hand instead:
+//   1. cp healthsync-local.app.gradle.kts.example healthsync-local.app.gradle.kts
+//   2. cp -r app/src/healthSyncNeutral app/src/healthSyncLocal
+//      then, in the copy, replace HealthSyncAdapterBridge.kt with
+//      healthsync-local.HealthSyncAdapterBridge.kt.example (already the
+//      real, working implementation - no editing needed there either),
+//      and replace AndroidManifest.xml with
+//      healthsync-local.AndroidManifest.xml.example.
+//   3. Pair with healthsync-local.settings.gradle.kts (see its .example).
+//
+// Both halves are gitignored - `app/build.gradle.kts` only applies this
+// file, and only compiles/merges `src/healthSyncLocal`, if they exist. A
+// fresh clone with neither present builds with zero vendor dependencies.
+//
+// This file only needs the dependency line: the source-set and manifest
+// swap already live in the committed app/build.gradle.kts, since scripts
+// applied via apply(from=...) don't get AGP's precompiled `android { }`
+// type-safe accessors.
+
+dependencies {
+    // The published adapter - resolvable once healthsync-local.settings.gradle.kts's
+    // two repositories are also in place. Pin to whatever version you're
+    // testing against; keep it in sync with the bwell-sdk-kotlin-healthsync
+    // version declared in the committed app/build.gradle.kts. Deliberately
+    // not written out here - the real coordinate is an argument you pass
+    // to ./enable-local-adapter.sh, never a string committed to this repo.
+    "implementation"("<group>:<artifact>:<version>")
+}

@@ -58,4 +58,9 @@
         android:name="com.bwell.sampleapp.activities.ui.profile.ProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_health_sync"
+        android:name="com.bwell.sampleapp.activities.ui.healthsync.HealthSyncPlaygroundFragment"
+        android:label="@string/menu_health_sync" />
 </navigation>
