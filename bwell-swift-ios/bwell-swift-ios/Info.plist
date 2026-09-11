@@ -15,5 +15,9 @@
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Sync your health data with b.well.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Sync your health data with b.well.</string>
 </dict>
 </plist>

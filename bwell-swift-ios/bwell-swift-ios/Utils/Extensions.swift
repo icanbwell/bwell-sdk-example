@@ -65,6 +65,19 @@ extension String {
         return outputFormatter.string(from: date)
     }
 
+    /// "8/13/2026, 12:00 AM GMT+2" - date + time + zone, for history rows that
+    /// need to disambiguate same-day records (dateFormatter() above only
+    /// shows the date).
+    func dateTimeWithZoneFormatted() -> String {
+        guard let date = fhirDate() else { return self }
+
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "M/d/yyyy, h:mm a zzz"
+        outputFormatter.locale = Locale(identifier: "en_US_POSIX")
+
+        return outputFormatter.string(from: date)
+    }
+
     func relativeDate() -> String {
         guard let validDate = fhirDate() else { return self }
 
