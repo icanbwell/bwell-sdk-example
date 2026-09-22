@@ -51,12 +51,6 @@ const joinSource = (sourceDisplay: any, source: any) => {
     return fallback.join(', ');
 }
 
-const joinCoding = (coding: any[]) => {
-    if (!coding?.length) return '';
-
-    return coding.map(c => c.coding[0].display).join(', ');
-}
-
 const formatValue = (value: any) => `${value?.valueQuantity?.value ?? ''} ${value?.valueQuantity?.unit ?? ''}`;
 
 export const CONNECTION_COLUMNS: GridColDef[] = [
