@@ -72,7 +72,7 @@ export const ALLERGY_INTOLERANCE_GROUP_COLUMNS: GridColDef[] = [
     // not a plain string. Render the human-readable display, falling back to code (TIP-7049).
     { field: 'criticality', headerName: 'Criticality', width: 150, valueGetter: (criticality: any) => criticality?.display ?? criticality?.code ?? '' },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (params) => monthDayYearTime(params), width: 175 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const ALLERGY_INTOLERANCE_COLUMNS: GridColDef[] = [
@@ -120,7 +120,7 @@ export const LAB_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 150 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const CARE_PLAN_COLUMNS: GridColDef[] = [
@@ -152,7 +152,7 @@ export const ENCOUNTER_GROUP_COLUMNS: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'participant', headerName: 'Participant', width: 150 },
     { field: 'date', headerName: 'Date', type: 'dateTime', valueGetter: (date) => new Date(date) },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const IMMUNIZATION_COLUMNS: GridColDef[] = [
@@ -167,7 +167,7 @@ export const IMMUNIZATION_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'occurrenceDateTime', headerName: 'Date', valueGetter: (occurrenceDateTime) => monthDayYear(occurrenceDateTime), width: 250 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const PROCEDURE_COLUMNS: GridColDef[] = [
