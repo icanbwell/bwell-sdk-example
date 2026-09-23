@@ -29,10 +29,26 @@ const joinActivity = (activity: any[]) => {
     return activity.map(a => a.detail?.code?.text).join(', ');
 }
 
-const joinCoding = (coding: any[]) => {
-    if (!coding?.length) return '';
+// Period.end is frequently null (open-ended periods), and the old
+// `start && end` check discarded the start date whenever that happened.
+// Render what we have instead of blanking the whole cell (PHR-3023).
+const formatPeriod = (period: any) => {
+    if (!period?.start && !period?.end) return '';
 
-    return coding.map(c => c.coding[0].display).join(', ');
+    const start = period?.start ? monthDayYear(period.start) : 'unknown';
+    const end = period?.end ? monthDayYear(period.end) : 'present';
+    return `${start} - ${end}`;
+}
+
+// sourceDisplay is a (string|null)[] that is frequently all-null upstream
+// even though source is populated; fall back to source rather than
+// rendering blank (PHR-3023).
+const joinSource = (sourceDisplay: any, source: any) => {
+    const display = Array.isArray(sourceDisplay) ? sourceDisplay.filter(Boolean) : [];
+    if (display.length) return display.join(', ');
+
+    const fallback = Array.isArray(source) ? source.filter(Boolean) : [];
+    return fallback.join(', ');
 }
 
 const formatValue = (value: any) => `${value?.valueQuantity?.value ?? ''} ${value?.valueQuantity?.unit ?? ''}`;
@@ -56,7 +72,7 @@ export const ALLERGY_INTOLERANCE_GROUP_COLUMNS: GridColDef[] = [
     // not a plain string. Render the human-readable display, falling back to code (TIP-7049).
     { field: 'criticality', headerName: 'Criticality', width: 150, valueGetter: (criticality: any) => criticality?.display ?? criticality?.code ?? '' },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (params) => monthDayYearTime(params), width: 175 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const ALLERGY_INTOLERANCE_COLUMNS: GridColDef[] = [
@@ -88,7 +104,7 @@ export const CONDITION_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 150 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const LAB_COLUMNS: GridColDef[] = [
@@ -104,21 +120,21 @@ export const LAB_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'recordedDate', headerName: 'Recorded Date', valueGetter: (recordedDate) => recordedDate ? new Date(recordedDate) : '', type: 'dateTime', width: 150 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const CARE_PLAN_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'category', headerName: 'Category', width: 100 },
     { field: 'activity', headerName: 'Activity', valueGetter: params => joinActivity(params), width: 200 },
-    { field: 'period', headerName: 'Period', valueGetter: (params: any) => params?.start && params?.end ? `${monthDayYear(params.start)} - ${monthDayYear(params.end)}` : '', width: 150 },
+    { field: 'period', headerName: 'Period', valueGetter: (params: any) => formatPeriod(params), width: 150 },
 ];
 
 export const CARE_PLAN_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
-    { field: 'period', headerName: 'Period', valueGetter: (period: any) => period?.start && period?.end ? `${monthDayYear(period.start)} - ${monthDayYear(period.end)}` : '', width: 150 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'period', headerName: 'Period', valueGetter: (period: any) => formatPeriod(period), width: 150 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const ENCOUNTER_COLUMNS: GridColDef[] = [
@@ -126,7 +142,7 @@ export const ENCOUNTER_COLUMNS: GridColDef[] = [
     { field: 'status', headerName: 'Status', width: 150 },
     { field: 'type', headerName: 'Type', width: 300 },
     { field: 'class', headerName: 'Class', width: 150 },
-    { field: 'period', headerName: 'Period', valueGetter: (params: any) => params?.start && params?.end ? `${monthDayYear(params.start)} - ${monthDayYear(params.end)}` : '', width: 250 },
+    { field: 'period', headerName: 'Period', valueGetter: (params: any) => formatPeriod(params), width: 250 },
     { field: 'reason', headerName: 'Reason', width: 250 },
     { field: 'serviceProvider', headerName: 'Service Provider', width: 250 },
 ];
@@ -136,7 +152,7 @@ export const ENCOUNTER_GROUP_COLUMNS: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'participant', headerName: 'Participant', width: 150 },
     { field: 'date', headerName: 'Date', type: 'dateTime', valueGetter: (date) => new Date(date) },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const IMMUNIZATION_COLUMNS: GridColDef[] = [
@@ -151,7 +167,7 @@ export const IMMUNIZATION_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 200 },
     { field: 'occurrenceDateTime', headerName: 'Date', valueGetter: (occurrenceDateTime) => monthDayYear(occurrenceDateTime), width: 250 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
 export const PROCEDURE_COLUMNS: GridColDef[] = [
@@ -189,11 +205,13 @@ export const MEDICATION_GROUP_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
     { field: 'name', headerName: 'Name', width: 300 },
     { field: 'authoredOn', headerName: 'Date', valueGetter: (authoredOn) => authoredOn ? new Date(authoredOn) : '', type: 'dateTime', width: 175 },
-    { field: 'sourceDisplay', headerName: 'Source', width: 200 },
+    { field: 'sourceDisplay', headerName: 'Source', width: 200, valueGetter: (sourceDisplay, row) => joinSource(sourceDisplay, row.source) },
 ];
 
+// Rows are flattened in HealthDataGrid (selector === 'medicationStatements'),
+// so these read plain strings rather than the raw resource shape (PHR-3023).
 export const MEDICATION_STATEMENT_COLUMNS: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 300 },
-    { field: 'medication', headerName: 'Name', valueGetter: (medication: any) => medication?.text ?? '', width: 300 },
-    { field: 'dosageInstruction', headerName: 'Instruction', valueGetter: (di: any) => di?.length ? di[0].text : '', width: 300 },
+    { field: 'medication', headerName: 'Name', width: 300 },
+    { field: 'dosageInstruction', headerName: 'Instruction', width: 300 },
 ]

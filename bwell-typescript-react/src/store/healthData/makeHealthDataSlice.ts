@@ -25,14 +25,17 @@ export const makeHealthDataSlice = (name: string, getter: { pending: any, fulfil
                     state.healthData = null;
                 })
                 .addCase(getter.fulfilled, (state, action) => {
+                    // PHR-3023: this used to unconditionally reset state.error to ""
+                    // right after setting it above, so a BWellQueryResult error was
+                    // always discarded and the grid silently rendered as empty.
                     if (action.payload.error) {
                         state.error = action.payload.error.message ?? "Unknown error";
                     } else {
                         state.healthData = action.payload || [];
+                        state.error = "";
                     }
 
                     state.loading = false;
-                    state.error = "";
                 })
                 .addCase(getter.rejected, (state, action) => {
                     if (action.error.message === "Uninitialized") {
