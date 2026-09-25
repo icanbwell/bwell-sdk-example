@@ -50,6 +50,11 @@ enum AppView: Hashable {
 
     // Consents (DCON-4083)
     case consents
+
+    // Feature playgrounds (DCON-4879) - one case for all of them, keyed by
+    // PlaygroundFeature.id. See Playground/PlaygroundFeature.swift - a new
+    // playground never needs a new case here.
+    case playground(String)
 }
 
 @MainActor
