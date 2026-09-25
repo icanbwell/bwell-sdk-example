@@ -8,4 +8,13 @@
 /captures
 .externalNativeBuild
 .cxx
+
+# Health Sync on-device adapter local test overlay - see the .example
+# templates at the repo root. Lets a developer plug in the published
+# adapter + vendor credentials locally, without ever committing a vendor
+# coordinate, a gated repo URL, a vendor binary, or a JFrog token.
+/healthsync-local.settings.gradle.kts
+/healthsync-local.app.gradle.kts
+/healthsync-local.properties
+app/src/healthSyncLocal/
 local.properties
