@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F2FAFC"
+    android:padding="12dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="10dp">
+
+    <TextView
+        android:id="@+id/typeProviderText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#0076AB"
+        android:textSize="16dp"
+        tools:ignore="SpUsage"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:text="MEDICAL · Provider" />
+
+    <TextView
+        android:id="@+id/descriptionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Description" />
+
+    <TextView
+        android:id="@+id/serviceDateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="#666666"
+        android:text="Service: —" />
+
+    <TextView
+        android:id="@+id/amountsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textStyle="bold"
+        android:text="Billed —  Ins —  You —" />
+
+</LinearLayout>

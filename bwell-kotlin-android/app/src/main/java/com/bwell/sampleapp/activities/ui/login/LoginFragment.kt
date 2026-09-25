@@ -72,7 +72,7 @@ class LoginFragment : Fragment() {
 
     private val embeddableVersion = "latest" // NOTE: Set to `latest` which can be breaking. Please pin to an exact version in production use.
     private val bootstrapApiURL = "https://api-gateway.client-sandbox.icanbwell.com/identity" // NOTE: Defaults to bwell `client-sandbox` environment
-    private val clientKey = null
+    private var clientKey: String? = null
     private var oAuthCredentials: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,11 +94,12 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        getOAuthToken()
+
         val editTextClientKey: EditText = view.findViewById(R.id.editTextClientKey)
         editTextClientKey.setText(clientKey)
 
         val editTextOAuthCredentials: EditText = view.findViewById(R.id.editTextOAuthCredentials)
-        getOAuthToken()
         editTextOAuthCredentials.setText(oAuthCredentials)
 
         // Initialize the button
@@ -312,6 +313,7 @@ class LoginFragment : Fragment() {
                 context?.assets?.open("env.properties")
             properties.load(inputStream)
             oAuthCredentials = properties.getProperty("authToken") ?: "MISSING OAUTH TOKEN. Please see README"
+            clientKey = properties.getProperty("clientKey") ?: clientKey
             // Use the configuration values as needed
         } catch (e: IOException) {
             e.printStackTrace()
