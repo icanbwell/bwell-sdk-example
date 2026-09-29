@@ -14,7 +14,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@icanbwell/bwell-sdk-ts": "^2.0.0-beta-rc.1765486931",
+    "@icanbwell/bwell-sdk-ts": "2.0.0-beta.8-rc.1790100162",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/x-data-grid": "^7.7.1",
@@ -41,6 +41,7 @@
     "playwright": "^1.56.1",
     "toml": "^3.0.0",
     "typescript": "^5.4.5",
-    "vite": "^8.1.5"
-  }
+    "vite": "^7.1.11"
+  },
+  "packageManager": "yarn@4.18.0+sha512.fcb8716fe7cd0eece141ffc18b92193a9df9204c1ba83189c288835223fc0bbe64af473bab0d5e9927a7daeb5caf2bb07eb2787cc9338ca040ea125f2a1f2f7e"
 }

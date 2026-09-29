@@ -99,9 +99,19 @@ const HealthDataGrid = ({
         rows = rows.map((row: any) => ({
             id: row.id,
             code: row.resource?.code?.coding?.[0]?.display ?? row.resource?.code?.text ?? '',
-            severity: row.resource?.severity?.text ?? '',
-            bodySite: row.resource?.bodySite?.[0]?.text ?? '',
+            severity: row.resource?.severity?.text ?? row.resource?.severity?.coding?.[0]?.display ?? '',
+            bodySite: row.resource?.bodySite?.[0]?.text ?? row.resource?.bodySite?.[0]?.coding?.[0]?.display ?? '',
             recordedDate: row.resource?.recordedDate ? new Date(row.resource.recordedDate) : null,
+        }));
+    }
+    // flatten medication statement rows if selector is medicationStatements;
+    // v2 fields are medicationCodeableConcept/dosage, nested under row.resource (PHR-3023)
+    if (selector === 'medicationStatements' && rows && rows.length > 0) {
+        rows = rows.map((row: any) => ({
+            id: row.id ?? row.resource?.id,
+            medication: row.resource?.medicationCodeableConcept?.text
+                ?? row.resource?.medicationCodeableConcept?.coding?.[0]?.display ?? '',
+            dosageInstruction: row.resource?.dosage?.[0]?.text ?? '',
         }));
     }
     // flatten immunization rows if selector is immunizations
@@ -188,7 +198,7 @@ const HealthDataGrid = ({
         }
 
         const id = selection[0];
-        const row = healthData?.data?.resources.find((row: any) => row.id === id);
+        const row = healthData?.data?.resources?.find((row: any) => row.id === id);
 
         onRowSelect?.([row]);
     }
@@ -213,7 +223,7 @@ const HealthDataGrid = ({
                     }
                     paginationMode={serverPagination ? "server" : "client"}
                     paginationModel={paginationModel}
-                    rowCount={serverPagination ? healthData?.data?.paging_info?.total_items || 0 : rows.length}
+                    rowCount={serverPagination ? healthData?.data?.pagingInfo?.totalItems || 0 : rows.length}
                     onPaginationModelChange={handlePaginationChange}
                     onRowSelectionModelChange={handleRowSelection}
                     getRowId={(row) => rowId ? row[rowId] : row.id}
