@@ -357,7 +357,6 @@ struct ProfileView: View {
                 }
             }
             .padding()
-            .frame(height: .infinity)
             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 25,
                                               topTrailingRadius: 25))
 
