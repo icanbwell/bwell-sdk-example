@@ -6,6 +6,7 @@ import com.bwell.sampleapp.repository.DataConnectionLabsRepository
 import com.bwell.sampleapp.repository.DataConnectionsRepository
 import com.bwell.sampleapp.repository.HealthSummaryRepository
 import com.bwell.sampleapp.repository.HealthJourneyRepository
+import com.bwell.sampleapp.repository.HealthSyncRepository
 import com.bwell.sampleapp.repository.InsuranceRepository
 import com.bwell.sampleapp.repository.MedicineRepository
 import com.bwell.sampleapp.repository.ProviderRepository
@@ -24,6 +25,7 @@ class BWellSampleApplication : Application() {
      lateinit var medicineRepository: MedicineRepository
      lateinit var healthJourneyRepository: HealthJourneyRepository
     lateinit var insuranceRepository: InsuranceRepository
+    lateinit var healthSyncRepository: HealthSyncRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -41,6 +43,7 @@ class BWellSampleApplication : Application() {
         healthSummaryRepository = HealthSummaryRepository( applicationContext)
         healthJourneyRepository = HealthJourneyRepository()
         insuranceRepository = InsuranceRepository(applicationContext)
+        healthSyncRepository = HealthSyncRepository()
 
     }
 }

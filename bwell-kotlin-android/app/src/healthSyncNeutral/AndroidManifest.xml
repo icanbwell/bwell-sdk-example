@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Neutral half of the Health Sync adapter manifest swap (see
+     app/build.gradle.kts's sourceSets block). No adapter is present in this
+     build, so there is nothing to merge - this file exists only so the
+     debug variant always has a manifest fragment to point at.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" />

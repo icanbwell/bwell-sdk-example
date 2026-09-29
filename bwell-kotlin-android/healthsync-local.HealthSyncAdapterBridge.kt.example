@@ -1,0 +1,81 @@
+// Health Sync on-device adapter - LOCAL TEST OVERLAY (real bridge body).
+//
+// This is a TEMPLATE, but unlike the other two .example files, you don't
+// need to edit it - copy it verbatim to
+// app/src/healthSyncLocal/java/com/bwell/sampleapp/healthsync/HealthSyncAdapterBridge.kt.
+// Pair with healthsync-local.settings.gradle.kts and
+// healthsync-local.app.gradle.kts (see their own .example files) and
+// healthsync-local.AndroidManifest.xml.example.
+//
+// Same pattern as bwell-sdk-kotlin's healthsync-sample MainActivity.kt
+// (PermissionBridge): the permission-request lambda and its in-flight
+// continuation live process-scoped, not Fragment-scoped, so they survive
+// Fragment recreation mid-dialog.
+
+package com.bwell.sampleapp.healthsync
+
+import android.content.Context
+import android.util.Log
+import androidx.fragment.app.Fragment
+import androidx.health.connect.client.records.Record
+import com.bwell.healthsync.BWellHealthSync
+import com.bwell.healthsync.adapter.aggregator.AggregatorHealthSource
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.reflect.KClass
+import kotlinx.coroutines.suspendCancellableCoroutine
+
+private object PermissionBridge {
+    val continuation = AtomicReference<Continuation<Map<KClass<out Record>, Boolean>>?>(null)
+
+    @Volatile
+    var launcher: ((Set<KClass<out Record>>) -> Unit)? = null
+
+    suspend fun request(types: Set<KClass<out Record>>): Map<KClass<out Record>, Boolean> =
+        suspendCancellableCoroutine { cont ->
+            check(continuation.compareAndSet(null, cont)) { "A permission request is already in flight." }
+            cont.invokeOnCancellation { continuation.compareAndSet(cont, null) }
+            val launch = launcher ?: run {
+                continuation.compareAndSet(cont, null)
+                error("No active permission launcher registered.")
+            }
+            launch(types)
+        }
+
+    fun deliverResult(grants: Map<KClass<out Record>, Boolean>) {
+        continuation.getAndSet(null)?.resume(grants)
+    }
+}
+
+object HealthSyncAdapterBridge {
+    private const val TAG = "HealthSyncAdapterBridge"
+
+    fun registerPermissionLauncher(fragment: Fragment) {
+        val permissionLauncher = fragment.registerForActivityResult(
+            AggregatorHealthSource.permissionContract(),
+        ) { grants -> PermissionBridge.deliverResult(grants) }
+        PermissionBridge.launcher = { types -> permissionLauncher.launch(types) }
+    }
+
+    fun configureIfAvailable(context: Context) {
+        if (BWellHealthSync.isConfigured) return
+        try {
+            // configure() calls into BaseSdk internally and throws if
+            // BWellSdk.initialize() (i.e. login) hasn't happened yet - this
+            // Fragment is reachable from the drawer before login, so that's
+            // a real, expected path here, not a bug to fix upstream.
+            // Self-healing: isConfigured stays false, and the next time this
+            // Fragment is (re)created - e.g. the user logs in and revisits
+            // Health Sync - this runs again and succeeds.
+            BWellHealthSync.configure(
+                AggregatorHealthSource(context) { types -> PermissionBridge.request(types) },
+            )
+        } catch (e: Exception) {
+            // Left unconfigured; caller falls back to the vendor-neutral
+            // Playground. Still logged, so a genuine misconfiguration (vs.
+            // the expected pre-login case) is diagnosable.
+            Log.w(TAG, "configureIfAvailable failed", e)
+        }
+    }
+}

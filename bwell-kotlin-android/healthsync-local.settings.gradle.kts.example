@@ -1,0 +1,86 @@
+// Health Sync on-device adapter - LOCAL TEST OVERLAY (settings half).
+//
+// This is a TEMPLATE. To use it (or just run ./enable-local-adapter.sh,
+// which does this for you):
+//   cp healthsync-local.settings.gradle.kts.example healthsync-local.settings.gradle.kts
+// Credentials are NOT filled in here - they live in healthsync-local.properties
+// (see its own .example), read below. The real file is gitignored -
+// `settings.gradle.kts` only applies it if it exists, so a fresh clone with
+// no local overlay never sees a vendor or gated repository at all.
+//
+// Pair this with healthsync-local.app.gradle.kts (see its own .example) -
+// that half adds the actual adapter dependency; this half adds the two
+// repositories needed to resolve it and its vendor transitive dependencies.
+//
+// Simulates exactly how a real paying customer integrates the adapter -
+// nothing here is b.well-internal tooling.
+
+import org.gradle.api.credentials.HttpHeaderCredentials
+import org.gradle.authentication.http.HttpHeaderAuthentication
+import java.util.Properties
+
+// Credentials come from healthsync-local.properties if present, falling
+// back to the JFROG_READ_TOKEN/JFROG_READ_USER environment variables
+// otherwise. The properties file is what makes this work from Android
+// Studio's Run button: its embedded Gradle daemon doesn't reliably inherit
+// variables `export`-ed in a terminal, but it always reads files on disk
+// the same way a CLI build does.
+val healthSyncLocalProps = Properties().apply {
+    file("healthsync-local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+}
+fun healthSyncLocalCredential(key: String): String? =
+    healthSyncLocalProps.getProperty(key)?.takeIf { it.isNotBlank() } ?: System.getenv(key)
+
+dependencyResolutionManagement {
+    repositories {
+        // The adapter's own artifact. Published separately from the rest of
+        // the SDK (a different JFrog org than bwell-sdk-kotlin/-healthsync,
+        // which live on Nexus) - confirmed via the adapter's own published
+        // POM, anonymous 200.
+        maven {
+            name = "bwellPublicMavenReleases"
+            url = uri("https://artifacts.bwell.com/artifactory/public-maven-releases")
+        }
+
+        // The gated vendor repo the adapter's POM declares its
+        // com.validic.mobile:* runtime dependencies against (confirmed 401
+        // anonymous - credentials are mandatory, not optional). Routed
+        // through b.well's own Artifactory proxy (CIE-8240), content-filtered
+        // so it is NEVER consulted for anything outside these two groups.
+        //
+        // Supports two credential shapes, picked by whether JFROG_READ_USER
+        // is set:
+        //   - JFROG_READ_TOKEN alone -> Bearer auth, no username. This is
+        //     the confirmed-working path: tested directly against the live
+        //     server, Basic Auth (username + token as password) got a 401
+        //     even with a valid token, Bearer got 200.
+        //   - JFROG_READ_USER + JFROG_READ_TOKEN -> standard Basic auth
+        //     (username/password), for cases where the credentials you were
+        //     issued really are a username+token pair. If this 401s, drop
+        //     JFROG_READ_USER and rely on the token alone (the path above).
+        maven {
+            name = "validic"
+            url = uri("https://artifacts.bwell.com/artifactory/virtual-maven")
+            val jfrogUser = healthSyncLocalCredential("JFROG_READ_USER")
+            val jfrogToken = healthSyncLocalCredential("JFROG_READ_TOKEN") ?: "REPLACE_ME"
+            if (jfrogUser != null) {
+                credentials {
+                    username = jfrogUser
+                    password = jfrogToken
+                }
+            } else {
+                credentials(HttpHeaderCredentials::class) {
+                    name = "Authorization"
+                    value = "Bearer $jfrogToken"
+                }
+                authentication {
+                    create<HttpHeaderAuthentication>("header")
+                }
+            }
+            content {
+                includeGroup("com.validic.mobile")
+                includeGroup("com.validic")
+            }
+        }
+    }
+}
