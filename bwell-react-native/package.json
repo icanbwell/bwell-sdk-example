@@ -18,7 +18,7 @@
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "@tanstack/react-query": "^5.81.5",
-    "expo": "~57.0.11",
+    "expo": "~58.0.22",
     "expo-blur": "~57.0.2",
     "expo-constants": "~57.0.9",
     "expo-font": "~57.0.1",
