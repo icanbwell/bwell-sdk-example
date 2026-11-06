@@ -16,6 +16,9 @@ test-results
 
 yalc.lock
 
+# Local npm config (may hold registry credentials). Never commit.
+.npmrc
+
 dist
 
 dist/*

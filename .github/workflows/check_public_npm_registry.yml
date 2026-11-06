@@ -1,0 +1,24 @@
+name: Check Public npm Registry
+
+# Fails if a committed package-lock.json resolves packages from anywhere but
+# public npmjs, or if a local yalc build is committed. This repo is public, so
+# clients must be able to install the examples without b.well credentials.
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Check lockfiles resolve from registry.npmjs.org
+        run: bash .github/scripts/check-public-npm-registry.sh
