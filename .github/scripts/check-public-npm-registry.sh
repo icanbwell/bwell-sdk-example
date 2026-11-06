@@ -35,10 +35,12 @@ grep_tracked() { # pattern, pathspec...
 
 lockfile_count=$(git ls-files -- ':(glob)**/package-lock.json' | wc -l | tr -d ' ')
 
+# Flag every "resolved" not on public npmjs, whatever the scheme: https
+# mirrors, git+ssh/git+https/github: repos and file: paths all fail for clients.
 while IFS= read -r hit; do
   [[ -n "$hit" ]] || continue
-  report "$hit" "Package resolved from a non-public registry. Rewrite \"resolved\" to ${PUBLIC_REGISTRY} (see root README section \"Contributing: keep lockfiles on public npmjs\")."
-done <<< "$(grep_tracked '"resolved": "https?://' ':(glob)**/package-lock.json' | grep -vF "\"resolved\": \"${PUBLIC_REGISTRY}" || true)"
+  report "$hit" "Package not resolved from ${PUBLIC_REGISTRY} (private registry, git repo or local file). Clients can't install it (see root README section \"Contributing: keep lockfiles on public npmjs\")."
+done <<< "$(grep_tracked '"resolved": "' ':(glob)**/package-lock.json' | grep -vF "\"resolved\": \"${PUBLIC_REGISTRY}" || true)"
 
 while IFS= read -r hit; do
   [[ -n "$hit" ]] || continue
