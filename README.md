@@ -95,10 +95,18 @@ adding or updating a package writes the mirror's URLs into the lockfile; make
 dependency changes with your `.npmrc` moved aside. `.npmrc` is gitignored;
 don't commit it.
 
-CI enforces this, and also rejects committed references to local
-[yalc](https://github.com/wclr/yalc) SDK builds. Run the same check locally
-from the repo root:
+CI enforces this for `package-lock.json` and `npm-shrinkwrap.json`. It also
+rejects `package.json` dependencies that don't come from the registry (`file:`,
+`link:`, git or `github:` specs, tarball URLs, and local
+[yalc](https://github.com/wclr/yalc) SDK builds), and any committed `.npmrc`.
+Run the same check locally from the repo root:
 
 ```bash
 .github/scripts/check-public-npm-registry.sh
+```
+
+If you change the check, run its fixture tests too:
+
+```bash
+.github/scripts/test-check-public-npm-registry.sh
 ```
