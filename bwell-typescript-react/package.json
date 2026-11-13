@@ -12,6 +12,7 @@
     "e2e": "npx playwright test --browser=chromium --reporter=html --workers=3 && npx playwright show-report --host 127.0.0.1"
   },
   "dependencies": {
+    "@descope/react-sdk": "^2.30.10",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@icanbwell/bwell-sdk-ts": "2.0.0-beta.8-rc.1790100162",
