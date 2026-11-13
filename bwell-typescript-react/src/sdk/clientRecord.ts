@@ -4,19 +4,13 @@ const FETCH_TIMEOUT_MS = 10000;
 export type DescopeClientConfig = {
   projectId: string;
   authDomain: string;
-  tenantId: string;
-  flowId: string;
 };
 
 type ClientRecordResponse = {
   identityProvider?: {
     name?: string;
     projectId?: string;
-    providerConfig?: {
-      tenantId?: string;
-      authDomain?: string;
-      flows?: { id?: string; name?: string }[];
-    };
+    providerConfig?: { authDomain?: string };
   };
 };
 
@@ -52,11 +46,8 @@ export const fetchDescopeClientConfig = async (clientKey: string): Promise<Desco
   if (identityProvider?.name !== "descope" || !identityProvider.projectId) {
     return undefined;
   }
-  const flows = identityProvider.providerConfig?.flows ?? [];
   return {
     projectId: identityProvider.projectId,
     authDomain: identityProvider.providerConfig?.authDomain ?? "",
-    tenantId: identityProvider.providerConfig?.tenantId ?? "",
-    flowId: flows[0]?.id ?? "",
   };
 };

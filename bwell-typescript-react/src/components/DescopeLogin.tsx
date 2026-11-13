@@ -28,9 +28,9 @@ const createMemoryStorage = () => {
 
 const PasswordForm = ({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled" | "onTokens">) => {
   const sdk = useDescope();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [submitting, setSubmitting] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const signIn = async () => {
@@ -38,17 +38,19 @@ const PasswordForm = ({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled"
     setError(null);
     try {
       const response = await sdk.password.signIn(email, password);
-      const sessionJwt = response.data?.sessionJwt || getSessionToken() || undefined;
-      const refreshJwt = response.data?.refreshJwt || getRefreshToken() || undefined;
       if (!response.ok) {
         setError(response.error?.errorDescription || response.error?.errorMessage || "Descope sign-in failed.");
-      } else if (!sessionJwt) {
-        setError("Descope sign-in succeeded but did not return a session token.");
-      } else {
-        // The Descope session JWT is used as both the access and ID token. The refresh
-        // token is usually unavailable here (HttpOnly cookie), so it is optional.
-        onTokens({ accessToken: sessionJwt, idToken: sessionJwt, refreshToken: refreshJwt });
+        return;
       }
+      const sessionJwt = response.data?.sessionJwt || getSessionToken();
+      if (!sessionJwt) {
+        setError("Descope sign-in succeeded but did not return a session token.");
+        return;
+      }
+      // The Descope session JWT is used as both the access and ID token. The refresh
+      // token is usually unavailable here (HttpOnly cookie), so it is optional.
+      const refreshToken = response.data?.refreshJwt || getRefreshToken() || undefined;
+      onTokens({ accessToken: sessionJwt, idToken: sessionJwt, refreshToken });
     } catch {
       setError("Descope sign-in failed.");
     } finally {
@@ -109,8 +111,8 @@ const PasswordForm = ({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled"
  * `setAuthTokens`.
  */
 const DescopeLogin = ({ clientKey, disabled, onTokens }: DescopeLoginProps) => {
-  const [projectId, setProjectId] = useState<string>(ENV_PROJECT_ID);
-  const [authDomain, setAuthDomain] = useState<string>(ENV_AUTH_DOMAIN);
+  const [projectId, setProjectId] = useState(ENV_PROJECT_ID);
+  const [authDomain, setAuthDomain] = useState(ENV_AUTH_DOMAIN);
   const [memoryStorage] = useState(createMemoryStorage);
 
   useEffect(() => {
