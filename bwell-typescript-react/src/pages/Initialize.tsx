@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { authenticate, initialize, userSlice } from "@/store/userSlice";
 import { AppDispatch, RootState } from "@/store/store";
+import DescopeLogin from "@/components/DescopeLogin";
+import type { DescopeAuthTokens } from "@/sdk/bWellSdk";
 
 const DEFAULT_KEY = import.meta.env.VITE_DEFAULT_KEY ?? "";
 const DEFAULT_OAUTH_CREDS = import.meta.env.VITE_DEFAULT_OAUTH_CREDS ?? "";
@@ -31,6 +33,8 @@ const Initialize = () => {
   const loginWithProvidedOAuthCreds = () => dispatch(authenticate({ oauthCreds }));
 
   const loginWithProvidedUsernamePassword = () => dispatch(authenticate({ username, password }));
+
+  const loginWithDescopeTokens = (descopeTokens: DescopeAuthTokens) => dispatch(authenticate({ descopeTokens }));
 
   if (!isRehydrated)
     return <Box>Rehydrating...</Box>
@@ -97,7 +101,7 @@ const Initialize = () => {
               </Button>
             </CenteredGridItem>
             <CenteredGridItem>
-              <h2>Or Login with Username & Password</h2>
+              <h2>Or Login with Cognito</h2>
               <TextField
                 aria-label="username"
                 id="txtUsername"
@@ -127,8 +131,11 @@ const Initialize = () => {
                 disabled={!(key && username && password) || isLoggedIn}
                 onClick={loginWithProvidedUsernamePassword}
               >
-                Login with Username & Password
+                Login with Cognito
               </Button>
+            </CenteredGridItem>
+            <CenteredGridItem>
+              <DescopeLogin clientKey={user.clientKey} disabled={isLoggedIn} onTokens={loginWithDescopeTokens} />
             </CenteredGridItem>
             {
               isLoggedIn && (

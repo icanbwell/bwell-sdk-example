@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { authenticateSdk, initializeSdk } from "@/sdk/bWellSdk";
+import {
+  authenticateSdk,
+  authenticateSdkWithTokens,
+  initializeSdk,
+  type DescopeAuthTokens,
+} from "@/sdk/bWellSdk";
 
 interface UserState {
   clientKey?: string;
@@ -13,12 +18,19 @@ interface UserState {
 
 export const authenticate = createAsyncThunk<
   string,
-  { oauthCreds?: string; username?: string; password?: string },
+  {
+    oauthCreds?: string;
+    username?: string;
+    password?: string;
+    descopeTokens?: DescopeAuthTokens;
+  },
   { rejectValue: string }
 >("user/authenticate", async (params, { rejectWithValue }) => {
   try {
     let authenticationOutcome;
-    if (params.oauthCreds) {
+    if (params.descopeTokens) {
+      authenticationOutcome = await authenticateSdkWithTokens(params.descopeTokens);
+    } else if (params.oauthCreds) {
       authenticationOutcome = await authenticateSdk(params.oauthCreds);
     } else if (params.username && params.password) {
       authenticationOutcome = await authenticateSdk({
@@ -31,6 +43,7 @@ export const authenticate = createAsyncThunk<
     const success = authenticationOutcome.success();
     if (!success)
       return rejectWithValue(authenticationOutcome.error().message ?? "Unknown error");
+    // Never return Descope tokens: this value is written to persisted redux state.
     return params.oauthCreds ?? params.username ?? "";
   } catch (error) {
     if (error instanceof Error) {
