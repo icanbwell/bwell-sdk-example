@@ -127,6 +127,8 @@ struct MainTabView: View {
             ProviderResourcesView()
         case .consents:
             ConsentsView()
+        case .playground(let id):
+            PlaygroundRegistry.all.first { $0.id == id }?.destination() ?? AnyView(EmptyView())
         }
     }
 }

@@ -3,6 +3,9 @@
 
 # Xcode user-specific data
 **/xcuserdata/
+**/DerivedData/
+**/.build/
+**/.swiftpm/
 
 node_modules
 

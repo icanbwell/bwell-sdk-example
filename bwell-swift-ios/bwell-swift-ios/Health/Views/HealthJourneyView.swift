@@ -395,7 +395,7 @@ private struct TaskCardView: View {
                         .padding(.top, 4)
                         .confirmationDialog("Complete Task", isPresented: $showConfirmation) {
                             Button("Mark as Complete") {
-                                Swift.Task { await onMarkComplete() }
+                                _Concurrency.Task { await onMarkComplete() }
                             }
                             Button("Cancel", role: .cancel) {}
                         } message: {
