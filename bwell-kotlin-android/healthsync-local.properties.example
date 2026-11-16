@@ -1,0 +1,18 @@
+# Health Sync on-device adapter - LOCAL TEST CREDENTIALS TEMPLATE.
+#
+# cp healthsync-local.properties.example healthsync-local.properties
+# then fill in your real JFrog credentials below. This file is gitignored -
+# never committed - and is read directly by
+# healthsync-local.settings.gradle.kts, so Android Studio's Run button
+# (its own embedded Gradle daemon) picks the credentials up with no shell
+# `export` needed. The JFROG_READ_TOKEN/JFROG_READ_USER environment
+# variables still work as a fallback if this file is absent or a key here
+# is left blank.
+
+# Required - a Bearer/reference token issued for the gated vendor repo.
+JFROG_READ_TOKEN=REPLACE_ME
+
+# Optional - only set this if you were issued a username too (switches the
+# repo from Bearer-only to standard username/password Basic auth). Leave
+# blank otherwise.
+JFROG_READ_USER=

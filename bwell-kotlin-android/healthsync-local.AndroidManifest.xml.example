@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Health Sync on-device adapter - LOCAL TEST OVERLAY (manifest half).
+
+     This is a TEMPLATE, and unlike the gradle .example files, needs no
+     editing - copy it verbatim to app/src/healthSyncLocal/AndroidManifest.xml
+     (enable-local-adapter.sh does this for you).
+
+     Merges into the debug variant only when this overlay is present (see
+     app/build.gradle.kts's sourceSets block). Adds exactly what the
+     published adapter's own manifest requires: Health Connect package
+     visibility, and the permissions-rationale intent-filter on the existing
+     launcher activity (merged by android:name match, not a new activity).
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <queries>
+        <package android:name="com.google.android.apps.healthdata" />
+    </queries>
+
+    <application>
+        <activity android:name=".activities.NavigationActivity">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
