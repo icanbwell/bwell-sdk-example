@@ -19,13 +19,6 @@ Enter your b.well **client key**, then sign in with one of these methods, in ord
 
 The SDK keeps its tokens in `sessionStorage` (see `src/sdk/sessionTokenStorage.ts`) so the session survives a page reload (and the full-page redirect used when a popup is blocked). Everything is cleared on sign out or when the tab closes.
 
-## Customize
-
-- `src/config/app.ts`: customer name, disconnect instructions, nav items, health sub-pages.
-- `src/config/tos.ts`: terms copy, assembled from the config above.
-- `src/theme/theme.ts`: 2026 brand palette and fonts (Quicksand, Open Sans).
-- Chat: `BAILEY_PROMPTS` in `src/config/app.ts` sets the preset questions.
-
 ## Redirects
 
 CLEAR and provider OAuth open in a popup (`src/components/useExternalFlow.ts`), so the app stays where it is. While the popup is open the page shows a panel with **Done verifying** / **Done connecting**, **Reopen window** and **Cancel**. Pressing Done re-checks the real state (verification status, connections) before moving on.
