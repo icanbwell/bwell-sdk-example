@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
-import { Alert, Box, Button, TextField } from "@mui/material";
+import { KeyboardEvent, useEffect, useState } from "react";
+import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
 import { AuthProvider, getRefreshToken, getSessionToken, useDescope } from "@descope/react-sdk";
-
-import type { DescopeAuthTokens } from "@/sdk/bWellSdk";
 import { fetchDescopeClientConfig } from "@/sdk/clientRecord";
 
 const ENV_PROJECT_ID = import.meta.env.VITE_DESCOPE_PROJECT_ID ?? "";
 const ENV_AUTH_DOMAIN = import.meta.env.VITE_DESCOPE_AUTH_DOMAIN ?? "";
 
+export type DescopeAuthTokens = {
+  accessToken: string;
+  idToken: string;
+  // Descope normally keeps the refresh token in an HttpOnly cookie, so a browser
+  // app usually has only the session token.
+  refreshToken?: string;
+};
+
 type DescopeLoginProps = {
-  clientKey?: string;
+  clientKey: string;
   disabled: boolean;
   onTokens: (tokens: DescopeAuthTokens) => void;
 };
-
-const fieldStyle = { minWidth: "80%", padding: "10px" };
 
 // Keeps Descope's tokens in memory only, but lets its getters read them back.
 const createMemoryStorage = () => {
@@ -26,12 +30,14 @@ const createMemoryStorage = () => {
   };
 };
 
-const PasswordForm = ({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled" | "onTokens">) => {
+function PasswordForm({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled" | "onTokens">) {
   const sdk = useDescope();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const canSubmit = !!email && !!password && !disabled && !submitting;
 
   const signIn = async () => {
     setSubmitting(true);
@@ -47,8 +53,7 @@ const PasswordForm = ({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled"
         setError("Descope sign-in succeeded but did not return a session token.");
         return;
       }
-      // The Descope session JWT is used as both the access and ID token. The refresh
-      // token is usually unavailable here (HttpOnly cookie), so it is optional.
+      // The Descope session JWT is used as both the access and ID token.
       const refreshToken = response.data?.refreshJwt || getRefreshToken() || undefined;
       onTokens({ accessToken: sessionJwt, idToken: sessionJwt, refreshToken });
     } catch {
@@ -58,67 +63,43 @@ const PasswordForm = ({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled"
     }
   };
 
+  const onEnter = (e: KeyboardEvent) => {
+    if (e.key === "Enter" && canSubmit) {
+      e.preventDefault();
+      void signIn();
+    }
+  };
+
   return (
-    <>
-      <Box>
-        <h2>Or Login with Descope</h2>
-        <TextField
-          aria-label="descope email"
-          id="txtDescopeEmail"
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          value={email}
-          fullWidth
-          style={fieldStyle}
-          disabled={disabled}
-        />
-        <TextField
-          type="password"
-          aria-label="descope password"
-          id="txtDescopePassword"
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          value={password}
-          fullWidth
-          style={fieldStyle}
-          disabled={disabled}
-        />
-      </Box>
-      <Box>
-        <Button
-          id="btnSubmitDescope"
-          variant="contained"
-          disabled={!(email && password) || disabled || submitting}
-          onClick={signIn}
-        >
-          Login with Descope
-        </Button>
-      </Box>
-      {error && (
-        <Alert severity="error" id="descopeError">
-          {error}
-        </Alert>
-      )}
-    </>
+    <Stack spacing={2.5}>
+      <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={onEnter}
+        autoComplete="off" disabled={disabled} fullWidth />
+      <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={onEnter} autoComplete="off" disabled={disabled} fullWidth />
+      {error && <Alert severity="error">{error}</Alert>}
+      <Button variant="contained" size="large" disabled={!canSubmit} onClick={signIn}>
+        {submitting ? "Signing in…" : "Continue with Descope"}
+      </Button>
+    </Stack>
   );
-};
+}
 
 /**
  * Email and password sign-in for clients that use Descope as their identity provider.
  * The Descope project and auth domain are read from the client's identity provider
- * configuration (or VITE_DESCOPE_* when it can't be read). Nothing renders for clients
- * that don't use Descope. The session and refresh tokens go to the SDK through
- * `setAuthTokens`.
+ * configuration (or VITE_DESCOPE_* when it can't be read). The session token goes to the
+ * SDK through `setAuthTokens` (see SessionContext).
  */
-const DescopeLogin = ({ clientKey, disabled, onTokens }: DescopeLoginProps) => {
+export default function DescopeLogin({ clientKey, disabled, onTokens }: DescopeLoginProps) {
   const [projectId, setProjectId] = useState(ENV_PROJECT_ID);
   const [authDomain, setAuthDomain] = useState(ENV_AUTH_DOMAIN);
   const [memoryStorage] = useState(createMemoryStorage);
 
   useEffect(() => {
-    if (!clientKey) return;
+    const key = clientKey.trim();
+    if (!key) return;
     let cancelled = false;
-    fetchDescopeClientConfig(clientKey)
+    fetchDescopeClientConfig(key)
       .then((config) => {
         if (cancelled || !config) return;
         setProjectId(config.projectId);
@@ -132,7 +113,13 @@ const DescopeLogin = ({ clientKey, disabled, onTokens }: DescopeLoginProps) => {
     };
   }, [clientKey]);
 
-  if (!projectId) return null;
+  if (!projectId) {
+    return (
+      <Typography variant="body2" color="text.secondary">
+        Enter your client key. If this client uses Descope, the sign-in form appears here.
+      </Typography>
+    );
+  }
 
   return (
     // Tokens stay in memory: nothing is written to cookies or storage.
@@ -148,6 +135,4 @@ const DescopeLogin = ({ clientKey, disabled, onTokens }: DescopeLoginProps) => {
       <PasswordForm disabled={disabled} onTokens={onTokens} />
     </AuthProvider>
   );
-};
-
-export default DescopeLogin;
+}

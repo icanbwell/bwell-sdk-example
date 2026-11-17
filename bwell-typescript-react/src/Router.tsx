@@ -1,41 +1,63 @@
-import Initialize from "@/pages/Initialize";
-import Page from "@/pages/Page";
-import AllergyIntolerances from "@/pages/AllergyIntolerances";
-import ManageConnections from "@/pages/Connections";
-import { createBrowserRouter } from "react-router-dom";
-import HealthSummary from "./pages/HealthSummary";
-import Conditions from "./pages/Conditions";
-import Labs from "./pages/Labs";
-import CarePlans from "./pages/CarePlans";
-import Encounters from "./pages/Encounters";
-import Immunizations from "./pages/Immunizations";
-import Medications from "./pages/Medications";
-import Procedures from "./pages/Procedures";
-import VitalSigns from "./pages/VitalSigns";
-import ProfilePage from "./pages/Profile";
-import SearchPage from "./pages/Search";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
+import { SessionProvider } from "@/auth/SessionContext";
+import { RequireSession, RequireTos } from "@/auth/Guards";
+import AppShell from "@/components/AppShell";
+import Login from "@/pages/Login";
+import Terms from "@/pages/Terms";
+import ConnectMethod from "@/pages/ConnectMethod";
+import ConnectClear from "@/pages/ConnectClear";
+import ConnectSearch from "@/pages/ConnectSearch";
+import OAuthReturn from "@/pages/OAuthReturn";
+import Connections from "@/pages/Connections";
+import { HealthDataPage, HealthIndexRedirect, HealthLayout } from "@/pages/Health";
+import Settings from "@/pages/Settings";
+import Chat from "@/pages/Chat";
 
-const makePageRoute = (path: string, element: JSX.Element) => ({
-  path,
-  element: <Page>{element}</Page>,
-});
+// The session lives in the router so the OAuth/CLEAR return page can sit outside it.
+const SessionRoot = () => <SessionProvider><Outlet /></SessionProvider>;
 
-const Router = createBrowserRouter([
-  makePageRoute("/", <Initialize />),
-  makePageRoute("/initialize", <Initialize />),
-  makePageRoute("/profile", <ProfilePage />),
-  makePageRoute("/search", <SearchPage />),
-  makePageRoute("/connections", <ManageConnections />),
-  makePageRoute("/healthSummary", <HealthSummary />),
-  makePageRoute("/allergyIntolerances", <AllergyIntolerances />),
-  makePageRoute("/carePlans", <CarePlans />),
-  makePageRoute("/conditions", <Conditions />),
-  makePageRoute("/encounters", <Encounters />),
-  makePageRoute("/immunizations", <Immunizations />),
-  makePageRoute("/labs", <Labs />),
-  makePageRoute("/medications", <Medications />),
-  makePageRoute("/procedures", <Procedures />),
-  makePageRoute("/vitalSigns", <VitalSigns />)
+export const router = createBrowserRouter([
+  // The popup lands here after CLEAR or a provider sign-in; it must not restore the session.
+  { path: "/oauth/return", element: <OAuthReturn /> },
+  {
+    element: <SessionRoot />,
+    children: [
+      { path: "/", element: <Navigate to="/login" replace /> },
+      { path: "/login", element: <Login /> },
+      {
+        element: <RequireSession />,
+        children: [
+          { path: "/terms", element: <Terms /> },
+          {
+            element: <RequireTos />,
+            children: [
+              { path: "/connect-method", element: <ConnectMethod /> },
+              { path: "/connect/clear", element: <ConnectClear /> },
+              { path: "/connect/search", element: <ConnectSearch /> },
+              {
+                path: "/app",
+                element: <AppShell />,
+                children: [
+                  { index: true, element: <Navigate to="connections" replace /> },
+                  { path: "connections", element: <Connections /> },
+                  {
+                    path: "health",
+                    element: <HealthLayout />,
+                    children: [
+                      { index: true, element: <HealthIndexRedirect /> },
+                      // v2: add { path: "share", element: <ShareMyRecords /> } before the :type route.
+                      { path: ":type", element: <HealthDataPage /> },
+                    ],
+                  },
+                  { path: "chat", element: <Chat /> },
+                  { path: "settings", element: <Settings /> },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      { path: "*", element: <Navigate to="/login" replace /> },
+    ],
+  },
 ]);
-
-export default Router;
