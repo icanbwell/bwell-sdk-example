@@ -39,7 +39,9 @@ export function ClientKeyProvider({ children }: PropsWithChildren) {
       let hasKey = false;
       let stateKey = '';
 
-      console.info('storage key', key)
+      // Never log the key itself — this is a credential and console output
+      // is not stripped from React Native release builds by default.
+      console.debug('client key from storage:', key === null ? 'none' : 'present')
 
       if (key !== null) {
         stateKey = key;
@@ -66,7 +68,7 @@ export function ClientKeyProvider({ children }: PropsWithChildren) {
 
   const setKey = async (key: string) => {
     try {
-      console.log('setting key')
+      console.debug('setting client key')
 
       await AsyncStorage.setItem(CLIENT_KEY_STORAGE_KEY, key)
 

@@ -385,9 +385,10 @@ class LoginFragment : Fragment() {
                 .build()
 
             BWellSdk.initialize(config = config)
+            // NOTE: never log `credentials.token` — it is a live bearer credential
+            // and this app ships with isMinifyEnabled = false and no log stripping.
             val credentials =
                 Credentials.OAuthCredentials(oAuthCredentials)
-            Log.d(TAG, credentials.token)
 
             BWellSdk.authenticate(credentials)
 
