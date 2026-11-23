@@ -108,6 +108,17 @@ export default function ConnectClear() {
     } catch (e) { setError(errorMessage(e)); setBusy(null); }
   };
 
+  // Ways out of the pending-verification screens. The saved agreement is dropped first, otherwise
+  // /connect-method would send the user straight back here.
+  const searchProvidersInstead = () => { flow.cancel(); clearSmartConnectAgreement(); navigate("/connect/search"); };
+  const skipForNow = () => { flow.cancel(); clearSmartConnectAgreement(); navigate("/app/connections"); };
+  const exitActions = (
+    <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap" }}>
+      <Button onClick={searchProvidersInstead}>Search for a provider instead</Button>
+      <Button onClick={skipForNow}>Skip for now</Button>
+    </Stack>
+  );
+
   const connect = async (connectionId: string) => {
     setBusy(connectionId); setError(null);
     try {
@@ -136,9 +147,16 @@ export default function ConnectClear() {
           <Button variant="contained" size="large" onClick={startVerification} disabled={busy === "verify"} sx={{ alignSelf: "flex-start" }}>
             {busy === "verify" ? "Opening CLEAR…" : "Verify with CLEAR"}
           </Button>
+          {exitActions}
         </Stack>
       )}
-      {phase === "waiting-verification" && <Stack spacing={2}><Typography>Your verification is being processed…</Typography><LinearProgress /></Stack>}
+      {phase === "waiting-verification" && (
+        <Stack spacing={2}>
+          <Typography>Your verification is being processed…</Typography>
+          <LinearProgress />
+          {exitActions}
+        </Stack>
+      )}
       {phase === "searching" && (
         <Stack spacing={2}>
           <Typography variant="h6">We're searching for your records</Typography>
@@ -149,6 +167,7 @@ export default function ConnectClear() {
           {polls < POLLS_TO_FULL
             ? <LinearProgress variant="determinate" value={(polls / POLLS_TO_FULL) * 100} />
             : <Alert severity="info">Sorry, the network query is taking longer than expected. We're still working on locating and retrieving your data!</Alert>}
+          <Button onClick={() => navigate("/connect/search")} sx={{ alignSelf: "flex-start" }}>Search for a provider instead</Button>
         </Stack>
       )}
       {phase === "results" && flow.active && (

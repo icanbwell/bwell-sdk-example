@@ -143,7 +143,9 @@ export async function getRecommendedConnections(sdk: BWellSDK): Promise<Recommen
       new HealthDataRequest({ page: 0, pageSize: 50, groupCode: { value: { code: "recommended-connections" } } }),
     ),
   );
-  type Member = { alias?: string; display?: string; resource?: { alias?: string; organizationName?: string; name?: string } };
+  // FHIR Organization.alias is a list of strings, so the API can return ["epic_on_fhir_sandbox"] rather than a bare string.
+  type Alias = string | string[];
+  type Member = { alias?: Alias; display?: string; resource?: { alias?: Alias; organizationName?: string; name?: string } };
   const out: RecommendedConnection[] = [];
   for (const entry of response.entry ?? []) {
     const team = entry?.resource as { id?: string; participant?: { member?: Member }[] } | undefined;
@@ -151,7 +153,9 @@ export async function getRecommendedConnections(sdk: BWellSDK): Promise<Recommen
       const member = participant?.member;
       // The connection id is the organization's alias. The SDK's query returns it on the member's
       // resource; some builds expose it directly on the member.
-      const alias = member?.alias ?? member?.resource?.alias;
+      // getOauthUrl needs a single string connectionId, so take the first alias when it is a list.
+      const rawAlias = member?.alias ?? member?.resource?.alias;
+      const alias = Array.isArray(rawAlias) ? rawAlias.find((a) => typeof a === "string" && a) : rawAlias;
       if (!team?.id || !alias) continue;
       const title = member?.display || member?.resource?.organizationName || member?.resource?.name || alias;
       out.push({ id: `${team.id}:${alias}`, title, connectionId: alias });
@@ -173,12 +177,24 @@ export async function getNetworkSearchState(sdk: BWellSDK): Promise<TaskState> {
       } as never),
     ),
   );
-  const statuses = (tasks.entry ?? []).map((e) => lower(String((e?.resource as { status?: unknown } | undefined)?.status ?? "")));
-  if (statuses.length === 0) return "none";
-  if (statuses.some((s) => s.includes("fail") || s.includes("reject"))) return "failed";
-  if (statuses.every((s) => s.includes("complete"))) return "done";
-  if (statuses.some((s) => s.includes("progress"))) return "running";
-  return "pending";
+  type TaskLike = { status?: unknown; authoredOn?: string; lastModified?: string; meta?: { lastUpdated?: string } };
+  const stamp = (t: TaskLike) => Date.parse(t.authoredOn ?? t.lastModified ?? t.meta?.lastUpdated ?? "") || 0;
+  // The query returns every earlier search too (and has no sort), so only the newest task counts.
+  const newest = (tasks.entry ?? [])
+    .map((e) => e?.resource as TaskLike | undefined)
+    .filter((t): t is TaskLike => !!t)
+    .sort((a, b) => stamp(b) - stamp(a))[0];
+  if (!newest) return "none";
+  // FHIR Task.status; normalised because the API may return enum-style values (IN_PROGRESS).
+  switch (lower(String(newest.status ?? "")).replace(/_/g, "-")) {
+    case "completed": return "done";
+    case "failed":
+    case "rejected":
+    case "cancelled":
+    case "entered-in-error": return "failed";
+    case "in-progress": return "running";
+    default: return "pending";
+  }
 }
 
 export type ConnectionSearchResult = { id: string; name: string; type: string; connectionId?: string; logoUrl?: string };
@@ -224,8 +240,13 @@ export async function getProfile(sdk: BWellSDK): Promise<Person> {
   return unwrapQuery(await sdk.user.getProfile());
 }
 
+/** Blank names are left out of the request, so they can never overwrite the stored name. */
 export async function updateProfileName(sdk: BWellSDK, firstName: string, lastName: string) {
-  return unwrapTransaction(await sdk.user.updateProfile(new UpdateProfileRequest({ firstName, lastName } as never)));
+  const fields = {
+    ...(firstName.trim() ? { firstName: firstName.trim() } : {}),
+    ...(lastName.trim() ? { lastName: lastName.trim() } : {}),
+  };
+  return unwrapTransaction(await sdk.user.updateProfile(new UpdateProfileRequest(fields as never)));
 }
 
 export async function getHealthSummary(sdk: BWellSDK) {

@@ -28,13 +28,15 @@ function ProfileSection() {
   const [last, setLast] = useState("");
   const [birthDate, setBirthDate] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
+  // Saving stays off if the profile didn't load: the empty fields would otherwise overwrite the real name.
+  const [loadFailed, setLoadFailed] = useState(false);
   const [msg, setMsg] = useState<{ severity: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
     getProfile(sdk).then((p) => {
       const name = p.name?.find((n) => n);
       setFirst(name?.given?.[0] ?? ""); setLast(name?.family ?? ""); setBirthDate(p.birthDate);
-    }).catch((e) => setMsg({ severity: "error", text: errorMessage(e, "Unable to load your profile.") })).finally(() => setLoaded(true));
+    }).catch((e) => { setLoadFailed(true); setMsg({ severity: "error", text: errorMessage(e, "Unable to load your profile.") }); }).finally(() => setLoaded(true));
   }, [sdk]);
 
   const save = async (e: FormEvent) => {
@@ -51,7 +53,7 @@ function ProfileSection() {
         <TextField label="Last name" value={last} onChange={(e) => setLast(e.target.value)} />
         <TextField label="Date of birth" value={birthDate ?? ""} disabled helperText="Contact support to change your date of birth." />
         {msg && <Alert severity={msg.severity}>{msg.text}</Alert>}
-        <Button type="submit" variant="contained" sx={{ alignSelf: "flex-start" }}>Save</Button>
+        <Button type="submit" variant="contained" disabled={loadFailed || (!first.trim() && !last.trim())} sx={{ alignSelf: "flex-start" }}>Save</Button>
       </Stack>
     </form>
   );

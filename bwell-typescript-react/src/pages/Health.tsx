@@ -127,7 +127,6 @@ export function HealthDataPage() {
       <Typography color="text.secondary" sx={{ mb: 2 }}>{VIEW_HELP[view]}</Typography>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {data?.warning && <Alert severity="warning" sx={{ mb: 2 }}>Some records may be missing: {data.warning}</Alert>}
       {!data && <Loading />}
       {data && !error && data.rows.length === 0 && (
         <Alert severity="info">No {known.label.toLowerCase()} yet. Once a connection finishes syncing, they'll show up here.</Alert>

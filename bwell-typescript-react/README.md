@@ -19,6 +19,15 @@ Enter your b.well **client key**, then sign in with one of these methods, in ord
 
 The SDK keeps its tokens in `sessionStorage` (see `src/sdk/sessionTokenStorage.ts`) so the session survives a page reload (and the full-page redirect used when a popup is blocked). Everything is cleared on sign out or when the tab closes.
 
+## Chat environment
+
+The **Chat** page calls the b.well health assistant API, and by default it talks to the **client-sandbox** environment (`https://api.client-sandbox.icanbwell.com/bailey/v1`). It works out of the box with a sandbox client key. For any other environment, set these in `.env.local`:
+
+- `VITE_BAILEY_BASE_URL`: the API base URL for built or deployed apps, for example `https://api.prod.icanbwell.com/bailey/v1`.
+- `VITE_BAILEY_PROXY_TARGET`: the host the dev server proxies `/bailey` to when you run `npm run dev`, for example `https://api.prod.icanbwell.com`.
+
+The client key and user tokens must belong to the same environment as the host, or the assistant returns an HTTP 401 and your access token is sent to the wrong host.
+
 ## Redirects
 
 CLEAR and provider OAuth open in a popup (`src/components/useExternalFlow.ts`), so the app stays where it is. While the popup is open the page shows a panel with **Done verifying** / **Done connecting**, **Reopen window** and **Cancel**. Pressing Done re-checks the real state (verification status, connections) before moving on.

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { listenForExternalReturn } from "@/sdk/externalFlow";
+import { clearExternalRedirect, listenForExternalReturn, markExternalRedirect } from "@/sdk/externalFlow";
 import { errorMessage } from "@/sdk/results";
 
 export type ExternalFlowOptions = {
@@ -40,9 +40,12 @@ export function useExternalFlow() {
 
   const open = useCallback(async (opts: ExternalFlowOptions): Promise<"popup" | "redirect"> => {
     // Opened first, while the click still counts: the URL below takes a network call to fetch.
+    clearExternalRedirect(); // before the popup exists, so it can't inherit a stale marker
     const win = window.open("", WINDOW_NAME, WINDOW_FEATURES);
     if (!win) {
-      window.location.assign(await opts.getUrl());
+      const url = await opts.getUrl();
+      markExternalRedirect();
+      window.location.assign(url);
       return "redirect";
     }
     try {
