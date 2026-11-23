@@ -179,6 +179,8 @@ export async function getNetworkSearchState(sdk: BWellSDK): Promise<TaskState> {
   );
   type TaskLike = { status?: unknown; authoredOn?: string; lastModified?: string; meta?: { lastUpdated?: string } };
   const stamp = (t: TaskLike) => Date.parse(t.authoredOn ?? t.lastModified ?? t.meta?.lastUpdated ?? "") || 0;
+  // When the task last changed (a task updated in place keeps its old authoredOn).
+  const modified = (t: TaskLike) => Date.parse(t.lastModified ?? t.meta?.lastUpdated ?? t.authoredOn ?? "") || 0;
   // The query returns every earlier search too (and has no sort), so only the newest task counts.
   const newest = (tasks.entry ?? [])
     .map((e) => e?.resource as TaskLike | undefined)
@@ -186,15 +188,24 @@ export async function getNetworkSearchState(sdk: BWellSDK): Promise<TaskState> {
     .sort((a, b) => stamp(b) - stamp(a))[0];
   if (!newest) return "none";
   // FHIR Task.status; normalised because the API may return enum-style values (IN_PROGRESS).
-  switch (lower(String(newest.status ?? "")).replace(/_/g, "-")) {
-    case "completed": return "done";
-    case "failed":
-    case "rejected":
-    case "cancelled":
-    case "entered-in-error": return "failed";
-    case "in-progress": return "running";
-    default: return "pending";
+  const state = ((): TaskState => {
+    switch (lower(String(newest.status ?? "")).replace(/_/g, "-")) {
+      case "completed": return "done";
+      case "failed":
+      case "rejected":
+      case "cancelled":
+      case "entered-in-error": return "failed";
+      case "in-progress": return "running";
+      default: return "pending";
+    }
+  })();
+  // A finished task that last changed before the current consent belongs to an earlier search, so
+  // keep waiting for the one the consent just started.
+  if (state === "done" || state === "failed") {
+    const consentAt = Date.parse((await getLatestConsent(sdk, "ias:import:records"))?.meta?.lastUpdated ?? "") || 0;
+    if (modified(newest) && modified(newest) < consentAt) return "pending";
   }
+  return state;
 }
 
 export type ConnectionSearchResult = { id: string; name: string; type: string; connectionId?: string; logoUrl?: string };

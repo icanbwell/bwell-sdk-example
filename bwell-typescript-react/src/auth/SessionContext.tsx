@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { BWellSDK } from "@icanbwell/bwell-sdk-ts";
 import { errorMessage, SdkError } from "@/sdk/results";
 import {
@@ -125,7 +125,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [sdk]);
 
   // After a CLEAR/OAuth redirect (or refresh) the page reloads: rebuild the SDK from stored tokens.
+  // Runs once: StrictMode's second dev run would refresh the same stored tokens concurrently.
+  const restored = useRef(false);
   useEffect(() => {
+    if (restored.current) return;
+    restored.current = true;
     const clientKey = sessionStorage.getItem(CLIENT_KEY);
     if (!clientKey) return setStatus("signed-out");
     newSdk(clientKey)

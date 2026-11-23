@@ -3,6 +3,9 @@ import { BAILEY_BASE_URL, BAILEY_MODEL } from "@/config/app";
 import { CLIENT_KEY_STORAGE } from "@/auth/SessionContext";
 
 const ACCESS_TOKEN_KEY = "bwell-sdk:accessToken"; // written by SessionTokenStorage
+// How long to wait for the API to start answering. It stops counting once the response begins, so a
+// long streamed answer isn't cut off.
+const CONNECT_TIMEOUT_MS = 30_000;
 
 /** Expiry (ms since epoch) from the token's `exp` claim, or 0 if it can't be read. */
 function tokenExpiry(token: string): number {
@@ -30,17 +33,27 @@ async function currentAccessToken(sdk: BWellSDK): Promise<string> {
 export async function askBailey(sdk: BWellSDK, prompt: string, onDelta: (text: string) => void, signal?: AbortSignal) {
   const clientKey = sessionStorage.getItem(CLIENT_KEY_STORAGE);
   if (!clientKey) throw new Error("You're not signed in.");
-  const response = await fetch(`${BAILEY_BASE_URL}/responses`, {
-    method: "POST",
-    signal,
-    headers: {
-      Authorization: `Bearer ${await currentAccessToken(sdk)}`,
-      "api-key": clientKey,
-      "Content-Type": "application/json",
-    },
-    // One-off questions: nothing to store or continue from.
-    body: JSON.stringify({ model: BAILEY_MODEL, input: prompt, stream: true, store: false }),
-  });
+  // The caller's signal (Stop / leaving the page) and the connection timeout both abort the request.
+  const controller = new AbortController();
+  if (signal?.aborted) controller.abort(signal.reason);
+  signal?.addEventListener("abort", () => controller.abort(signal.reason), { once: true });
+  const timer = setTimeout(() => controller.abort(new Error("The assistant didn't respond in time.")), CONNECT_TIMEOUT_MS);
+  let response: Response;
+  try {
+    response = await fetch(`${BAILEY_BASE_URL}/responses`, {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${await currentAccessToken(sdk)}`,
+        "api-key": clientKey,
+        "Content-Type": "application/json",
+      },
+      // One-off questions: nothing to store or continue from.
+      body: JSON.stringify({ model: BAILEY_MODEL, input: prompt, stream: true, store: false }),
+    });
+  } finally {
+    clearTimeout(timer);
+  }
   if (!response.ok || !response.body) {
     // Include the server's explanation (an API error message, not user data) so a rejected request is diagnosable.
     const detail = (await response.text().catch(() => "")).trim().slice(0, 300);
@@ -52,10 +65,10 @@ export async function askBailey(sdk: BWellSDK, prompt: string, onDelta: (text: s
   let buffer = "";
   for (;;) {
     const { done, value } = await reader.read();
-    if (done) return;
-    buffer += decoder.decode(value, { stream: true });
+    // On the last read, flush the decoder and treat whatever is left as a complete line.
+    buffer += decoder.decode(value, { stream: !done });
     const lines = buffer.split("\n");
-    buffer = lines.pop() ?? "";
+    buffer = done ? "" : lines.pop() ?? "";
     for (const line of lines) {
       if (!line.startsWith("data: ")) continue;
       const data = line.slice(6).trim();
@@ -65,5 +78,6 @@ export async function askBailey(sdk: BWellSDK, prompt: string, onDelta: (text: s
       if (event.type === "response.output_text.delta" && event.delta) onDelta(event.delta);
       else if (event.type === "error" || event.type === "response.failed") throw new Error("The assistant couldn't finish that answer.");
     }
+    if (done) return;
   }
 }

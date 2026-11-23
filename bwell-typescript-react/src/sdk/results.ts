@@ -24,11 +24,12 @@ export function unwrapQuery<T>(result: BWellQueryResult<T, any>, fallback = "Req
 
 /**
  * Queries can return data AND errors (e.g. a resolver failing for part of a record set). Keep the
- * data when there is some, and pass the error along as a warning so the UI can say records may be missing.
+ * data when there is some and log the error (the message only) so a partial failure stays diagnosable.
  */
-export function unwrapPartialQuery<T>(result: BWellQueryResult<T, any>, fallback = "Request failed"): { data: T; warning?: string } {
+export function unwrapPartialQuery<T>(result: BWellQueryResult<T, any>, fallback = "Request failed"): { data: T } {
   if (result.data === undefined) return { data: unwrapQuery(result, fallback) };
-  return result.hasError() ? { data: result.data, warning: messageOf(result.error, fallback) } : { data: result.data };
+  if (result.hasError()) console.warn("Query returned partial data:", messageOf(result.error, fallback));
+  return { data: result.data };
 }
 
 export function unwrapTransaction<T>(result: BWellTransactionResult<T, any>, fallback = "Request failed"): T {

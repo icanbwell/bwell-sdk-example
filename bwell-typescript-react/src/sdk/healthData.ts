@@ -25,8 +25,6 @@ export type HealthPage = {
   rows: HealthRow[];
   /** Total across all pages, when the server reports one. */
   total: number | null;
-  /** Set when the server returned data alongside an error, so some records may be missing. */
-  warning?: string;
 };
 export type HealthView = "refined" | "raw";
 
@@ -82,17 +80,17 @@ function describe(resource: any): { title: string; date?: string; detail?: strin
 
 type RawResponse = { entry: ({ id?: string | null; resource?: unknown } | null)[] | null; total: number | null; pagingInfo: Paged };
 
-function rawPage({ data: r, warning }: { data: RawResponse; warning?: string }): HealthPage {
+function rawPage({ data: r }: { data: RawResponse }): HealthPage {
   const rows = (r.entry ?? []).flatMap((e, i): HealthRow[] => {
     if (!e?.resource) return [];
     const d = describe(e.resource);
     return [{ id: e.id ?? (e.resource as { id?: string }).id ?? `raw-${i}`, ...d, json: e.resource }];
   });
-  return { rows, total: totalOf(r.pagingInfo, r.total), warning };
+  return { rows, total: totalOf(r.pagingInfo, r.total) };
 }
 
-const refinedPage = <G extends Group>({ data: r, warning }: { data: { resources: G[]; pagingInfo: Paged }; warning?: string }, date: (g: G) => string | null | undefined, extra?: (g: G) => string | undefined): HealthPage =>
-  ({ rows: groupRows(r.resources, date, extra), total: totalOf(r.pagingInfo), warning });
+const refinedPage = <G extends Group>({ data: r }: { data: { resources: G[]; pagingInfo: Paged } }, date: (g: G) => string | null | undefined, extra?: (g: G) => string | undefined): HealthPage =>
+  ({ rows: groupRows(r.resources, date, extra), total: totalOf(r.pagingInfo) });
 
 const req = (p: Paging) => ({ page: p.page, pageSize: p.pageSize });
 

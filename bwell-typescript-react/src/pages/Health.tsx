@@ -41,7 +41,9 @@ const VIEW_HELP: Record<HealthView, string> = {
 
 const formatDate = (d?: string) => {
   if (!d) return "";
-  const date = new Date(d);
+  // A date-only string ("2020-01-05") parses as UTC midnight, which shows as the day before west of UTC.
+  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d);
+  const date = dateOnly ? new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3])) : new Date(d);
   return Number.isNaN(date.getTime()) ? d : date.toLocaleDateString();
 };
 
