@@ -17,7 +17,7 @@ import { errorMessage } from "@/sdk/results";
 
 const STATUS_LABEL: Record<string, { label: string; color: "success" | "warning" | "error" | "default" }> = {
   CONNECTED: { label: "Connected", color: "success" },
-  EXPIRED: { label: "Needs sign-in", color: "warning" },
+  EXPIRED: { label: "Expired", color: "warning" },
   DISCONNECTED: { label: "Disconnected", color: "default" },
   ACCESS_ENDED: { label: "Access ended", color: "default" },
   ERROR: { label: "Error", color: "error" },

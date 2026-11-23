@@ -1,5 +1,5 @@
 import type { BWellSDK } from "@icanbwell/bwell-sdk-ts";
-import { BAILEY_BASE_URL, BAILEY_MODEL } from "@/config/app";
+import { baileyBaseUrl, BAILEY_MODEL } from "@/config/app";
 import { CLIENT_KEY_STORAGE } from "@/auth/SessionContext";
 
 const ACCESS_TOKEN_KEY = "bwell-sdk:accessToken"; // written by SessionTokenStorage
@@ -40,7 +40,7 @@ export async function askBailey(sdk: BWellSDK, prompt: string, onDelta: (text: s
   const timer = setTimeout(() => controller.abort(new Error("The assistant didn't respond in time.")), CONNECT_TIMEOUT_MS);
   let response: Response;
   try {
-    response = await fetch(`${BAILEY_BASE_URL}/responses`, {
+    response = await fetch(`${baileyBaseUrl(clientKey)}/responses`, {
       method: "POST",
       signal: controller.signal,
       headers: {

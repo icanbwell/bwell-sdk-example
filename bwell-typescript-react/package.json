@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "TZ=America/Los_Angeles vitest run"
   },
   "dependencies": {
     "@descope/react-sdk": "^2.30.10",

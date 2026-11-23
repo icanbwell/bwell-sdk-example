@@ -21,12 +21,12 @@ The SDK keeps its tokens in `sessionStorage` (see `src/sdk/sessionTokenStorage.t
 
 ## Chat environment
 
-The **Chat** page calls the b.well health assistant API, and by default it talks to the **client-sandbox** environment (`https://api.client-sandbox.icanbwell.com/bailey/v1`). It works out of the box with a sandbox client key. For any other environment, set these in `.env.local`:
+The **Chat** page calls the b.well health assistant API. The host comes from the environment inside your client key (`https://api.<env>.icanbwell.com`, for example `api.client-sandbox.icanbwell.com` or `api.prod.icanbwell.com`), so it works with a client key from any environment without extra setup. Keys that don't contain an environment fall back to client-sandbox.
 
-- `VITE_BAILEY_BASE_URL`: the API base URL for built or deployed apps, for example `https://api.prod.icanbwell.com/bailey/v1`.
-- `VITE_BAILEY_PROXY_TARGET`: the host the dev server proxies `/bailey` to when you run `npm run dev`, for example `https://api.prod.icanbwell.com`.
+When you run `npm run dev`, requests go through the Vite dev server's `/bailey` proxy (the API rejects the browser's CORS pre-check from localhost), and the proxy picks the host the same way. Both settings below are optional overrides, set in `.env.local`:
 
-The client key and user tokens must belong to the same environment as the host, or the assistant returns an HTTP 401 and your access token is sent to the wrong host.
+- `VITE_BAILEY_BASE_URL`: the API base URL for built or deployed apps, for example `https://api.prod.icanbwell.com/bailey/v1`. Ignored by `npm run dev`.
+- `VITE_BAILEY_PROXY_TARGET`: the host the dev server proxies `/bailey` to, for example `https://api.prod.icanbwell.com`.
 
 ## Redirects
 

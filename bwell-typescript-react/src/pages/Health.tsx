@@ -11,6 +11,7 @@ import { useSdk } from "@/auth/SessionContext";
 import { HEALTH_DATA_TYPES, HEALTH_EXTRA_TABS, HealthDataTypeId } from "@/config/app";
 import { fetchHealthPage, HealthPage, HealthRow, HealthView } from "@/sdk/healthData";
 import { errorMessage } from "@/sdk/results";
+import { formatFhirDate } from "@/sdk/formatDate";
 
 const TABS = [
   ...HEALTH_DATA_TYPES.map((t) => ({ id: t.id, label: t.label, to: `/app/health/${t.id}` })),
@@ -39,14 +40,6 @@ const VIEW_HELP: Record<HealthView, string> = {
   raw: "The individual records exactly as each source provided them.",
 };
 
-const formatDate = (d?: string) => {
-  if (!d) return "";
-  // A date-only string ("2020-01-05") parses as UTC midnight, which shows as the day before west of UTC.
-  const dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d);
-  const date = dateOnly ? new Date(Number(dateOnly[1]), Number(dateOnly[2]) - 1, Number(dateOnly[3])) : new Date(d);
-  return Number.isNaN(date.getTime()) ? d : date.toLocaleDateString();
-};
-
 function Row({ row, view }: { row: HealthRow; view: HealthView }) {
   const [open, setOpen] = useState(false);
   return (
@@ -58,7 +51,7 @@ function Row({ row, view }: { row: HealthRow; view: HealthView }) {
           </IconButton>
         </TableCell>
         <TableCell sx={{ fontWeight: 600 }}>{row.title}</TableCell>
-        <TableCell sx={{ whiteSpace: "nowrap" }}>{formatDate(row.date)}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{formatFhirDate(row.date)}</TableCell>
         <TableCell>{row.detail}</TableCell>
         {view === "refined" && (
           <TableCell align="right">{row.recordCount !== undefined && <Chip size="small" label={`${row.recordCount} ${row.recordCount === 1 ? "record" : "records"}`} />}</TableCell>

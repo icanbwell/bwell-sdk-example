@@ -139,8 +139,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         await next.authenticateFromStorage();
         await ready(next);
       })
-      .catch(() => {
-        sessionStorage.clear();
+      .catch((e) => {
+        // The tokens stay in sessionStorage: the failure may be temporary (network, a 5xx), and the
+        // SDK can't tell us whether the tokens were rejected. A reload retries the restore; signing
+        // in again replaces them (signIn clears storage first).
+        setError(`We couldn't restore your session: ${errorMessage(e)}. Reload to try again, or sign in again.`);
         setStatus("signed-out");
       });
   }, [ready]);

@@ -1,3 +1,5 @@
+import { apiHostForKey } from "@/sdk/clientKeyEnv";
+
 // Everything a client is expected to customise lives here.
 export const CUSTOMER_NAME = "[Customer]";
 export const DISCONNECT_METHOD = "[describe method]";
@@ -17,13 +19,12 @@ export const MAIN_NAV: readonly NavItem[] = [
 ];
 
 // The Chat page uses the b.well health assistant API (the "bailey" Responses API) (OpenAI-compatible).
-// In dev, requests go through the Vite dev server's /bailey proxy (see vite.config.ts) because the bailey API
-// rejects the browser's CORS pre-check from localhost. Otherwise they go straight to the API; use the host that
-// matches your client key's environment (sandbox: api.client-sandbox.icanbwell.com, production: api.prod.icanbwell.com).
-// Override with VITE_BAILEY_BASE_URL.
-export const BAILEY_BASE_URL: string =
-  import.meta.env.VITE_BAILEY_BASE_URL ||
-  (import.meta.env.DEV ? "/bailey/v1" : "https://api.client-sandbox.icanbwell.com/bailey/v1");
+// In dev, requests always go through the Vite dev server's /bailey proxy (see vite.config.ts) because the bailey
+// API rejects the browser's CORS pre-check from localhost; the proxy picks the host from the client key.
+// Otherwise they go straight to the API, on the host for the client key's environment
+// (https://api.<env>.icanbwell.com). Override a built app's URL with VITE_BAILEY_BASE_URL.
+export const baileyBaseUrl = (clientKey: string): string =>
+  import.meta.env.DEV ? "/bailey/v1" : import.meta.env.VITE_BAILEY_BASE_URL || `${apiHostForKey(clientKey)}/bailey/v1`;
 export const BAILEY_MODEL = "Bailey AI";
 // The preset questions shown as buttons on the Chat page. Edit freely.
 export const BAILEY_PROMPTS: readonly string[] = [

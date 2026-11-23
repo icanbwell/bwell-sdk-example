@@ -1,3 +1,5 @@
+import { decodeEnv } from "@/sdk/clientKeyEnv";
+
 const DEFAULT_IDENTITY_GATEWAY_URL = "https://api-gateway.prod.icanbwell.com/identity";
 const FETCH_TIMEOUT_MS = 10000;
 
@@ -12,16 +14,6 @@ type ClientRecordResponse = {
     projectId?: string;
     providerConfig?: { authDomain?: string };
   };
-};
-
-// Client keys are base64 JSON containing the environment. Old style keys are not JSON.
-const decodeEnv = (clientKey: string): string | undefined => {
-  try {
-    const decoded = JSON.parse(atob(clientKey)) as { env?: string };
-    return decoded.env;
-  } catch {
-    return undefined;
-  }
 };
 
 const identityGatewayUrl = (clientKey: string): string => {
