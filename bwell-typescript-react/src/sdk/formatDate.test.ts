@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { formatFhirDate } from "@/sdk/formatDate";
 
 describe("formatFhirDate", () => {
-  // Run with TZ=America/Los_Angeles (see package.json) so a UTC-parsing regression would show up.
+  // Run in America/Los_Angeles (see src/test/globalSetup.ts) so a UTC-parsing regression would show up.
   test.each([
     ["a year", "2015", "2015"],
     ["a year and month", "2015-03", "Mar 2015"],

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Alert, Button, Checkbox, FormControlLabel, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { JourneyPage } from "@/components/Page";
 import { Credentials, useSession } from "@/auth/SessionContext";
 import DescopeLogin, { DescopeAuthTokens } from "@/components/DescopeLogin";
@@ -10,6 +10,10 @@ type Mode = "idp" | "bwell" | "descope";
 export default function Login() {
   const { status, signIn, error } = useSession();
   const navigate = useNavigate();
+  // RequireSession records the page the user was sent away from, so a reload that restores the session
+  // (or a sign-in) returns them there instead of starting onboarding again.
+  const from = (useLocation().state as { from?: unknown } | null)?.from;
+  const returnTo = typeof from === "string" && from.startsWith("/app") ? from : undefined;
   const [mode, setMode] = useState<Mode>("descope");
   const [clientKey, setClientKey] = useState("");
   const [idpToken, setIdpToken] = useState("");
@@ -20,7 +24,7 @@ export default function Login() {
 
   // First-time users go through terms and connect-method; returning users can skip to the app.
   // (RequireTos still sends anyone who hasn't accepted the terms to /terms.)
-  const destination = skipOnboarding ? "/app/connections" : "/terms";
+  const destination = returnTo ?? (skipOnboarding ? "/app/connections" : "/terms");
 
   if (status === "signed-in") return <Navigate to={destination} replace />;
 

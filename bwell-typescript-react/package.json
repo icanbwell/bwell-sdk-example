@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "TZ=America/Los_Angeles vitest run"
+    "test": "vitest run"
   },
   "dependencies": {
     "@descope/react-sdk": "^2.30.10",
@@ -29,6 +29,7 @@
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react-swc": "^3.10.2",
+    "http-proxy-middleware": "^4.2.2",
     "typescript": "^5.4.5",
     "vite": "^7.1.11",
     "vitest": "^3.2.7"
