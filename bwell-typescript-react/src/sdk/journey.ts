@@ -208,7 +208,9 @@ export async function getNetworkSearchState(sdk: BWellSDK): Promise<TaskState> {
   return state;
 }
 
-export type ConnectionSearchResult = { id: string; name: string; type: string; connectionId?: string; logoUrl?: string };
+/** One way to connect to a search result. `label` names the organization when it isn't the result itself. */
+export type ConnectionOption = { connectionId: string; label?: string };
+export type ConnectionSearchResult = { id: string; name: string; type: string; connections: ConnectionOption[]; logoUrl?: string };
 
 export const isZipCode = (zip: string) => /^\d{5}$/.test(zip);
 
@@ -238,13 +240,33 @@ export async function searchConnections(sdk: BWellSDK, term: string, zip?: strin
       }),
     ),
   );
-  return (data.results ?? []).map((r: any, i: number) => ({
+  return (data.results ?? []).map(toSearchResult);
+}
+
+/**
+ * Organizations and practices carry their own `endpoint`. Practitioners don't: they connect through the
+ * organizations they practice at, so each of those that has an endpoint becomes its own option (labelled
+ * with the organization's name). Options are de-duplicated by connection id.
+ */
+export function toSearchResult(r: any, i: number): ConnectionSearchResult {
+  const endpointName = (endpoints: unknown): string | undefined =>
+    Array.isArray(endpoints) ? endpoints.find((e) => typeof e?.name === "string" && e.name)?.name : undefined;
+  const own = endpointName(r.endpoint);
+  const organizations: any[] = Array.isArray(r.organization) ? r.organization : [];
+  const viaOrganizations = new Map<string, ConnectionOption>();
+  for (const o of organizations) {
+    const connectionId = endpointName(o?.endpoint);
+    if (connectionId && !viaOrganizations.has(connectionId)) {
+      viaOrganizations.set(connectionId, { connectionId, label: typeof o?.name === "string" && o.name ? o.name : undefined });
+    }
+  }
+  return {
     id: r.id ?? `result-${i}`,
     name: r.content ?? r.display ?? "Unnamed source",
     type: r.type ?? "",
-    connectionId: Array.isArray(r.endpoint) ? r.endpoint[0]?.name : undefined,
-    logoUrl: r.logoUrl ?? undefined,
-  }));
+    connections: own ? [{ connectionId: own }] : [...viaOrganizations.values()],
+    logoUrl: r.logoUrl ?? organizations.find((o) => o?.logoUrl)?.logoUrl ?? undefined,
+  };
 }
 
 export async function getProfile(sdk: BWellSDK): Promise<Person> {

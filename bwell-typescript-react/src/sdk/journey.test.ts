@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { BWellSDK, Person } from "@icanbwell/bwell-sdk-ts";
-import { getNetworkSearchState, getRecommendedConnections, isZipCode, zipFromProfile } from "@/sdk/journey";
+import { getNetworkSearchState, getRecommendedConnections, isZipCode, toSearchResult, zipFromProfile } from "@/sdk/journey";
 
 // Only the SDK (the external boundary) is faked; the functions under test run for real.
 const ok = (data: unknown) => ({ data, hasError: () => false });
@@ -93,5 +93,31 @@ describe("zip codes", () => {
     ["handles no addresses", [], undefined],
   ])("zipFromProfile %s", (_label, address, expected) => {
     expect(zipFromProfile({ address } as unknown as Person)).toBe(expected);
+  });
+});
+
+describe("toSearchResult", () => {
+  const org = (name: string, endpoint: string | null, extra: Record<string, unknown> = {}) =>
+    ({ name, endpoint: endpoint ? [{ name: endpoint }] : [], ...extra });
+
+  test.each([
+    ["an organization with its own endpoint", { type: "PRACTICE", endpoint: [{ name: "clinic_ep" }] }, [{ connectionId: "clinic_ep" }]],
+    ["a practitioner with one organization", { organization: [org("Essentia Health", "essentia_health")] }, [{ connectionId: "essentia_health", label: "Essentia Health" }]],
+    [
+      "a practitioner with several organizations",
+      { organization: [org("Essentia Health", "essentia_health"), org("Epic Clinic", "epic_clinic")] },
+      [{ connectionId: "essentia_health", label: "Essentia Health" }, { connectionId: "epic_clinic", label: "Epic Clinic" }],
+    ],
+    ["organizations without an endpoint are left out", { organization: [org("No Endpoint", null), org("Epic Clinic", "epic_clinic")] }, [{ connectionId: "epic_clinic", label: "Epic Clinic" }]],
+    ["organizations sharing an endpoint appear once", { organization: [org("A", "shared"), org("B", "shared")] }, [{ connectionId: "shared", label: "A" }]],
+    ["its own endpoint wins over the organizations'", { endpoint: [{ name: "own" }], organization: [org("Essentia Health", "essentia_health")] }, [{ connectionId: "own" }]],
+    ["an endpoint with no name", { organization: [{ name: "X", endpoint: [{ name: null }] }] }, []],
+    ["no organization at all", {}, []],
+  ])("%s", (_label, result, expected) => {
+    expect(toSearchResult({ id: "1", content: "Name", ...result }, 0).connections).toEqual(expected);
+  });
+
+  test("falls back to the organization's logo", () => {
+    expect(toSearchResult({ id: "1", organization: [org("A", "a", { logoUrl: "https://example.test/a.png" })] }, 0).logoUrl).toBe("https://example.test/a.png");
   });
 });

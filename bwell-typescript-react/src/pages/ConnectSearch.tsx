@@ -66,25 +66,32 @@ export default function ConnectSearch() {
           <Button type="submit" variant="contained" disabled={!term.trim() || zipInvalid || busy === "search"} sx={{ alignSelf: "flex-start", height: 56 }}>{busy === "search" ? "Searching…" : "Search"}</Button>
         </Stack>
       </form>}
+      {/* Below the search form but above the results, which can be long. */}
+      <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+        <Button onClick={() => navigate("/connect-method")}>Back</Button>
+        <Button onClick={() => navigate("/app/connections")}>Go to my connections</Button>
+      </Stack>
       {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
       {!flow.active && results && results.length === 0 && <Typography sx={{ mt: 3 }} color="text.secondary">No matches. Try a shorter name.</Typography>}
       {!flow.active && results && results.length > 0 && (
         <List sx={{ mt: 2 }}>
           {results.map((r) => (
-            <ListItem key={r.id} divider secondaryAction={
-              r.connectionId
-                ? <Button variant="outlined" size="small" disabled={busy === r.connectionId} onClick={() => connect(r.connectionId!)}>Sign in to connect</Button>
-                : <Typography variant="body2" color="text.secondary">Not available yet</Typography>}>
-              <ListItemAvatar><Avatar src={r.logoUrl} alt="">{r.name[0]}</Avatar></ListItemAvatar>
+            <ListItem key={r.id} divider>
+              <ListItemAvatar><Avatar src={r.logoUrl} alt="" sx={{ bgcolor: "info.main", color: "#fff" }}>{r.name[0]}</Avatar></ListItemAvatar>
               <ListItemText primary={r.name} secondary={r.type} />
+              {r.connections.length > 0 ? (
+                <Stack spacing={1} sx={{ alignItems: "flex-end", ml: 2, flexShrink: 0 }}>
+                  {r.connections.map((c) => (
+                    <Button key={c.connectionId} variant="outlined" size="small" sx={{ whiteSpace: "nowrap" }} disabled={busy === c.connectionId} onClick={() => connect(c.connectionId)}>
+                      {c.label ? `Sign in to ${c.label}` : "Sign in to connect"}
+                    </Button>
+                  ))}
+                </Stack>
+              ) : <Typography variant="body2" color="text.secondary">Not available yet</Typography>}
             </ListItem>
           ))}
         </List>
       )}
-      <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-        <Button onClick={() => navigate("/connect-method")}>Back</Button>
-        <Button onClick={() => navigate("/app/connections")}>Go to my connections</Button>
-      </Stack>
     </JourneyPage>
   );
 }
