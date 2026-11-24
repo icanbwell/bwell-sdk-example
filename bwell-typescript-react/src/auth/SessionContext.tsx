@@ -149,7 +149,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         // SDK can't tell us whether the tokens were rejected. A reload retries the restore; signing
         // in again replaces them (signIn clears storage first).
         setRestoreFailed(true);
-        setError(`We couldn't restore your session: ${errorMessage(e)}. Reload to try again, or sign in again.`);
+        setError(`We couldn't restore your session: ${errorMessage(e).replace(/\.$/, "")}. Reload to try again, or sign in again.`);
         setStatus("signed-out");
       });
   }, [ready]);
