@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { BWellSDK } from "@icanbwell/bwell-sdk-ts";
-import { errorMessage, SdkError } from "@/sdk/results";
+import { errorMessage, SdkError, SESSION_EXPIRED_EVENT, SESSION_EXPIRED_MESSAGE } from "@/sdk/results";
 import {
   acceptTermsOfService, enableSmartConnect, getLatestConsent, getVerificationState, isPermitted,
 } from "@/sdk/journey";
@@ -153,6 +153,22 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setStatus("signed-out");
       });
   }, [ready]);
+
+  // A failed token refresh (see results.ts) means the session is over: sign out with an explanation
+  // instead of leaving errors on every page. Only while signed in, so sign-in's own tolerated refresh
+  // failure (no refresh token) is unaffected.
+  const statusRef = useRef(status);
+  statusRef.current = status;
+  useEffect(() => {
+    const onExpired = () => {
+      if (statusRef.current !== "signed-in") return;
+      statusRef.current = "signed-out"; // several calls can fail at once: handle the first only
+      signOut();
+      setError(SESSION_EXPIRED_MESSAGE);
+    };
+    window.addEventListener(SESSION_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
+  }, [signOut]);
 
   const value = useMemo(
     () => ({ status, sdk, tosAccepted, error, restoreFailed, signIn, signOut, acceptTos }),

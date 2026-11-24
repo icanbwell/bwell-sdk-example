@@ -5,6 +5,21 @@ import type { BWellQueryResult, BWellTransactionResult } from "@icanbwell/bwell-
 // callers one throwing style so UI code only has to catch.
 export class SdkError extends Error {}
 
+/** The SDK couldn't renew the user's tokens: the session is over and they need to sign in again. */
+export class SessionExpiredError extends SdkError {}
+export const SESSION_EXPIRED_EVENT = "bwell:session-expired";
+export const SESSION_EXPIRED_MESSAGE = "Your session has expired. Please sign in again.";
+
+/**
+ * A failed token refresh surfaces from any API call. Rather than show that raw message on every page,
+ * tell the session (which signs the user out) and throw a clear error.
+ */
+function fail(message: string): SdkError {
+  if (!/token refresh failed/i.test(message)) return new SdkError(message);
+  if (typeof window !== "undefined") window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+  return new SessionExpiredError(SESSION_EXPIRED_MESSAGE);
+}
+
 const messageOf = (error: unknown, fallback: string): string => {
   if (!error || typeof error !== "object") return fallback;
   const e = error as { name?: string; message?: unknown; cause?: unknown };
@@ -17,7 +32,7 @@ const messageOf = (error: unknown, fallback: string): string => {
 };
 
 export function unwrapQuery<T>(result: BWellQueryResult<T, any>, fallback = "Request failed"): T {
-  if (result.hasError()) throw new SdkError(messageOf(result.error, fallback));
+  if (result.hasError()) throw fail(messageOf(result.error, fallback));
   if (result.data === undefined) throw new SdkError(`${fallback}: the server returned no data`);
   return result.data;
 }
@@ -33,7 +48,7 @@ export function unwrapPartialQuery<T>(result: BWellQueryResult<T, any>, fallback
 }
 
 export function unwrapTransaction<T>(result: BWellTransactionResult<T, any>, fallback = "Request failed"): T {
-  if (!result.success()) throw new SdkError(messageOf(result.error(), fallback));
+  if (!result.success()) throw fail(messageOf(result.error(), fallback));
   return result.data();
 }
 
