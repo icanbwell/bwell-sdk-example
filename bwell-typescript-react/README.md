@@ -13,7 +13,7 @@ npm run dev
 
 Enter your b.well **client key**, then sign in with one of these methods, in order of preference:
 
-1. **Username and password (Descope)**, for clients that use Descope as their identity provider. Once the client key is entered, the app reads the client's Descope configuration and shows an email and password form. Descope's tokens are kept in memory only and handed to the SDK. See `src/components/DescopeLogin.tsx`.
+1. **Username and password (Descope)**, for clients that use Descope as their identity provider. Once the client key is entered, the app reads the client's Descope configuration and shows an email and password form. Descope's tokens are kept in memory only and handed to the SDK. See `src/components/DescopeLogin.tsx`. Below the Login button, a small **Copy access token to clipboard** link signs in with Descope the same way but, instead of signing in to the app, copies the access token so you can use it as a Bearer token in Postman or curl. Nothing is stored. It expires with the session, so copy a fresh one when it does.
 2. **External IdP token**, for environments set up for token auth.
 3. **b.well tokens** (access and ID, plus refresh if you have one), as a fallback for when the options above don't fit: sign in to the b.well web app and copy the tokens it issues. The refresh token is optional: without it the session works only until the access token expires (the SDK's refresh step fails and is tolerated).
 

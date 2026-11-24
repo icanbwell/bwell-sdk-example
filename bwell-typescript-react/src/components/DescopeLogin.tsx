@@ -1,5 +1,5 @@
 import { KeyboardEvent, useEffect, useState } from "react";
-import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { AuthProvider, getRefreshToken, getSessionToken, useDescope } from "@descope/react-sdk";
 import { fetchDescopeClientConfig } from "@/sdk/clientRecord";
 
@@ -36,30 +36,52 @@ function PasswordForm({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled"
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const canSubmit = !!email && !!password && !disabled && !submitting;
 
-  const signIn = async () => {
+  /** Signs in with Descope and returns its tokens, or null (with the reason shown) if that didn't work. */
+  const authenticate = async (): Promise<DescopeAuthTokens | null> => {
     setSubmitting(true);
     setError(null);
+    setCopied(false);
     try {
       const response = await sdk.password.signIn(email, password);
       if (!response.ok) {
         setError(response.error?.errorDescription || response.error?.errorMessage || "Descope sign-in failed.");
-        return;
+        return null;
       }
       const sessionJwt = response.data?.sessionJwt || getSessionToken();
       if (!sessionJwt) {
         setError("Descope sign-in succeeded but did not return a session token.");
-        return;
+        return null;
       }
       // The Descope session JWT is used as both the access and ID token.
       const refreshToken = response.data?.refreshJwt || getRefreshToken() || undefined;
-      onTokens({ accessToken: sessionJwt, idToken: sessionJwt, refreshToken });
+      return { accessToken: sessionJwt, idToken: sessionJwt, refreshToken };
     } catch {
       setError("Descope sign-in failed.");
+      return null;
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const signIn = async () => {
+    const tokens = await authenticate();
+    if (tokens) onTokens(tokens);
+  };
+
+  // For developers who want a token to call the API from another tool (Postman, curl). Signs in with
+  // Descope but not to this app, and puts only the access token on the clipboard; nothing is stored.
+  const copyAccessToken = async () => {
+    const tokens = await authenticate();
+    if (!tokens) return;
+    try {
+      await navigator.clipboard.writeText(tokens.accessToken);
+      setCopied(true);
+    } catch {
+      setError("Couldn't copy to the clipboard. Your browser may have blocked it.");
     }
   };
 
@@ -80,6 +102,18 @@ function PasswordForm({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled"
       <Button variant="contained" size="large" disabled={!canSubmit} onClick={signIn}>
         {submitting ? "Signing in…" : "Login"}
       </Button>
+      <Stack spacing={0.5} sx={{ alignItems: "center" }}>
+        <Link component="button" type="button" variant="body2" underline="hover" color="text.secondary"
+          disabled={!canSubmit} onClick={copyAccessToken}
+          sx={{ "&:disabled": { opacity: 0.5, cursor: "default", textDecoration: "none" } }}>
+          Copy access token to clipboard
+        </Link>
+        {copied && (
+          <Typography variant="caption" color="success.dark" role="status">
+            Access token copied. Use it as a Bearer token (it expires, so copy a fresh one when needed).
+          </Typography>
+        )}
+      </Stack>
     </Stack>
   );
 }
