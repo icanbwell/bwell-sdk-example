@@ -24,6 +24,8 @@ type Session = {
   sdk: BWellSDK | null;
   tosAccepted: boolean;
   error: string | null;
+  /** The stored session couldn't be restored (as opposed to the user signing out). */
+  restoreFailed: boolean;
   signIn: (clientKey: string, credentials: Credentials) => Promise<boolean>;
   signOut: () => void;
   acceptTos: () => Promise<void>;
@@ -84,6 +86,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [sdk, setSdk] = useState<BWellSDK | null>(null);
   const [tosAccepted, setTosAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [restoreFailed, setRestoreFailed] = useState(false);
 
   const ready = useCallback(async (next: BWellSDK) => {
     setTosAccepted(isPermitted(await getLatestConsent(next, "tos")));
@@ -95,6 +98,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback(async (clientKey: string, credentials: Credentials) => {
     setStatus("signing-in");
     setError(null);
+    setRestoreFailed(false);
     sessionStorage.clear();
     try {
       const key = clientKey.trim();
@@ -111,6 +115,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [ready]);
 
   const signOut = useCallback(() => {
+    setRestoreFailed(false);
     sessionStorage.clear();
     clearSmartConnectAgreement();
     setSdk(null);
@@ -143,14 +148,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         // The tokens stay in sessionStorage: the failure may be temporary (network, a 5xx), and the
         // SDK can't tell us whether the tokens were rejected. A reload retries the restore; signing
         // in again replaces them (signIn clears storage first).
+        setRestoreFailed(true);
         setError(`We couldn't restore your session: ${errorMessage(e)}. Reload to try again, or sign in again.`);
         setStatus("signed-out");
       });
   }, [ready]);
 
   const value = useMemo(
-    () => ({ status, sdk, tosAccepted, error, signIn, signOut, acceptTos }),
-    [status, sdk, tosAccepted, error, signIn, signOut, acceptTos],
+    () => ({ status, sdk, tosAccepted, error, restoreFailed, signIn, signOut, acceptTos }),
+    [status, sdk, tosAccepted, error, restoreFailed, signIn, signOut, acceptTos],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }
