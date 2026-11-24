@@ -78,7 +78,7 @@ function PasswordForm({ disabled, onTokens }: Pick<DescopeLoginProps, "disabled"
         onKeyDown={onEnter} autoComplete="off" disabled={disabled} fullWidth />
       {error && <Alert severity="error">{error}</Alert>}
       <Button variant="contained" size="large" disabled={!canSubmit} onClick={signIn}>
-        {submitting ? "Signing in…" : "Continue with Descope"}
+        {submitting ? "Signing in…" : "Login"}
       </Button>
     </Stack>
   );
